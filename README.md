@@ -1,4 +1,4 @@
-DONT BELIEVE IT!
+# DONT BELIEVE IT!
 I will create new readme later
 
 <img src="https://i.imgur.com/RlmtERk.jpg" alt="terminal_new" align="right" height="320px">
