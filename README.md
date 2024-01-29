@@ -1,3 +1,6 @@
+DONT BELIEVE IT!
+I will create new readme later
+
 <img src="https://i.imgur.com/RlmtERk.jpg" alt="terminal_new" align="right" height="320px">
 
 <img src="https://i.imgur.com/Zb7WXjz.jpg" alt="firefox_new" align="right" height="320px">
