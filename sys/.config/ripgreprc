@@ -1,0 +1,15 @@
+# vim: ft=rc commentstring=#\ %s
+# Don't let ripgrep vomit really long lines to my terminal, and show a preview.
+--no-heading
+--smart-case
+--follow
+--hidden
+
+--glob=!.git/
+--glob=!node_modules/
+--glob=!yarn.lock
+--glob=!package-lock.json
+--glob=!.yarn/
+--glob=!_build/
+--glob=!tags
+--glob=!.pub-cache

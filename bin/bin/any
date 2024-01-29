@@ -1,0 +1,2 @@
+#!/usr/bin/env sh
+[ -n "$1" ] && ps uwwwp $(pgrep -f "$@")

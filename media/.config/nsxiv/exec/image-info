@@ -1,0 +1,6 @@
+#!/bin/sh
+l="⟬ "; r=" ⟭"; c=$r$l
+filename="${1##*/}"
+filesize=$(du -h "$1" | awk '{print $1}')
+geometry=$(identify -format '%wx%h' "$1[0]")
+echo "$l$filename$c$geometry$c$filesize$r"

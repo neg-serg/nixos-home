@@ -1,0 +1,22 @@
+local -A abk=(
+    'C'    '| wc -l'
+    'E'    '|& v -'
+    'G'    '|& rg -i '
+    'H'    '| head'
+    'Q'    '&>/dev/null'
+    'S'    '| sort -h '
+    'T'    '| tail'
+    'V'    '|& rg -iv '
+    'Z'    '|& rg -iz '
+
+    "e1"   "!-2$"
+    "e2"   "!-3$"
+    "e3"   "!-4$"
+    "we"   "!-2$"
+    "wd"   "!-3$"
+    "wc"   "!-4$"
+)
+local MATCH
+matched_chars='[.-|_a-zA-Z0-9]#'
+LBUFFER=${LBUFFER%%(#m)[.-|_a-zA-Z0-9]#}
+LBUFFER+=${abk[$MATCH]:-$MATCH}

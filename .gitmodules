@@ -1,0 +1,9 @@
+[submodule "zsh/.config/zsh/powerlevel10k"]
+	path = zsh/.config/zsh/powerlevel10k
+    url = git@github.com:romkatv/powerlevel10k.git
+[submodule "zsh/.config/zsh/powerlevel10k"]
+    path = zsh/.config/zsh/powerlevel10k
+    url = git@github.com:romkatv/powerlevel10k.git
+[submodule "negwm/.config/i3"]
+	path = negwm/.config/i3
+	url = https://github.com/neg-serg/negwm

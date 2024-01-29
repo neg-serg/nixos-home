@@ -1,0 +1,29 @@
+#!/usr/bin/env sh
+
+img="$1"
+send_notify() {
+    c1="<span weight='bold' color='#395573'>"
+    c2="<span weight='bold' color='#245361'>"
+    b="<span weight='bold'>"
+    clear="</span>"
+    header="⟬$(echo "$img"|sed -e "s/.bmp$/.png/")⟭"
+    header="$(echo "$header" | sed -e "s:$HOME:~:" \
+                -e "s:\/:$c1/$clear:g" \
+                -e "s:\(⟬\|⟭\):$c1\1$clear:g" -e "s:~:$c2~$clear:g")"
+    inf="$(exiftool -ImageSize -MIMEType -Megapixels "$img")"
+    output=$(echo "$inf" | xargs -n4 \
+        | sed -e 's/^/⟬/' -e 's/$/⟭/' \
+        -e "s;\(.*\):;$b\\1$c1:$clear$clear;" \
+        -e "s:\(⟬\|⟭\):$c1\1$clear:g"
+    )
+    dunstify -h "string:fgcolor:#6C7E96" -a "pic" -i "$img" ' ' "$header\n$output"
+}
+
+main() {
+    shots_pikz="$HOME/tmp/shots"
+    [ ! -d "$shots_pikz" ] && mkdir -p "$shots_pikz"
+    echo "$img"|sed -e "s/.bmp$/.png/" | xclip
+    send_notify
+}
+
+main "$@"

@@ -1,0 +1,127 @@
+:root {
+  --border_color: #0a3749;
+  --color_black: #020202;
+  --foreground: #f0f1ff;
+  --line_highlight: #13384f;
+  --tridactyl-bg: var(--color_black);
+  --tridactyl-fg: var(--foreground);
+  --tridactyl-hint-active-bg: var(--tridactyl-hintspan-bg);
+  --tridactyl-hint-active-fg: var(--foreground);
+  --tridactyl-hint-active-outline: none;
+  --tridactyl-hint-bg: none;
+  --tridactyl-hint-outline: none;
+  --tridactyl-hintspan-bg: #001742 !important;
+  --tridactyl-hintspan-fg: #89cdd2 !important;
+  --tridactyl-hintspan-font-family: "Iosevka" !important;
+  --tridactyl-hintspan-font-size: 10pt !important;
+  --tridactyl-hintspan-font-weight: 600 !important;
+  --tridactyl-url-bg: var(--color_black);
+  --tridactyl-url-fg: var(--url_highlight);
+  --url_highlight: #243f55;
+}
+
+#command-line-holder {
+  border: 1pt solid var(--border_color);
+  color: var(--tridactyl-bg);
+  order: 1;
+}
+
+#tridactyl-input {
+  background: var(--tridactyl-bg);
+  color: var(--tridactyl-fg);
+  font-family: "Iosevka";
+  font-size: 10pt;
+  font-weight: 600;
+}
+
+#completions {
+  background: var(--tridactyl-bg);
+  color: var(--tridactyl-fg);
+  display: inline-block;
+  font-family: "Iosevka";
+  font-size: 10pt;
+  font-weight: 600;
+  --option-height: 1.2em;
+  overflow: hidden;
+  padding: -8pt -8pt;
+  width: 100%;
+}
+
+#completions > div {
+  max-height: calc(20 * var(--option-height));
+  min-height: calc(2 * var(--option-height));
+}
+
+#completions table {
+  font-family: "Iosevka";
+  font-size: 10pt;
+  font-weight: 600;
+  padding: -8pt -8pt;
+}
+
+#completions .HistoryCompletionSource {
+  max-height: 292pt;
+  min-height: unset;
+}
+
+#completions .HistoryCompletionSource table {
+  border-spacing: 0;
+  font-size: 10pt;
+  table-layout: fixed;
+  width: 100%;
+}
+
+#completions .BmarkCompletionSource {
+  max-height: 292pt;
+  min-height: unset;
+}
+
+#completions .BufferCompletionSource table {
+  border-spacing: 0;
+  font-size: 10pt;
+  table-layout: fixed;
+  width: unset;
+}
+
+#completions table tr .title {
+  width: 70%;
+}
+
+#completions table tr {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#completions .sectionHeader {
+  background: unset;
+  border-bottom: unset;
+  padding-left: unset;
+}
+
+#completions .focused {
+  background: var(--line_highlight);
+  color: var(--foreground);
+  padding: -8pt -8pt;
+}
+
+#completions .focused .url {
+  background: var(--line_highlight);
+  color: var(--foreground);
+  padding: -8pt -8pt;
+}
+
+span.TridactylHint {
+  background-color: var(--tridactyl-hintspan-bg) !important;
+  border-radius: 4px !important;
+  border-style: var(--tridactyl-hintspan-border-style) !important;
+  border-width: var(--tridactyl-hintspan-border-width) !important;
+  color: var(--tridactyl-hintspan-fg) !important;
+  font-family: var(--tridactyl-hintspan-font-family) !important;
+  font-size: var(--tridactyl-hintspan-font-size) !important;
+  font-style: var(--tridactyl-hintspan-font-style) !important;
+  min-width: 0.75em !important;
+  padding: 2pt !important;
+  position: absolute !important;
+  z-index: 2147483646 !important;
+}

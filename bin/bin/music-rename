@@ -1,0 +1,107 @@
+#!/usr/bin/env zsh
+
+set -e
+typeset -A conv_table
+
+trim() {
+    local var="$@"
+    var="${var#"${var%%[![:space:]]*}"}" # remove leading whitespace characters
+    echo -n "${var%"${var##*[![:space:]]}"}" # remove trailing whitespace characters
+}
+
+generate_convert_table() {
+    for i in {900..989}; do
+        q=${i:1:5}
+        conv_table[1$i]="1x$q"
+    done
+
+    for i in {990..999}; do
+        q=${i:2:5}
+        conv_table[1$i]="1x$q"
+    done
+
+    i="000"
+    num=$(sed "s/^000/0/" <<< "$i")
+    conv_table[2$i]="2x$num"
+    for i in {001..035}; do
+        num=$(sed "s/^0*//" <<< "$i")
+        if [[ ${num} -lt 10 ]]; then
+            conv_table[2$i]="2x$num"
+        else
+            j=10
+            for q in {A..Z}; do
+                if [[ $j == $num ]]; then
+                    conv_table[2$i]="2x$q"
+                fi
+                ((j++))
+            done
+        fi
+    done
+}
+
+rename_files() {
+    Data=$(albumdetails "$@")
+    rename "$@"
+}
+
+rename_dir() {
+    if [[ ! -z "$1" ]]; then
+        Data=$(find "$1" -exec albumdetails '{}' + 2>/dev/null)
+        rename "$@"
+    fi
+}
+
+extract_field() {
+    rg "^$1:" <<< "$Data" | cut -d ':' -f 2-
+}
+
+rename() {
+    artist="$(extract_field 'Artist')"
+    year="$(extract_field 'Year')"
+
+    generate_convert_table
+
+    # take only first word from year
+    year=$(awk '{print $1}' <<< "$year")
+    year=${year//$year/$conv_table[$year]}
+
+    album="$(extract_field 'Album')"
+
+    if [[ -d "$1" ]]; then
+        src="$1"
+    else
+        src="$(builtin print "$(dirname $1)")"
+    fi
+
+    artist=$(trim "$artist")
+    album=$(trim "$album")
+    year=$(trim "$year")
+    lhs='-⟨'
+    rhs='⟩-'
+
+    if [[ $artist != "" && $year != "" && $album != "" ]]; then
+        music_dirname="$(awk '/music_directory/{print $2}' "${XDG_CONFIG_HOME}/mpd/mpd.conf"|tr -d '"'|sed 's:^~:'${HOME}':')"
+        result="$music_dirname/$(basename "$(sed 's; ;·;g' <<< "${artist}${lhs}${year}${rhs}${album}")")"
+        if [[ $(realpath "$src") != $(realpath "$result") ]]; then
+            mv -i "$src" "$result"
+        fi
+        ren -i "$result"
+        rmdir "$src" 2> /dev/null
+    fi
+}
+
+main(){
+    [[ -z "${1// }" ]] && exit 0
+    case "${1}" in
+        c*)
+            dirname="$(awk '/music_directory/{print $2}' "$XDG_CONFIG_HOME/mpd/mpd.conf"|tr -d '"'|sed 's:^~:'$HOME':')/$(dirname "$(mpc -f '%file%'|head -1)")"
+            rename_dir "$dirname"
+        ;;
+        f*) shift; rename_files "$@" ;;
+        *)
+            for dir; rename_dir "$dir"
+        ;;
+    esac
+}
+
+main "$@"

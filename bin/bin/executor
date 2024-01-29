@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+source /etc/profile
+if [ $# -eq 0 ]; then
+    exit 0
+elif [ $# -eq 1 ] && [ "$1" = 'daemon' ]; then
+    python -m executor daemon
+fi
+eval "$(echo "$@" | nc localhost 15556 -N)"

@@ -1,0 +1,110 @@
+#!/usr/bin/env zsh
+
+mp() {
+    local args=""
+    for arg; do
+        if [[ -d ${arg} ]]; then
+            {find "${arg}" -maxdepth 1 -type f -print0 | xargs -0n10 -P 10 ~/bin/vid-info} &
+        fi
+    done
+    {for arg; [[ -f "${arg}" ]] && args+="$(printf '%s\0' "${arg}")";
+    xargs -0n10 -P 10 ~/bin/vid-info <<< "${args}"} &
+    mpv --input-ipc-server=$XDG_CONFIG_HOME/mpv/socket --vo=gpu "$@" > ${HOME}/tmp/mpv.log
+}
+
+pl() {
+    [[ -e "$1" ]] && arg_="$1"
+    [[ -z "${arg_}" ]] && arg_="${XDG_VIDEOS_DIR}/"
+    pushd ${arg_}
+    rg_cmd=(
+        rg -g \"'!{.git,node_modules}/*'\" -g \"'!*.srt'\"
+        --files --hidden --follow
+    )
+    run_command=(fzf)
+    find_result="$(eval ${run_command[@]})"
+    xsel <<< "${find_result}"
+    if [[ ! -z ${find_result} ]]; then
+        mp "${find_result}"
+    fi
+    popd
+}
+
+pl_rofi() {
+    [[ -e "$1" ]] && arg_="$1"
+    [[ -z "${arg_}" ]] && arg_="${XDG_VIDEOS_DIR}/"
+    pushd ${arg_}
+    rg_cmd=(
+        rg -g \"'!{.git,node_modules}/*'\" -g \"'!*.srt'\"
+        --files --hidden --follow --sort path
+    )
+    if [[ ${set_maxdepth} == true ]]; then
+        rg_cmd+=(--max-depth 1)
+    fi
+    rg_cmd_result=$(eval ${rg_cmd[@]})
+    if [[ $#rg_cmd_result > 1 ]]; then
+        find_result=$(rofi -theme clip -p '⟬vid⟭ ❯>' -i -dmenu <<< ${rg_cmd_result})
+    else
+        find_result="$rg_cmd_result"
+    fi
+    xsel <<< "${find_result}"
+    if [[ ! -z ${find_result} ]]; then
+        mp "${find_result}"
+    fi
+    popd
+}
+
+vol(){ playerctl -p "$1" volume "$2" }
+vset(){
+    for p in mpv mpd; do
+        if [[ "$(playerctl -p $p status)" =~ 'Stopped|No players found' ]]; then
+            vol "$p" "$1"; break
+        else
+            playerctl volume "$1"
+        fi
+    done
+}
+
+vchange(){
+    for p in mpv mpd; do
+        if [[ "$(playerctl -p $p status)" =~ 'Stopped|No players found' ]]; then
+            vol "$p" "$1" || playerctl -p "$p" volume "$[$1/5]$2"; break
+        else
+            playerctl volume "$1" || playerctl volume "$[$1/5]$2"
+        fi
+    done
+}
+
+main() {
+    set_maxdepth=false
+    run=pl
+    if [[ $1 == "rofi" ]]; then
+        run=pl_rofi
+        shift;
+    fi
+    if [[ $1 == "video" ]]; then
+        run=(rofi -modi file-browser-extended -show file-browser-extended \
+            -file-browser-dir "~/vid/new" -file-browser-depth 1 \
+            -file-browser-open-multi-key "kb-accept-alt" \
+            -file-browser-open-custom-key "kb-custom-11" \
+            -file-browser-hide-hidden-symbol "" \
+            -file-browser-path-sep "/" -theme clip \
+            -file-browser-cmd 'mpv --input-ipc-server=/tmp/mpvsocket --vo=gpu'
+        )
+        shift
+    fi
+    if [[ $1 == "1st_level" ]]; then set_maxdepth=true; shift; fi
+    $run "$@"
+    exit
+}
+
+case $1 in
+    cmd) shift; playerctl "$@" ;;
+    vol)
+        case $2 in
+            mute) vset 0.0 || amixer -q set Master 0 mute ;;
+            unmute) vset 1.0 || amixer -q set Master 65536 unmute ;;
+            up) vchange 0.05 + ;;
+            down) vchange 0.05 - ;;
+        esac ;;
+    *) main "$@" ;;
+esac
