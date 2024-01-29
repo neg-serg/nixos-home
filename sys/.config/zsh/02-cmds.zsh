@@ -70,17 +70,17 @@ _exists nh && {
     alias sws="nh os switch /etc/nixos"
     alias S="nix-shell"
 }
-_exists doas && {
-    alias {doas,s}='doas '
-    local doas_list=(chmod chown modprobe umount)
-    local logind_doas_list=(reboot halt poweroff)
-    _exists iotop && alias iotop='doas iotop -oPa'
-    _exists lsof && alias ports='doas lsof -Pni'
-    _exists kmon && alias kmon='doas kmon -u --color 19683a'
-    for c in ${doas_list[@]}; {_exists "$c" && alias "$c=doas $c"}
-    for i in ${logind_doas_list[@]}; alias "${i}=doas ${sysctl_pref} ${i}"
-    unset doas_list noglob_list rlwrap_list nocorrect_list logind_doas_list
-    _exists reflector && alias mirrors='doas /usr/bin/reflector --score 100 --fastest 10 --number 10 --verbose --save /etc/pacman.d/mirrorlist'
+_exists sudo && {
+    alias {sudo,s}='sudo '
+    local sudo_list=(chmod chown modprobe umount)
+    local logind_sudo_list=(reboot halt poweroff)
+    _exists iotop && alias iotop='sudo iotop -oPa'
+    _exists lsof && alias ports='sudo lsof -Pni'
+    _exists kmon && alias kmon='sudo kmon -u --color 19683a'
+    for c in ${sudo_list[@]}; {_exists "$c" && alias "$c=sudo $c"}
+    for i in ${logind_sudo_list[@]}; alias "${i}=sudo ${sysctl_pref} ${i}"
+    unset sudo_list noglob_list rlwrap_list nocorrect_list logind_sudo_list
+    _exists reflector && alias mirrors='sudo /usr/bin/reflector --score 100 --fastest 10 --number 10 --verbose --save /etc/pacman.d/mirrorlist'
 }
 _exists nvidia-settings && alias nvidia-settings="nvidia-settings --config=$XDG_CONFIG_HOME/nvidia/settings"
 _exists plocate && alias locate='plocate'
