@@ -5,6 +5,7 @@
       epr # cli epub reader
       glow # markdown viewer
       mdcat # cat for markdown
+      recoll # full-text search tool
       zathura # pdf/djvu viewer
   ];
 }

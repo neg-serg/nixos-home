@@ -1,6 +1,7 @@
 { config, pkgs, ... }: {
   home.packages = with pkgs; [
       almonds # TUI fractal viewer
+      bucklespring # for keyboard sounds
       cool-retro-term # a retro terminal emulator
       figlet # ascii art
       fortune # fortune cookie

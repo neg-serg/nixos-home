@@ -1,12 +1,7 @@
 { config, pkgs, ... }: {
   nixpkgs.config.allowUnfree = true;
   home.packages = with pkgs; [
-      # appimage-run # to run appimages
-      # bucklespring # for keyboard sounds
-      # chez # Chez Scheme (useful for idris)
-      # cosmocc # Cosmopolitan (Actually Portable Executable) C/C++ toolchain; use via CC=cosmocc, CXX=cosmoc++
-      # idris2 # Idris2 functional statically-typed programming language that looks cool and compiles to C
-      # micromamba # for python env
+      # imwheel # for mouse wheel scrolling
       blesh # bluetooth shell
       ccrypt # Secure encryption and decryption of files and streams
       dconf # gnome registry
