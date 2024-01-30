@@ -1,4 +1,4 @@
-{ lib, config, pkgs, stable, ... }:
+{ lib, config, pkgs, ... }:
 with rec {
     defaultApplications = {
         terminal = { cmd = "${pkgs.foot}/bin/kitty"; desktop = "kitty"; };
@@ -28,7 +28,6 @@ with rec {
         "application/xhtml+xml" = browser;
         "application/x-extension-xhtml" = browser;
         "application/x-extension-xht" = browser;
-        "application/json" = browser;
 
         "audio/*" = video;
         "video/*" = video;
@@ -45,6 +44,25 @@ with rec {
 
         "x-scheme-handler/nxm" = ["vortex-downloads-handler.desktop"];
         "x-scheme-handler/nxm-protocol" = ["vortex-downloads-handler.desktop"];
+
+        "text/english" = editor;
+        "text/plain" = editor;
+        "text/x-makefile" = editor;
+        "text/x-c++hdr" = editor;
+        "text/x-c++src" = editor;
+        "text/x-chdr" = editor;
+        "text/x-csrc" = editor;
+        "text/x-java" = editor;
+        "text/x-moc" = editor;
+        "text/x-pascal" = editor;
+        "text/x-tcl" = editor;
+        "text/x-tex" = editor;
+        "application/x-shellscript" = editor;
+        "application/json" = editor;
+        "application/xml" = editor;
+        "text/xml" = editor;
+        "text/x-c" = editor;
+        "text/x-c++" = editor;
     };
 };{
     xdg = {
