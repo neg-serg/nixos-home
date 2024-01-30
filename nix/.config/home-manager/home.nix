@@ -44,6 +44,7 @@ with rec {
     ./apps/pics_and_fonts.nix
     ./apps/terminal.nix
     ./apps/text/manipulate.nix
+    ./apps/text/notes.nix
     ./apps/text/read.nix
     ./apps/torrent.nix
     ./apps/vulnerability_scanners.nix
