@@ -1,7 +1,0 @@
-*
-!*/
-!.gitignore
-!/LICENSE
-!/flake.nix
-!/flake.lock
-!*.nix
