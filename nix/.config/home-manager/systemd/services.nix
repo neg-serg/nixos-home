@@ -248,7 +248,7 @@
             BindsTo = "xsettingsd.service";
         };
         Service = {
-            ExecStart = "${pkgs.polybar}/bin/polybar -q main";
+            ExecStart = "${pkgs.dash}/bin/dash -lc ${pkgs.polybar}/bin/polybar -q main";
             ExecStop = "${pkgs.polybar}/bin/polybar-msg cmd quit";
             Restart = "on-failure";
             RestartSec = "3";
