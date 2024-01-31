@@ -1,6 +1,6 @@
-{ config, pkgs, xdg, ... }: with rec {
+{ config, pkgs, xdg, ... }: with {
     l = config.lib.file.mkOutOfStoreSymlink; 
-    dots = /home/neg/.dotfiles;
+    dots = "/home/neg/.dotfiles";
 }; {
   home.packages = with pkgs; [
       manix
