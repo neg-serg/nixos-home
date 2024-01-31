@@ -40,8 +40,8 @@
             };
             modules = [
                 ./home.nix
-                chaotic.homeManagerModules.default # OUR DEFAULT MODULE
-                stylix.homeManagerModules.stylix ./home.nix
+                chaotic.homeManagerModules.default
+                stylix.homeManagerModules.stylix
             ];
         };
     };
