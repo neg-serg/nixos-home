@@ -2,6 +2,12 @@
 with rec {
     alkano-aio = pkgs.callPackage ./theme/alkano-aio.nix {};
 }; {
+    gtk = {
+        iconTheme = {
+            name = "kora";
+            package = pkgs.kora-icon-theme;
+        };
+    };
     dconf = {
         enable = true;
         settings = {
@@ -72,14 +78,15 @@ with rec {
             base0E = "#5B5BBB"; # Purple
             base0F = "#162b44"; # Brown
         };
-        cursor.size = 35;
-        cursor.name = "Alkano-aio";
-        cursor.package = alkano-aio;
+        cursor = {
+            size = 35;
+            name = "Alkano-aio";
+            package = alkano-aio;
+        };
         polarity = "dark";
         fonts = {
             serif = { name = "Cantarell"; package = pkgs.cantarell-fonts; };
             sansSerif = { name = "Cantarell"; package = pkgs.cantarell-fonts; };
-            # monospace = { name = "Iosevka"; package = pkgs.iosevka; };
             sizes = { applications = 10; desktop = 10; };
         };
     };
