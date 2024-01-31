@@ -9,6 +9,7 @@
         schizofox = { url = "github:schizofox/schizofox"; inputs.nixpkgs.follows = "nixpkgs"; };
         home-manager = { url = "github:nix-community/home-manager"; inputs.nixpkgs.follows = "nixpkgs"; };
         negwm.url = "github:neg-serg/negwm";
+        executor.url = "github:neg-serg/executor";
         stylix.url = "github:danth/stylix";
     };
 
@@ -19,6 +20,7 @@
         , nixpkgs-stable
         , simple-osd-daemons
         , negwm
+        , executor
         , stylix
         , ... } @inputs:
     with rec {
@@ -26,6 +28,7 @@
         pkgs = nixpkgs.legacyPackages.${system};
         stable = nixpkgs-stable.legacyPackages.${system};
         negwmPkg = negwm.packages.${system};
+        executorPkg = executor.packages.${system};
     }; {
         packages.${system}.default = nixpkgs.legacyPackages.${system}.zsh;
         homeConfigurations."neg" = home-manager.lib.homeManagerConfiguration {
@@ -33,6 +36,7 @@
             extraSpecialArgs = {
                 inherit stable;
                 inherit negwmPkg;
+                inherit executorPkg;
             };
             modules = [
                 ./home.nix

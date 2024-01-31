@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, negwmPkg, executorPkg, ... }:
 {
     systemd.user.services.polkit-gnome-authentication-agent-1 = {
         Unit = {
@@ -83,7 +83,7 @@
             Requires = ["xsettingsd.service"];
         };
         Service = {
-            ExecStart = "%h/bin/executor daemon";
+            ExecStart = "${executorPkg.executor}/bin/executor daemon";
             Restart = "on-failure";
         };
     };
@@ -129,7 +129,7 @@
             Requires = ["xsettingsd.service"];
         };
         Service = {
-            ExecStart = "%h/bin/negwm";
+            ExecStart = "${negwmPkg.negwm}/bin/negwm";
             Restart = "on-failure";
         };
     };
