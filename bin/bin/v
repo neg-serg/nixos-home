@@ -1,7 +1,16 @@
 #!/usr/bin/env sh
+
+source /etc/profile
+port=15555
+negwm_path="$HOME/src/negwm"
+
+send(){
+    echo "$@" | nc localhost $port -w 0
+}
+
 if command -v nvr >/dev/null 2>&1; then
     if [ -n "$DISPLAY" ]; then
-        negwm send 'circle next dev'
+        send 'circle next dev'
         while ! xdotool search --sync --all --class '^nwim$' > /dev/null 2>&1; do :; done
     fi
     if [ $# -eq 0 ]; then
@@ -13,3 +22,5 @@ if command -v nvr >/dev/null 2>&1; then
 else
     ${EDITOR:-vi} "$@"
 fi
+
+# vim:filetype=sh
