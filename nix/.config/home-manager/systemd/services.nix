@@ -172,8 +172,6 @@
         Service = {
             Type = "simple";
             Restart = "on-failure";
-            # ExecStart = "${pkgs.mpdris2}/bin/mpDris2 --use-journal";
-            # ExecStart = "${pkgs.writeShellScriptBin "delay-mpd-dris" "${pkgs.coreutils}/bin/sleep 1 && ${pkgs.mpd-mpris}/bin/mpd-mpris"}/bin/delay-mpd-dris";
             ExecStart = "${pkgs.writeShellScriptBin "delay-mpdris2" "${pkgs.coreutils}/bin/sleep 1 && ${pkgs.mpdris2}/bin/mpDris2"}/bin/delay-mpdris2";
         };
         Install = { WantedBy = ["default.target"]; };
