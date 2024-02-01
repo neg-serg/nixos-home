@@ -11,6 +11,7 @@
         negwm.url = "github:neg-serg/negwm";
         executor.url = "github:neg-serg/executor";
         stylix.url = "github:danth/stylix";
+        sops-nix.url = "github:Mic92/sops-nix";
     };
 
     outputs = { nixpkgs
@@ -22,6 +23,7 @@
         , negwm
         , executor
         , stylix
+        , sops-nix
         , ... } @inputs:
     with rec {
         system = "x86_64-linux";
@@ -42,6 +44,7 @@
                 ./home.nix
                 chaotic.homeManagerModules.default
                 stylix.homeManagerModules.stylix
+                sops-nix.homeManagerModules.sops
             ];
         };
     };
