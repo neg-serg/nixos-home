@@ -36,7 +36,7 @@
         "beets" = { source = l "${dots}/music/.config/beets"; recursive = true; };
         "mpd" = { source = l "${dots}/music/.config/mpd"; recursive = true; };
         "ncmpcpp" = { source = l "${dots}/music/.config/ncmpcpp"; recursive = true; };
-        "ncpamixer" = { source = l "${dots}/music/.config/ncpamixer.conf"; recursive = true; };
+        "ncpamixer.conf" = { source = l "${dots}/music/.config/ncpamixer.conf"; recursive = true; };
         # █▓▒░ negwm ────────────────────────────────────────────────────────────────────────
         "dunst" = { source = l "${dots}/negwm/.config/dunst"; recursive = true; };
         "executor" = { source = l "${dots}/negwm/.config/executor"; recursive = true; };
