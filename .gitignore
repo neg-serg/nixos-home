@@ -214,7 +214,6 @@ mail/.config/vdirsyncer/token_stuff
 misc/.slit/history
 music/.config/beets/discogs_token.json
 music/.config/beets/state.pickle
-music/.config/mpd
 music/.config/mpd/mpd.pid
 music/.config/mpd/mpdstate
 music/.config/ncmpcpp/error.log
@@ -326,3 +325,5 @@ sys/.config/btop/btop.conf
 /home/neg/pic/shots/screenshot-2024-01-28_17-33-22.png
 negwm/.config/xinit/xsettingsd
 sys/.config/zsh/.zcompdump*
+music/.config/mpd/sticker.sql
+music/.config/mpd/mpd.db
