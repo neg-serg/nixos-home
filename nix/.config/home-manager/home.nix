@@ -1,4 +1,4 @@
-{ lib, config, pkgs, stable, ... }:
+{ lib, config, pkgs, ... }:
 with rec {
     home_vars = {
         __GL_GSYNC_ALLOWED = "0"; # picom/compositing compatibility(for now)
