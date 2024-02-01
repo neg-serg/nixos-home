@@ -60,8 +60,6 @@ with rec {
 
     ./systemd/targets.nix
     ./systemd/services.nix
-
-    ./files.nix
   ];
 
   services = {
