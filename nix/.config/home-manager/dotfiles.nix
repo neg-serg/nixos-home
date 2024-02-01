@@ -9,9 +9,10 @@
       "dircolors" = { source = l "${dots}/sys/.config/dircolors"; recursive = true; };
       "fastfetch" = { source = l "${dots}/misc/.config/fastfetch"; recursive = true; };
       "gdb" = { source = l "${dots}/dev/.config/gdb"; recursive = true; };
+      "git" = { source = l "${dots}/git/.config/git"; recursive = true; };
+      "i3" = { source = l "${dots}/negwm/.config/i3"; recursive = true; };
       "macchina" = { source = l "${dots}/misc/.config/macchina"; recursive = true; };
       "nvim" = { source = l "${dots}/dev/.config/nvim"; recursive = true; };
-      "git" = { source = l "${dots}/git/.config/git"; recursive = true; };
   };
   xdg.dataFile = {
       "hack-art" = { source = l "${dots}/art/.local/share/hack-art"; recursive = true; };
