@@ -23,6 +23,7 @@ if ! grep NAME=NixOS /etc/os-release > /dev/null; then
    fpath=(
        ${HOME}/.zinit/completions
        ${ZDOTDIR}/lazyfuncs
+       ${XDG_CONFIG_HOME}/.config/zsh-nix
        /usr/share/zsh/site-functions
        /usr/share/zsh/functions/{Misc,Zle,Completion}
        /usr/share/zsh/functions/Completion/*

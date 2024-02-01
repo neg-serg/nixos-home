@@ -7,7 +7,7 @@
                 /run/current-system/sw/bin/waitpid $(pgrep i3)
                 '';
         };
-        "${config.xdg.configHome}/zsh/lazyfuncs/ylock".text = ''
+        "${config.xdg.configHome}/zsh-nix/ylock".text = ''
             if ! [[ $(ssh-add -L | grep "PIV AUTH") ]] && \
                 [[ $(lsusb | grep "0407 Yubico") ]]; then
                 ssh-add -s ${pkgs.opensc}/lib/opensc-pkcs11.so
