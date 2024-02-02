@@ -17,8 +17,8 @@ with rec {
     ./pkgs.nix
     ./xdg.nix
     ./theme.nix
-    ./dotfiles.nix
     ./sops.nix
+    ./dotfiles.nix
 
     ./apps/android.nix
     ./apps/archives.nix
