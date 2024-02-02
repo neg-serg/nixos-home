@@ -32,6 +32,6 @@
     ydotool # xdotool systemwide
     zk # notes database
 
-    (python3-lto.withPackages (ps: with ps; [ docopt i3ipc psutil ]))
+    (python3-lto.withPackages (ps: with ps; [ docopt i3ipc psutil colored ]))
   ];
 }
