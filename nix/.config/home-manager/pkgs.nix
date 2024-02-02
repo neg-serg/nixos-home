@@ -26,9 +26,6 @@
     pinentry # for gpg/gnupg password entry GUI. why does it not install this itself? ah, found out... https://github.com/NixOS/nixpkgs/commit/3d832dee59ed0338db4afb83b4c481a062163771
     pwgen # generate passwords
     sysz # An fzf-based terminal UI for systemctl
-    ydotool # xdotool systemwide
-    zk # notes database
-
     (python3-lto.withPackages (ps: with ps; [ docopt i3ipc psutil colored ]))
   ];
 }
