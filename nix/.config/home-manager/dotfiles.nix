@@ -33,7 +33,6 @@
         "tridactyl" = { source = l "${dots}/misc/.config/tridactyl"; recursive = true; };
         "zathura" = { source = l "${dots}/misc/.config/zathura"; recursive = true; };
         # █▓▒░ music ────────────────────────────────────────────────────────────────────────
-        "beets" = { source = l "${dots}/music/.config/beets"; recursive = true; };
         "mpd" = { source = l "${dots}/music/.config/mpd"; recursive = true; };
         "ncmpcpp" = { source = l "${dots}/music/.config/ncmpcpp"; recursive = true; };
         "ncpamixer.conf" = { source = l "${dots}/music/.config/ncpamixer.conf"; recursive = true; };

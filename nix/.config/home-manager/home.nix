@@ -24,6 +24,7 @@ with rec {
     ./apps/archives.nix
     ./apps/audio/apps.nix
     ./apps/audio/core.nix
+    ./apps/audio/beets.nix
     ./apps/benchmarks.nix
     ./apps/btop.nix
     ./apps/cli.nix

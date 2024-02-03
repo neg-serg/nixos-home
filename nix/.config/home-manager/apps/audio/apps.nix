@@ -2,7 +2,6 @@
   home.packages = with pkgs; [
       ape # monkey audio codec
       audiowaveform # shows soundwaveform
-      beets-unstable # autoset tags
       cdparanoia # cdrip / cdrecord
       easytag # use this for tags
       id3v2 # id3v2 edit

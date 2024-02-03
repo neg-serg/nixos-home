@@ -327,3 +327,4 @@ negwm/.config/xinit/xsettingsd
 sys/.config/zsh/.zcompdump*
 music/.config/mpd/sticker.sql
 music/.config/mpd/mpd.db
+music/.config/beets/config.yaml
