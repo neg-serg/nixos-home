@@ -113,7 +113,7 @@ optimizeWithTtx = false
     bar = 'force-upright'
     question = 'corner'
     lig-ltgteq = 'slanted'
-    lig-plus-chain = 'with-notch'
+    # lig-plus-chain = 'with-notch'
 
 [collectPlans.iosevka-neg]
 release = true
