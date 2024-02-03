@@ -1,7 +1,12 @@
 { config, ... }: {
     sops = {
-        age.keyFile = "${config.xdg.configHome}/sops/age/keys.txt"; # must have no password!
+        age.keyFile = "${config.xdg.configHome}/sops/age/keys.txt";
         defaultSopsFile = ./secrets/all.yaml;
-        # secrets.mpdas = {};
+        secrets = {
+            "negrc" = {
+                format = "binary";
+                sopsFile = ./secrets/mpdas/neg.rc;
+            };
+        };
     };
  }
