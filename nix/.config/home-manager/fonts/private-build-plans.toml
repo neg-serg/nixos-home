@@ -44,6 +44,7 @@ optimizeWithTtx = false
     capital-x = 'straight-motion-serifed'
     capital-y = 'curly-serifless'
     capital-z = 'curly-serifed'
+    capital-delta = 'curly'
     a = 'double-storey-tailed'
     b = 'toothed-serifless'
     c = 'serifless'
@@ -112,6 +113,7 @@ optimizeWithTtx = false
     bar = 'force-upright'
     question = 'corner'
     lig-ltgteq = 'slanted'
+    lig-plus-chain = 'with-notch'
 
 [collectPlans.iosevka-neg]
 release = true
