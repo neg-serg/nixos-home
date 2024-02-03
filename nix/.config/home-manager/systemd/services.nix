@@ -284,7 +284,7 @@
             Requires = "mpd.service";
         };
         Service = {
-            ExecStart = "${pkgs.mpdas}/bin/mpdas -c %E/mpdas/neg.rc";
+            ExecStart = "${pkgs.mpdas}/bin/mpdas -c ${config.sops.secrets.mpdas_negrc.path}";
             Restart = "on-failure";
             RestartSec = "10";
         };
