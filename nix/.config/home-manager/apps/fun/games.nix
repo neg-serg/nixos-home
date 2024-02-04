@@ -14,7 +14,6 @@
       nethack # roguelike
       shattered-pixel-dungeon # roguelike
       unnethack # roguelike
-      unvanquished # FPS
       xaos # smooth fractal explorer
   ];
 }
