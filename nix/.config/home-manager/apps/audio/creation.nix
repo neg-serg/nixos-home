@@ -1,4 +1,4 @@
-{ config, pkgs, ... }: {
+{ pkgs, ... }: {
   home.packages = with pkgs; [
       bitwig-studio # great DAW
       reaper # А вот в рипере!

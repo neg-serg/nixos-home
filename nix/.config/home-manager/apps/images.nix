@@ -1,4 +1,4 @@
-{ config, pkgs, ... }: {
+{ pkgs, ... }: {
   home.packages = with pkgs; [
       darktable # photo editing
       gcolor3 # color selector

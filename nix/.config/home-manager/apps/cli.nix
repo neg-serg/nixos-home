@@ -1,4 +1,4 @@
-{ config, pkgs, stable, ... }: {
+{ pkgs, stable, ... }: {
   home.packages = with pkgs; [
       as-tree # represent smth as tree
       babashka # native clojure for scripts

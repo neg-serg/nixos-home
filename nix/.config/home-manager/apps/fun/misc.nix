@@ -1,4 +1,4 @@
-{ config, pkgs, ... }: {
+{ pkgs, ... }: {
   home.packages = with pkgs; [
       almonds # TUI fractal viewer
       bucklespring # for keyboard sounds

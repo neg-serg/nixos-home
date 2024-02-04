@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }: {
+{ pkgs, ... }: {
   home.packages = [ pkgs.floorp ]; # Module installing  as default browser
   home.sessionVariables = { DEFAULT_BROWSER = "${pkgs.floorp}/bin/floorp"; };
   xdg.mimeApps.defaultApplications = {

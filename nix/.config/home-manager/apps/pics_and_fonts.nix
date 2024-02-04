@@ -1,4 +1,4 @@
-{ config, pkgs, ... }: {
+{ pkgs, ... }: {
   home.packages = with pkgs; [
     # fontpreview-ueberzug # commandline fontpreview
     advancecomp # AdvanceCOMP PNG Compression Utility

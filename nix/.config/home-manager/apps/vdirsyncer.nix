@@ -1,4 +1,4 @@
-{ config, pkgs, ... }: {
+{ pkgs, ... }: {
     systemd.user.services.vdirsyncer = {
         Unit = { Description = "Vdirsyncer synchronization service"; };
         Service = {

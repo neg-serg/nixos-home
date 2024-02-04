@@ -1,4 +1,4 @@
-{ config, pkgs, ... }: {
+{ pkgs, ... }: {
   home.packages = with pkgs; [
       abuse # classic side-scrolling shooter customizable with LISP
       airshipper # for veloren voxel game

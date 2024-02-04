@@ -1,4 +1,4 @@
-{ config, pkgs, ... }: {
+{ pkgs, ... }: {
   home.packages = with pkgs; [
       amfora # terminal browser for gemini
       antiword # convert ms word to text or ps

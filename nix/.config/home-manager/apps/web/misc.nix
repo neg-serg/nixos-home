@@ -1,4 +1,4 @@
-{ config, pkgs, ... }: {
+{ pkgs, ... }: {
   home.packages = with pkgs; [
       aria2 # multi-protocol network downloader
       freetube # private youtube client

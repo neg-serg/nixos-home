@@ -1,4 +1,4 @@
-{ config, pkgs, negwmPkg, ... }: {
+{ pkgs, negwmPkg, ... }: {
   home.packages = with pkgs; [
       dunst # notification daemon
       flameshot # interactive screenshot tool
@@ -9,6 +9,6 @@
       maim # screenshot tool for x11
       picom # x11 compositing
       polybar # my favorite panel so far
-      negwmPkg.negwm
+      negwmPkg.negwm # my own i3 helper
     ];
 }

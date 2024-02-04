@@ -1,4 +1,4 @@
-{ config, pkgs, negwmPkg, ... }: {
+{ pkgs, ... }: {
     home.packages = with pkgs; [
         # fnott # wayland notifications
         # fuzzel # wayland launcher

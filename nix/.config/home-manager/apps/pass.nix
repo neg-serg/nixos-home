@@ -1,4 +1,4 @@
-{ config, pkgs, ... }: {
+{ pkgs, ... }: {
   home.packages = with pkgs; [
       # password manager via gpg
       (pass.withExtensions (ext: with ext; [

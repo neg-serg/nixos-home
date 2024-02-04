@@ -1,4 +1,4 @@
-{ config, pkgs, xdg, ... }: {
+{ pkgs, ... }: {
   home.packages = with pkgs; [
       manix
       neovim-remote # nvr for neovim
