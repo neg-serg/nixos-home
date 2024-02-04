@@ -3,6 +3,11 @@ _exists() { (( $+commands[$1] )) }
 alias qe='cd ^.git*(/om[1]D)'
 alias ls="${aliases[ls]:-ls} --time-style=+\"%d.%m.%Y %H:%M\" --color=auto --hyperlink=auto"
 alias l="${aliases[ls]:-ls}"
+_exists eza && {
+    alias ls="eza --icons=auto --hyperlink"
+    alias l="${aliases[ls]:-eza} -l"
+    alias L="eza --icons=auto --hyperlink --grid --long"
+}
 alias cp='cp --reflink=auto'
 alias ll='ls -lah'
 alias mv='mv -i'
