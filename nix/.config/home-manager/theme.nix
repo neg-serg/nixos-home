@@ -60,6 +60,7 @@ with rec {
             url = "https://i.imgur.com/t3bTk2b.jpg";
             sha256 = "sha256-WVDIxyy9ww39JNFkMOJA2N6KxLMh9cKjmeQwLY7kCjk=";
         };
+        targets.kitty.enable = false;
         base16Scheme = {
             base00 = "#020202"; # Background
             base01 = "#010912"; # Alternate background(for toolbars)
