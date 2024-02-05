@@ -6,7 +6,7 @@ alias l="${aliases[ls]:-ls}"
 _exists eza && {
     alias ls="eza --icons=auto --hyperlink"
     alias l="${aliases[ls]:-eza} -l"
-    alias L="eza --icons=auto --hyperlink --grid --long"
+    alias ll="${aliases[ls]:-eza} -l"
 }
 alias cp='cp --reflink=auto'
 alias ll='ls -lah'
