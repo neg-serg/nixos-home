@@ -56,7 +56,6 @@ with rec {
     ./apps/x11/apps.nix
     ./apps/x11/rofi.nix
     ./apps/x11/stuff.nix
-    ./apps/xdg.nix
     ./apps/yubikey.nix
 
     ./systemd/targets.nix

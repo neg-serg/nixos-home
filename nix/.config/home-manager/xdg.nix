@@ -1,20 +1,20 @@
-{ lib, config, pkgs, ... }:
+{ config, pkgs, ... }:
 with rec {
     defaultApplications = {
-        terminal = { cmd = "${pkgs.foot}/bin/kitty"; desktop = "kitty"; };
+        terminal = { cmd = "${pkgs.kitty}/bin/kitty"; desktop = "kitty"; };
         browser = { cmd = "${pkgs.floorp}/bin/floorp"; desktop = "floorp"; };
         editor = { cmd = "${pkgs.neovim}/bin/nvim"; desktop = "nvim"; };
     };
 
-    browser = ["${defaultApplications.browser.desktop}.desktop"];
-    pdfreader = ["org.pwmt.zathura.desktop.desktop"];
-    telegram = ["org.telegram.desktop.desktop"];
-    torrent = ["transmission.desktop"];
-    video = ["mpv.desktop"];
-    image = ["nsxiv.desktop"];
-    editor = ["${defaultApplications.editor.desktop}.desktop"];
+    browser = "${defaultApplications.browser.desktop}.desktop";
+    pdfreader = "org.pwmt.zathura.desktop";
+    telegram = "org.telegram.desktop.desktop";
+    torrent = "transmission.desktop";
+    video = "mpv.desktop";
+    image = "nsxiv.desktop";
+    editor = "${defaultApplications.editor.desktop}.desktop";
 
-    associations = {
+    my_associations = {
         "text/html*" = browser;
         "x-scheme-handler/http" = browser;
         "x-scheme-handler/https" = browser;
@@ -64,7 +64,29 @@ with rec {
         "text/x-c" = editor;
         "text/x-c++" = editor;
     };
+
+    associations_removed = {
+        "application/vnd.ms-htmlhelp" = "wine-extension-chm.desktop";
+        "image/gif" = ["wine-extension-gif.desktop"];
+        "application/winhlp" = "wine-extension-hlp.desktop";
+        "application/x-wine-extension-ini" = "wine-extension-ini.desktop";
+        "image/jpeg" = ["wine-extension-jfif.desktop" "wine-extension-jpe.desktop"];
+        "application/x-wine-extension-msp" = "wine-extension-msp.desktop";
+        "application/pdf" = ["wine-extension-pdf.desktop"];
+        "image/png" = ["wine-extension-png.desktop"];
+        "application/rtf" = "wine-extension-rtf.desktop";
+        "text/plain" = "wine-extension-txt.desktop";
+        "application/x-mswinurl" = "wine-extension-url.desktop";
+        "application/x-wine-extension-vbs" = "wine-extension-vbs.desktop";
+        "application/x-mswrite" = "wine-extension-wri.desktop";
+        "application/xml" = "wine-extension-xml.desktop";
+        "text/html" = ["wine-extension-htm.desktop"];
+    };
 };{
+    home.packages = with pkgs; [
+        handlr # xdg-open
+        xdg-ninja # autodetect stuff that should be moved from HOME dir
+    ];
     xdg = {
         enable = true;
         userDirs = {
@@ -89,8 +111,9 @@ with rec {
         mime.enable = true;
         mimeApps = {
             enable = true;
-            associations.added = associations;
-            defaultApplications = associations;
+            associations.added = my_associations;
+            associations.removed = associations_removed;
+            defaultApplications = my_associations;
         };
     };
 }
