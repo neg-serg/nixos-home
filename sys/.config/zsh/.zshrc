@@ -42,6 +42,10 @@ zinit load olets/zsh-abbr
 zinit load hlissner/zsh-autopair
 zinit load Tarrasch/zsh-functional
 zinit load chisui/zsh-nix-shell
+# zinit load junegunn/fzf shell
+# zinit load jeffreytse/zsh-vi-mode
+# zinit load zsh-users/zsh-autosuggestions
+# zinit load zsh-users/zsh-history-substring-search
 zinit ice wait'!0'
 zinit wait lucid for silent atinit"ZINIT[COMPINIT_OPTS]=-C; zpcompinit; zpcdreplay" \
     neg-serg/fast-syntax-highlighting blockf zsh-users/zsh-completions
