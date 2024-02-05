@@ -40,7 +40,6 @@
         "dunst" = { source = l "${dots}/negwm/.config/dunst"; recursive = true; };
         "executor" = { source = l "${dots}/negwm/.config/executor"; recursive = true; };
         "i3" = { source = l "${dots}/negwm/.config/i3"; recursive = true; };
-        "iosevka_profile" = { source = l "${dots}/negwm/.config/iosevka_profile"; recursive = true; };
         "keymaps" = { source = l "${dots}/negwm/.config/keymaps"; recursive = true; };
         "kitty" = { source = l "${dots}/negwm/.config/kitty"; recursive = true; };
         "negwm" = { source = l "${dots}/negwm/.config/negwm"; recursive = true; };
