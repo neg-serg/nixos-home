@@ -4,17 +4,10 @@ with rec {
         __GL_GSYNC_ALLOWED = "0"; # picom/compositing compatibility(for now)
         __GL_VRR_ALLOWED = "0"; # picom/compositing compatibility(for now)
         _JAVA_AWT_WM_NONEREPARENTING = "1";
-        MOZ_DBUS_REMOTE = "1";
-        MOZ_ENABLE_WAYLAND = "1";
-        WLR_BACKEND = "vulkan"; # nvidia compatibility
-        WLR_DRM_NO_ATOMIC = "1";
-        WLR_NO_HARDWARE_CURSORS = "1"; # nvidia compatibility
-        WLR_RENDERER = "vulkan"; # nvidia compatibility
     };
 };{
   nix.package = pkgs.nix;
   imports = [
-    ./pkgs.nix
     ./xdg.nix
     ./theme.nix
     ./sops.nix
@@ -22,42 +15,32 @@ with rec {
 
     ./apps/android.nix
     ./apps/archives.nix
-    ./apps/audio/apps.nix
-    ./apps/audio/core.nix
-    ./apps/audio/beets.nix
+    ./apps/audio
     ./apps/benchmarks.nix
     ./apps/btop.nix
     ./apps/cli.nix
     ./apps/dev.nix
     ./apps/distros.nix
     ./apps/fetch.nix
-    ./apps/fun/emulators.nix
-    ./apps/fun/games.nix
-    ./apps/fun/launchers.nix
-    ./apps/fun/misc.nix
+    ./apps/fun
     ./apps/gpg.nix
     ./apps/hack.nix
-    ./apps/hardware/info.nix
-    ./apps/hid.nix
+    ./apps/hardware
     ./apps/im.nix
-    ./apps/images.nix
+    ./apps/images
     ./apps/mail.nix
     ./apps/neovim.nix
     ./apps/pass.nix
-    ./apps/pics_and_fonts.nix
-    ./apps/terminal.nix
-    ./apps/text/manipulate.nix
-    ./apps/text/notes.nix
-    ./apps/text/read.nix
-    ./apps/torrent.nix
+    ./apps/fonts
+    ./apps/terminal
+    ./apps/text
+    ./apps/torrent
     ./apps/vulnerability_scanners.nix
-    ./apps/web/browsing.nix
-    ./apps/web/misc.nix
-    ./apps/x11/apps.nix
-    ./apps/x11/rofi.nix
-    ./apps/x11/stuff.nix
+    ./apps/web
+    ./apps/x11
     ./apps/yubikey.nix
-
+    ./misc_pkgs.nix
+    
     ./systemd/targets.nix
     ./systemd/services.nix
   ];

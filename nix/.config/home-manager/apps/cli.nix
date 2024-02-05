@@ -42,5 +42,5 @@
       urlscan # extract urls from text
       viddy # modern watch command
       zoxide # better fasd for some
-      ];
+  ];
 }
