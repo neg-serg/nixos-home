@@ -15,12 +15,11 @@
       enca # autoreencode
       entr # run commands when files change
       expect # do tty stuff noninteractively
-      fasd
+      fasd # my favorite mru autocompletion
       frawk # small text processing language
       fzf # famous fuzzy finder
       fzy # fuzzy finder that's faster/better than fzf
       grex # tool to generate regexes
-      stable.khal # better calendar
       lnav # logfile navigator
       massren # massive rename
       miller # awk/cut/join alternative
@@ -36,6 +35,7 @@
       sad # more simple sed alternative
       sd # bettter sed
       speedtest-cli # test network
+      stable.khal # better calendar
       stow # manage farms of symlinks
       topgrade # upgrade all the stuff for all distros
       ugrep # better grep, rg alternative
