@@ -62,7 +62,11 @@ with rec {
       platformTheme = "qtct";
   };
 
-  manual.manpages.enable = false;
+  manual = {
+      html.enable = false;
+      json.enable = false;
+      manpages.enable = false;
+  };
 
   programs = {
       home-manager.enable = true; # Let Home Manager install and manage itself.
