@@ -7,7 +7,7 @@ local -A abk=(
     'S'    '| sort -h '
     'T'    '| tail'
     'V'    '|& rg -iv '
-    'X'    '|& xargs'
+    'X'    '|& xargs '
     'Z'    '|& rg -iz '
 )
 local MATCH
