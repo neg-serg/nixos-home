@@ -9,13 +9,6 @@ local -A abk=(
     'V'    '|& rg -iv '
     'X'    '|& xargs'
     'Z'    '|& rg -iz '
-
-    "e1"   "!-2$"
-    "e2"   "!-3$"
-    "e3"   "!-4$"
-    "we"   "!-2$"
-    "wd"   "!-3$"
-    "wc"   "!-4$"
 )
 local MATCH
 matched_chars='[.-|_a-zA-Z0-9]#'
