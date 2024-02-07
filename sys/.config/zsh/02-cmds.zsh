@@ -128,6 +128,7 @@ _exists yt-dlp && {
 if _exists wget2; then
     alias wget="wget2 --hsts-file=$XDG_DATA_HOME/wget-hsts"
 fi
+alias xkcdpass="echo $(nix run nixpkgs#xkcdpass -- -d '-' -n 3 -C capitalize)$((RANDOM % 9))"
 local rlwrap_list=(bb fennel guile irb)
 local noglob_list=(fc find ftp history lftp links2 locate lynx nix rake rsync scp sftp you-get yt)
 for c in ${noglob_list[@]}; {_exists "$c" && alias "$c=noglob $c"}
