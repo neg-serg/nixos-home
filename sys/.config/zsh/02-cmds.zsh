@@ -128,13 +128,13 @@ _exists yt-dlp && {
     alias ytt='ytfzf --preview-side=left -t'
 }
 if _exists wget2; then
-    alias wget="noglob wget2 --hsts-file=$XDG_DATA_HOME/wget-hsts"
+    alias wget="wget2 --hsts-file=$XDG_DATA_HOME/wget-hsts"
 else
-    alias wget='noglob wget --continue --show-progress --progress=bar:force:noscroll'
+    alias wget='wget --continue --show-progress --progress=bar:force:noscroll'
 fi
 alias xkcdpass="echo $(nix run nixpkgs#xkcdpass -- -d '-' -n 3 -C capitalize)$((RANDOM % 9))"
 local rlwrap_list=(bb fennel guile irb)
-local noglob_list=(fc find ftp history lftp links2 locate lynx nix nixos-remote nixos-rebuild rake rsync scp sftp you-get yt)
+local noglob_list=(fc find ftp history lftp links2 locate lynx nix nixos-remote nixos-rebuild rake rsync scp sftp you-get yt wget wget2)
 for c in ${noglob_list[@]}; {_exists "$c" && alias "$c=noglob $c"}
 for c in ${rlwrap_list[@]}; {_exists "$c" && alias "$c=rlwrap $c"}
 for c in ${nocorrect_list[@]}; {_exists "$c" && alias "$c=nocorrect $c"}
