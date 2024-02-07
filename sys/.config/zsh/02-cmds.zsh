@@ -128,7 +128,9 @@ _exists yt-dlp && {
     alias ytt='ytfzf --preview-side=left -t'
 }
 if _exists wget2; then
-    alias wget="wget2 --hsts-file=$XDG_DATA_HOME/wget-hsts"
+    alias wget="noglob wget2 --hsts-file=$XDG_DATA_HOME/wget-hsts"
+else
+    alias wget='noglob wget --continue --show-progress --progress=bar:force:noscroll'
 fi
 alias xkcdpass="echo $(nix run nixpkgs#xkcdpass -- -d '-' -n 3 -C capitalize)$((RANDOM % 9))"
 local rlwrap_list=(bb fennel guile irb)
