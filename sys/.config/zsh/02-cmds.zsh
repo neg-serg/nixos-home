@@ -181,6 +181,16 @@ _exists xev && alias xev="xev | grep -A2 --line-buffered '^KeyRelease' | sed -n 
 hash -d nix-hm="/nix/var/nix/profiles/per-user/$USER/home-manager"
 hash -d nix-now="/run/current-system"
 hash -d nix-boot="/nix/var/nix/profiles/system"
+# thx to Mic92:
+flakify() {
+    if [ ! -e flake.nix ]; then
+        nix flake new -t github:Mic92/flake-templates#nix-develop .
+    elif [ ! -e .envrc ]; then
+        echo "use flake" > .envrc
+    fi
+    direnv allow
+    ${EDITOR:-vim} flake.nix
+}
 
 autoload zc
 unfunction _exists
