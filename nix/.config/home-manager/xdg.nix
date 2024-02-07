@@ -70,10 +70,8 @@ with rec {
         "image/gif" = ["wine-extension-gif.desktop"];
         "application/winhlp" = "wine-extension-hlp.desktop";
         "application/x-wine-extension-ini" = "wine-extension-ini.desktop";
-        "image/jpeg" = ["wine-extension-jfif.desktop" "wine-extension-jpe.desktop"];
         "application/x-wine-extension-msp" = "wine-extension-msp.desktop";
         "application/pdf" = ["wine-extension-pdf.desktop"];
-        "image/png" = ["wine-extension-png.desktop"];
         "application/rtf" = "wine-extension-rtf.desktop";
         "text/plain" = "wine-extension-txt.desktop";
         "application/x-mswinurl" = "wine-extension-url.desktop";
@@ -81,6 +79,8 @@ with rec {
         "application/x-mswrite" = "wine-extension-wri.desktop";
         "application/xml" = "wine-extension-xml.desktop";
         "text/html" = ["wine-extension-htm.desktop"];
+        "image/jpeg" = ["wine-extension-jfif.desktop" "wine-extension-jpe.desktop"];
+        "image/png" = ["wine-extension-png.desktop"];
     };
 };{
     home.packages = with pkgs; [
