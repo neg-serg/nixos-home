@@ -12,6 +12,7 @@
         executor.url = "github:neg-serg/executor";
         stylix.url = "github:danth/stylix";
         sops-nix.url = "github:Mic92/sops-nix";
+        nixos-generators = { url = "github:nix-community/nixos-generators"; inputs.nixpkgs.follows = "nixpkgs"; };
     };
 
     outputs = { nixpkgs
@@ -24,6 +25,7 @@
         , executor
         , stylix
         , sops-nix
+        , nixos-generators
         , ... } @inputs:
     with rec {
         system = "x86_64-linux";
