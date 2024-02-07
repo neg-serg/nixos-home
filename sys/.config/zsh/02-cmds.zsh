@@ -32,10 +32,6 @@ if _exists ugrep; then
 else
     alias grep='grep --color=auto'
 fi
-_exists pueue && {
-    alias p='pueue'
-    alias pa{d,}='pueue add -- '
-}
 _exists rg && {
     local rg_options=(
         --max-columns=0
@@ -65,11 +61,6 @@ _exists bat && alias cat='bat --paging=never'
 alias sort='sort --parallel 8 -S 16M'
 alias :q="exit"
 alias emptydir='ls -ld **/*(/^F)'
-_exists paru && {
-    alias yay='paru'
-    alias rmorphans='paru -Rs $(paru -Qqdt)'
-}
-_exists pacman && {alias fat="LC_ALL=C pacman -Qi | egrep '^(Name|Installed)' | cut -f2 -d':' | paste - - | column -t | sort -nk 2 | grep MiB"}
 _exists nh && {
     alias swh="nh home switch $(readlink -f $XDG_CONFIG_HOME/home-manager)"
     alias sws="nh os switch /etc/nixos"
@@ -136,10 +127,7 @@ _exists yt-dlp && {
 }
 if _exists wget2; then
     alias wget="wget2 --hsts-file=$XDG_DATA_HOME/wget-hsts"
-else
-    alias wget="wget --hsts-file=$XDG_DATA_HOME/wget-hsts"
 fi
-_exists imgur_screenshot && alias img='imgur-screenshot'
 local rlwrap_list=(bb fennel guile irb)
 local noglob_list=(fc find ftp history lftp links2 locate lynx nix rake rsync scp sftp you-get yt)
 for c in ${noglob_list[@]}; {_exists "$c" && alias "$c=noglob $c"}
