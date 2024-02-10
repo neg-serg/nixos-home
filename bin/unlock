@@ -1,12 +1,13 @@
 #!/bin/sh
 source /etc/profile
-pp="$(pass show ssh-key)"
+pp1="$(pass show ssh-key)"
+pp2="$(pass show sk)"
 expect << EOF
-    spawn ssh-add $HOME/.ssh/id_neg_ecdsa
+    spawn ssh-add $HOME/.ssh/id_neg
     expect "Enter passphrase"
-    send "$pp\r"
-    spawn ssh-add $HOME/.ssh/id_neg_ed25519
+    send "$pp1\r"
+    spawn ssh-add $HOME/.ssh/neg_ed25519_sk
     expect "Enter passphrase"
-    send "$pp\r"
+    send "$pp2\r"
     expect eof
 EOF
