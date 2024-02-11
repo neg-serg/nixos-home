@@ -102,7 +102,7 @@ _exists objdump && alias objdump='objdump -M intel -d'
 _exists gdb && alias gdb="gdb -nh -x ${XDG_CONFIG_HOME}/gdb/gdbinit"
 _exists nvim && alias nvim='v'
 _exists iostat && alias iostat='--compact -p -h -s'
-_exists patool && { alias se='patool extract'; alias pk='patool create'; }
+_exists patool && {alias se='patool extract'; alias pk='patool create';}
 _exists xz && alias xz='xz --threads=0'
 _exists pigz && alias gzip='pigz'
 _exists pbzip2 && alias bzip2='pbzip2'
@@ -113,7 +113,7 @@ _exists mpv && {
     alias mpi="${aliases[mpv]:-mpv} --interpolation=yes --tscale='oversample' \
         --video-sync='display-resample' "$@" > ${HOME}/tmp/mpv.log"
 }
-_exists mpvc && { alias mpvc="mpvc -S ${XDG_CONFIG_HOME}/mpv/socket" }
+_exists mpvc && {alias mpvc="mpvc -S ${XDG_CONFIG_HOME}/mpv/socket"}
 _exists mpc && {
     alias love='mpc sendmessage mpdas love'
     alias unlove='mpc sendmessage mpdas unlove'
