@@ -1,5 +1,7 @@
 { config, pkgs, negwmPkg, executorPkg, ... }:
-{
+with rec {
+    systemctl = "${pkgs.systemd}/bin/systemctl";
+};{
     systemd.user.services.polkit-gnome-authentication-agent-1 = {
         Unit = {
             Description = "polkit-gnome-authentication-agent-1";
@@ -45,8 +47,8 @@
             ExecReload = [
                 "${pkgs.util-linux}/bin/kill -HUP $MAINPID"
                 "${pkgs.i3}/bin/i3-msg reload"
-                "${pkgs.systemd}/bin/systemctl --user try-restart polybar.service"
-                "${pkgs.systemd}/bin/systemctl --user try-reload-or-restart picom.service"
+                "${systemctl} --user try-restart polybar.service"
+                "${systemctl} --user try-reload-or-restart picom.service"
             ];
         };
         Install = { WantedBy = ["default.target"]; };
@@ -266,7 +268,7 @@
         };
         Service = {
             Type = "oneshot";
-            ExecStart = "${pkgs.systemd}/bin/systemctl --user restart polybar.service";
+            ExecStart = "${systemctl} --user restart polybar.service";
         };
         Install = { WantedBy = ["graphical-session.target"]; };
     };
@@ -357,8 +359,8 @@
         Service = {
             Type = "oneshot";
             ExecStart = "/bin/sh -lc ${pkgs.i3}/bin/i3";
-            ExecReload = ["${pkgs.i3}/i3-msg reload" "${pkgs.systemd}/bin/systemctl --user restart negwm.service"];
-            ExecStopPost = "${pkgs.systemd}/bin/systemctl --user stop --no-block graphical-session.target";
+            ExecReload = ["${pkgs.i3}/i3-msg reload" "${systemctl} --user restart negwm.service"];
+            ExecStopPost = "${systemctl} --user stop --no-block graphical-session.target";
         };
     };
     
