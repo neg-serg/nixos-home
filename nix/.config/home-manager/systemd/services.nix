@@ -71,7 +71,7 @@ with rec {
             Description = "Session locker";
         };
         Service = {
-            ExecStart = "${pkgs.xss-lock}/bin/xss-lock --transfer-sleep-lock -- /home/neg/bin/x11lock";
+            ExecStart = "${pkgs.xss-lock}/bin/xss-lock --transfer-sleep-lock -- %h/bin/x11lock";
             Restart = "on-failure";
         };
     };
