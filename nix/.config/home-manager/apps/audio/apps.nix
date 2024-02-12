@@ -3,6 +3,7 @@
       ape # monkey audio codec
       audiowaveform # shows soundwaveform
       cdparanoia # cdrip / cdrecord
+      cider # apple music player
       easytag # use this for tags
       id3v2 # id3v2 edit
       jamesdsp # pipewire dsp
