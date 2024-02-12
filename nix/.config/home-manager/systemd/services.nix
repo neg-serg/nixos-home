@@ -309,6 +309,21 @@ with rec {
         Install = { WantedBy = ["default.target"]; };
     };
 
+    systemd.user.services.pass-secret-service = {
+        Unit = {
+            Description = "pass secret service";
+            After = ["sockets.target"];
+        };
+        Service = {
+            ExecStart = "${pkgs.pass-secret-service}/bin/pass_secret_service --path %h/.local/share/pass";
+            PassEnvironment = ["HOME"];
+            Restart = "on-failure";
+            RestartSec = "1";
+            StartLimitBurst = "0";
+        };
+        Install = { WantedBy = ["default.target"]; };
+    };
+
     systemd.user.services.pic-dirs = {
         Unit = {
             Description = "Pic dirs notification";
