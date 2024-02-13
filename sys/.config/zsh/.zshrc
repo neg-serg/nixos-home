@@ -29,7 +29,6 @@ if [[ ! -f /etc/NIXOS ]]; then
    )
 else
     fpath+=( 
-        ${HOME}/.zinit/completions
         ${ZDOTDIR}/lazyfuncs
         ${XDG_CONFIG_HOME}/zsh-nix
     )
@@ -38,7 +37,6 @@ fi
 zinit atload"!source ${ZDOTDIR}/.p10k.zsh" lucid nocd for romkatv/powerlevel10k # best prompt
 zinit load romkatv/zsh-defer
 zinit load QuarticCat/zsh-smartcache
-zinit load olets/zsh-abbr
 zinit load hlissner/zsh-autopair
 zinit load Tarrasch/zsh-functional
 zinit load chisui/zsh-nix-shell
