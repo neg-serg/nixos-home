@@ -293,21 +293,21 @@ with rec {
         Install = { WantedBy = ["default.target"]; };
     };
 
-    # systemd.user.services.shot-optimizer = {
-    #     Unit = {
-    #         Description = "Optimize screenshots";
-    #         After = ["sockets.target"];
-    #     };
-    #     Service = {
-    #         ExecStart = "%h/bin/shot-optimizer";
-    #         WorkingDirectory = "%h/pic/shots";
-    #         PassEnvironment = "HOME";
-    #         Restart = "on-failure";
-    #         RestartSec = "1";
-    #         StartLimitBurst = "0";
-    #     };
-    #     Install = { WantedBy = ["default.target"]; };
-    # };
+    systemd.user.services.shot-optimizer = {
+        Unit = {
+            Description = "Optimize screenshots";
+            After = ["sockets.target"];
+        };
+        Service = {
+            ExecStart = "%h/bin/shot-optimizer";
+            WorkingDirectory = "%h/pic/shots";
+            PassEnvironment = "HOME";
+            Restart = "on-failure";
+            RestartSec = "1";
+            StartLimitBurst = "0";
+        };
+        Install = { WantedBy = ["default.target"]; };
+    };
 
     systemd.user.services.pass-secret-service = {
         Unit = {
