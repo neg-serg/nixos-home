@@ -13,7 +13,6 @@
   };
   home.packages = with pkgs; [
     # imwheel # for mouse wheel scrolling
-    (python3-lto.withPackages (ps: with ps; [ docopt i3ipc psutil colored ]))
     blesh # bluetooth shell
     ccrypt # Secure encryption and decryption of files and streams
     dconf # gnome registry
@@ -27,6 +26,7 @@
     pass-secret-service # gnome-keyring alternative via paste
     pinentry # for gpg/gnupg password entry GUI. why does it not install this itself? ah, found out... https://github.com/NixOS/nixpkgs/commit/3d832dee59ed0338db4afb83b4c481a062163771
     pwgen # generate passwords
+    (python3-lto.withPackages (ps: with ps; [ docopt i3ipc psutil colored ]))
     sysz # An fzf-based terminal UI for systemctl
   ];
 }
