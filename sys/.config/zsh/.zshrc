@@ -19,11 +19,10 @@ autoload -Uz _zinit
 ### End of Zinit's installer chunk
 
 typeset -gx P9K_SSH=0
-if ! grep NAME=NixOS /etc/os-release > /dev/null; then
+if [[ ! -f /etc/NIXOS ]]; then
    fpath=(
-       ${HOME}/.zinit/completions
        ${ZDOTDIR}/lazyfuncs
-       ${XDG_CONFIG_HOME}/.config/zsh-nix
+       ${XDG_CONFIG_HOME}/zsh-nix
        /usr/share/zsh/site-functions
        /usr/share/zsh/functions/{Misc,Zle,Completion}
        /usr/share/zsh/functions/Completion/*
@@ -32,6 +31,7 @@ else
     fpath+=( 
         ${HOME}/.zinit/completions
         ${ZDOTDIR}/lazyfuncs
+        ${XDG_CONFIG_HOME}/zsh-nix
     )
 fi
 
