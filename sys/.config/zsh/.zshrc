@@ -40,7 +40,6 @@ zinit load QuarticCat/zsh-smartcache
 zinit load hlissner/zsh-autopair
 zinit load Tarrasch/zsh-functional
 zinit load chisui/zsh-nix-shell
-zinit load jeffreytse/zsh-vi-mode
 zinit ice wait'!0'
 zinit wait lucid for silent atinit"ZINIT[COMPINIT_OPTS]=-C; zpcompinit; zpcdreplay" \
     neg-serg/fast-syntax-highlighting blockf zsh-users/zsh-completions
