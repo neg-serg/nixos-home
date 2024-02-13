@@ -3,6 +3,7 @@
       aria2 # multi-protocol network downloader
       freetube # private youtube client
       gallery-dl # download image galleries/collections
+      magic-wormhole # tool for local file sharing
       megacmd # cli for MEGA
       monolith # download all webpage stuff as one file
       pipe-viewer # lightweight youtube client
