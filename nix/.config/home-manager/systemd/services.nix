@@ -170,7 +170,7 @@ with rec {
     systemd.user.services.mpDris = {
         Unit = {
             Description = "mpDris2 - Music Player Daemon D-Bus bridge";
-            After = ["network.target" "sound.target" "mpd.service"];
+            After = ["playerctld.service" "network.target" "sound.target" "mpd.service"];
             PartOf = ["mpd.socket" "mpd.service"];
         };
         Service = {
