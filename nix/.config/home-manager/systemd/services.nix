@@ -51,7 +51,7 @@ with rec {
                 "${systemctl} --user try-reload-or-restart picom.service"
             ];
         };
-        Install = { WantedBy = ["default.target"]; };
+        Install = { WantedBy = ["graphical-session.target"]; };
     };
 
     systemd.user.services.xiccd = {
@@ -63,7 +63,7 @@ with rec {
             ExecStart = "${pkgs.xiccd}/bin/xiccd --edid";
             Restart = "on-failure";
         };
-        Install = { WantedBy = ["default.target"]; };
+        Install = { WantedBy = ["graphical-session.target"]; };
     };
 
     systemd.user.services.xss-lock = {
@@ -153,7 +153,7 @@ with rec {
             RestartSec = "1";
             StartLimitBurst = "3000";
         };
-        Install = { WantedBy = ["default.target"]; };
+        Install = { WantedBy = ["graphical-session.target"]; };
     };
 
     systemd.user.services.inputplug = {
@@ -240,7 +240,7 @@ with rec {
             StartLimitBurst = "8";
         };
 
-        Install = { WantedBy = ["default.target"]; };
+        Install = { WantedBy = ["graphical-session.target"]; };
     };
 
     systemd.user.services.polybar = {
@@ -258,7 +258,7 @@ with rec {
             RestartSec = "3";
             StartLimitBurst = "30";
         };
-        Install = { WantedBy = ["default.target"]; };
+        Install = { WantedBy = ["graphical-session.target"]; };
     };
 
     systemd.user.services.polybar-watcher = {
@@ -363,7 +363,7 @@ with rec {
             Restart = "on-failure";
             RestartSec = "3";
         };
-        Install = { WantedBy = ["default.target"]; };
+        Install = { WantedBy = ["graphical-session.target"]; };
     };
 
     systemd.user.services.i3 = {
