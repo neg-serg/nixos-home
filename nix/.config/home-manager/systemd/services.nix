@@ -339,19 +339,6 @@ with rec {
         Install = { WantedBy = ["default.target"]; };
     };
 
-    systemd.user.services.tmux-term = {
-        Unit = {
-            Description = "Start tmux in detached session";
-            After = ["sockets.target"];
-        };
-        Service = {
-            ExecStart="${pkgs.tmux}/bin/tmux -S %h/.cache/negwm/tmux_sockets/term.socket new-session -s term -d";
-            ExecStop="${pkgs.tmux}/bin/tmux -S %h/.cache/negwm/tmux_sockets/term.socket kill-session -t term";
-            RemainAfterExit = "yes";
-        };
-        Install = { WantedBy = ["default.target"]; };
-    };
-
     systemd.user.services.unclutter = {
         Unit = {
             Description = "Unclutter to hide cursor";
