@@ -34,26 +34,6 @@ with rec {
         };
     };
 
-    # systemd.user.services.xsettingsd = {
-    #     Unit = {
-    #         Description = "XSETTINGS daemon";
-    #         PartOf = ["graphical-session.target"];
-    #         StartLimitIntervalSec = "0";
-    #     };
-    #     Service = {
-    #         Restart = "on-failure";
-    #         ExecStartPre = "-${pkgs.util-linux}/bin/mkdir %E/xsettingsd";
-    #         ExecStart = "%h/bin/xsettingsd-setup";
-    #         ExecReload = [
-    #             "${pkgs.util-linux}/bin/kill -HUP $MAINPID"
-    #             "${pkgs.i3}/bin/i3-msg reload"
-    #             "${systemctl} --user try-restart polybar.service"
-    #             "${systemctl} --user try-reload-or-restart picom.service"
-    #         ];
-    #     };
-    #     Install = { WantedBy = ["graphical-session.target"]; };
-    # };
-
     systemd.user.services.xiccd = {
         Unit = {
             Description = "X color management";
@@ -181,41 +161,6 @@ with rec {
 
         Install = { WantedBy = ["graphical-session.target"]; };
     };
-
-    # systemd.user.services.polybar = {
-    #     Unit = {
-    #         Description = "Polybar statusbar";
-    #         PartOf = ["graphical-session.target"];
-    #         StartLimitIntervalSec = "60";
-    #         Requires = "xsettingsd.service";
-    #     };
-    #     Service = {
-    #         ExecStart = "${pkgs.dash}/bin/dash -lc ${pkgs.polybar}/bin/polybar -q main";
-    #         ExecStop = "${pkgs.polybar}/bin/polybar-msg cmd quit";
-    #         Restart = "on-failure";
-    #         RestartSec = "3";
-    #         StartLimitBurst = "30";
-    #     };
-    #     Install = { WantedBy = ["graphical-session.target"]; };
-    # };
-    #
-    # systemd.user.services.polybar-watcher = {
-    #     Unit = {
-    #         Description = "Polybar autorestart service";
-    #         After = ["network.target"];
-    #     };
-    #     Service = {
-    #         Type = "oneshot";
-    #         ExecStart = "${systemctl} --user restart polybar.service";
-    #     };
-    #     Install = { WantedBy = ["graphical-session.target"]; };
-    # };
-    #
-    # systemd.user.paths.polybar-watcher = {
-    #     Unit = { Description = "Enable polybar on change"; };
-    #     Path = { PathChanged = "%E/polybar/config.ini"; };
-    #     Install = { WantedBy = ["graphical-session.target"]; };
-    # };
 
     systemd.user.services.shot-optimizer = {
         Unit = {
