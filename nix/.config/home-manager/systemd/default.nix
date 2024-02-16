@@ -1,6 +1,7 @@
 { lib, config, pkgs, ... }: {
   imports = [
-      ./targets.nix
       ./services.nix
+      ./targets.nix
+      ./x11.nix
   ];
 }
