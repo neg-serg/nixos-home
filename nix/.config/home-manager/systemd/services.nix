@@ -38,10 +38,16 @@ with rec {
         Unit = {
             Description = "XSETTINGS daemon";
             PartOf = ["graphical-session.target"];
+            BindsTo = ["graphical-session.target"];
+            Wants = ["graphical-session-pre.target"];
+            After = ["graphical-session-pre.target"];
             StartLimitIntervalSec = "0";
         };
         Service = {
+            Type = "simple";
             Restart = "on-failure";
+            RestartSec = "5";
+            TimeoutStopSec = "10";
             ExecStartPre = "-${pkgs.util-linux}/bin/mkdir %E/xsettingsd";
             ExecStart = "%h/bin/xsettingsd-setup";
             ExecReload = [
@@ -357,6 +363,7 @@ with rec {
         Unit = {
             Description = "i3 improved dynamic tiling window manager for X";
             Documentation = "man:i3(5)";
+            PartOf = ["graphical-session.target"];
         };
         Service = {
             Type = "oneshot";
