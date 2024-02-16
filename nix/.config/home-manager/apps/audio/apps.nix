@@ -32,6 +32,22 @@
       streamlink  # CLI for extracting streams from websites
       termplay # play video in terminal
   ];
+
+    systemd.user.services.playerctld = {
+        Unit = {
+            Description = "Keep track of media player activity";
+            After = ["network.target" "sound.target"];
+        };
+
+        Service = {
+            Type = "forking";
+            ExecStart = "${pkgs.playerctl}/bin/playerctld daemon";
+            RestartSec = "3";
+            StartLimitBurst = "0";
+        };
+        Install = { WantedBy = ["default.target"]; };
+    };
+
     systemd.user.services.mpdas = {
         Unit = {
             Description = "mpdas last.fm scrobbler";

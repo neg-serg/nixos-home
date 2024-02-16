@@ -164,21 +164,6 @@ with rec {
         Install = { WantedBy = ["default.target"]; };
     };
 
-    systemd.user.services.playerctld = {
-        Unit = {
-            Description = "Keep track of media player activity";
-            After = ["network.target" "sound.target"];
-        };
-
-        Service = {
-            Type = "forking";
-            ExecStart = "${pkgs.playerctl}/bin/playerctld daemon";
-            RestartSec = "3";
-            StartLimitBurst = "0";
-        };
-        Install = { WantedBy = ["default.target"]; };
-    };
-
     systemd.user.services.warpd = {
         Unit = {
             Description = "Modal keyboard driven interface for mouse manipulation";
