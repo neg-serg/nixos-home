@@ -84,7 +84,7 @@
                 if [[ ! $(find /tmp/.X11-unix | wc -l) -ge 1 ]]; then
                     inotifywait -q -m -e CREATE /tmp/.X11-unix/
                 fi
-                kitty
+                systemctl --user start --wait i3
                 '';
         };
         "${config.xdg.configHome}/zsh-nix/ylock".text = ''
