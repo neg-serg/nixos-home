@@ -2,14 +2,12 @@
 with rec {
     systemctl = "${pkgs.systemd}/bin/systemctl";
 };{
-
     systemd.user.services.executor = {
         Unit = {
             Description = "Terminal manager";
             PartOf = ["graphical-session.target"];
             StartLimitBurst = "5";
             StartLimitIntervalSec = "1";
-            # Requires = ["xsettingsd.service"];
         };
         Service = {
             Environment = "PATH=/home/neg/bin:/bin:/home/neg/.local/bin:/run/wrappers/bin:/home/neg/.local/bin:/home/neg/.nix-profile/bin:/home/neg/.local/state/nix/profile/bin:/etc/profiles/per-user/neg/bin:/nix/var/nix/profiles/default/bin:/run/current-system/sw/bin";
@@ -24,7 +22,6 @@ with rec {
             PartOf = ["graphical-session.target"];
             StartLimitBurst = "5";
             StartLimitIntervalSec = "0";
-            # Requires = ["xsettingsd.service"];
         };
         Service = {
             Environment = "PATH=/home/neg/bin:/bin:/home/neg/.local/bin:/run/wrappers/bin:/home/neg/.local/bin:/home/neg/.nix-profile/bin:/home/neg/.local/state/nix/profile/bin:/etc/profiles/per-user/neg/bin:/nix/var/nix/profiles/default/bin:/run/current-system/sw/bin";
@@ -136,4 +133,5 @@ with rec {
             NotifyAccess="all";
         };
     };
+
 }
