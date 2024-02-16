@@ -91,21 +91,19 @@ with rec {
         };
     };
 
-    systemd.user.services.transmission-daemon = {
+    systemd.user.services.negwm = {
         Unit = {
-            Description = "transmission service";
-            After = ["network.target"];
-            ConditionPathExists = "${pkgs.transmission}/bin/transmission-daemon";
+            Description = "negwm window manager mod for i3wm";
+            PartOf = ["graphical-session.target"];
+            StartLimitBurst = "5";
+            StartLimitIntervalSec = "0";
+            Requires = ["xsettingsd.service"];
         };
         Service = {
-            Type = "notify";
-            ExecStart = "${pkgs.transmission}/bin/transmission-daemon -g %E/transmission-daemon -f --log-error";
+            Environment = "PATH=/home/neg/bin:/bin:/home/neg/.local/bin:/run/wrappers/bin:/home/neg/.local/bin:/home/neg/.nix-profile/bin:/home/neg/.local/state/nix/profile/bin:/etc/profiles/per-user/neg/bin:/nix/var/nix/profiles/default/bin:/run/current-system/sw/bin";
+            ExecStart = "${negwmPkg.negwm}/bin/negwm";
             Restart = "on-failure";
-            RestartSec = "30";
-            StartLimitBurst = "8";
-            ExecReload = "${pkgs.util-linux}/bin/kill -s HUP $MAINPID";
         };
-        Install = { WantedBy = ["default.target"]; };
     };
 
     systemd.user.services.negwm-autostart = {
@@ -120,21 +118,6 @@ with rec {
             Restart = "on-failure";
             RestartSec = "1";
             StartLimitBurst = "20";
-        };
-    };
-
-    systemd.user.services.negwm = {
-        Unit = {
-            Description = "negwm window manager mod for i3wm";
-            PartOf = ["graphical-session.target"];
-            StartLimitBurst = "5";
-            StartLimitIntervalSec = "0";
-            Requires = ["xsettingsd.service"];
-        };
-        Service = {
-            Environment = "PATH=/home/neg/bin:/bin:/home/neg/.local/bin:/run/wrappers/bin:/home/neg/.local/bin:/home/neg/.nix-profile/bin:/home/neg/.local/state/nix/profile/bin:/etc/profiles/per-user/neg/bin:/nix/var/nix/profiles/default/bin:/run/current-system/sw/bin";
-            ExecStart = "${negwmPkg.negwm}/bin/negwm";
-            Restart = "on-failure";
         };
     };
 
