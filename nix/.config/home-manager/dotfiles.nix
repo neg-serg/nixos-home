@@ -81,10 +81,7 @@
         ".xsession" = {
             executable = true;
             text = ''
-                #dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK
-                #dbus-daemon --session --address="unix:path=$XDG_RUNTIME_DIR/bus" &
-                #exec ${pkgs.systemd}/bin/systemctl --user start --wait i3
-                exec ${pkgs.kitty}/bin/kitty
+                exec ${pkgs.systemd}/bin/systemctl --user start --wait i3
                 '';
         };
         "${config.xdg.configHome}/zsh-nix/ylock".text = ''
