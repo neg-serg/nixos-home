@@ -81,7 +81,10 @@
         ".xsession" = {
             executable = true;
             text = ''
-                exec ${pkgs.systemd}/bin/systemctl --user start --wait i3
+                if [[ ! $(find /tmp/.X11-unix | wc -l) -ge 1 ]]; then
+                    inotifywait -q -m -e CREATE /tmp/.X11-unix/
+                fi
+                kitty
                 '';
         };
         "${config.xdg.configHome}/zsh-nix/ylock".text = ''
