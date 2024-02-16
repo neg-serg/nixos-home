@@ -45,17 +45,6 @@ with rec {
         };
     };
 
-    systemd.user.services.inputplug = {
-        Unit = {
-            Description = "XInput event monitor";
-            PartOf = ["graphical-session.target"];
-        };
-        Service = {
-            ExecStart = "${pkgs.inputplug}/bin/inputplug -d -0 -c %h/bin/input-event";
-            Restart = "on-failure";
-        };
-    };
-
     systemd.user.services.openrgb = {
         Unit = {
             Description = "OpenRGB Configuration utility for RGB lights supporting motherboards, RAM, & peripherals";
