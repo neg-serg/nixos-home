@@ -15,7 +15,6 @@ optimizeWithTtx = false
     inherits = "dlig"
     brace-bar = false
     brack-bar = false
-    connected-tilde-as-wave = false
     connected-hyphen-as-solid-line = false
     connected-hyphen-as-semi-dashed-line = false
 [buildPlans.iosevka-neg.variants.design]
