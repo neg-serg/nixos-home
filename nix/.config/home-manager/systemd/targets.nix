@@ -13,12 +13,8 @@
           BindsTo = ["i3.service"];
           Wants = [
               "executor.service"
-              "misc-x.service"
               "negwm-autostart.service"
               "negwm.service"
-              "polybar.service"
-              "unclutter.service"
-              "ssh-agent.service"
           ];
       };
   };

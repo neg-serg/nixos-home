@@ -22,6 +22,7 @@ with rec {
         Unit = {
             Description = "Miscellaneous settings for X11";
             PartOf = ["graphical-session.target"];
+            BindsTo = ["graphical-session.target"];
         };
         Service = {
             ExecStart = [
@@ -32,12 +33,14 @@ with rec {
             Type = "oneshot";
             RemainAfterExit = "false";
         };
+        Install = { WantedBy = ["graphical-session.target"]; };
     };
 
     systemd.user.services.xiccd = {
         Unit = {
             Description = "X color management";
             PartOf = "graphical-session.target";
+            BindsTo = ["graphical-session.target"];
         };
         Service = {
             ExecStart = "${pkgs.xiccd}/bin/xiccd --edid";
@@ -213,12 +216,15 @@ with rec {
             Description = "Unclutter to hide cursor";
             PartOf = ["graphical-session.target"];
             StartLimitIntervalSec = "60";
+            BindsTo = ["graphical-session.target"];
         };
+
         Service = {
             ExecStart = "${pkgs.unclutter-xfixes}/bin/unclutter --timeout 3 --jitter 50 --ignore-scrolling --start-hidden";
             Restart = "on-failure";
             RestartSec = "3";
         };
+
         Install = { WantedBy = ["graphical-session.target"]; };
     };
 
