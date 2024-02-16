@@ -357,12 +357,17 @@ with rec {
         Unit = {
             Description = "i3 improved dynamic tiling window manager for X";
             Documentation = "man:i3(5)";
+            BindsTo = ["graphical-session.target"];
+            Wants = ["graphical-session-pre.target"];
+            After = ["graphical-session-pre.target"];
         };
         Service = {
-            Type = "oneshot";
+            Type = "notify";
             ExecStart = "/bin/sh -lc ${pkgs.i3}/bin/i3";
             ExecReload = ["${pkgs.i3}/i3-msg reload" "${systemctl} --user restart negwm.service"];
             ExecStopPost = "${systemctl} --user stop --no-block graphical-session.target";
+            Restart = "on-failure";
+            NotifyAccess="all";
         };
     };
     

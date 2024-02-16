@@ -81,8 +81,7 @@
         ".xsession" = {
             executable = true;
             text = ''
-                ${pkgs.systemd}/bin/systemctl --user start --wait i3-session.target
-                /run/current-system/sw/bin/waitpid $(pgrep i3)
+                exec ${pkgs.systemd}/bin/systemctl --user start --wait i3
                 '';
         };
         "${config.xdg.configHome}/zsh-nix/ylock".text = ''
