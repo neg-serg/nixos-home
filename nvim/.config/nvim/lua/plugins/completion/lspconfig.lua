@@ -23,6 +23,7 @@ return {'neovim/nvim-lspconfig', -- lsp config
             'clangd',
             'dockerls',
             'jsonls',
+            'nil_ls',
             'pyright',
             'rust_analyzer',
             'salt_ls',
