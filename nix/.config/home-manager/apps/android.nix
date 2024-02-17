@@ -1,4 +1,4 @@
-{ config, pkgs, ... }: {
+{ pkgs, ... }: {
   nixpkgs.config.allowUnfree = true;
   home.packages = with pkgs; [
       android-tools # android debug stuff

@@ -1,5 +1,5 @@
-{ config, pkgs, negwmPkg, executorPkg, ... }:
-with rec {
+{ pkgs, negwmPkg, executorPkg, ... }:
+with {
     systemctl = "${pkgs.systemd}/bin/systemctl";
 };{
     systemd.user.services = {

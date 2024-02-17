@@ -1,5 +1,5 @@
-{ lib, config, pkgs, ... }:
-with rec {
+{ config, pkgs, ... }:
+with {
     alkano-aio = pkgs.callPackage ./theme/alkano-aio.nix {};
 }; {
     gtk = {

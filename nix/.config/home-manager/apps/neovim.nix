@@ -1,4 +1,4 @@
-{ pkgs, config, stable, ... }: with rec {
+{ pkgs, config, stable, ... }: with {
     l = config.lib.file.mkOutOfStoreSymlink;
     dots = "${config.home.homeDirectory}/.dotfiles";
 } ;{

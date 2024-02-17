@@ -1,4 +1,4 @@
-{ lib, config, pkgs, ... }: {
+{
   imports = [
       ./misc.nix
       ./games.nix

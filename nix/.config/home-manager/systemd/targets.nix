@@ -1,4 +1,3 @@
-{ config, pkgs, ... }:
 {
   systemd.user.targets.tray = {
       Unit = {
