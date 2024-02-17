@@ -20,6 +20,7 @@
       fzf # famous fuzzy finder
       fzy # fuzzy finder that's faster/better than fzf
       grex # tool to generate regexes
+      has # better which (availability and version of executables)
       lnav # logfile navigator
       massren # massive rename
       miller # awk/cut/join alternative
