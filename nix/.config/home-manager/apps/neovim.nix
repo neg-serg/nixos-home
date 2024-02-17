@@ -1,7 +1,7 @@
 { pkgs, config, stable, ... }: with {
     l = config.lib.file.mkOutOfStoreSymlink;
     dots = "${config.home.homeDirectory}/.dotfiles";
-} ;{
+};{
     home.packages = with pkgs; [
         cargo
         manix
@@ -11,9 +11,9 @@
         rust-analyzer
         stable.nil # nixos language server
     ];
-    programs.neovim.plugins = with pkgs; [ 
-        vimPlugins.nvim-treesitter.withAllGrammars 
-        vimPlugins.clangd_extensions-nvim
+    programs.neovim.plugins = with pkgs.vimPlugins; [
+        clangd_extensions-nvim
+        nvim-treesitter.withAllGrammars
     ];
     xdg.configFile = {
         # █▓▒░ nvim ─────────────────────────────────────────────────────────────────────────
