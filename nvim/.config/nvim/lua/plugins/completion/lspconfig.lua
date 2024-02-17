@@ -1,8 +1,8 @@
 -- ┌───────────────────────────────────────────────────────────────────────────────────┐
 -- │ █▓▒░ neovim/nvim-lspconfig                                                        │
 -- └───────────────────────────────────────────────────────────────────────────────────┘
-return {'neovim/nvim-lspconfig', -- lsp config
-    config=function()
+return {'neovim/nvim-lspconfig',
+    config = function()
         vim.diagnostic.config({
             virtual_text=true,
             signs=true,
@@ -15,22 +15,11 @@ return {'neovim/nvim-lspconfig', -- lsp config
             local hl="DiagnosticSign" .. type
             vim.fn.sign_define(hl, {text=icon, texthl=hl, numhl=hl})
         end
-        local mason=require'mason'
-        local mason_lspconfig=require'mason-lspconfig'
-        mason.setup()
-        mason_lspconfig.setup({ensure_installed={
-            'bashls',
-            'clangd',
-            'dockerls',
-            'jsonls',
-            'nil_ls',
-            'pyright',
-            'rust_analyzer',
-            'salt_ls',
-        }})
+
+        local lspconfig = require('lspconfig')
+        lspconfig.bashls.setup{}
+        lspconfig.clangd.setup{}
+        lspconfig.nil_ls.setup{}
+        lspconfig.pyright.setup{}
     end,
-    dependencies={
-        'williamboman/mason.nvim',
-        'williamboman/mason-lspconfig.nvim'
-    }, event={'InsertEnter'}
 }

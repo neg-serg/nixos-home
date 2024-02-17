@@ -6,11 +6,14 @@
         cargo
         manix
         neovim-remote # nvr for neovim
-        nodejs_21 # dependency for some lsp stuff
+        nodePackages.bash-language-server
+        nodePackages.pyright
+        rust-analyzer
         stable.nil # nixos language server
     ];
     programs.neovim.plugins = with pkgs; [ 
         vimPlugins.nvim-treesitter.withAllGrammars 
+        vimPlugins.clangd_extensions-nvim
     ];
     xdg.configFile = {
         # █▓▒░ nvim ─────────────────────────────────────────────────────────────────────────
