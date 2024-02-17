@@ -118,10 +118,9 @@ with rec {
             Service = {
                 Type = "notify";
                 ExecStart = "/bin/sh -lc ${pkgs.i3}/bin/i3";
-                ExecReload = ["${pkgs.i3}/i3-msg reload" "${systemctl} --user restart negwm.service"];
+                ExecReload = ["${pkgs.i3}/bin/i3-msg reload" "${systemctl} --user restart negwm.service"];
                 ExecStopPost = "${systemctl} --user stop --no-block graphical-session.target";
                 NotifyAccess = "all";
-                RemainAfterExit = "yes";
             };
         };
 
