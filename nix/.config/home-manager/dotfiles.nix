@@ -45,8 +45,9 @@
         "negwm" = { source = l "${dots}/negwm/.config/negwm"; recursive = true; };
         "picom" = { source = l "${dots}/negwm/.config/picom"; recursive = true; };
         "polybar" = { source = l "${dots}/negwm/.config/polybar"; recursive = true; };
-        "rofi" = { source = l "${dots}/negwm/.config/rofi"; recursive = true; };
         "rofi-pass" = { source = l "${dots}/negwm/.config/rofi-pass"; recursive = true; };
+        "rofi" = { source = l "${dots}/negwm/.config/rofi"; recursive = true; };
+        "sway" = { source = l "${dots}/negwm/.config/sway"; recursive = true; };
         "warpd" = { source = l "${dots}/negwm/.config/warpd"; recursive = true; };
         "xautocfg.cfg" = { source = l "${dots}/negwm/.config/xautocfg.cfg"; recursive = true; };
         # █▓▒░ nix ──────────────────────────────────────────────────────────────────────────
