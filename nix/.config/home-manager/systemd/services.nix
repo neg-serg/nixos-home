@@ -3,7 +3,6 @@ with rec {
     systemctl = "${pkgs.systemd}/bin/systemctl";
 };{
     systemd.user.services = {
-
         executor = {
             Unit = {
                 Description = "Terminal manager";
