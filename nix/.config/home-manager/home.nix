@@ -1,5 +1,5 @@
-{ lib, config, pkgs, ... }:
-with rec {
+{ pkgs, ... }:
+with {
     home_vars = {
         __GL_GSYNC_ALLOWED = "0"; # picom/compositing compatibility(for now)
         __GL_VRR_ALLOWED = "0"; # picom/compositing compatibility(for now)
