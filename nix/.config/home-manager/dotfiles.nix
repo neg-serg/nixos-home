@@ -51,8 +51,6 @@
         "xautocfg.cfg" = { source = l "${dots}/negwm/.config/xautocfg.cfg"; recursive = true; };
         # █▓▒░ nix ──────────────────────────────────────────────────────────────────────────
         "home-manager" = { source = l "${dots}/nix/.config/home-manager"; recursive = true; };
-        # █▓▒░ nvim ─────────────────────────────────────────────────────────────────────────
-        "nvim" = { source = l "${dots}/nvim/.config/nvim"; recursive = true; };
         # █▓▒░ sys ──────────────────────────────────────────────────────────────────────────
         "BetterDiscord" = { source = l "${dots}/sys/.config/BetterDiscord"; recursive = true; };
         "broot" = { source = l "${dots}/sys/.config/broot"; recursive = true; };

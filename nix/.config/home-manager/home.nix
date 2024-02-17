@@ -71,7 +71,6 @@ with rec {
   programs = {
       home-manager.enable = true; # Let Home Manager install and manage itself.
       mangohud.enable = true; # gaming hud
-      neovim.plugins = with pkgs; [ vimPlugins.nvim-treesitter.withAllGrammars ];
   };
 
   home = {
