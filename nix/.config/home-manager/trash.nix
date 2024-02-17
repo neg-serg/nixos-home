@@ -121,3 +121,14 @@
 #     };
 #     Install = { WantedBy = ["graphical-session.target"]; };
 # };
+
+# nixpkgs.overlays = [
+#     (final: prev: {
+#      wlroots_0_16 = prev.wlroots_0_16.overrideAttrs (o: {
+#          patches = (o.patches or [ ]) ++ [
+#               ./patches/nvidia.patch
+#               ./patches/dmabuf-capture-example.patch
+#          ];
+#          });
+#      })
+# ];
