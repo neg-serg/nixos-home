@@ -22,7 +22,7 @@ return {'ray-x/navigator.lua', -- great source code ui
             diagnostic_head='🐛',
             diagnostic_head_severity_1='🈲',
         },
-        mason=true, -- set to true if you would like use the lsp installed by williamboman/mason
+        mason=false, -- set to true if you would like use the lsp installed by williamboman/mason
         lsp={
             enable=true,
             diagnostic_virtual_text=true,  -- show virtual for diagnostic message
