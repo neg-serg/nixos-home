@@ -1,6 +1,5 @@
 { pkgs, ... }: {
   home.packages = with pkgs; [
-      freetube # private youtube client
       gallery-dl # download image galleries/collections
       magic-wormhole # tool for local file sharing
       megacmd # cli for MEGA
