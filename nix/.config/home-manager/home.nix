@@ -14,7 +14,6 @@ with {
     ./sops.nix
     ./dotfiles.nix
 
-    ./apps/aria.nix
     ./apps/android.nix
     ./apps/archives.nix
     ./apps/audio
