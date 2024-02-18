@@ -7,12 +7,12 @@
         negwm.url = "github:neg-serg/negwm";
         nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-23.05";
         nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-        schizofox = { url = "github:schizofox/schizofox"; inputs.nixpkgs.follows = "nixpkgs"; };
         sops-nix.url = "github:Mic92/sops-nix";
         stylix.url = "github:danth/stylix";
         # nixos-generators = { url = "github:nix-community/nixos-generators"; inputs.nixpkgs.follows = "nixpkgs"; };
         # nixpkgs-wayland = { url = "github:colemickens/nixpkgs-wayland"; flake = false; };
         # nvfetcher= {url = "github:berberman/nvfetcher"; inputs.nixpkgs.follows = "nixpkgs"; };
+        # schizofox = { url = "github:schizofox/schizofox"; inputs.nixpkgs.follows = "nixpkgs"; };
         # simple-osd-daemons.url = "github:balsoft/simple-osd-daemons";
     };
 
@@ -27,6 +27,7 @@
         # , nixos-generators
         # , nixpkgs-wayland
         # , nvfetcher
+        # , schizofox
         # , simple-osd-daemons
         , ... }:
     with rec {
