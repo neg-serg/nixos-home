@@ -3,8 +3,6 @@ with {
     home_vars = {
         __GL_GSYNC_ALLOWED = "0"; # picom/compositing compatibility(for now)
         __GL_VRR_ALLOWED = "0"; # picom/compositing compatibility(for now)
-        _JAVA_AWT_WM_NONEREPARENTING = "1";
-        WLR_NO_HARDWARE_CURSORS = "1";
     };
 };{
   nix.package = pkgs.nix;
