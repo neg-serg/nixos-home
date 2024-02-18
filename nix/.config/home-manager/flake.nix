@@ -1,34 +1,34 @@
 {
     description = "Home Manager configuration of neg";
     inputs = {
-        nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-        nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-23.05";
         chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
-        nixpkgs-wayland = { url = "github:colemickens/nixpkgs-wayland"; flake = false; };
-        simple-osd-daemons.url = "github:balsoft/simple-osd-daemons";
-        schizofox = { url = "github:schizofox/schizofox"; inputs.nixpkgs.follows = "nixpkgs"; };
+        executor.url = "github:neg-serg/executor";
         home-manager = { url = "github:nix-community/home-manager"; inputs.nixpkgs.follows = "nixpkgs"; };
         negwm.url = "github:neg-serg/negwm";
-        executor.url = "github:neg-serg/executor";
-        stylix.url = "github:danth/stylix";
+        nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-23.05";
+        nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+        schizofox = { url = "github:schizofox/schizofox"; inputs.nixpkgs.follows = "nixpkgs"; };
         sops-nix.url = "github:Mic92/sops-nix";
-        nixos-generators = { url = "github:nix-community/nixos-generators"; inputs.nixpkgs.follows = "nixpkgs"; };
-        nvfetcher= {url = "github:berberman/nvfetcher"; inputs.nixpkgs.follows = "nixpkgs"; };
+        stylix.url = "github:danth/stylix";
+        # nixos-generators = { url = "github:nix-community/nixos-generators"; inputs.nixpkgs.follows = "nixpkgs"; };
+        # nixpkgs-wayland = { url = "github:colemickens/nixpkgs-wayland"; flake = false; };
+        # nvfetcher= {url = "github:berberman/nvfetcher"; inputs.nixpkgs.follows = "nixpkgs"; };
+        # simple-osd-daemons.url = "github:balsoft/simple-osd-daemons";
     };
 
     outputs = { nixpkgs
         , chaotic
-        , home-manager
-        , nixpkgs-wayland
-        , nixpkgs-stable
-        , simple-osd-daemons
-        , negwm
         , executor
-        , stylix
+        , home-manager
+        , negwm
+        , nixpkgs-stable
         , sops-nix
-        , nixos-generators
-        , nvfetcher
-        , ... } @inputs:
+        , stylix
+        # , nixos-generators
+        # , nixpkgs-wayland
+        # , nvfetcher
+        # , simple-osd-daemons
+        , ... }:
     with rec {
         system = "x86_64-linux";
         pkgs = nixpkgs.legacyPackages.${system};
