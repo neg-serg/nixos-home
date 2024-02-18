@@ -176,6 +176,19 @@ _exists fzf && {
     }
 }
 _exists xev && alias xev="xev | grep -A2 --line-buffered '^KeyRelease' | sed -n '/keycode /s/^.*keycode \([0-9]*\).* (.*, \(.*\)).*$/\1 \2/p'"
+_exists systemctl && {
+    alias ctl='systemctl'
+    alias stl='s systemctl'
+    alias utl='systemctl --user'
+    alias ut='systemctl --user start'
+    alias un='systemctl --user stop'
+    alias up='s systemctl start'
+    alias dn='s systemctl stop'
+    alias j='journalctl'
+}
+_exists nixos-rebuild && {
+    alias nrb='sudo nixos-rebuild'
+}
 
 # thx to @oni: https://discourse.nixos.org/t/nvd-simple-nix-nixos-version-diff-tool/12397/3
 hash -d nix-hm="/nix/var/nix/profiles/per-user/$USER/home-manager"
