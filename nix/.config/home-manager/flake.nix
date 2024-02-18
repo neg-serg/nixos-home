@@ -13,6 +13,7 @@
         stylix.url = "github:danth/stylix";
         sops-nix.url = "github:Mic92/sops-nix";
         nixos-generators = { url = "github:nix-community/nixos-generators"; inputs.nixpkgs.follows = "nixpkgs"; };
+        nvfetcher= {url = "github:berberman/nvfetcher"; inputs.nixpkgs.follows = "nixpkgs"; };
     };
 
     outputs = { nixpkgs
@@ -26,6 +27,7 @@
         , stylix
         , sops-nix
         , nixos-generators
+        , nvfetcher
         , ... } @inputs:
     with rec {
         system = "x86_64-linux";
