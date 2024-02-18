@@ -7,10 +7,10 @@ with {
 };{
   nix.package = pkgs.nix;
   imports = [
-    ./xdg.nix
-    ./theme.nix
-    ./sops.nix
     ./dotfiles.nix
+    ./sops.nix
+    ./theme.nix
+    ./xdg.nix
 
     ./apps/android.nix
     ./apps/archives.nix
@@ -21,16 +21,16 @@ with {
     ./apps/dev.nix
     ./apps/distros.nix
     ./apps/fetch.nix
+    ./apps/fonts
     ./apps/fun
     ./apps/gpg.nix
     ./apps/hack.nix
     ./apps/hardware
-    ./apps/im.nix
     ./apps/images
+    ./apps/im.nix
     ./apps/mail.nix
     ./apps/neovim.nix
     ./apps/pass.nix
-    ./apps/fonts
     ./apps/terminal
     ./apps/text
     ./apps/torrent
