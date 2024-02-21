@@ -11,9 +11,6 @@
       };
     };
   };
-  wayland.windowManager.sway = {
-      extraOptions = [ "--unsupported-gpu" ];
-  };
   home.packages = with pkgs; [
     blesh # bluetooth shell
     ccrypt # Secure encryption and decryption of files and streams

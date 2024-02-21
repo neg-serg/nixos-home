@@ -11,6 +11,9 @@
         # wtype # xdotool for wayland
         ydotool # xdotool systemwide
     ];
+    wayland.windowManager.sway = {
+        extraOptions = [ "--unsupported-gpu" ];
+    };
 }
 
 # systemd.user.services.wpaperd = {
