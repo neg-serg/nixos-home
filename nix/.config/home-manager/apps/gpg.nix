@@ -17,13 +17,11 @@
     };
     services.gpg-agent = {
         defaultCacheTtl = 60480000;
-        enable = true;
         enableExtraSocket = true;
         enableScDaemon = true;
         enableSshSupport = false;
-        extraConfig = ''
-            pinentry-program ${pinentryRofi}/bin/pinentry-rofi-with-env
-            '';
+        enable = true;
+        extraConfig = '' pinentry-program ${pinentryRofi}/bin/pinentry-rofi-with-env '';
         pinentryFlavor = null;
         verbose = true;
     };
