@@ -91,8 +91,7 @@
                 systemctl --user start --wait i3
                 while true; do
                     systemctl --user restart i3
-                    waitpid $(pgrep i3)
-                    sleep 1
+                    while pgrep i3; do sleep 1; done
                 done
                 '';
         };
@@ -110,8 +109,7 @@
                 systemctl --user start --wait i3
                 while true; do
                     systemctl --user restart i3
-                    waitpid $(pgrep i3)
-                    sleep 1
+                    while pgrep i3; do sleep 1; done
                 done
                 '';
         };
