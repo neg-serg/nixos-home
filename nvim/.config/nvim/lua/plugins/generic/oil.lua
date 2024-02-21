@@ -4,23 +4,16 @@
 return {'stevearc/oil.nvim',  -- nice netrw replacement
     config=function()
         require'oil'.setup({
-            -- Id is automatically added at the beginning, and name at the end
-            -- See :help oil-columns
-            -- columns={
-            --     "icon",
-            --     "permissions",
-            --     "size",
-            --     "mtime",
-            -- },
-            -- Buffer-local options to use for oil buffers
-            buf_options={
-                buflisted=false,
-                bufhidden="hide",
+            columns={
+                "icon",
+                -- "permissions", "size", "mtime",
             },
+            -- Buffer-local options to use for oil buffers
+            buf_options={ buflisted=false, bufhidden="hide"},
             -- Window-local options to use for oil buffers
             win_options={
                 wrap=false,
-                signcolumn="no",
+                signcolumn="yes",
                 cursorcolumn=false,
                 foldcolumn="0",
                 spell=false,
