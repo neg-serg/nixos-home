@@ -38,7 +38,7 @@ with {
     ./apps/web
     ./apps/x11
     ./apps/yubikey.nix
-    ./misc_pkgs.nix
+    ./misc-pkgs.nix
 
     ./systemd/targets.nix
     ./systemd/services.nix
