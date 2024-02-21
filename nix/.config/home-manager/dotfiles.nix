@@ -44,7 +44,6 @@
         "kitty" = { source = l "${dots}/negwm/.config/kitty"; recursive = true; };
         "negwm" = { source = l "${dots}/negwm/.config/negwm"; recursive = true; };
         "picom" = { source = l "${dots}/negwm/.config/picom"; recursive = true; };
-        "polybar" = { source = l "${dots}/negwm/.config/polybar"; recursive = true; };
         "rofi-pass" = { source = l "${dots}/negwm/.config/rofi-pass"; recursive = true; };
         "rofi" = { source = l "${dots}/negwm/.config/rofi"; recursive = true; };
         "sway" = { source = l "${dots}/negwm/.config/sway"; recursive = true; };
@@ -77,21 +76,6 @@
         ".psqlrc" = { source = l "${dots}/sys/.psqlrc"; recursive = true; };
         ".ugrep" = { source = l "${dots}/sys/.ugrep"; recursive = true; };
         ".zshenv" = { source = l "${dots}/sys/.zshenv"; recursive = true; };
-        ".local/bin/polybar-run" = {
-            executable = true;
-            text = ''
-            #!/bin/sh
-            killall -KILL polybar
-            if [ "$(hostname)" != 'telfir' ]; then
-                POLYBAR_DPI="$(echo "$dpi/1.85" | bc)"
-            else
-                POLYBAR_DPI=65
-            fi
-            export POLYBAR_DPI
-            systemctl --user import-environment POLYBAR_DPI
-            polybar main
-            '';
-        };
         ".xinitrc" = {
             text = ''
                 xrdb -merge "$HOME/.Xresources"
