@@ -77,24 +77,6 @@
         ".psqlrc" = { source = l "${dots}/sys/.psqlrc"; recursive = true; };
         ".ugrep" = { source = l "${dots}/sys/.ugrep"; recursive = true; };
         ".zshenv" = { source = l "${dots}/sys/.zshenv"; recursive = true; };
-        ".xsession" = {
-            executable = true;
-            text = ''
-                xrdb -merge ~/.Xresources
-                if test -z "$DBUS_SESSION_BUS_ADDRESS"; then
-                    eval $(dbus-launch --exit-with-session --sh-syntax)
-                fi
-                systemctl --user import-environment DISPLAY XAUTHORITY
-                if command -v dbus-update-activation-environment >/dev/null 2>&1; then
-                    dbus-update-activation-environment DISPLAY XAUTHORITY
-                fi
-                systemctl --user start --wait i3
-                while true; do
-                    systemctl --user restart i3
-                    while pgrep i3; do sleep 1; done
-                done
-                '';
-        };
         ".xinitrc" = {
             executable = true;
             text = ''
