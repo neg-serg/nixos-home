@@ -1,7 +1,6 @@
 #!/bin/sh
 . /etc/profile
 pp1="$(pass show ssh-key)"
-pp2="$(pass show sk)"
 if lsusb | grep -q "0407 Yubico"; then
     pp3="$(pass show pin)"
     expect << EOF
@@ -15,8 +14,5 @@ expect << EOF
     spawn ssh-add $HOME/.ssh/id_neg
     expect "Enter passphrase"
     send "$pp1\r"
-    spawn ssh-add $HOME/.ssh/neg_ed25519_sk
-    expect "Enter passphrase"
-    send "$pp2\r"
     expect eof
 EOF
