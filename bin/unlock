@@ -1,18 +1,18 @@
 #!/bin/sh
 . /etc/profile
-pp1="$(pass show ssh-key)"
+pp0="$(pass show ssh-key)"
 if lsusb | grep -q "0407 Yubico"; then
-    pp3="$(pass show pin)"
+    pp1="$(pass show pin)"
     expect << EOF
         spawn "$XDG_CONFIG_HOME/zsh-nix/ylock"
         expect "Enter passphrase"
-        send "$pp3\r"
+        send "$pp1\r"
         expect eof
 EOF
 fi
 expect << EOF
     spawn ssh-add $HOME/.ssh/id_neg
     expect "Enter passphrase"
-    send "$pp1\r"
+    send "$pp0\r"
     expect eof
 EOF
