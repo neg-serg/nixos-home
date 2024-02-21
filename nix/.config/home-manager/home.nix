@@ -49,6 +49,19 @@ with {
       mpdris2 = { enable = false; };
   };
 
+  nixpkgs.overlays = [
+      # "overwrite" xdg-open with handlr
+      (final: prev: {
+          # very expensive since this invalidates the cache for a lot of (almost all) graphical apps.
+          xdg-utils = prev.xdg-utils.overrideAttrs (oldAttrs: {
+              postInstall = oldAttrs.postInstall + ''
+                  # "overwrite" xdg-open with handlr
+                  cp ${prev.writeShellScriptBin "xdg-open" "${prev.handlr}/bin/handlr open \"$@\""}/bin/xdg-open $out/bin/xdg-open
+              '';
+          });
+      })
+  ];
+
   systemd.user.sessionVariables = {
       GDK_BACKEND = "x11";
       XDG_CURRENT_DESKTOP = "i3";
