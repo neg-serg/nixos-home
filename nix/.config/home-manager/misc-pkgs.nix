@@ -21,7 +21,7 @@
     # imwheel # for mouse wheel scrolling
     libsForQt5.qt5ct libsForQt5.qtstyleplugin-kvantum qt6Packages.qtstyleplugin-kvantum # kvantum theme support
     pwgen # generate passwords
-    (python3-lto.withPackages (ps: with ps; [ docopt i3ipc psutil colored ]))
+    (python3-lto.withPackages (ps: with ps; [ docopt i3ipc psutil colored pynvim ]))
     swayfx # i3 for wayland
   ];
 }
