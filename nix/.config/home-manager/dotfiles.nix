@@ -94,12 +94,15 @@
                 done
                 '';
         };
-        "${config.xdg.configHome}/zsh-nix/ylock".text = ''
+        "${config.xdg.configHome}/zsh-nix/ylock" = {
+            executable = true;
+            text = ''
             if ! [[ $(ssh-add -L | grep "PIV AUTH") ]] && \
                 [[ $(lsusb | grep "0407 Yubico") ]]; then
                 ssh-add -s ${pkgs.opensc}/lib/opensc-pkcs11.so
             fi
-        '';
+            '';
+        };
         "${config.xdg.configHome}/nixpkgs/config.nix".text = ''
             {
                 allowUnfree = true;
