@@ -1,5 +1,5 @@
 #!/bin/sh
-source /etc/profile
+. /etc/profile
 showdpi() {
     output=$1 pixels=$2 mm=$3
     dpi=$((pixels * 254 / 10 / mm))
@@ -26,7 +26,7 @@ dpi=${dpi:-96}
 echo "using ${dpi}dpi" >&2
 xrandr --dpi "$dpi"
 cfg="$XDG_CONFIG_HOME/xsettingsd/xsettingsd.conf"
-if [ ! -s "$cfg" ]; then mkdir -v $(dirname "$cfg"); touch "$cfg"; fi
+if [ ! -s "$cfg" ]; then mkdir -v "$(dirname "$cfg")"; touch "$cfg"; fi
 DPI_BIG_ENOUGH=${DPI_BIG_ENOUGH:-120}
 {
     echo Xft.dpi: "$dpi"
@@ -41,15 +41,7 @@ DPI_BIG_ENOUGH=${DPI_BIG_ENOUGH:-120}
     echo Gdk/WindowScalingFactor "$( [ "$dpi" -ge "$DPI_BIG_ENOUGH" ] && command echo -n 2 || command echo -n 1 )"
     echo Gdk/UnscaledDPI $((96*1024))
 } > "$cfg"
-if [ "$(hostname)" != 'telfir' ]; then
-    POLYBAR_DPI="$(echo "$dpi/1.85" | bc)"
-else
-    POLYBAR_DPI=65
-fi
-export POLYBAR_DPI
-systemctl --user import-environment POLYBAR_DPI
 if [ ! "$(pgrep -f /usr/bin/xsettingsd|wc -l)" -ge 1 ]; then
-    touch "$XDG_CONFIG_HOME/polybar/config.ini"
     xsettingsd -c "$cfg"
 else
     for t in $(pgrep -f xsettingsd); do kill -HUP "$t"; done

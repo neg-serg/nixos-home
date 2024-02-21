@@ -77,6 +77,21 @@
         ".psqlrc" = { source = l "${dots}/sys/.psqlrc"; recursive = true; };
         ".ugrep" = { source = l "${dots}/sys/.ugrep"; recursive = true; };
         ".zshenv" = { source = l "${dots}/sys/.zshenv"; recursive = true; };
+        ".local/bin/polybar-run" = {
+            executable = true;
+            text = ''
+            #!/bin/sh
+            killall -KILL polybar
+            if [ "$(hostname)" != 'telfir' ]; then
+                POLYBAR_DPI="$(echo "$dpi/1.85" | bc)"
+            else
+                POLYBAR_DPI=65
+            fi
+            export POLYBAR_DPI
+            systemctl --user import-environment POLYBAR_DPI
+            polybar main
+            '';
+        };
         ".xinitrc" = {
             text = ''
                 xrdb -merge "$HOME/.Xresources"
