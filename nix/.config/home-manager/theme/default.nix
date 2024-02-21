@@ -1,6 +1,6 @@
 { config, pkgs, ... }:
 with {
-    alkano-aio = pkgs.callPackage ./theme/alkano-aio.nix {};
+    alkano-aio = pkgs.callPackage ./alkano-aio.nix {};
 }; {
     gtk = {
         iconTheme = {
@@ -91,7 +91,7 @@ with {
             monospace = { name = "Iosevka";
                 package = (pkgs.iosevka.override {
                   set = "neg";
-                  privateBuildPlan = builtins.readFile ./fonts/private-build-plans.toml;
+                  privateBuildPlan = builtins.readFile ../fonts/private-build-plans.toml;
                 }); };
             sizes = { applications = 10; desktop = 10; };
         };

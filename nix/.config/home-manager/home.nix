@@ -9,7 +9,7 @@ with {
   imports = [
     ./dotfiles.nix
     ./sops.nix
-    ./theme.nix
+    ./theme
     ./xdg.nix
 
     ./apps/android.nix
