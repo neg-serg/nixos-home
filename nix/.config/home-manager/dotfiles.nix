@@ -79,7 +79,7 @@
         ".zshenv" = { source = l "${dots}/sys/.zshenv"; recursive = true; };
         ".xinitrc" = {
             text = ''
-                xrdb -merge ~/.Xresources
+                xrdb -merge "$HOME/.Xresources"
                 if test -z "$DBUS_SESSION_BUS_ADDRESS"; then
                     eval $(dbus-launch --exit-with-session --sh-syntax)
                 fi
