@@ -28,7 +28,7 @@ return {'nvim-telescope/telescope.nvim', -- modern fuzzy-finder over lists
         local zoxide=telescope.load_extension'zoxide'
         local sorters=require'telescope.sorters'
         local long_find={'rg','--files','--hidden','-g','!.git'}
-        local short_find={'fd','-H','--ignore-vcs','-d','3','--strip-cwd-prefix'}
+        local short_find={'fd','-H','--ignore-vcs','-d','4','--strip-cwd-prefix'}
         local ignore_patterns={
             '__pycache__/', '__pycache__/*',
             'build/', 'gradle/', 'node_modules/', 'node_modules/*',
@@ -188,8 +188,24 @@ return {'nvim-telescope/telescope.nvim', -- modern fuzzy-finder over lists
         Map('n', '<M-C-o>', function() builtin.lsp_dynamic_workspace_symbols() end, opts)
         Map('n', '<M-o>', function() builtin.lsp_document_symbols() end, opts)
         Map('n', '<leader>l', function() vim.cmd'chdir %:p:h'; pathogen.find_files{} end, opts)
-        Map('n', 'E', function() vim.cmd'chdir %:p:h'; pathogen.find_files{} end, opts)
-        Map('n', '[Qleader]e', function() pathogen.find_files{} end, opts)
-        Map('n', '<leader>L', function() vim.cmd'ProjectRoot'; pathogen.find_files{} end, opts)
+        Map('n', 'E', function()
+            if vim.bo.filetype then
+                require'oil.actions'.cd.callback()
+            else 
+                vim.cmd'chdir %:p:h'
+            end
+            pathogen.find_files{}
+        end, opts)
+        Map('n', '[Qleader]e', function()
+            pathogen.find_files{}
+        end, opts)
+        Map('n', '<leader>L', function() 
+            if vim.bo.filetype then
+                require'oil.actions'.cd.callback()
+            else
+                vim.cmd'ProjectRoot'
+            end
+            pathogen.find_files{}
+        end, opts)
     end
 }
