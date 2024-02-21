@@ -1,8 +1,12 @@
 #!/bin/sh
-source /etc/profile
+. /etc/profile
 pp1="$(pass show ssh-key)"
 pp2="$(pass show sk)"
+pp3="$(pass show pin)"
 expect << EOF
+    spawn "$HOME/.config/zsh-nix/ylock"
+    expect "Enter passphrase"
+    send "$pp3\r"
     spawn ssh-add $HOME/.ssh/id_neg
     expect "Enter passphrase"
     send "$pp1\r"
