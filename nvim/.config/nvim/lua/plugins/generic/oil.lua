@@ -107,5 +107,6 @@ return {'stevearc/oil.nvim',  -- nice netrw replacement
         vim.api.nvim_buf_set_keymap(0, 'n', 'q', '<Cmd>q<CR>', {noremap=true})
         vim.api.nvim_buf_set_keymap(0, 'n', '<BS>', 'function() require("oil").open() end, { desc = "oil: goto parent dir" }', {noremap=true})
         vim.api.nvim_buf_set_keymap(0, 'n', '<leader>ed', ':q<CR>', {noremap=true})
+        vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" }) -- mimic the vim-vinegar
     end,
     dependencies={'nvim-tree/nvim-web-devicons'}}
