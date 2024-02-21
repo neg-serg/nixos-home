@@ -9,11 +9,10 @@ return {'epwalsh/obsidian.nvim', -- obsidian helpers for neovim
     config=function()
         require'obsidian'.setup({
               dir="~/1st_level", -- Required, the path to your vault directory.
+              new_notes_location="current_dir",
               completion={
                 nvim_cmp=true, -- If using nvim-cmp, otherwise set to false
                 min_chars=2, -- Trigger completion at 2 chars
-                new_notes_location="current_dir",
-                prepend_note_id=true
               },
               mappings={
                 ["gf"]={ -- Overrides the 'gf' mapping to work on markdown/wiki links within your vault.
