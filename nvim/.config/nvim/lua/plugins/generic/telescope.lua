@@ -177,7 +177,6 @@ return {'nvim-telescope/telescope.nvim', -- modern fuzzy-finder over lists
         telescope.load_extension'undo'
 
         local opts={silent=true, noremap=true}
-        Map('n', 'E', function() vim.cmd'ProjectRoot'; pathogen.find_files{} end, opts)
         Map('n', 'cd', function()
             telescope.load_extension'zoxide'.list(
                 require'telescope.themes'.get_ivy(
@@ -189,6 +188,8 @@ return {'nvim-telescope/telescope.nvim', -- modern fuzzy-finder over lists
         Map('n', '<M-C-o>', function() builtin.lsp_dynamic_workspace_symbols() end, opts)
         Map('n', '<M-o>', function() builtin.lsp_document_symbols() end, opts)
         Map('n', '<leader>l', function() vim.cmd'chdir %:p:h'; pathogen.find_files{} end, opts)
+        Map('n', 'E', function() vim.cmd'chdir %:p:h'; pathogen.find_files{} end, opts)
         Map('n', '[Qleader]e', function() pathogen.find_files{} end, opts)
+        Map('n', '<leader>L', function() vim.cmd'ProjectRoot'; pathogen.find_files{} end, opts)
     end
 }
