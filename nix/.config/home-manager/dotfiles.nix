@@ -78,7 +78,6 @@
         ".ugrep" = { source = l "${dots}/sys/.ugrep"; recursive = true; };
         ".zshenv" = { source = l "${dots}/sys/.zshenv"; recursive = true; };
         ".xinitrc" = {
-            executable = true;
             text = ''
                 xrdb -merge ~/.Xresources
                 if test -z "$DBUS_SESSION_BUS_ADDRESS"; then
