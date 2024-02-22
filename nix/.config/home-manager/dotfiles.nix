@@ -26,7 +26,6 @@
         "dosbox" = { source = l "${dots}/misc/.config/dosbox"; recursive = true; };
         "fastfetch" = { source = l "${dots}/misc/.config/fastfetch"; recursive = true; };
         "flameshot" = { source = l "${dots}/misc/.config/flameshot"; recursive = true; };
-        "macchina" = { source = l "${dots}/misc/.config/macchina"; recursive = true; };
         "stig" = { source = l "${dots}/misc/.config/stig"; recursive = true; };
         "surfingkeys" = { source = l "${dots}/misc/.config/surfingkeys"; recursive = true; };
         "transmission-daemon" = { source = l "${dots}/misc/.config/transmission-daemon"; recursive = true; };
