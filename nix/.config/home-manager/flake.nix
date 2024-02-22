@@ -29,7 +29,7 @@
         # , nvfetcher
         # , schizofox
         # , simple-osd-daemons
-        , ... }:
+        , ... } @inputs:
     with rec {
         system = "x86_64-linux";
         pkgs = nixpkgs.legacyPackages.${system};
@@ -41,6 +41,7 @@
         homeConfigurations."neg" = home-manager.lib.homeManagerConfiguration {
             inherit pkgs;
             extraSpecialArgs = {
+                inherit inputs;
                 inherit stable;
                 inherit negwmPkg;
                 inherit executorPkg;
