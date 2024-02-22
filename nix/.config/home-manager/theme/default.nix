@@ -15,6 +15,8 @@ with {
                 color-scheme = "prefer-dark";
                 gtk-key-theme = "emacs";
                 icon-theme = "kora";
+                font-hinting = "hintsfull";
+                font-antialiasing = "grayscale";
             };
             "org/gnome/desktop/privacy".remember-recent-files = false;
             "org/gnome/desktop/screensaver".lock-enabled = false;
@@ -42,9 +44,6 @@ with {
     home.file = {
         "${config.xdg.configHome}/xinit/xsettingsd".text = ''
             # Used by xsettingsd-setup
-            Xft/Antialias 1 # gtk-xft-antialias
-            Xft/Hinting 1 # gtk-xft-hinting
-            Xft/HintStyle "hintsfull" # gtk-xft-hintstyle
             Net/IconThemeName "kora" # gtk-icon-theme-name
             Net/EnableEventSounds 0
             Gtk/FontName "Iosevka 10"
