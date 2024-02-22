@@ -138,7 +138,7 @@ return {'nvim-telescope/telescope.nvim', -- modern fuzzy-finder over lists
                 },
                 zoxide={
                     mappings={
-                        ["<Enter>"]={action=function(selection) pathogen.find_files{cwd=selection.path} end},
+                        ["<S-Enter>"]={action=function(selection) pathogen.find_files{cwd=selection.path} end},
                         ["<Tab>"]={action=function(selection) pathogen.find_files{cwd=selection.path} end},
                         ["<C-e>"]={action=z_utils.create_basic_command("edit")},
                         ["<C-j>"]=actions.cycle_history_next,
