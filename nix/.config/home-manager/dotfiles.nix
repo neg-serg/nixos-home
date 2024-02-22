@@ -46,7 +46,6 @@
         "rofi" = { source = l "${dots}/negwm/.config/rofi"; recursive = true; };
         "sway" = { source = l "${dots}/negwm/.config/sway"; recursive = true; };
         "warpd" = { source = l "${dots}/negwm/.config/warpd"; recursive = true; };
-        "xautocfg.cfg" = { source = l "${dots}/negwm/.config/xautocfg.cfg"; recursive = true; };
         # █▓▒░ nix ──────────────────────────────────────────────────────────────────────────
         "home-manager" = { source = l "${dots}/nix/.config/home-manager"; recursive = true; };
         # █▓▒░ sys ──────────────────────────────────────────────────────────────────────────
