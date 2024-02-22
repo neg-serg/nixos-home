@@ -19,7 +19,7 @@
       keybindings = {};
   };
   xdg.configFile = {
-      "polybar" = { source = l "${dots}/negwm/.config/polybar"; recursive = true; };
+      "polybar" = { source = l "${dots}/wm/.config/polybar"; recursive = true; };
   };
   home.file = {
       ".local/bin/polybar-run" = {
