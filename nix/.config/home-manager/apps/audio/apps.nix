@@ -22,7 +22,6 @@
       dr14_tmeter # compute the DR14 of a given audio file according to the procedure from Pleasurize Music Foundation
       ffmpeg-full
       ffmpegthumbnailer # thumbnail for video
-      haruna # a nicer, better front end for mpv
       mpvc # CLI controller for mpv
       mpvScripts.mpris # playerctl support for mpv
       mpv # video player
