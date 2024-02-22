@@ -23,6 +23,7 @@
     neomutt # email client
     pwgen # generate passwords
     (python3-lto.withPackages (ps: with ps; [ docopt i3ipc psutil colored pynvim ]))
-    swayfx # i3 for wayland
+    # swayfx # i3 for wayland
+    sway-unwrapped_git # i3 for wayland
   ];
 }
