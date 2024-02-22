@@ -27,7 +27,6 @@
         "fastfetch" = { source = l "${dots}/misc/.config/fastfetch"; recursive = true; };
         "flameshot" = { source = l "${dots}/misc/.config/flameshot"; recursive = true; };
         "stig" = { source = l "${dots}/misc/.config/stig"; recursive = true; };
-        "surfingkeys" = { source = l "${dots}/misc/.config/surfingkeys"; recursive = true; };
         "transmission-daemon" = { source = l "${dots}/misc/.config/transmission-daemon"; recursive = true; };
         "tridactyl" = { source = l "${dots}/misc/.config/tridactyl"; recursive = true; };
         "zathura" = { source = l "${dots}/misc/.config/zathura"; recursive = true; };
