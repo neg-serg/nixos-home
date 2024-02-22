@@ -34,7 +34,7 @@
           fi
           export POLYBAR_DPI
           systemctl --user import-environment POLYBAR_DPI
-          polybar main
+          polybar main -l error
           '';
       };
   };
