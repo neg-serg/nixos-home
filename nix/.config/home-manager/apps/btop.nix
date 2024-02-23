@@ -12,8 +12,8 @@
             graph_symbol_mem = "default";
             graph_symbol_net = "default";
             graph_symbol_proc = "default";
-            shown_boxes = "cpu mem net proc";
-            update_ms = 500;
+            shown_boxes = "cpu mem proc";
+            update_ms = 500; #* Fast update
             proc_sorting = "cpu lazy";
             proc_reversed = false; #* Reverse sorting order, true; or false;.
             proc_tree = false; #* Show processes as a tree.
@@ -23,9 +23,9 @@
             proc_mem_bytes = true; #* Show process memory as bytes instead of percent.
             proc_cpu_graphs = true; #* Show cpu graph for each process.
             proc_info_smaps = false; #* Use /proc/[pid]/smaps for memory information in the process info box (very slow but more accurate)
-            proc_left = false; #* Show proc box on left side of screen instead of right.
-            proc_filter_kernel = false; #* (Linux) Filter processes tied to the Linux kernel(similar behavior to htop).
-            proc_aggregate = false; #* In tree-view, always accumulate child process resources in the parent process.
+            proc_left = true; #* Show proc box on left side of screen instead of right.
+            proc_filter_kernel = true; #* (Linux) Filter processes tied to the Linux kernel(similar behavior to htop).
+            proc_aggregate = true; #* In tree-view, always accumulate child process resources in the parent process.
             cpu_graph_upper = "total";
             cpu_graph_lower = "total";
             show_gpu_info = "Auto"; #* If gpu info should be shown in the cpu box. Available values = "Auto", "On" and "Off".
@@ -44,7 +44,7 @@
             background_update = true; #* Update main ui in background when menus are showing, set this to false if the menus is flickering too much for comfort.
             custom_cpu_name = ""; #* Custom cpu model name, empty string to disable.
             disks_filter = "";
-            mem_graphs = true; #* Show graphs instead of meters for memory values.
+            mem_graphs = false; #* Show graphs instead of meters for memory values.
             mem_below_net = false; #* Show mem box below net box instead of above.
             zfs_arc_cached = true; #* Count ZFS ARC in cached and available memory.
             show_swap = true; #* If swap memory should be shown in memory box.
