@@ -2,6 +2,7 @@
 -- │ █▓▒░ epwalsh/obsidian.nvim                                                        │
 -- └───────────────────────────────────────────────────────────────────────────────────┘
 return {'epwalsh/obsidian.nvim', -- obsidian helpers for neovim
+    tag='v3.4.1',
     dependencies={
         'nvim-lua/plenary.nvim',
         'hrsh7th/nvim-cmp',
@@ -18,12 +19,12 @@ return {'epwalsh/obsidian.nvim', -- obsidian helpers for neovim
               },
               mappings={
                   ["gf"]={ -- Overrides the 'gf' mapping to work on markdown/wiki links within your vault.
-                  action=function()
-                      return require'obsidian'.util.gf_passthrough()
-                  end,
-                  opts={ noremap=false, expr=true, buffer=true },
+                      action=function()
+                          return require'obsidian'.util.gf_passthrough()
+                      end,
+                      opts={ noremap=false, expr=true, buffer=true },
+                  },
               },
-          },
               note_id_func=function(title)
                   local suffix=""
                   if title ~= nil then
