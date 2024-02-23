@@ -12,9 +12,9 @@
             graph_symbol_mem = "default";
             graph_symbol_net = "default";
             graph_symbol_proc = "default";
-            shown_boxes = "cpu mem proc";
-            update_ms = 500; # Fast update
-            proc_sorting = "cpu lazy";
+            shown_boxes = "cpu proc";
+            update_ms = 2000; # Fast update
+            proc_sorting = "cpu direct";
             proc_reversed = false; # Reverse sorting order, true; or false;.
             proc_tree = false; # Show processes as a tree.
             proc_colors = true; # Use the cpu graph colors in the process list.
@@ -68,12 +68,6 @@
             log_level = "WARNING";
             nvml_measure_pcie_speeds = true; # Measure PCIe throughput on NVIDIA cards, may impact performance on certain cards.
             gpu_mirror_graph = true; # Horizontally mirror the GPU graph.
-            custom_gpu_name0 = ""; # Custom gpu0 model name, empty string to disable.
-            custom_gpu_name1 = ""; # Custom gpu1 model name, empty string to disable.
-            custom_gpu_name2 = ""; # Custom gpu2 model name, empty string to disable.
-            custom_gpu_name3 = ""; # Custom gpu3 model name, empty string to disable.
-            custom_gpu_name4 = ""; # Custom gpu4 model name, empty string to disable.
-            custom_gpu_name5 = ""; # Custom gpu5 model name, empty string to disable.
         };
     };
 }
