@@ -26,9 +26,10 @@ with {
     ./apps/gpg.nix
     ./apps/hack.nix
     ./apps/hardware
-    ./apps/images
     ./apps/im.nix
+    ./apps/images
     ./apps/mail.nix
+    ./apps/media
     ./apps/neovim.nix
     ./apps/pass.nix
     ./apps/terminal

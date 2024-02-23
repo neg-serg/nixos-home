@@ -22,9 +22,7 @@
         "notmuch" = { source = l "${dots}/mail/.config/notmuch"; recursive = true; };
         "vdirsyncer" = { source = l "${dots}/mail/.config/vdirsyncer"; recursive = true; };
         # █▓▒░ media ────────────────────────────────────────────────────────────────────────
-        "mpv" = { source = l "${dots}/media/.config/mpv"; recursive = true; };
         "nsxiv" = { source = l "${dots}/media/.config/nsxiv"; recursive = true; };
-        "pipewire" = { source = l "${dots}/media/.config/pipewire"; recursive = true; };
         # █▓▒░ misc ─────────────────────────────────────────────────────────────────────────
         "amfora" = { source = l "${dots}/misc/.config/amfora"; recursive = true; };
         "bat" = { source = l "${dots}/misc/.config/bat"; recursive = true; };
