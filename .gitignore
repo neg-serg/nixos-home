@@ -324,3 +324,4 @@ music/.config/mpd/sticker.sql
 music/.config/mpd/mpd.db
 music/.config/beets/config.yaml
 misc/.config/transmission-daemon/torrents/
+shell/.config/zsh/.zcompdump
