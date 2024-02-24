@@ -5,8 +5,9 @@ alias ls="${aliases[ls]:-ls} --time-style=+\"%d.%m.%Y %H:%M\" --color=auto --hyp
 alias l="${aliases[ls]:-ls}"
 _exists eza && {
     alias ls="eza --icons=auto --hyperlink"
-    alias l="${aliases[ls]:-eza}"
-    alias ll="${aliases[ls]:-eza} -l"
+    alias l="${aliases[eza]:-eza}"
+    alias ll="${aliases[eza]:-eza} -l"
+    alias lcr="${aliases[eza]:-eza} -r -sort=changed"
 }
 alias cp='cp --reflink=auto'
 alias ll='ls -lah'
