@@ -1,5 +1,5 @@
 { pkgs, ... }: with {
-    nsxiv = pkgs.callPackage ./nsxiv.nix {};
+    nsxiv-neg = pkgs.callPackage ./nsxiv.nix {};
 }; {
   home.packages = with pkgs; [
       advancecomp # AdvanceCOMP PNG Compression Utility
@@ -12,7 +12,7 @@
       jpegoptim # jpeg optimization
       krita # digital painting
       mediainfo # another tool to extract media info
-      nsxiv # my favorite image viewer
+      nsxiv-neg # my favorite image viewer
       optipng # optimize png
       pngquant # convert png from RGBA to 8 bit with alpha-channel
       qrencode # qr encoding
