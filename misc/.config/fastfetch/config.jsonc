@@ -13,7 +13,7 @@
     "host",
     "kernel",
     "uptime",
-    "localip",
+    // "localip",
     // "packages",
     "shell",
     "monitor",
