@@ -9,10 +9,9 @@ return {'nvim-treesitter/nvim-treesitter', -- nvim treesitter support
         if (not status) then return end
         tsconf.setup{
             ensure_installed="all", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
-            -- Install parsers synchronously (only applied to `ensure_installed`)
             sync_install=false,
             context_commentstring={enable=true},
-            ignore_install={'phpdoc', 'swift'},
+            ignore_install={},
             highlight={
                 enable=true, -- false will disable the whole extension
                 disable={},  -- list of language that will be disabled
