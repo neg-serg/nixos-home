@@ -1,0 +1,62 @@
+{
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+  "logo": {
+    "source": "~/.config/fastfetch/skull",
+    "width": 65
+  },
+  "display": {
+    "color": {
+      "keys": "3",
+      "title": "4"
+    },
+    "size": {
+      "maxPrefix": "PB"
+    },
+    "percent": {
+      "type": 3
+    }
+  },
+  "modules": [
+    {
+      "type": "title",
+      "fqdn": true
+    },
+    {
+      "type": "separator",
+      "string": "-"
+    },
+    "os",
+    "host",
+    "kernel",
+    "uptime",
+    "packages",
+    "shell",
+    "display",
+    "de",
+    "wm",
+    "wmtheme",
+    "theme",
+    "icons",
+    "font",
+    "cursor",
+    "terminal",
+    "terminalfont",
+    "cpu",
+    "board",
+    "bios",
+    {
+      "type": "gpu",
+      "forceVulkan": true
+    },
+    "vulkan",
+    "memory",
+    "disk",
+    "battery",
+    "poweradapter",
+    "locale",
+    "sound",
+    "player",
+    "break",
+    "colors"
+  ]
+}
