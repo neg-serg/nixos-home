@@ -2,6 +2,7 @@
 -- │ █▓▒░ svermeulen/vim-NotableFt                                                     │
 -- └───────────────────────────────────────────────────────────────────────────────────┘
 return {'svermeulen/vim-NotableFt', -- better f-t-bindings
+    enabled=false,
     config=function()
         vim.g.NotableFtUseDefaults=false
 
