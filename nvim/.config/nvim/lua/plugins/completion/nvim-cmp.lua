@@ -8,11 +8,6 @@ return {'hrsh7th/nvim-cmp', -- completion engine
         local ok_snip, luasnip = pcall(require, 'luasnip')
         if not ok_snip then return end
 
-        vim.cmd([[
-        hi CmpItemKindDefault guifg=#0C2430'
-        autocmd FileType TelescopePrompt lua require('cmp').setup.buffer { enabled = false }
-        ]])
-
         local has_words_before = function()
             local line, col = unpack(vim.api.nvim_win_get_cursor(0))
             return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match('%s') == nil
@@ -95,7 +90,6 @@ return {'hrsh7th/nvim-cmp', -- completion engine
                     cmp.config.compare.offset,
                     cmp.config.compare.exact,
                     cmp.config.compare.score,
-                    require 'cmp-under-comparator'.under,
                     cmp.config.compare.kind,
                     cmp.config.compare.sort_text,
                     cmp.config.compare.length,
@@ -114,4 +108,4 @@ return {'hrsh7th/nvim-cmp', -- completion engine
         'hrsh7th/cmp-nvim-lsp', -- cmp lsp support
         'hrsh7th/cmp-nvim-lua', -- cmp neovim lua api support
         'hrsh7th/cmp-path', -- cmp path completion support
-        'lukas-reineke/cmp-under-comparator'}} -- better nvim-cmp sorter
+    }} -- better nvim-cmp sorter
