@@ -12,7 +12,6 @@ return {'nvim-telescope/telescope.nvim', -- modern fuzzy-finder over lists
         'nvim-telescope/telescope-frecency.nvim', -- MRU frecency
         'natecraddock/telescope-zf-native.nvim', -- zf native sorter
         'renerocksai/telekasten.nvim', -- telekasten support
-        config=function() require'telescope'.load_extension 'repo' end},
     }, -- telescope + telekasten
     keys={{'<M-x>', '<cmd>Telescope commands<cr>', desc='Run Command'}},
     config=function()
