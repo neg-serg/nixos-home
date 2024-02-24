@@ -6,10 +6,8 @@ return {'stevearc/oil.nvim',  -- nice netrw replacement
         require'oil'.setup({
             columns={
                 "icon",
-                -- "permissions", "size", "mtime",
             },
-            -- Buffer-local options to use for oil buffers
-            buf_options={ buflisted=false, bufhidden="hide"},
+            buf_options={ buflisted=false, bufhidden="hide"}, -- Buffer-local options to use for oil buffers
             -- Window-local options to use for oil buffers
             win_options={
                 wrap=false,
