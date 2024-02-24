@@ -3,6 +3,7 @@
 -- └───────────────────────────────────────────────────────────────────────────────────┘
 return {'neovim/nvim-lspconfig',
     config = function()
+        local lspconfig = require('lspconfig')
         vim.diagnostic.config({
             virtual_text=true,
             signs=true,
@@ -15,8 +16,6 @@ return {'neovim/nvim-lspconfig',
             local hl="DiagnosticSign" .. type
             vim.fn.sign_define(hl, {text=icon, texthl=hl, numhl=hl})
         end
-
-        local lspconfig = require('lspconfig')
         lspconfig.bashls.setup{}
         lspconfig.clangd.setup{}
         lspconfig.nil_ls.setup{}
