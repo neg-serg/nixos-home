@@ -108,10 +108,7 @@ return {'nvim-telescope/telescope.nvim', -- modern fuzzy-finder over lists
                     previewer=true,
                     layout_strategy="flex",
                     layout_config={
-                        horizontal={
-                            prompt_position="bottom",
-                            preview_width=0.70,
-                        },
+                        horizontal={prompt_position="bottom", preview_width=0.70},
                         vertical={mirror=false},
                         width=0.87,
                         height=0.80,
