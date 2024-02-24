@@ -1,62 +1,44 @@
 {
   "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
-  "logo": {
-    "source": "~/.config/fastfetch/skull",
-    "width": 65
-  },
+  "logo": { "source": "~/.config/fastfetch/skull", "width": 65 },
   "display": {
-    "color": {
-      "keys": "3",
-      "title": "4"
-    },
-    "size": {
-      "maxPrefix": "PB"
-    },
-    "percent": {
-      "type": 3
-    }
+    "color": { "keys": "3", "title": "4" },
+    "size": { "maxPrefix": "PB" },
+    "percent": { "type": 3 }
   },
   "modules": [
-    {
-      "type": "title",
-      "fqdn": true
-    },
-    {
-      "type": "separator",
-      "string": "-"
-    },
+    { "type": "title", "fqdn": true },
+    { "type": "separator", "string": "-" },
     "os",
     "host",
     "kernel",
     "uptime",
-    "packages",
+    "localip",
+    // "packages",
     "shell",
-    "display",
-    "de",
+
+    "monitor",
     "wm",
     "wmtheme",
     "theme",
     "icons",
     "font",
     "cursor",
-    "terminal",
-    "terminalfont",
+
+    "terminal", "terminalfont", "terminalsize",
     "cpu",
     "board",
     "bios",
-    {
-      "type": "gpu",
-      "forceVulkan": true
-    },
-    "vulkan",
+    // { "type": "gpu", "forceVulkan": true },
+    // "vulkan",
     "memory",
     "disk",
-    "battery",
-    "poweradapter",
+    // "battery",
+    // "poweradapter",
     "locale",
     "sound",
     "player",
-    "break",
-    "colors"
+    "locale",
+    // "weather",
   ]
 }
