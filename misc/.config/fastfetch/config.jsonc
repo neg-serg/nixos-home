@@ -16,7 +16,6 @@
     "localip",
     // "packages",
     "shell",
-
     "monitor",
     "wm",
     "wmtheme",
@@ -24,7 +23,7 @@
     "icons",
     "font",
     "cursor",
-
+    "locale",
     "terminal", "terminalfont", "terminalsize",
     "cpu",
     "board",
@@ -35,10 +34,8 @@
     "disk",
     // "battery",
     // "poweradapter",
-    "locale",
     "sound",
     "player",
-    "locale",
     // "weather",
   ]
 }
