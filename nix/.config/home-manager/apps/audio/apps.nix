@@ -1,7 +1,7 @@
-{ pkgs, config, ... }: {
+{ pkgs, config, stable, ... }: {
   home.packages = with pkgs; [
       ape # monkey audio codec
-      audiowaveform # shows soundwaveform
+      stable.audiowaveform # shows soundwaveform
       cdparanoia # cdrip / cdrecord
       cider # apple music player
       easytag # use this for tags
