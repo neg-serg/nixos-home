@@ -72,6 +72,8 @@ return {'nvim-telescope/telescope.nvim', -- modern fuzzy-finder over lists
                 borderchars={'─', '│', '─', '│', '╭', '╮', '╯', '╰'},
                 color_devicons=true,
                 use_less=false,
+                file_sorter=sorters.get_fuzzy_file,
+                generic_sorter=sorters.get_generic_fuzzy_sorter,
                 file_previewer=previewers.vim_buffer_cat.new,
                 grep_previewer=previewers.vim_buffer_vimgrep.new,
                 qflist_previewer=previewers.vim_buffer_qflist.new,
