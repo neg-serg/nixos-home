@@ -8,6 +8,7 @@
       id3v2 # id3v2 edit
       jamesdsp # pipewire dsp
       mpc-cli # mpd client
+      opensoundmeter # sound measurement application for tuning audio systems in real-time
       ncmpcpp # curses mpd client
       ncpamixer # cli-pavucontrol
       nicotine-plus # download music via soulseek
