@@ -8,6 +8,7 @@
     home.packages = with pkgs; [
         # fnott # wayland notifications
         # fuzzel # wayland launcher
+        # swww # wallpaper daemon for wayland
         # wtype # xdotool for wayland
         ydotool # xdotool systemwide
     ];
