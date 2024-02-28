@@ -26,7 +26,7 @@ with {
     ./apps/gpg.nix
     ./apps/hack.nix
     ./apps/hardware
-    ./apps/im.nix
+    ./apps/im
     ./apps/images
     ./apps/mail.nix
     ./apps/media
