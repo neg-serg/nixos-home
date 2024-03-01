@@ -9,6 +9,7 @@ _exists eza && {
     alias ll="${aliases[eza]:-eza} -l"
     alias lcr="${aliases[eza]:-eza} -r -sort=changed"
 }
+alias fc="fc -liE 100"
 alias cp='cp --reflink=auto'
 alias ll='ls -lah'
 alias mv='mv -i'
