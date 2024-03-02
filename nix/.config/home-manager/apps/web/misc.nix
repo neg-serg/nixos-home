@@ -9,6 +9,6 @@
       stable.megacmd # cli for MEGA
       whois # get domain info
       xidel # download webpage parts
-      yt-dlp # download from youtube and another sources
+      yt-dlp_git # download from youtube and another sources
   ];
 }
