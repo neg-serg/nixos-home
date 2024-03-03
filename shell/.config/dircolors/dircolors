@@ -28,8 +28,10 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 *dircolors  48;5;89;38;5;197;1;3;4;7 # :-)
 *dir_colors 48;5;89;38;5;197;1;3;4;7 # :-)
 
-.txt              00;38;5;248 # Plain text
 .lesshst          01;38;5;248 # Plain text
+.map              01;38;5;248 # Plain text
+.txt              00;38;5;248 # Plain text
+.nfo              01;38;5;248 # Plain text
 
 .bin              00;38;5;249
 .com              00;38;5;111
@@ -205,6 +207,7 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .cache            01;38;5;236 # Scum
 .class            01;38;5;236 # Scum
 .incomplete       01;38;5;236 # Scum
+.mfasl            01;38;5;236 # Mozilla XUL precompiled javacript
 .o                01;38;5;236 # *nix Object file (shared libraries, core dumps etc)
 .pyc              01;38;5;236 # Scum (python compiled)
 
@@ -427,33 +430,26 @@ PKGBUILD          00;38;5;60
 .torrent          00;38;5;60
 .ttl              00;38;5;60
 
-.cfg              01;38;5;32 # Config
-.conf             01;38;5;32 # Config
-*config           01;38;5;32 # Config
-.hgignore         01;38;5;32 # Config
-.hgrc             01;38;5;32 # Config
-.htoprc           01;38;5;32 # Config
-.ini              01;38;5;32 # Config
-.json             01;38;5;32 # Config
-.msmtprc          01;38;5;32 # Config
-.muttrc           01;38;5;32 # Config
-.nix              01;38;5;32 # Config
-.ovpn             01;38;5;32 # Config
-*rc               01;38;5;32 # Config
-.rc               01;38;5;32 # Config
-.reg              01;38;5;32 # Config
-.sls              01;38;5;32 # Config (yaml usually)
-.xkb              03;38;5;32 # Config
-
-# .map              01;38;5;32
-# .mf               01;38;5;32
-# .mfasl            01;38;5;32
-# .mi               01;38;5;32
-# .mtx              01;38;5;32
-# .mutt             00;38;5;36
-# .netrc            01;38;5;34
-# .nfo              01;38;5;32
-# .pacnew           00;38;5;33
+.cfg              01;38;5;2 # Config
+.conf             01;38;5;2 # Config
+*config           01;38;5;2 # Config
+.hgignore         01;38;5;2 # Config
+.hgrc             01;38;5;2 # Config
+.htoprc           01;38;5;2 # Config
+.ini              01;38;5;2 # Config
+.json             01;38;5;2 # Config
+.mf               01;38;5;2 # Java manifest(config)
+.msmtprc          01;38;5;2 # Config
+.muttrc           01;38;5;2 # Config
+.netrc            01;38;5;2 # Config
+.nix              01;38;5;2 # Config
+.ovpn             01;38;5;2 # Config
+*rc               01;38;5;2 # Config
+.rc               01;38;5;2 # Config
+.reg              01;38;5;2 # Config
+.sls              01;38;5;2 # Config (yaml usually)
+.xkb              03;38;5;2 # Config
+.pacnew           04;38;5;33 # Config unusual
 
 .bib              00;38;5;29 # Data store # non-relational
 .dtd              00;38;5;29 # Data store # non-relational
@@ -479,9 +475,9 @@ PKGBUILD          00;38;5;60
 .yaml             00;38;5;29 # Data store # non-relational
 .yml              00;38;5;29 # Data store # non-relational
 
-.a                01;38;5;22
-.dll              01;38;5;22
-.so               01;38;5;22
+.a                01;38;5;22 # Libraries
+.dll              01;38;5;22 # Libraries
+.so               01;38;5;22 # Libraries
 
 .aac              03;38;5;37 # Audio formats (lossy, Apple)
 .axa              03;38;5;37 # Audio formats (lossy, CSIRO)
