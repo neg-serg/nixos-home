@@ -1,3 +1,5 @@
+# Partially inspired by https://github.com/trapd00r/LS_COLORS
+
 COLOR all
 OPTIONS -F -b -T 0
 EIGHTBIT 1
@@ -23,6 +25,34 @@ SETUID                38;5;37                # File that is setgid: u+s
 STICKY                38;5;86;48;5;234       # Dir with the sticky bit set +t and not other-writable
 STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writable
 
+*dircolors 48;5;89;38;5;197;1;3;4;7 # :-)
+
+*LICENSE          00;38;5;60  # Documentation
+*LICENSE.md       00;38;5;60  # Documentation
+*README           00;38;5;60  # Documentation
+*README.markdown  00;38;5;60  # Documentation
+*README.md        00;38;5;60  # Documentation
+*README.rst       00;38;5;60  # Documentation
+*README.txt       00;38;5;60  # Documentation
+*readme.txt       00;38;5;60  # Documentation
+*COPYING          00;38;5;60  # Documentation
+*INSTALL          00;38;5;60  # Documentation
+*COPYRIGHT        00;38;5;60  # Documentation
+*AUTHORS          00;38;5;60  # Documentation
+*HISTORY          00;38;5;60  # Documentation
+*CONTRIBUTORS     00;38;5;60  # Documentation
+*CONTRIBUTING     00;38;5;60  # Documentation
+*CONTRIBUTING.md  00;38;5;60  # Documentation
+*CHANGELOG        00;38;5;60  # Documentation
+*CHANGELOG.md     00;38;5;60  # Documentation
+*CODEOWNERS       00;38;5;60  # Documentation
+*PATENTS          00;38;5;60  # Documentation
+*VERSION          00;38;5;60  # Documentation
+*NOTICE           00;38;5;60  # Documentation
+*CHANGES          00;38;5;60  # Documentation
+
+.txt              00;38;5;253 # Plain text
+
 .bin              00;38;5;249
 .btm              00;38;5;111
 .com              00;38;5;111
@@ -31,42 +61,52 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .bat              00;38;5;31
 .cmd              00;38;5;31
 
-.7z               01;38;5;61
-.ace              01;38;5;61
-.alp              01;38;5;61
-.alz              01;38;5;61
-.arc              00;38;5;61
-.arj              00;38;5;61
-.bz               01;38;5;61
-.bz2              01;38;5;61
-.cpio             01;38;5;61
-.dz               01;38;5;61
-.gz               01;38;5;61
-.klwp             00;38;5;61
-.lha              01;38;5;61
-.lrz              01;38;5;61
-.lz               01;38;5;61
-.lz4              01;38;5;61
-.lzh              01;38;5;61
-.lzma             01;38;5;61
-.rar              00;38;5;63
-.rz               01;38;5;61
-.t7z              01;38;5;61
-.tar              00;38;5;61
-.taz              01;38;5;61
-.tbz              01;38;5;61
-.tbz2             01;38;5;61
-.tgz              01;38;5;61
-.tlz              01;38;5;61
-.txz              01;38;5;61
-.tz               01;38;5;61
-.tzo              01;38;5;61
-.xz               01;38;5;61
-.z                01;38;5;61
-.Z                01;38;5;61
-.zip              01;38;5;61
-.ZIP              01;38;5;61
-.zoo              01;38;5;61
+.7z               01;38;5;61 # Packs / archives
+.WARC             00;38;5;61 # Packs / archives
+.Z                01;38;5;61 # Packs / archives
+.ZIP              01;38;5;61 # Packs / archives
+.ace              01;38;5;61 # Packs / archives
+.alp              01;38;5;61 # Packs / archives
+.alz              01;38;5;61 # Packs / archives
+.arc              00;38;5;61 # Packs / archives
+.arj              00;38;5;61 # Packs / archives
+.br               01;38;5;61 # Packs / archives
+.bz               01;38;5;61 # Packs / archives
+.bz2              01;38;5;61 # Packs / archives
+.cpio             01;38;5;61 # Packs / archives
+.dz               01;38;5;61 # Packs / archives
+.gz               01;38;5;61 # Packs / archives
+.klwp             00;38;5;61 # Packs / archives
+.lha              01;38;5;61 # Packs / archives
+.lrz              01;38;5;61 # Packs / archives
+.lz               01;38;5;61 # Packs / archives
+.lz4              01;38;5;61 # Packs / archives
+.lzh              01;38;5;61 # Packs / archives
+.lzma             01;38;5;61 # Packs / archives
+.lzo              01;38;5;61 # Packs / archives
+.rar              00;38;5;63 # Packs / archives
+.rz               01;38;5;61 # Packs / archives
+.s7z              01;38;5;61 # Packs / archives
+.t7z              01;38;5;61 # Packs / archives
+.tar              00;38;5;61 # Packs / archives
+.taz              01;38;5;61 # Packs / archives
+.tbz              01;38;5;61 # Packs / archives
+.tbz2             01;38;5;61 # Packs / archives
+.tgz              01;38;5;61 # Packs / archives
+.tlz              01;38;5;61 # Packs / archives
+.txz              01;38;5;61 # Packs / archives
+.tz               01;38;5;61 # Packs / archives
+.tzo              01;38;5;61 # Packs / archives
+.warc             00;38;5;61 # Packs / archives
+.xz               01;38;5;61 # Packs / archives
+.z                01;38;5;61 # Packs / archives
+.zip              01;38;5;61 # Packs / archives
+.zipx             01;38;5;61 # Packs / archives
+.zoo              01;38;5;61 # Packs / archives
+.zpaq             01;38;5;61 # Packs / archives
+.zst              01;38;5;61 # Packs / archives
+.zstd             01;38;5;61 # Packs / archives
+.zz               01;38;5;61 # Packs / archives
 
 .apk              00;38;5;74
 .arj              00;38;5;73
@@ -190,7 +230,6 @@ PKGBUILD          00;38;5;74
 .rtf              00;38;5;30
 .sql              00;38;5;99
 .sqlite           00;38;5;99
-.txt              00;38;5;60
 .xla              00;38;5;14
 .xls              00;38;5;14
 .xlsm             00;38;5;14
@@ -341,7 +380,6 @@ zshrc             03;38;5;29
 .json             01;38;5;29
 .hjson            01;38;5;29
 .latex            01;03;38;5;73
-*LICENSE          00;38;5;60
 *Makefile         00;38;5;60
 .mk               00;38;5;60
 .modulemap        00;38;5;60
@@ -356,11 +394,6 @@ zshrc             03;38;5;29
 *rc               00;38;5;60
 .rc               00;38;5;60
 .rdf              00;38;5;60
-*README           00;38;5;60
-*README.markdown  00;38;5;60
-*README.md        00;38;5;60
-*readme.txt       00;38;5;60
-*README.txt       00;38;5;60
 .reg              00;38;5;29
 .sbt              00;38;5;60
 .sls              00;38;5;29
