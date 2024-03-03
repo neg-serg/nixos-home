@@ -223,32 +223,29 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .error            38;5;160;1 # error logs
 .stderr           38;5;160;1 # error logs
 
-.cbz              01;38;5;7
-.chm              00;38;5;235
 .chrt             01;38;5;14
-.djv              00;38;5;7
-.djvu             00;38;5;7
 .dvi              00;38;5;235
-.epub             00;38;5;7
-.fb2              00;38;5;7
 .gnumeric         00;38;5;14
-.lit              00;38;5;7
 .mf               03;38;5;110
 .mfasl            00;38;5;73
-.mobi             00;38;5;7
-.odp              00;38;5;29
-.ods              00;38;5;29
-.pdf              01;38;5;7
 
-# .odp                  38;5;166            # Presentation
-# .pps                  38;5;166            # Presentation
-# .ppt                  38;5;166            # Presentation
-# .pptx                 38;5;166            # Presentation
-# .ppts                 38;5;166            # Presentation
-# .pptxm                38;5;166;4          # Presentation (with macros)
-# .pptsm                38;5;166;4          # Presentation (with macros)
-.ppt              00;38;5;31
-.pptx             00;38;5;31
+.cbz              01;38;5;7 # Documents # binary
+.chm              01;38;5;7 # Documents # binary
+.djv              00;38;5;7 # Documents # binary
+.djvu             00;38;5;7 # Documents # binary
+.epub             00;38;5;7 # Documents # binary
+.fb2              00;38;5;7 # Documents # binary
+.lit              00;38;5;7 # Documents # binary
+.mobi             00;38;5;7 # Documents # binary
+.pdf              01;38;5;7 # Documents # binary
+
+.odp              00;38;5;31    # Presentation
+.pps              00;38;5;31    # Presentation
+.ppt              00;38;5;31    # Presentation (with macros)
+.ppts             00;38;5;31    # Presentation
+.pptx             00;38;5;31    # Presentation (with macros)
+.pptsm            00;38;5;31;4  # Presentation (with macros)
+.pptxm            00;38;5;31;4  # Presentation (with macros)
 
 .btm              00;38;5;99 # Data store
 .db               00;38;5;99 # Data store
