@@ -211,6 +211,7 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 
 .bak              01;38;5;236 # Backup / temporary files
 .bck              00;38;5;244 # Backup / temporary files
+.ii               00;38;5;244 # Backup / temporary files (gcc tmp file)
 .part             01;38;5;244 # Archive temporarypart
 .sassc            00;38;5;244 # Backup / temporary files
 .swo              00;38;5;244 # Backup / temporary files
@@ -224,29 +225,25 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .error            38;5;160;1 # error logs
 .stderr           38;5;160;1 # error logs
 
-.chrt             01;38;5;14
-.dvi              00;38;5;235
-.gnumeric         00;38;5;14
-.mf               03;38;5;110
-.mfasl            00;38;5;73
-
 .cbz              01;38;5;7 # Documents # binary
 .chm              01;38;5;7 # Documents # binary
-.djv              00;38;5;7 # Documents # binary
-.djvu             00;38;5;7 # Documents # binary
 .epub             00;38;5;7 # Documents # binary
 .fb2              00;38;5;7 # Documents # binary
 .lit              00;38;5;7 # Documents # binary
 .mobi             00;38;5;7 # Documents # binary
 .pdf              01;38;5;7 # Documents # binary
 
-.odp              00;38;5;31    # Presentation
-.pps              00;38;5;31    # Presentation
-.ppt              00;38;5;31    # Presentation (with macros)
-.ppts             00;38;5;31    # Presentation
-.pptx             00;38;5;31    # Presentation (with macros)
-.pptsm            00;38;5;31;4  # Presentation (with macros)
-.pptxm            00;38;5;31;4  # Presentation (with macros)
+.djv              00;38;5;249 # Documents # binary (djvu)
+.djvu             00;38;5;249 # Documents # binary (djvu)
+.dvi              01;38;5;249 # Documents # binary (djvu)
+
+.odp              00;38;5;31 # Presentation
+.pps              00;38;5;31 # Presentation
+.ppt              00;38;5;31 # Presentation (with macros)
+.ppts             00;38;5;31 # Presentation
+.pptx             00;38;5;31 # Presentation (with macros)
+.pptsm            00;38;5;31;4 # Presentation (with macros)
+.pptxm            00;38;5;31;4 # Presentation (with macros)
 
 .btm              00;38;5;99 # Data store
 .db               00;38;5;99 # Data store
@@ -265,6 +262,7 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .odt              00;38;5;175 # Documents
 .pages            00;38;5;175 # Documents
 
+.chrt             01;38;5;14 # KOffice chart
 .numbers          00;38;5;14 # Spreadsheet
 .ods              00;38;5;14 # Spreadsheet
 .xla              00;38;5;14 # Spreadsheet
@@ -288,7 +286,6 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 *1                03;38;5;249 # Markup (alternative)
 .info             03;38;5;249 # Markup (alternative)
 .latex            03;38;5;249 # Markup (alternative)
-.nfo              03;38;5;249 # Markup (alternative)
 .norg             03;38;5;249 # Markup (alternative)
 .org              03;38;5;249 # Markup (alternative)
 .tex              03;38;5;249 # Markup (alternative)
@@ -322,18 +319,6 @@ zshrc             03;38;5;103 # UNIX Shell
 .prql             00;38;5;83 # Code (SQL)
 .sql              00;38;5;83 # Code (SQL)
 
-.agda             00;38;5;34
-.asm              00;38;5;64
-.cs               00;38;5;36 # C Sharp
-.e                01;38;5;245
-
-.ex               00;38;5;36
-.example          00;38;5;36
-.fehbg            00;38;5;36
-.fonts            00;38;5;36
-.git              00;38;5;36
-.gitignore        00;38;5;238
-.hs               00;38;5;34
 .java             03;38;5;245 # Java
 .jsm              00;38;5;245 # Java
 .jnlp             03;38;5;245 # Java
@@ -358,23 +343,7 @@ zshrc             03;38;5;103 # UNIX Shell
 .diff             48;5;7;38;5;16;1
 .patch            48;5;7;38;5;16;1
 
-.attheme          00;38;5;35
-.erb              01;38;5;33
-.irb              01;38;5;33
-.pc               00;38;5;4
-.pfa              00;38;5;4
-.php              00;38;5;4
-.pid              00;38;5;4
-.pl               00;38;5;73
-.PL               01;38;5;73
-.pm               00;38;5;4
-.py               01;38;5;30
-.rb               01;03;38;5;33
-.ru               00;38;5;4
-.t                01;38;5;28
-.tcl              03;38;5;34
-.tk               03;38;5;34
-
+.attheme          01;38;5;5 # Theme (android telegram theme data)
 .colors           01;38;5;5 # Theme
 .rasi             01;38;5;5 # Theme
 .sty              01;38;5;5 # Theme
@@ -404,45 +373,44 @@ zshrc             03;38;5;103 # UNIX Shell
 .allow            00;38;5;24
 .deny             00;38;5;89
 
-# Files of special interest (base1 + bold)
-*Dockerfile       00;38;5;60
-*Makefile         00;38;5;60
-PKGBUILD          00;38;5;60
-*Rakefile         00;38;5;60
+# Files of special interest
 *TODO             01;38;5;91
-*build.xml        00;38;5;60
 .icls             00;38;5;60
 .jidgo            00;38;5;60
-.mk               00;38;5;60
 .modulemap        00;38;5;60
 .n3               00;38;5;60
-.nfo              00;38;5;60
 .nt               00;38;5;60
 .owl              00;38;5;60
 .qml              00;38;5;60
 .rdf              00;38;5;60
-.sbt              00;38;5;60
 .torrent          00;38;5;60
 .ttl              00;38;5;60
 
-.cfg              01;38;5;2 # Config
-.conf             01;38;5;2 # Config
-*config           01;38;5;2 # Config
-.hgignore         01;38;5;2 # Config
-.hgrc             01;38;5;2 # Config
-.htoprc           01;38;5;2 # Config
-.ini              01;38;5;2 # Config
-.json             01;38;5;2 # Config
-.mf               01;38;5;2 # Java manifest(config)
-.msmtprc          01;38;5;2 # Config
-.muttrc           01;38;5;2 # Config
-.netrc            01;38;5;2 # Config
-.nix              01;38;5;2 # Config
-.ovpn             01;38;5;2 # Config
-*rc               01;38;5;2 # Config
-.rc               01;38;5;2 # Config
-.reg              01;38;5;2 # Config
-.sls              01;38;5;2 # Config (yaml usually)
+*Dockerfile       00;38;5;60 # Build files
+*Makefile         00;38;5;60 # Build files
+*Rakefile         00;38;5;60 # Build files
+*build.xml        00;38;5;60 # Build files
+.mk               00;38;5;60 # Build files
+.sbt              00;38;5;60 # Build files
+
+.cfg              03;38;5;2 # Config
+.conf             03;38;5;2 # Config
+*config           03;38;5;2 # Config
+.hgignore         03;38;5;2 # Config
+.hgrc             03;38;5;2 # Config
+.htoprc           03;38;5;2 # Config
+.ini              03;38;5;2 # Config
+.json             03;38;5;2 # Config
+.mf               03;38;5;2 # Java manifest(config)
+.msmtprc          03;38;5;2 # Config
+.muttrc           03;38;5;2 # Config
+.netrc            03;38;5;2 # Config
+.nix              03;38;5;2 # Config
+.ovpn             03;38;5;2 # Config
+*rc               03;38;5;2 # Config
+.rc               03;38;5;2 # Config
+.reg              03;38;5;2 # Config
+.sls              03;38;5;2 # Config (yaml usually)
 .xkb              03;38;5;2 # Config
 .pacnew           04;38;5;33 # Config unusual
 
@@ -601,42 +569,69 @@ PKGBUILD          00;38;5;60
 .st               00;38;5;232 # Emulator roms, emulator savegames
 .ipk              00;38;5;232 # Emulator roms, emulator savegames (Nintendo DS Packed Images)
 
-# systemd units
-# http://www.freedesktop.org/software/systemd/man/systemd.unit.html
+# systemd units http://www.freedesktop.org/software/systemd/man/systemd.unit.html
 .automount        00;38;5;66
 .desktop          00;38;5;75
 .device           00;38;5;24
 .mount            00;38;5;66
 .path             00;38;5;66
-@.service         00;38;5;45
+.pid              01;38;5;1 # pid file
 .service          00;38;5;81
 .snapshot         00;38;5;97
 .socket           00;38;5;75
 .swap             00;38;5;97
 .target           00;38;5;73
 .timer            00;38;5;111
+@.service         00;38;5;45
+
+.agda             00;38;5;34 # Agda
+.asm              00;38;5;64 # Assembler
+.e                01;38;5;245
+.erb              01;38;5;33
+.ex               00;38;5;36
+.example          00;38;5;36
+.fehbg            00;38;5;36
+.fonts            00;38;5;36
+.git              00;38;5;36
+.gitignore        00;38;5;238
+.gnumeric         00;38;5;14
+.hs               00;38;5;34
+.irb              01;38;5;33
+.mf               03;38;5;110
+.pc               00;38;5;4
+.pfa              00;38;5;4
+.php              00;38;5;4 # PHP
+.pl               00;38;5;73 # Perl
+.PL               01;38;5;73 # Perl
+.pm               00;38;5;4
+.py               01;38;5;30 # Python
+.rb               01;03;38;5;33 # Ruby
+.ru               00;38;5;4
 
 # source files
-.c++              01;03;38;5;24
-.C                01;03;38;5;24
-.cc               01;03;38;5;24
-.cp               01;03;38;5;24
-.cpp              01;03;38;5;24
-.cxx              01;03;38;5;24
-.c                01;38;5;110
-.clj              03;38;5;64
-.cs               01;03;38;5;74 # C sharp
-.el               03;38;5;64
-.erl              03;38;5;70
-.fnl              03;38;5;64
-.glsl             03;38;5;70
-.go               03;38;5;70
-.ii               01;03;38;5;24
-.ml               03;38;5;70
-.pas              03;38;5;73
-.rs               03;38;5;73
-.scala            03;38;5;70
-.swift            03;38;5;73
+.c                01;38;5;110 # Pure C
+.c++              01;03;38;5;24 # C++
+.C                01;03;38;5;24 # C++
+.cc               01;03;38;5;24 # C++
+.cp               01;03;38;5;24 # C++
+.cpp              01;03;38;5;24 # C++
+.cs               00;38;5;36 # C Sharp
+.cxx              01;03;38;5;24 # C++
+
+.clj              03;38;5;64 # Clojure
+.el               03;38;5;64 # Emacs config
+.erl              03;38;5;70 # Erlang
+.fnl              03;38;5;64 # Fennel
+.glsl             03;38;5;70 # GLSL Shaders
+.go               03;38;5;70 # Go
+.ml               03;38;5;70 # ML
+.pas              03;38;5;73 # Pascal
+.rs               03;38;5;73 # Rust
+.scala            03;38;5;70 # Scala
+.swift            03;38;5;73 # Swift
+.t                01;38;5;28
+.tcl              03;38;5;34 # Tcl
+.tk               03;38;5;34 # Tk
 
 # headers
 .f                00;38;5;29
@@ -678,6 +673,7 @@ PKGBUILD          00;38;5;60
 *LICENSE.md       38;5;243;04 # Documentation
 *NOTICE           38;5;243;04 # Documentation
 *PATENTS          38;5;243;04 # Documentation
+*PKGBUILD         00;38;5;60 # Arch linux build
 *README           38;5;243;04 # Documentation
 *README.markdown  38;5;243;04 # Documentation
 *README*.md       38;5;243;04 # Documentation
