@@ -225,6 +225,7 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .error            38;5;160;1 # error logs
 .stderr           38;5;160;1 # error logs
 
+.cbr              01;38;5;7 # Documents # binary (comix archive)
 .cbz              01;38;5;7 # Documents # binary
 .chm              01;38;5;7 # Documents # binary
 .epub             00;38;5;7 # Documents # binary
@@ -232,6 +233,7 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .lit              00;38;5;7 # Documents # binary
 .mobi             00;38;5;7 # Documents # binary
 .pdf              01;38;5;7 # Documents # binary
+.PDF              01;38;5;7 # Documents # binary
 
 .djv              00;38;5;249 # Documents # binary (djvu)
 .djvu             00;38;5;249 # Documents # binary (djvu)
@@ -247,10 +249,19 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 
 .btm              00;38;5;99 # Data store
 .db               00;38;5;99 # Data store
+.fmp12            00;38;5;99 # Data store
+.fp7              00;38;5;99 # Data store
 .ldf              00;38;5;99 # MS SQL journal
+.localstorage     00;38;5;99 # Data store
 .mdb              00;38;5;99 # Data store
 .mde              00;38;5;99 # Data store
+.nc               00;38;5;99 # Data store # NetCDF
 .sqlite           00;38;5;99 # Data store
+.typelib          00;38;5;99 # Data store
+.accdb            00;38;5;161 # Data store # MS Access
+.accde            00;38;5;161 # Data store # MS Access
+.accdr            00;38;5;161 # Data store # MS Access
+.accdt            00;38;5;161 # Data store # MS Access
 
 .doc              00;38;5;175 # Documents # with macros
 .docm             00;38;5;175 # Documents
@@ -297,15 +308,20 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .awk              00;38;5;103 # UNIX Shell
 .bash             01;38;5;103 # UNIX Shell
 .bash_history     01;38;5;103 # UNIX Shell
+.bash_login       03;38;5;103 # UNIX Shell
 .bash_logout      03;38;5;103 # UNIX Shell
 .bash_profile     03;38;5;103 # UNIX Shell
-bashrc            03;38;5;103 # UNIX Shell
 .csh              01;38;5;103 # UNIX Shell
 .dash             01;38;5;103 # UNIX Shell
 .fish             01;38;5;103 # UNIX Shell
 .ksh              01;38;5;103 # UNIX Shell
 .profile          03;38;5;103 # UNIX Shell
 .sed              03;38;5;103 # UNIX Shell
+.zlogin           03;38;5;103 # UNIX Shell
+.zlogout          03;38;5;103 # UNIX Shell
+.zprofile         03;38;5;103 # UNIX Shell
+.zshenv           03;38;5;103 # UNIX Shell
+bashrc            03;38;5;103 # UNIX Shell
 .sh               01;38;5;103 # UNIX Shell
 .sh*              01;38;5;103 # UNIX Shell
 .tcsh             01;38;5;103 # UNIX Shell
@@ -374,7 +390,6 @@ zshrc             03;38;5;103 # UNIX Shell
 .deny             00;38;5;89
 
 # Files of special interest
-*TODO             01;38;5;91
 .icls             00;38;5;60
 .jidgo            00;38;5;60
 .modulemap        00;38;5;60
@@ -395,7 +410,6 @@ zshrc             03;38;5;103 # UNIX Shell
 
 .cfg              03;38;5;2 # Config
 .conf             03;38;5;2 # Config
-*config           03;38;5;2 # Config
 .hgignore         03;38;5;2 # Config
 .hgrc             03;38;5;2 # Config
 .htoprc           03;38;5;2 # Config
@@ -407,16 +421,25 @@ zshrc             03;38;5;103 # UNIX Shell
 .netrc            03;38;5;2 # Config
 .nix              03;38;5;2 # Config
 .ovpn             03;38;5;2 # Config
-*rc               03;38;5;2 # Config
+.psf              03;38;5;2 # Config (photoshop settings)
 .rc               03;38;5;2 # Config
 .reg              03;38;5;2 # Config
 .sls              03;38;5;2 # Config (yaml usually)
 .xkb              03;38;5;2 # Config
+
 .pacnew           04;38;5;33 # Config unusual
+.prisma           04;38;5;33 # Prisma Schema/Config
+
+*authorized_keys  03;38;5;2 # Config
+*cfg              03;38;5;2 # Config
+*conf             03;38;5;2 # Config
+*config           03;38;5;2 # Config
+*known_hosts      03;38;5;2 # Config
+*rc               03;38;5;2 # Config
 
 .bib              00;38;5;29 # Data store # non-relational
-.csv              00;38;5;28 # Data store # non-relational
 .dtd              00;38;5;29 # Data store # non-relational
+.epf              00;38;5;29 # Data store # non-relational # Autodesk preferences
 .fxml             00;38;5;29 # Data store # non-relational
 .hjson            01;38;5;29 # Data store # non-relational
 .json5            00;38;5;29 # Data store # non-relational
@@ -427,17 +450,22 @@ zshrc             03;38;5;103 # UNIX Shell
 .msg              00;38;5;29 # Data store # non-relational
 .ndjson           00;38;5;29 # Data store # non-relational
 .pgn              00;38;5;29 # Data store # non-relational
+.plist            00;38;5;29 # Data store # non-relational (apple property list)
 .rdata            00;38;5;29 # Data store # non-relational
 .RData            00;38;5;29 # Data store # non-relational
 .rnc              00;38;5;29 # Data store # non-relational
 .rng              00;38;5;29 # Data store # non-relational
 .rss              00;38;5;29 # Data store # non-relational
 .sgml             00;38;5;29 # Data store # non-relational
+.tmTheme          00;38;5;29 # Data store # non-relational # Textmate settings
 .toml             00;38;5;29 # Data store # non-relational
 .xml              00;38;5;29 # Data store # non-relational
 .xsd              00;38;5;29 # Data store # non-relational
 .yaml             00;38;5;29 # Data store # non-relational
 .yml              00;38;5;29 # Data store # non-relational
+
+.csv              00;38;5;28 # Spreadsheet (plain text)
+.tsv              00;38;5;28 # Spreadsheet (plain text)
 
 .a                01;38;5;22 # Libraries
 .dll              01;38;5;22 # Libraries
@@ -592,8 +620,6 @@ zshrc             03;38;5;103 # UNIX Shell
 .example          00;38;5;36
 .fehbg            00;38;5;36
 .fonts            00;38;5;36
-.git              00;38;5;36
-.gitignore        00;38;5;238
 .gnumeric         00;38;5;14
 .hs               00;38;5;34
 .irb              01;38;5;33
@@ -607,6 +633,11 @@ zshrc             03;38;5;103 # UNIX Shell
 .py               01;38;5;30 # Python
 .rb               01;03;38;5;33 # Ruby
 .ru               00;38;5;4
+
+.git              00;38;5;36 # Version control
+.gitattributes    00;38;5;36 # Version control
+.github           00;38;5;36 # Version control
+.gitignore        00;38;5;238 # Version control
 
 # source files
 .c                01;38;5;110 # Pure C
@@ -680,4 +711,5 @@ zshrc             03;38;5;103 # UNIX Shell
 *README.rst       38;5;243;04 # Documentation
 *readme.txt       38;5;243;04 # Documentation
 *README.txt       38;5;243;04 # Documentation
+*TODO             01;38;5;91 # Todo list
 *VERSION          38;5;243;04 # Documentation
