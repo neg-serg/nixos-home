@@ -1,13 +1,13 @@
 # Build options
 [buildOptions]
-optimizeWithTtx = false
+optimizeWithTtx = true
 
 [buildPlans.iosevka-neg]
     family = "Iosevka"
     desc = "Default"
     calt = false
     export-glyph-names = true
-    webfont-formats = ['ttf']
+    webfont-formats = ['otf']
     spacing = "fontconfig-mono"
     snapshotFamily = 'iosevka'
     snapshotFeature = '"NWID" off'
