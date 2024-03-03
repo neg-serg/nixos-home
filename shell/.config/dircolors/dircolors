@@ -29,9 +29,9 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 *dir_colors 48;5;89;38;5;197;1;3;4;7 # :-)
 
 .txt              00;38;5;248 # Plain text
+.lesshst          01;38;5;248 # Plain text
 
 .bin              00;38;5;249
-.btm              00;38;5;111
 .com              00;38;5;111
 .exe              00;38;5;111
 
@@ -239,24 +239,33 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .odp              00;38;5;29
 .ods              00;38;5;29
 .pdf              01;38;5;7
+
+# .odp                  38;5;166            # Presentation
+# .pps                  38;5;166            # Presentation
+# .ppt                  38;5;166            # Presentation
+# .pptx                 38;5;166            # Presentation
+# .ppts                 38;5;166            # Presentation
+# .pptxm                38;5;166;4          # Presentation (with macros)
+# .pptsm                38;5;166;4          # Presentation (with macros)
 .ppt              00;38;5;31
 .pptx             00;38;5;31
-.sqlite           00;38;5;99
 
+.btm              00;38;5;99 # Data store
 .db               00;38;5;99 # Data store
 .ldf              00;38;5;99 # MS SQL journal
 .mdb              00;38;5;99 # Data store
 .mde              00;38;5;99 # Data store
+.sqlite           00;38;5;99 # Data store
 
-.doc              00;38;5;30 # Documents # with macros
-.docm             00;38;5;30 # Documents
-.docx             00;38;5;30 # Documents
-.dot              00;38;5;30 # Documents
-.dotm             00;38;5;30 # Documents
-.odb              00;38;5;30 # Documents
-.odm              00;38;5;30 # Documents
-.odt              00;38;5;30 # Documents
-.pages            00;38;5;30 # Documents
+.doc              00;38;5;175 # Documents # with macros
+.docm             00;38;5;175 # Documents
+.docx             00;38;5;175 # Documents
+.dot              00;38;5;175 # Documents
+.dotm             00;38;5;175 # Documents
+.odb              00;38;5;175 # Documents
+.odm              00;38;5;175 # Documents
+.odt              00;38;5;175 # Documents
+.pages            00;38;5;175 # Documents
 
 .numbers          00;38;5;14 # Spreadsheet
 .ods              00;38;5;14 # Spreadsheet
@@ -328,30 +337,16 @@ zshrc             03;38;5;103 # UNIX Shell
 .fonts            00;38;5;36
 .git              00;38;5;36
 .gitignore        00;38;5;238
-.hgignore         01;38;5;23
-.hgrc             01;38;5;23
 .hs               00;38;5;34
-.htoprc           01;38;5;23
-.java             03;38;5;245
-.jnlp             03;38;5;245
-.js               03;38;5;34
-.jsm              00;38;5;74
-.jsp              00;38;5;74
+.java             03;38;5;245 # Java
+.jsm              00;38;5;245 # Java
+.jnlp             03;38;5;245 # Java
+.jsp              00;38;5;245 # Java
+.js               03;38;5;74 # Javascript
+.js               03;38;5;74 # Typescript
 .lam              00;38;5;74
-.lesshst          01;38;5;23
 .lisp             00;38;5;74
-.lua              03;38;5;24
-.map              01;38;5;32
-.mf               01;38;5;32
-.mfasl            01;38;5;32
-.mi               01;38;5;32
-.msmtprc          01;38;5;32
-.mtx              01;38;5;32
-.mutt             00;38;5;36
-.muttrc           01;38;5;32
-.netrc            01;38;5;34
-.nfo              01;38;5;32
-.pacnew           00;38;5;33
+.lua              03;38;5;74
 .scm              00;38;5;74
 
 .css              00;38;5;31 # Styling (web)
@@ -421,7 +416,6 @@ PKGBUILD          00;38;5;60
 *Rakefile         00;38;5;60
 *TODO             01;38;5;91
 *build.xml        00;38;5;60
-*rc               00;38;5;60
 .icls             00;38;5;60
 .jidgo            00;38;5;60
 .mk               00;38;5;60
@@ -431,27 +425,62 @@ PKGBUILD          00;38;5;60
 .nt               00;38;5;60
 .owl              00;38;5;60
 .qml              00;38;5;60
-.rc               00;38;5;60
 .rdf              00;38;5;60
 .sbt              00;38;5;60
 .torrent          00;38;5;60
 .ttl              00;38;5;60
-.xml              00;38;5;60
-.yaml             00;38;5;60
 
-.cfg              00;38;5;29 # Config
-.conf             00;38;5;29 # Config
-*config           00;38;5;29 # Config
-.hjson            01;38;5;29 # Config
-.ini              00;38;5;29 # Config
-.json             01;38;5;29 # Config
-.nix              00;38;5;29 # Config
-.ovpn             00;38;5;29 # Config
-.reg              00;38;5;29 # Config
-.sls              00;38;5;29 # Config (yaml usually)
-.toml             00;38;5;29 # Config
-.xkb              03;38;5;29 # Config
-.yml              00;38;5;29 # Config
+.cfg              01;38;5;32 # Config
+.conf             01;38;5;32 # Config
+*config           01;38;5;32 # Config
+.hgignore         01;38;5;32 # Config
+.hgrc             01;38;5;32 # Config
+.htoprc           01;38;5;32 # Config
+.ini              01;38;5;32 # Config
+.json             01;38;5;32 # Config
+.msmtprc          01;38;5;32 # Config
+.muttrc           01;38;5;32 # Config
+.nix              01;38;5;32 # Config
+.ovpn             01;38;5;32 # Config
+*rc               01;38;5;32 # Config
+.rc               01;38;5;32 # Config
+.reg              01;38;5;32 # Config
+.sls              01;38;5;32 # Config (yaml usually)
+.xkb              03;38;5;32 # Config
+
+# .map              01;38;5;32
+# .mf               01;38;5;32
+# .mfasl            01;38;5;32
+# .mi               01;38;5;32
+# .mtx              01;38;5;32
+# .mutt             00;38;5;36
+# .netrc            01;38;5;34
+# .nfo              01;38;5;32
+# .pacnew           00;38;5;33
+
+.bib              00;38;5;29 # Data store # non-relational
+.dtd              00;38;5;29 # Data store # non-relational
+.fxml             00;38;5;29 # Data store # non-relational
+.hjson            01;38;5;29 # Data store # non-relational
+.json5            00;38;5;29 # Data store # non-relational
+.jsonc            00;38;5;29 # Data store # non-relational
+.jsonl            00;38;5;29 # Data store # non-relational
+.jsonnet          00;38;5;29 # Data store # non-relational
+.libsonnet        00;38;5;29 # Data store # non-relational
+.msg              00;38;5;29 # Data store # non-relational
+.ndjson           00;38;5;29 # Data store # non-relational
+.pgn              00;38;5;29 # Data store # non-relational
+.rdata            00;38;5;29 # Data store # non-relational
+.RData            00;38;5;29 # Data store # non-relational
+.rnc              00;38;5;29 # Data store # non-relational
+.rng              00;38;5;29 # Data store # non-relational
+.rss              00;38;5;29 # Data store # non-relational
+.sgml             00;38;5;29 # Data store # non-relational
+.toml             00;38;5;29 # Data store # non-relational
+.xml              00;38;5;29 # Data store # non-relational
+.xsd              00;38;5;29 # Data store # non-relational
+.yaml             00;38;5;29 # Data store # non-relational
+.yml              00;38;5;29 # Data store # non-relational
 
 .a                01;38;5;22
 .dll              01;38;5;22
@@ -601,13 +630,13 @@ PKGBUILD          00;38;5;60
 # source files
 .c++              01;03;38;5;24
 .C                01;03;38;5;24
-.c                01;38;5;110
 .cc               01;03;38;5;24
-.clj              03;38;5;64
 .cp               01;03;38;5;24
 .cpp              01;03;38;5;24
-.cs               01;03;38;5;74
 .cxx              01;03;38;5;24
+.c                01;38;5;110
+.clj              03;38;5;64
+.cs               01;03;38;5;74 # C sharp
 .el               03;38;5;64
 .erl              03;38;5;70
 .fnl              03;38;5;64
