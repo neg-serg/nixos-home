@@ -39,7 +39,7 @@ with {
             };
             Service = {
                 Type = "oneshot";
-                ExecStart = "${pkgs.zsh}/bin/zsh -c \"echo 'circle next term' | ${pkgs.netcat}/bin/nc localhost 15555 -w 0\"";
+                ExecStart = "${pkgs.zsh}/bin/zsh -c \"echo 'circle next term' | ${pkgs.netcat-openbsd}/bin/nc localhost 15555 -w 0\"";
                 Restart = "on-failure";
                 RestartSec = "1";
                 StartLimitBurst = "20";
