@@ -423,30 +423,33 @@ zshrc             03;38;5;29
 .st5              00;38;5;69
 
 # Audio formats
-.aac              03;38;5;37
-.aiff             01;03;38;5;37
-.alac             01;03;38;5;37
-.ape              01;03;38;5;37
-.au               03;38;5;37
-.axa              03;38;5;37
-.dff              01;03;38;5;37
-.dsf              01;03;38;5;37
-.flac             01;03;38;5;37
-.m4a              03;38;5;37
-.m4b              03;38;5;37
-.m4r              03;38;5;37
-.mid              03;38;5;37
-.midi             03;38;5;37
-.mka              03;38;5;37
-.mp2              03;38;5;37
-.mp3              03;38;5;37
-.mpc              03;38;5;37
-.oga              03;38;5;37
-.ogg              03;38;5;37
-.ra               03;38;5;37
-.spx              03;38;5;37
-.wav              03;38;5;37
-.wma              03;38;5;37
+.aac              03;38;5;37 # Audio formats (lossy, Apple)
+.aiff             01;03;38;5;37 # Audio formats (Apple legacy)
+.au               03;38;5;37 # Audio formats (lossy, Sun legacy)
+.axa              03;38;5;37 # Audio formats (lossy, CSIRO)
+.m4a              03;38;5;37 # Audio formats (lossy, container, aac usually)
+.m4b              03;38;5;37 # Audio formats (lossy, audiobook)
+.m4r              03;38;5;37 # Audio formats (lossy, container, aac usually)
+.mka              03;38;5;37 # Audio formats (lossy, matroska audio container)
+.mp2              03;38;5;37 # Audio formats (lossy)
+.mp3              03;38;5;37 # Audio formats (lossy)
+.mpc              03;38;5;37 # Audio formats (lossy, musepack)
+.oga              03;38;5;37 # Audio formats (lossy)
+.ogg              03;38;5;37 # Audio formats (lossy)
+.ra               03;38;5;37 # Audio formats (lossy, real audio)
+.spx              03;38;5;37 # Audio formats (lossy, compressed ogg)
+.wma              03;38;5;37 # Audio formats (lossy)
+
+.mid              04;38;5;37 # Audio formats (midi)
+.midi             04;38;5;37 # Audio formats (midi)
+
+.alac             01;03;38;5;34 # Audio formats (lossless, Apple)
+.ape              01;03;38;5;34 # Audio formats (lossless)
+.flac             01;03;38;5;34 # Audio formats (lossless)
+.wav              01;03;38;5;34 # Audio formats (lossy)
+
+.dff              01;03;38;5;36 # Audio formats (dsd)
+.dsf              01;03;38;5;36 # Audio formats (dsd)
 
 # sheets
 .cue              03;38;5;28
