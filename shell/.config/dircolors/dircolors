@@ -25,31 +25,32 @@ SETUID                38;5;37                # File that is setgid: u+s
 STICKY                38;5;86;48;5;234       # Dir with the sticky bit set +t and not other-writable
 STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writable
 
-*dircolors 48;5;89;38;5;197;1;3;4;7 # :-)
+*dircolors  48;5;89;38;5;197;1;3;4;7 # :-)
+*dir_colors 48;5;89;38;5;197;1;3;4;7 # :-)
 
-*LICENSE          00;38;5;60  # Documentation
-*LICENSE.md       00;38;5;60  # Documentation
-*README           00;38;5;60  # Documentation
-*README.markdown  00;38;5;60  # Documentation
-*README.md        00;38;5;60  # Documentation
-*README.rst       00;38;5;60  # Documentation
-*README.txt       00;38;5;60  # Documentation
-*readme.txt       00;38;5;60  # Documentation
-*COPYING          00;38;5;60  # Documentation
-*INSTALL          00;38;5;60  # Documentation
-*COPYRIGHT        00;38;5;60  # Documentation
-*AUTHORS          00;38;5;60  # Documentation
-*HISTORY          00;38;5;60  # Documentation
-*CONTRIBUTORS     00;38;5;60  # Documentation
-*CONTRIBUTING     00;38;5;60  # Documentation
-*CONTRIBUTING.md  00;38;5;60  # Documentation
-*CHANGELOG        00;38;5;60  # Documentation
-*CHANGELOG.md     00;38;5;60  # Documentation
-*CODEOWNERS       00;38;5;60  # Documentation
-*PATENTS          00;38;5;60  # Documentation
-*VERSION          00;38;5;60  # Documentation
-*NOTICE           00;38;5;60  # Documentation
-*CHANGES          00;38;5;60  # Documentation
+*LICENSE          00;38;5;60 # Documentation
+*LICENSE.md       00;38;5;60 # Documentation
+*README           00;38;5;60 # Documentation
+*README.markdown  00;38;5;60 # Documentation
+*README.md        00;38;5;60 # Documentation
+*README.rst       00;38;5;60 # Documentation
+*README.txt       00;38;5;60 # Documentation
+*readme.txt       00;38;5;60 # Documentation
+*COPYING          00;38;5;60 # Documentation
+*INSTALL          00;38;5;60 # Documentation
+*COPYRIGHT        00;38;5;60 # Documentation
+*AUTHORS          00;38;5;60 # Documentation
+*HISTORY          00;38;5;60 # Documentation
+*CONTRIBUTORS     00;38;5;60 # Documentation
+*CONTRIBUTING     00;38;5;60 # Documentation
+*CONTRIBUTING.md  00;38;5;60 # Documentation
+*CHANGELOG        00;38;5;60 # Documentation
+*CHANGELOG.md     00;38;5;60 # Documentation
+*CODEOWNERS       00;38;5;60 # Documentation
+*PATENTS          00;38;5;60 # Documentation
+*VERSION          00;38;5;60 # Documentation
+*NOTICE           00;38;5;60 # Documentation
+*CHANGES          00;38;5;60 # Documentation
 
 .txt              00;38;5;253 # Plain text
 
@@ -58,55 +59,52 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .com              00;38;5;111
 .exe              00;38;5;111
 
-.bat              00;38;5;31
-.cmd              00;38;5;31
-
-.7z               01;38;5;61 # Packs / archives
-.WARC             00;38;5;61 # Packs / archives
-.Z                01;38;5;61 # Packs / archives
-.ZIP              01;38;5;61 # Packs / archives
-.ace              01;38;5;61 # Packs / archives
-.alp              01;38;5;61 # Packs / archives
-.alz              01;38;5;61 # Packs / archives
-.arc              00;38;5;61 # Packs / archives
-.arj              00;38;5;61 # Packs / archives ( legacy )
-.br               01;38;5;61 # Packs / archives
-.bz               01;38;5;61 # Packs / archives
-.bz2              01;38;5;61 # Packs / archives
-.cpio             01;38;5;61 # Packs / archives
-.dz               01;38;5;61 # Packs / archives
-.gz               01;38;5;61 # Packs / archives
-.klwp             00;38;5;61 # Packs / archives
-.lha              01;38;5;61 # Packs / archives
-.lrz              01;38;5;61 # Packs / archives
-.lz               01;38;5;61 # Packs / archives
-.lz4              01;38;5;61 # Packs / archives
-.lzh              01;38;5;61 # Packs / archives
-.lzma             01;38;5;61 # Packs / archives
-.lzo              01;38;5;61 # Packs / archives
-.rar              00;38;5;61 # Packs / archives
-.rz               01;38;5;61 # Packs / archives
-.s7z              01;38;5;61 # Packs / archives
-.t7z              01;38;5;61 # Packs / archives
-.tar              00;38;5;61 # Packs / archives
-.taz              01;38;5;61 # Packs / archives
-.tbz              01;38;5;61 # Packs / archives
-.tbz2             01;38;5;61 # Packs / archives
-.tgz              01;38;5;61 # Packs / archives
-.tlz              01;38;5;61 # Packs / archives
-.txz              01;38;5;61 # Packs / archives
-.tz               01;38;5;61 # Packs / archives
-.tzo              01;38;5;61 # Packs / archives
-.warc             00;38;5;61 # Packs / archives
-.xz               01;38;5;61 # Packs / archives
-.z                01;38;5;61 # Packs / archives
-.zip              01;38;5;61 # Packs / archives
-.zipx             01;38;5;61 # Packs / archives
-.zoo              01;38;5;61 # Packs / archives
-.zpaq             01;38;5;61 # Packs / archives
-.zst              01;38;5;61 # Packs / archives
-.zstd             01;38;5;61 # Packs / archives
-.zz               01;38;5;61 # Packs / archives
+.7z               01;38;5;61 # Arhives / Packages
+.WARC             00;38;5;61 # Arhives / Packages
+.Z                01;38;5;61 # Arhives / Packages
+.ZIP              01;38;5;61 # Arhives / Packages
+.ace              01;38;5;61 # Arhives / Packages
+.alp              01;38;5;61 # Arhives / Packages
+.alz              01;38;5;61 # Arhives / Packages
+.arc              00;38;5;61 # Arhives / Packages
+.arj              00;38;5;61 # Arhives / Packages (legacy)
+.br               01;38;5;61 # Arhives / Packages
+.bz               01;38;5;61 # Arhives / Packages
+.bz2              01;38;5;61 # Arhives / Packages
+.cpio             01;38;5;61 # Arhives / Packages
+.dz               01;38;5;61 # Arhives / Packages
+.gz               01;38;5;61 # Arhives / Packages
+.klwp             00;38;5;61 # Arhives / Packages
+.lha              01;38;5;61 # Arhives / Packages
+.lrz              01;38;5;61 # Arhives / Packages
+.lz               01;38;5;61 # Arhives / Packages
+.lz4              01;38;5;61 # Arhives / Packages
+.lzh              01;38;5;61 # Arhives / Packages
+.lzma             01;38;5;61 # Arhives / Packages
+.lzo              01;38;5;61 # Arhives / Packages
+.rar              00;38;5;61 # Arhives / Packages
+.rz               01;38;5;61 # Arhives / Packages
+.s7z              01;38;5;61 # Arhives / Packages
+.t7z              01;38;5;61 # Arhives / Packages
+.tar              00;38;5;61 # Arhives / Packages
+.taz              01;38;5;61 # Arhives / Packages
+.tbz              01;38;5;61 # Arhives / Packages
+.tbz2             01;38;5;61 # Arhives / Packages
+.tgz              01;38;5;61 # Arhives / Packages
+.tlz              01;38;5;61 # Arhives / Packages
+.txz              01;38;5;61 # Arhives / Packages
+.tz               01;38;5;61 # Arhives / Packages
+.tzo              01;38;5;61 # Arhives / Packages
+.warc             00;38;5;61 # Arhives / Packages
+.xz               01;38;5;61 # Arhives / Packages
+.z                01;38;5;61 # Arhives / Packages
+.zip              01;38;5;61 # Arhives / Packages
+.zipx             01;38;5;61 # Arhives / Packages
+.zoo              01;38;5;61 # Arhives / Packages
+.zpaq             01;38;5;61 # Arhives / Packages
+.zst              01;38;5;61 # Arhives / Packages
+.zstd             01;38;5;61 # Arhives / Packages
+.zz               01;38;5;61 # Arhives / Packages
 
 .apk              00;38;5;74 # Packaged apps
 .cab              00;38;5;74 # Packaged apps
@@ -126,67 +124,89 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .war              00;38;5;73 # Packaged apps
 .xpi              00;38;5;74 # Packaged apps
 
-.qcow             00;38;5;61 # Disk images (virtual)
-.qcow2            00;38;5;61 # Disk images (virtual)
-.vdi              00;38;5;61 # Disk images (virtual)
-.vmdk             00;38;5;61 # Disk images (virtual)
+.qcow             00;38;5;89 # Disk images (virtual, QEMU)
+.qcow2            00;38;5;89 # Disk images (virtual, QEMU)
+.vdi              00;38;5;89 # Disk images (virtual)
+.vmdk             00;38;5;89 # Disk images (virtual)
+.fvd              00;38;5;89 # Disk images (virtual, QEMU)
+.vhd              00;38;5;89 # Disk images (virtual, old)
+.vhdx             00;38;5;89 # Disk images (virtual, hyper-v)
 
-.dmg              01;38;5;134 # Disk images
+.dmg              01;38;5;134 # Disk images (apple)
 .img              01;38;5;134 # Disk images
-.iso              01;38;5;134 # Disk images
-.ISO              01;38;5;134 # Disk images
-.mdf              01;38;5;134 # Disk images
 .nrg              01;38;5;134 # Disk images
-.vcd              01;38;5;134 # Disk images
+.sparseimage      01;38;5;134 # Disk images (apple)
 
-# .fvd                  38;5;124            # Partition images
-# .sparseimage          38;5;124            # Partition images
-# .toast                38;5;124            # Partition images
-# .vcd                  38;5;124            # Partition images
-# .vhd                  38;5;124            # Partition images
-# .vhdx                 38;5;124            # Partition images
-# .vfd                  38;5;124            # Partition images
+.ISO              01;38;5;134 # Disk images (cd / dvd)
+.iso              01;38;5;134 # Disk images (cd / dvd)
+.mdf              01;38;5;134 # Disk images (cd / dvd)
+.toast            01;38;5;134 # Disk images (cd / dvd)
+.vcd              01;38;5;134 # Disk images (video cd)
+.vfd              01;38;5;134 # Disk images (floppy)
 
-.jpeg             00;38;5;24
-.jpg              00;38;5;24
-.JPG              00;38;5;24
-.bmp              01;38;5;110
-.indd             00;38;5;110
-.pbm              00;38;5;110
-.pgm              00;38;5;110
-.ppm              00;38;5;110
-.psd              00;38;5;110
-.tga              00;38;5;110
-.xbm              00;38;5;111
-.tif              00;38;5;33
-.tiff             00;38;5;33
-.xpm              00;38;5;36
-.bpg              01;38;5;24
-.cgm              01;38;5;24
-.CR2              01;38;5;24
-.dl               00;38;5;24
-.emf              01;38;5;24
-.eps              01;38;5;24
-.mng              00;38;5;24
-.pcx              00;38;5;24
-.png              01;38;5;24
-.svg              00;38;5;25
-.svgz             00;38;5;25
-.webp             01;38;5;24
-.xcf              01;38;5;24
-.xwd              01;38;5;24
-.yuv              01;38;5;24
+.jpeg             00;38;5;24 # Images
+.jpg              00;38;5;24 # Images
+.JPG              00;38;5;24 # Images
+.bpg              01;38;5;24 # Images
+.cgm              01;38;5;24 # Images
+.CR2              01;38;5;24 # Images
+.dl               00;38;5;24 # Images
+.emf              01;38;5;24 # Images
+.eps              01;38;5;24 # Images
+.mng              00;38;5;24 # Images
+.pcx              00;38;5;24 # Images
+.png              01;38;5;24 # Images
+.webp             01;38;5;24 # Images
+.xcf              01;38;5;24 # Images
+.xwd              01;38;5;24 # Images
+.yuv              01;38;5;24 # Images
 
-.icc              00;38;5;249
-.icm              00;38;5;249
+.tif              00;38;5;33 # big picture format
+.tiff             00;38;5;33 # big picture format
+
+.svg              00;38;5;25 # vector images
+.svgz             00;38;5;25 # vector images
+
+.bmp              01;38;5;110 # bitmap
+.indd             00;38;5;110 # bitmap
+.pbm              00;38;5;110 # bitmap
+.pgm              00;38;5;110 # bitmap
+.ppm              00;38;5;110 # bitmap
+.psd              00;38;5;110 # bitmap
+.xpm              00;38;5;110 # bitmap
+.tga              00;38;5;110 # bitmap
+.xbm              00;38;5;111 # bitmap
 
 .gif              01;38;5;25
-.icns             01;38;5;25
-.ico              01;38;5;25
 
-.key              01;38;5;53
-.pem              00;38;5;53
-.pub              00;38;5;53
+.icns             01;38;5;25 # icons
+.ico              01;38;5;25 # icons
+
+.icc              00;38;5;249 # color profiles
+.icm              00;38;5;249 # color profiles
+
+.asc              01;38;5;74  # Encrypted data
+.bfe              00;38;5;74  # Encrypted data
+.enc              00;38;5;74  # Encrypted data
+.ffp              00;38;5;74  # Encrypted data
+.gpg              00;38;5;74  # Encrypted data
+*id_dsa           00;38;5;74  # Encrypted data
+*id_ecdsa         00;38;5;74  # Encrypted data
+*id_ed25519       00;38;5;74  # Encrypted data
+*id_rsa           00;38;5;74  # Encrypted data
+.key              01;38;5;74  # Encrypted data
+.md5              00;38;5;74  # Encrypted data
+.p12              00;38;5;74  # Encrypted data
+.p7s              00;38;5;74  # Encrypted data
+.par              00;38;5;74  # Encrypted data
+.pem              00;38;5;74  # Encrypted data
+.pgp              00;38;5;74  # Encrypted data
+.pub              00;38;5;74  # Encrypted data
+.sfv              00;38;5;74  # Encrypted data
+.sha1             00;38;5;74  # Encrypted data
+.sig              00;38;5;74  # Encrypted data
+.signature        00;38;5;74  # Encrypted data
+.st5              00;38;5;74  # Encrypted data
 
 *#                00;38;5;235
 *~                01;38;5;235
@@ -194,7 +214,6 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .aux              01;38;5;235
 .bak              01;38;5;235
 .bbl              01;38;5;235
-.bck              00;38;5;244
 .blg              01;38;5;235
 .cache            01;38;5;235
 .class            01;38;5;235
@@ -203,15 +222,16 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .part             01;38;5;235
 .pyc              01;38;5;235
 .swp              01;38;5;235
+
+.bck              00;38;5;244
 .temp             00;38;5;244
 .tmp              00;38;5;244
 
-.log              01;38;5;238
+.log              01;38;5;238 # logs
 
 .cbz              01;38;5;7
 .chm              00;38;5;235
 .chrt             01;38;5;14
-.db               00;38;5;99
 .djv              00;38;5;7
 .djvu             00;38;5;7
 .doc              00;38;5;30
@@ -223,10 +243,7 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .epub             00;38;5;7
 .fb2              00;38;5;7
 .gnumeric         00;38;5;14
-.ldf              00;38;5;99
 .lit              00;38;5;7
-.mdb              00;38;5;99
-.mdf              00;38;5;99
 .mf               03;38;5;110
 .mfasl            00;38;5;73
 .mkd              00;38;5;110
@@ -243,12 +260,21 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .ppt              00;38;5;31
 .pptx             00;38;5;31
 .rtf              00;38;5;30
-.sql              00;38;5;99
 .sqlite           00;38;5;99
-.xla              00;38;5;14
-.xls              00;38;5;14
-.xlsm             00;38;5;14
-.xlsx             00;38;5;14
+
+.db               00;38;5;99 # Data store
+.ldf              00;38;5;99 # MS SQL journal
+.mdb              00;38;5;99 # Data store
+.mde              00;38;5;99 # Data store
+
+.numbers          00;38;5;14 # Spreadsheet
+.ods              00;38;5;14 # Spreadsheet
+.xla              00;38;5;14 # Spreadsheet
+.xls              00;38;5;14 # Spreadsheet
+.xlsm             00;38;5;14 # Spreadsheet
+.xlsx             04;38;5;14 # Spreadsheet
+.xltm             04;38;5;14 # Spreadsheet (with macros)
+.xltx             04;38;5;14 # Spreadsheet (with macros)
 
 .adoc             00;38;5;110 # Markup
 .markdown         00;38;5;110 # Markup
@@ -257,17 +283,41 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .mkd              00;38;5;110 # Markup
 .wiki             00;38;5;110 # Markup
 
+.bat              00;38;5;31 # MS Shell
+.cmd              00;38;5;31 # MS Shell
+
+.awk              00;38;5;103 # UNIX Shell
+.bash             01;38;5;103 # UNIX Shell
+.bash_history     01;38;5;103 # UNIX Shell
+.bash_logout      03;38;5;103 # UNIX Shell
+.bash_profile     03;38;5;103 # UNIX Shell
+bashrc            03;38;5;103 # UNIX Shell
+.csh              01;38;5;103 # UNIX Shell
+.dash             01;38;5;103 # UNIX Shell
+.fish             01;38;5;103 # UNIX Shell
+.ksh              01;38;5;103 # UNIX Shell
+.profile          03;38;5;103 # UNIX Shell
+.sed              03;38;5;103 # UNIX Shell
+.sh               01;38;5;103 # UNIX Shell
+.sh*              01;38;5;103 # UNIX Shell
+.tcsh             01;38;5;103 # UNIX Shell
+.zsh              01;38;5;103 # UNIX Shell
+zshrc             03;38;5;103 # UNIX Shell
+.zwc              01;38;5;103 # UNIX Shell
+
+.msql             00;38;5;83 # Code (SQL)
+.mysql            00;38;5;83 # Code (SQL)
+.pgsql            00;38;5;83 # Code (SQL)
+.prql             00;38;5;83 # Code (SQL)
+.sql              00;38;5;83 # Code (SQL)
+
 .agda             00;38;5;34
 .asm              00;38;5;64
 .asoundrc         00;38;5;36
-.awk              00;38;5;36
 .coffee           00;38;5;36
 .cs               00;38;5;36
-.css              00;38;5;31
 .csv              00;38;5;36
-.dir_colors       01;38;5;34
 .e                01;38;5;245
-.enc              00;38;5;36
 .eps2             00;38;5;7
 .eps3             00;38;5;7
 .eps              00;38;5;7
@@ -283,18 +333,14 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .hgignore         01;38;5;23
 .hgrc             01;38;5;23
 .hs               00;38;5;34
-.htm              00;38;5;29
-.html             00;38;5;29
 .htoprc           01;38;5;23
 .info             01;38;5;23
 .java             03;38;5;245
-.jhtm             01;38;5;29
 .jnlp             03;38;5;245
 .js               03;38;5;34
 .jsm              00;38;5;74
 .jsp              00;38;5;74
 .lam              00;38;5;74
-.less             00;38;5;31
 .lesshst          01;38;5;23
 .lisp             00;38;5;74
 .lua              03;38;5;24
@@ -310,9 +356,17 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .nfo              01;38;5;32
 .pacnew           00;38;5;33
 .ps               00;38;5;7
-.sass             00;38;5;31
 .scm              00;38;5;74
-.scss             00;38;5;31
+
+.css              00;38;5;31 # Styling (web)
+.less             00;38;5;31 # Styling (web)
+.sass             00;38;5;31 # Styling (web)
+.scss             00;38;5;31 # Styling (web)
+
+.htm              00;38;5;29 # Markup (web)
+.html             00;38;5;29 # Markup (web)
+.jhtm             00;38;5;29 # Markup (web)
+.mht              00;38;5;29 # Markup (web)
 
 .diff             48;5;7;38;5;16;1
 .patch            48;5;7;38;5;16;1
@@ -333,8 +387,6 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .rasi             01;38;5;5
 .rb               01;03;38;5;33
 .ru               00;38;5;4
-.sed              00;38;5;4
-.signature        00;38;5;4
 .sty              01;38;5;5
 .sug              01;38;5;5
 .t                01;38;5;28
@@ -346,34 +398,20 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .tfnt             01;38;5;5
 .theme            01;38;5;5
 .tk               03;38;5;34
-.vim              00;38;5;56
-.viminfo          00;38;5;56
-.vimp             00;38;5;56
-.vimrc            04;38;5;56
 
-.bash             01;38;5;103
-.bash_history     01;38;5;103
-.bash_logout      03;38;5;29
-.bash_profile     03;38;5;29
-bashrc            03;38;5;29
-.csh              01;38;5;103
-.dash             01;38;5;103
-.fish             01;38;5;103
-.ksh              01;38;5;103
-.profile          03;38;5;29
-.sh               01;38;5;103
-.sh*              01;38;5;103
+.kak              00;38;5;56 # kakoine
+.vim              00;38;5;56 # vim
+.viminfo          00;38;5;56 # vim
+.vimp             00;38;5;56 # vim
+.vimrc            04;38;5;56 # vim
+
 .snippets         00;38;5;31
-.tcsh             01;38;5;103
 .ttytterrc        01;38;5;5
 .urlview          01;38;5;5
 .Xauthority       01;38;5;4
 .xinitrc          01;38;5;4
 .Xmodmap          00;38;5;4
 .Xresources       01;38;5;33
-.zsh              01;38;5;103
-zshrc             03;38;5;29
-.zwc              01;38;5;239
 
 # /etc/hosts.{deny,allow}
 .allow            00;38;5;24
@@ -428,15 +466,6 @@ PKGBUILD          00;38;5;60
 .dll              01;38;5;22
 .so               01;38;5;22
 
-.ffp              00;38;5;69
-.gpg              00;38;5;69
-.md5              00;38;5;69
-.par              00;38;5;69
-.sfv              00;38;5;69
-.sha1             00;38;5;69
-.st5              00;38;5;69
-
-# Audio formats
 .aac              03;38;5;37 # Audio formats (lossy, Apple)
 .axa              03;38;5;37 # Audio formats (lossy, CSIRO)
 .m4a              03;38;5;37 # Audio formats (lossy, container, aac usually)
@@ -483,38 +512,37 @@ PKGBUILD          00;38;5;60
 .wv               00;38;5;5 # Another audio formats
 .wvc              00;38;5;5 # Another audio formats
 
-# Video formats (as audio + bold)
-.asf              01;38;5;75
-.avi              01;38;5;75
-.AVI              01;38;5;75
-.divx             01;38;5;75
-.flc              01;38;5;75
-.fli              01;38;5;75
-.flv              01;38;5;75
-.gl               01;38;5;75
-.m2ts             01;38;5;75
-.m2v              01;38;5;75
-.m4v              01;38;5;75
-.mjpeg            01;38;5;75
-.mkv              01;38;5;75
-.mov              01;38;5;75
-.MOV              01;38;5;75
-.mp4              01;38;5;75
-.mp4v             01;38;5;75
-.mpeg             01;38;5;75
-.mpg              01;38;5;75
-.nuv              01;38;5;75
-.ogm              01;38;5;75
-.ogv              01;38;5;75
-.qt               01;38;5;75
-.rm               01;38;5;75
-.rmvb             01;38;5;75
-.sample           01;38;5;75
-.ts               00;38;5;75
-.vob              01;38;5;75
-.VOB              01;38;5;75
-.webm             01;38;5;75
-.wmv              01;38;5;75
+.asf              01;38;5;75 # Video
+.avi              01;38;5;75 # Video
+.AVI              01;38;5;75 # Video
+.divx             01;38;5;75 # Video
+.flc              01;38;5;75 # Video
+.fli              01;38;5;75 # Video
+.flv              01;38;5;75 # Video
+.gl               01;38;5;75 # Video
+.m2ts             01;38;5;75 # Video
+.m2v              01;38;5;75 # Video
+.m4v              01;38;5;75 # Video
+.mjpeg            01;38;5;75 # Video
+.mkv              01;38;5;75 # Video
+.mov              01;38;5;75 # Video
+.MOV              01;38;5;75 # Video
+.mp4              01;38;5;75 # Video
+.mp4v             01;38;5;75 # Video
+.mpeg             01;38;5;75 # Video
+.mpg              01;38;5;75 # Video
+.nuv              01;38;5;75 # Video
+.ogm              01;38;5;75 # Video
+.ogv              01;38;5;75 # Video
+.qt               01;38;5;75 # Video
+.rm               01;38;5;75 # Video
+.rmvb             01;38;5;75 # Video
+.sample           01;38;5;75 # Video
+.ts               00;38;5;75 # Video
+.vob              01;38;5;75 # Video (lossless)
+.VOB              01;38;5;75 # Video (lossless)
+.webm             00;38;5;75 # Video
+.wmv              00;38;5;75 # Video
 
 # http://wiki.xiph.org/index.php/MIME_Types_and_File_Extensions
 .anx              01;38;5;13
