@@ -28,31 +28,7 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 *dircolors  48;5;89;38;5;197;1;3;4;7 # :-)
 *dir_colors 48;5;89;38;5;197;1;3;4;7 # :-)
 
-*LICENSE          00;38;5;60 # Documentation
-*LICENSE.md       00;38;5;60 # Documentation
-*README           00;38;5;60 # Documentation
-*README.markdown  00;38;5;60 # Documentation
-*README.md        00;38;5;60 # Documentation
-*README.rst       00;38;5;60 # Documentation
-*README.txt       00;38;5;60 # Documentation
-*readme.txt       00;38;5;60 # Documentation
-*COPYING          00;38;5;60 # Documentation
-*INSTALL          00;38;5;60 # Documentation
-*COPYRIGHT        00;38;5;60 # Documentation
-*AUTHORS          00;38;5;60 # Documentation
-*HISTORY          00;38;5;60 # Documentation
-*CONTRIBUTORS     00;38;5;60 # Documentation
-*CONTRIBUTING     00;38;5;60 # Documentation
-*CONTRIBUTING.md  00;38;5;60 # Documentation
-*CHANGELOG        00;38;5;60 # Documentation
-*CHANGELOG.md     00;38;5;60 # Documentation
-*CODEOWNERS       00;38;5;60 # Documentation
-*PATENTS          00;38;5;60 # Documentation
-*VERSION          00;38;5;60 # Documentation
-*NOTICE           00;38;5;60 # Documentation
-*CHANGES          00;38;5;60 # Documentation
-
-.txt              00;38;5;253 # Plain text
+.txt              00;38;5;248 # Plain text
 
 .bin              00;38;5;249
 .btm              00;38;5;111
@@ -163,39 +139,39 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .xwd              01;38;5;24 # Images
 .yuv              01;38;5;24 # Images
 
-.bmp              01;38;5;110 # bitmap
-.indd             00;38;5;110 # bitmap
-.pbm              00;38;5;110 # bitmap
-.pgm              00;38;5;110 # bitmap
-.ppm              00;38;5;110 # bitmap
-.xpm              00;38;5;110 # bitmap
-.tga              00;38;5;110 # bitmap
-.xbm              00;38;5;111 # bitmap
+.bmp              01;38;5;110 # Bitmap
+.indd             00;38;5;110 # Bitmap
+.pbm              00;38;5;110 # Bitmap
+.pgm              00;38;5;110 # Bitmap
+.ppm              00;38;5;110 # Bitmap
+.xpm              00;38;5;110 # Bitmap
+.tga              00;38;5;110 # Bitmap
+.xbm              00;38;5;111 # Bitmap
 
-.tif              00;38;5;33 # big picture format
-.tiff             00;38;5;33 # big picture format
-.TIFF             00;38;5;33 # big picture format
+.tif              00;38;5;33 # Big picture format
+.tiff             00;38;5;33 # Big picture format
+.TIFF             00;38;5;33 # Big picture format
 
-.ai               00;38;5;25 # vector images
-.drw              00;38;5;25 # vector images
-.eps              00;38;5;25 # vector images
-.eps              00;38;5;25 # vector images
-.eps2             00;38;5;25 # vector images
-.eps3             00;38;5;25 # vector images
-.epsf             00;38;5;25 # vector images
-.epsf             00;38;5;25 # vector images
-.epsi             00;38;5;25 # vector images
-.ps               00;38;5;25 # vector images
-.svg              00;38;5;25 # vector images
-.svgz             00;38;5;25 # vector images
+.ai               00;38;5;25 # Vector images
+.drw              00;38;5;25 # Vector images
+.eps              00;38;5;25 # Vector images
+.eps              00;38;5;25 # Vector images
+.eps2             00;38;5;25 # Vector images
+.eps3             00;38;5;25 # Vector images
+.epsf             00;38;5;25 # Vector images
+.epsf             00;38;5;25 # Vector images
+.epsi             00;38;5;25 # Vector images
+.ps               00;38;5;25 # Vector images
+.svg              00;38;5;25 # Vector images
+.svgz             00;38;5;25 # Vector images
 
-.gif              01;38;5;25
+.gif              01;38;5;25 # Images, animated
 
-.icns             01;38;5;25 # icons
-.ico              01;38;5;25 # icons
+.icns             01;38;5;25 # Icons
+.ico              01;38;5;25 # Icons
 
-.icc              00;38;5;249 # color profiles
-.icm              00;38;5;249 # color profiles
+.icc              00;38;5;249 # Color profiles
+.icm              00;38;5;249 # Color profiles
 
 .asc              01;38;5;74  # Encrypted data
 .bfe              00;38;5;74  # Encrypted data
@@ -220,26 +196,32 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .signature        00;38;5;74  # Encrypted data
 .st5              00;38;5;74  # Encrypted data
 
-*#                00;38;5;235
-*~                01;38;5;235
-.added            00;38;5;235
-.aux              01;38;5;235
-.bak              01;38;5;235
-.bbl              01;38;5;235
-.blg              01;38;5;235
-.cache            01;38;5;235
-.class            01;38;5;235
-.incomplete       01;38;5;235
-.o                01;38;5;235
-.part             01;38;5;235
-.pyc              01;38;5;235
-.swp              01;38;5;235
+*#                00;38;5;236 # Scum
+*~                01;38;5;236 # Scum
+.added            00;38;5;236 # Temporary torrent
+.aux              01;38;5;236 # LaTeX helper
+.bbl              01;38;5;236 # Scum
+.blg              01;38;5;236 # Scum
+.cache            01;38;5;236 # Scum
+.class            01;38;5;236 # Scum
+.incomplete       01;38;5;236 # Scum
+.o                01;38;5;236 # *nix Object file (shared libraries, core dumps etc)
+.pyc              01;38;5;236 # Scum (python compiled)
 
-.bck              00;38;5;244
-.temp             00;38;5;244
-.tmp              00;38;5;244
+.bak              01;38;5;236 # Backup / temporary files
+.bck              00;38;5;244 # Backup / temporary files
+.part             01;38;5;244 # Archive temporarypart
+.sassc            00;38;5;244 # Backup / temporary files
+.swo              00;38;5;244 # Backup / temporary files
+.swp              01;38;5;244 # Backup / temporary files
+.temp             00;38;5;244 # Backup / temporary files
+.tmp              00;38;5;244 # Backup / temporary files
 
 .log              01;38;5;238 # logs
+
+.err              38;5;160;1 # error logs
+.error            38;5;160;1 # error logs
+.stderr           38;5;160;1 # error logs
 
 .cbz              01;38;5;7
 .chm              00;38;5;235
@@ -285,22 +267,24 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .xltm             04;38;5;14 # Spreadsheet (with macros)
 .xltx             04;38;5;14 # Spreadsheet (with macros)
 
-.adoc             00;38;5;110 # Markup
-.asciidoc         00;38;5;110 # Markup
-.etx              00;38;5;110 # Markup
-.markdown         00;38;5;110 # Markup
-.md               00;38;5;110 # Markup
-.mdx              00;38;5;110 # Markup (markdown with jsx)
-.mkd              00;38;5;110 # Markup
-.pod              00;38;5;110 # Markup
-.rst              00;38;5;110 # Markup
-.wiki             00;38;5;110 # Markup
-.info             01;38;5;23  # Markup (alternative)
-.nfo              01;38;5;23  # Markup (alternative)
-.norg             01;38;5;23  # Markup (alternative)
-.org              01;38;5;23  # Markup (alternative)
-.tex              01;38;5;23  # Markup (alternative)
-.textile          01;38;5;23  # Markup (alternative)
+.adoc             00;38;5;246 # Markup
+.asciidoc         00;38;5;246 # Markup
+.etx              00;38;5;246 # Markup
+.markdown         00;38;5;246 # Markup
+.md               00;38;5;246 # Markup
+.mdx              00;38;5;246 # Markup (markdown with jsx)
+.mkd              00;38;5;246 # Markup
+.pod              00;38;5;246 # Markup
+.rst              00;38;5;246 # Markup
+.wiki             00;38;5;246 # Markup
+
+.info             03;38;5;249 # Markup (alternative)
+.latex            03;38;5;249 # Markup (alternative)
+.nfo              03;38;5;249 # Markup (alternative)
+.norg             03;38;5;249 # Markup (alternative)
+.org              03;38;5;249 # Markup (alternative)
+.tex              03;38;5;249 # Markup (alternative)
+.textile          03;38;5;249 # Markup (alternative)
 
 .bat              00;38;5;31 # MS Shell
 .cmd              00;38;5;31 # MS Shell
@@ -400,22 +384,22 @@ zshrc             03;38;5;103 # UNIX Shell
 .tcl              03;38;5;34
 .tk               03;38;5;34
 
-.colors           01;38;5;5 # theme
-.rasi             01;38;5;5 # theme
-.sty              01;38;5;5 # theme
-.sug              01;38;5;5 # theme
-.tdesktop-pallete 01;38;5;5 # theme
-.tdesktop-theme   01;38;5;5 # theme
-.tdy              01;38;5;5 # theme
-.tfm              01;38;5;5 # theme
-.tfnt             01;38;5;5 # theme
-.theme            01;38;5;5 # theme
+.colors           01;38;5;5 # Theme
+.rasi             01;38;5;5 # Theme
+.sty              01;38;5;5 # Theme
+.sug              01;38;5;5 # Theme
+.tdesktop-pallete 01;38;5;5 # Theme
+.tdesktop-theme   01;38;5;5 # Theme
+.tdy              01;38;5;5 # Theme
+.tfm              01;38;5;5 # Theme
+.tfnt             01;38;5;5 # Theme
+.theme            01;38;5;5 # Theme
 
-.kak              00;38;5;56 # kakoine
-.vim              00;38;5;56 # vim
-.viminfo          00;38;5;56 # vim
-.vimp             00;38;5;56 # vim
-.vimrc            04;38;5;56 # vim
+.kak              00;38;5;56 # Kakoine
+.vim              00;38;5;56 # Vim (legacy)
+.viminfo          00;38;5;56 # Vim (legacy)
+.vimp             00;38;5;56 # Vim (legacy)
+.vimrc            04;38;5;56 # Vim (legacy)
 
 .snippets         00;38;5;31
 .ttytterrc        01;38;5;5
@@ -438,10 +422,8 @@ PKGBUILD          00;38;5;60
 *TODO             01;38;5;91
 *build.xml        00;38;5;60
 *rc               00;38;5;60
-.aux              00;38;5;239
 .icls             00;38;5;60
 .jidgo            00;38;5;60
-.latex            01;03;38;5;73
 .mk               00;38;5;60
 .modulemap        00;38;5;60
 .n3               00;38;5;60
@@ -452,8 +434,6 @@ PKGBUILD          00;38;5;60
 .rc               00;38;5;60
 .rdf              00;38;5;60
 .sbt              00;38;5;60
-.tex              01;03;38;5;73
-.textile          00;38;5;60
 .torrent          00;38;5;60
 .ttl              00;38;5;60
 .xml              00;38;5;60
@@ -663,3 +643,27 @@ PKGBUILD          00;38;5;60
 .dmp              00;38;5;29 # Dump
 .dump             00;38;5;29 # Dump
 .pcap             00;38;5;29 # Dump
+
+*AUTHORS          38;5;243;04 # Documentation
+*CHANGELOG        38;5;243;04 # Documentation
+*CHANGELOG.md     38;5;243;04 # Documentation
+*CHANGES          38;5;243;04 # Documentation
+*CODEOWNERS       38;5;243;04 # Documentation
+*CONTRIBUTING     38;5;243;04 # Documentation
+*CONTRIBUTING.md  38;5;243;04 # Documentation
+*CONTRIBUTORS     38;5;243;04 # Documentation
+*COPYING          38;5;243;04 # Documentation
+*COPYRIGHT        38;5;243;04 # Documentation
+*HISTORY          38;5;243;04 # Documentation
+*INSTALL          38;5;243;04 # Documentation
+*LICENSE          38;5;243;04 # Documentation
+*LICENSE.md       38;5;243;04 # Documentation
+*NOTICE           38;5;243;04 # Documentation
+*PATENTS          38;5;243;04 # Documentation
+*README           38;5;243;04 # Documentation
+*README.markdown  38;5;243;04 # Documentation
+*README*.md       38;5;243;04 # Documentation
+*README.rst       38;5;243;04 # Documentation
+*readme.txt       38;5;243;04 # Documentation
+*README.txt       38;5;243;04 # Documentation
+*VERSION          38;5;243;04 # Documentation
