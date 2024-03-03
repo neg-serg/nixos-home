@@ -144,38 +144,50 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .vcd              01;38;5;134 # Disk images (video cd)
 .vfd              01;38;5;134 # Disk images (floppy)
 
-.jpeg             00;38;5;24 # Images
-.jpg              00;38;5;24 # Images
-.JPG              00;38;5;24 # Images
 .bpg              01;38;5;24 # Images
 .cgm              01;38;5;24 # Images
 .CR2              01;38;5;24 # Images
 .dl               00;38;5;24 # Images
 .emf              01;38;5;24 # Images
-.eps              01;38;5;24 # Images
+.jpeg             00;38;5;24 # Images
+.jpg              00;38;5;24 # Images
+.JPG              00;38;5;24 # Images
 .mng              00;38;5;24 # Images
 .pcx              00;38;5;24 # Images
 .png              01;38;5;24 # Images
+.psd              01;38;5;24 # Images (photoshop)
+.pxd              01;38;5;24 # Images (pixelmator pro)
+.pxm              01;38;5;24 # Images (pixelmator image)
 .webp             01;38;5;24 # Images
 .xcf              01;38;5;24 # Images
 .xwd              01;38;5;24 # Images
 .yuv              01;38;5;24 # Images
-
-.tif              00;38;5;33 # big picture format
-.tiff             00;38;5;33 # big picture format
-
-.svg              00;38;5;25 # vector images
-.svgz             00;38;5;25 # vector images
 
 .bmp              01;38;5;110 # bitmap
 .indd             00;38;5;110 # bitmap
 .pbm              00;38;5;110 # bitmap
 .pgm              00;38;5;110 # bitmap
 .ppm              00;38;5;110 # bitmap
-.psd              00;38;5;110 # bitmap
 .xpm              00;38;5;110 # bitmap
 .tga              00;38;5;110 # bitmap
 .xbm              00;38;5;111 # bitmap
+
+.tif              00;38;5;33 # big picture format
+.tiff             00;38;5;33 # big picture format
+.TIFF             00;38;5;33 # big picture format
+
+.ai               00;38;5;25 # vector images
+.drw              00;38;5;25 # vector images
+.eps              00;38;5;25 # vector images
+.eps              00;38;5;25 # vector images
+.eps2             00;38;5;25 # vector images
+.eps3             00;38;5;25 # vector images
+.epsf             00;38;5;25 # vector images
+.epsf             00;38;5;25 # vector images
+.epsi             00;38;5;25 # vector images
+.ps               00;38;5;25 # vector images
+.svg              00;38;5;25 # vector images
+.svgz             00;38;5;25 # vector images
 
 .gif              01;38;5;25
 
@@ -234,11 +246,6 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .chrt             01;38;5;14
 .djv              00;38;5;7
 .djvu             00;38;5;7
-.doc              00;38;5;30
-.docm             00;38;5;30
-.docx             00;38;5;30
-.dot              00;38;5;30
-.dotm             00;38;5;30
 .dvi              00;38;5;235
 .epub             00;38;5;7
 .fb2              00;38;5;7
@@ -246,26 +253,28 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .lit              00;38;5;7
 .mf               03;38;5;110
 .mfasl            00;38;5;73
-.mkd              00;38;5;110
 .mobi             00;38;5;7
-.odb              00;38;5;29
-.odb              00;38;5;99
-.odm              00;38;5;30
 .odp              00;38;5;29
 .ods              00;38;5;29
-.odt              00;38;5;30
-.org              00;38;5;110
-.pages            00;38;5;30
 .pdf              01;38;5;7
 .ppt              00;38;5;31
 .pptx             00;38;5;31
-.rtf              00;38;5;30
 .sqlite           00;38;5;99
 
 .db               00;38;5;99 # Data store
 .ldf              00;38;5;99 # MS SQL journal
 .mdb              00;38;5;99 # Data store
 .mde              00;38;5;99 # Data store
+
+.doc              00;38;5;30 # Documents # with macros
+.docm             00;38;5;30 # Documents
+.docx             00;38;5;30 # Documents
+.dot              00;38;5;30 # Documents
+.dotm             00;38;5;30 # Documents
+.odb              00;38;5;30 # Documents
+.odm              00;38;5;30 # Documents
+.odt              00;38;5;30 # Documents
+.pages            00;38;5;30 # Documents
 
 .numbers          00;38;5;14 # Spreadsheet
 .ods              00;38;5;14 # Spreadsheet
@@ -277,11 +286,21 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .xltx             04;38;5;14 # Spreadsheet (with macros)
 
 .adoc             00;38;5;110 # Markup
+.asciidoc         00;38;5;110 # Markup
+.etx              00;38;5;110 # Markup
 .markdown         00;38;5;110 # Markup
 .md               00;38;5;110 # Markup
 .mdx              00;38;5;110 # Markup (markdown with jsx)
 .mkd              00;38;5;110 # Markup
+.pod              00;38;5;110 # Markup
+.rst              00;38;5;110 # Markup
 .wiki             00;38;5;110 # Markup
+.info             01;38;5;23  # Markup (alternative)
+.nfo              01;38;5;23  # Markup (alternative)
+.norg             01;38;5;23  # Markup (alternative)
+.org              01;38;5;23  # Markup (alternative)
+.tex              01;38;5;23  # Markup (alternative)
+.textile          01;38;5;23  # Markup (alternative)
 
 .bat              00;38;5;31 # MS Shell
 .cmd              00;38;5;31 # MS Shell
@@ -318,12 +337,7 @@ zshrc             03;38;5;103 # UNIX Shell
 .cs               00;38;5;36
 .csv              00;38;5;36
 .e                01;38;5;245
-.eps2             00;38;5;7
-.eps3             00;38;5;7
-.eps              00;38;5;7
-.epsf             00;38;5;7
-.epsi             00;38;5;7
-.etx              00;38;5;36
+
 .ex               00;38;5;36
 .example          00;38;5;36
 .fehbg            00;38;5;36
@@ -334,7 +348,6 @@ zshrc             03;38;5;103 # UNIX Shell
 .hgrc             01;38;5;23
 .hs               00;38;5;34
 .htoprc           01;38;5;23
-.info             01;38;5;23
 .java             03;38;5;245
 .jnlp             03;38;5;245
 .js               03;38;5;34
@@ -355,7 +368,6 @@ zshrc             03;38;5;103 # UNIX Shell
 .netrc            01;38;5;34
 .nfo              01;38;5;32
 .pacnew           00;38;5;33
-.ps               00;38;5;7
 .scm              00;38;5;74
 
 .css              00;38;5;31 # Styling (web)
@@ -372,7 +384,6 @@ zshrc             03;38;5;103 # UNIX Shell
 .patch            48;5;7;38;5;16;1
 
 .attheme          00;38;5;35
-.colors           01;38;5;5
 .erb              01;38;5;33
 .irb              01;38;5;33
 .pc               00;38;5;4
@@ -382,22 +393,23 @@ zshrc             03;38;5;103 # UNIX Shell
 .pl               00;38;5;73
 .PL               01;38;5;73
 .pm               00;38;5;4
-.pod              01;38;5;23
 .py               01;38;5;30
-.rasi             01;38;5;5
 .rb               01;03;38;5;33
 .ru               00;38;5;4
-.sty              01;38;5;5
-.sug              01;38;5;5
 .t                01;38;5;28
 .tcl              03;38;5;34
-.tdesktop-pallete 01;38;5;5
-.tdesktop-theme   01;38;5;5
-.tdy              01;38;5;5
-.tfm              01;38;5;5
-.tfnt             01;38;5;5
-.theme            01;38;5;5
 .tk               03;38;5;34
+
+.colors           01;38;5;5 # theme
+.rasi             01;38;5;5 # theme
+.sty              01;38;5;5 # theme
+.sug              01;38;5;5 # theme
+.tdesktop-pallete 01;38;5;5 # theme
+.tdesktop-theme   01;38;5;5 # theme
+.tdy              01;38;5;5 # theme
+.tfm              01;38;5;5 # theme
+.tfnt             01;38;5;5 # theme
+.theme            01;38;5;5 # theme
 
 .kak              00;38;5;56 # kakoine
 .vim              00;38;5;56 # vim
@@ -454,7 +466,6 @@ PKGBUILD          00;38;5;60
 .ini              00;38;5;29 # Config
 .json             01;38;5;29 # Config
 .nix              00;38;5;29 # Config
-.norg             01;38;5;29 # Config
 .ovpn             00;38;5;29 # Config
 .reg              00;38;5;29 # Config
 .sls              00;38;5;29 # Config (yaml usually)
@@ -626,7 +637,6 @@ PKGBUILD          00;38;5;60
 .ml               03;38;5;70
 .pas              03;38;5;73
 .rs               03;38;5;73
-.rst              03;38;5;73
 .scala            03;38;5;70
 .swift            03;38;5;73
 
