@@ -69,7 +69,7 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .alp              01;38;5;61 # Packs / archives
 .alz              01;38;5;61 # Packs / archives
 .arc              00;38;5;61 # Packs / archives
-.arj              00;38;5;61 # Packs / archives
+.arj              00;38;5;61 # Packs / archives ( legacy )
 .br               01;38;5;61 # Packs / archives
 .bz               01;38;5;61 # Packs / archives
 .bz2              01;38;5;61 # Packs / archives
@@ -84,7 +84,7 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .lzh              01;38;5;61 # Packs / archives
 .lzma             01;38;5;61 # Packs / archives
 .lzo              01;38;5;61 # Packs / archives
-.rar              00;38;5;63 # Packs / archives
+.rar              00;38;5;61 # Packs / archives
 .rz               01;38;5;61 # Packs / archives
 .s7z              01;38;5;61 # Packs / archives
 .t7z              01;38;5;61 # Packs / archives
@@ -108,28 +108,44 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .zstd             01;38;5;61 # Packs / archives
 .zz               01;38;5;61 # Packs / archives
 
-.apk              00;38;5;74
-.arj              00;38;5;73
-.cab              00;38;5;74
-.deb              00;38;5;74
-.ear              00;38;5;73
-.egg              00;38;5;74
-.gem              00;38;5;74
-.jad              00;38;5;74
-.jar              00;38;5;73
-.msi              00;38;5;74
-.pkg              00;38;5;74
-PKGBUILD          00;38;5;74
-.rpm              00;38;5;74
-.sar              00;38;5;73
-.udeb             00;38;5;74
-.war              00;38;5;73
-.xpi              00;38;5;74
+.apk              00;38;5;74 # Packaged apps
+.cab              00;38;5;74 # Packaged apps
+.deb              00;38;5;74 # Packaged apps
+.ear              00;38;5;73 # Packaged apps
+.egg              00;38;5;74 # Packaged apps
+.gem              00;38;5;74 # Packaged apps
+.jad              00;38;5;74 # Packaged apps
+.jar              00;38;5;73 # Packaged apps
+.msi              00;38;5;74 # Packaged apps
+.pak              00;38;5;74 # Packaged apps
+.pk3              00;38;5;74 # Packaged apps
+.pkg              00;38;5;74 # Packaged apps
+.rpm              00;38;5;74 # Packaged apps
+.sar              00;38;5;73 # Packaged apps
+.udeb             00;38;5;74 # Packaged apps
+.war              00;38;5;73 # Packaged apps
+.xpi              00;38;5;74 # Packaged apps
 
-.qcow             00;38;5;61
-.qcow2            00;38;5;61
-.vdi              00;38;5;61
-.vmdk             00;38;5;61
+.qcow             00;38;5;61 # Disk images (virtual)
+.qcow2            00;38;5;61 # Disk images (virtual)
+.vdi              00;38;5;61 # Disk images (virtual)
+.vmdk             00;38;5;61 # Disk images (virtual)
+
+.dmg              01;38;5;134 # Disk images
+.img              01;38;5;134 # Disk images
+.iso              01;38;5;134 # Disk images
+.ISO              01;38;5;134 # Disk images
+.mdf              01;38;5;134 # Disk images
+.nrg              01;38;5;134 # Disk images
+.vcd              01;38;5;134 # Disk images
+
+# .fvd                  38;5;124            # Partition images
+# .sparseimage          38;5;124            # Partition images
+# .toast                38;5;124            # Partition images
+# .vcd                  38;5;124            # Partition images
+# .vhd                  38;5;124            # Partition images
+# .vhdx                 38;5;124            # Partition images
+# .vfd                  38;5;124            # Partition images
 
 .jpeg             00;38;5;24
 .jpg              00;38;5;24
@@ -359,14 +375,6 @@ bashrc            03;38;5;29
 zshrc             03;38;5;29
 .zwc              01;38;5;239
 
-.dmg              01;38;5;134
-.img              01;38;5;134
-.iso              01;38;5;134
-.ISO              01;38;5;134
-.mdf              01;38;5;134
-.nrg              01;38;5;134
-.vcd              01;38;5;134
-
 # /etc/hosts.{deny,allow}
 .allow            00;38;5;24
 .deny             00;38;5;89
@@ -375,6 +383,7 @@ zshrc             03;38;5;29
 *1                00;38;5;60
 *Dockerfile       00;38;5;60
 *Makefile         00;38;5;60
+PKGBUILD          00;38;5;60
 *Rakefile         00;38;5;60
 *TODO             01;38;5;91
 *build.xml        00;38;5;60
@@ -514,40 +523,46 @@ zshrc             03;38;5;29
 .ogx              01;38;5;13
 .srt              01;38;5;116
 
-#fonts
-.bdf              00;38;5;61
-.dfont            01;38;5;61
-.fon              01;38;5;61
-.gsf              00;38;5;61
-.otf              01;38;5;61
-.pcf              00;38;5;61
-.pfa              00;38;5;61
-.pfb              00;38;5;61
-.ttf              01;38;5;61
+.afm              01;38;5;61 # Fonts (Adobe metrics file)
+.bdf              00;38;5;61 # Fonts
+.dfont            01;38;5;61 # Fonts
+.fnt              01;38;5;61 # Fonts (Windows legacy)
+.fon              01;38;5;61 # Fonts
+.gsf              00;38;5;61 # Fonts
+.otf              01;38;5;61 # Fonts
+.pcf              00;38;5;61 # Fonts
+.pfa              00;38;5;61 # Fonts
+.PFA              00;38;5;61 # Fonts
+.pfb              00;38;5;61 # Fonts
+.pfm              01;38;5;61 # Fonts (Printer Font Metrics)
+.ttf              01;38;5;61 # Fonts
+.woff             01;38;5;61 # Fonts
+.woff2            01;38;5;61 # Fonts
 
-# Emulator roms, emulator savegames {{{
-.32x              00;38;5;232
-.a00              00;38;5;232
-.a52              00;38;5;232
-.a64              00;38;5;232
-.A64              00;38;5;232
-.a78              00;38;5;232
-.adf              00;38;5;35
-.atr              00;38;5;232
-.cdi              00;38;5;232
-.fm2              00;38;5;35
-.gb               00;38;5;232
-.gba              00;38;5;232
-.gbc              00;38;5;232
-.gel              00;38;5;232
-.gg               00;38;5;232
-.ggl              00;38;5;232
-.j64              00;38;5;232
-.nds              00;38;5;232
-.nes              00;38;5;232
-.rom              01;38;5;232
-.sav              00;38;5;232
-.sms              00;38;5;33
+.32x              00;38;5;232 # Emulator roms, emulator savegames
+.A64              00;38;5;232 # Emulator roms, emulator savegames
+.a00              00;38;5;232 # Emulator roms, emulator savegames
+.a52              00;38;5;232 # Emulator roms, emulator savegames
+.a64              00;38;5;232 # Emulator roms, emulator savegames
+.a78              00;38;5;232 # Emulator roms, emulator savegames
+.adf              00;38;5;232 # Emulator roms, emulator savegames
+.atr              00;38;5;232 # Emulator roms, emulator savegames
+.cdi              00;38;5;232 # Emulator roms, emulator savegames
+.fm2              00;38;5;232 # Emulator roms, emulator savegames
+.gb               00;38;5;232 # Emulator roms, emulator savegames (Nindendo)
+.gba              00;38;5;232 # Emulator roms, emulator savegames (Nindendo)
+.gbc              00;38;5;232 # Emulator roms, emulator savegames (Nindendo)
+.gel              00;38;5;232 # Emulator roms, emulator savegames (Nindendo)
+.gg               00;38;5;232 # Emulator roms, emulator savegames (Nindendo)
+.ggl              00;38;5;232 # Emulator roms, emulator savegames (Nindendo)
+.j64              00;38;5;232 # Emulator roms, emulator savegames (Nindendo)
+.nds              00;38;5;232 # Emulator roms, emulator savegames (Nintendo)
+.nes              00;38;5;232 # Emulator roms, emulator savegames (Nintendo NES)
+.rom              01;38;5;232 # Emulator roms, emulator savegames
+.sav              00;38;5;232 # Emulator roms, emulator savegames
+.sms              00;38;5;232 # Emulator roms, emulator savegames
+.st               00;38;5;232 # Emulator roms, emulator savegames
+.ipk              00;38;5;232 # Emulator roms, emulator savegames (Nintendo DS Packed Images)
 
 # systemd units
 # http://www.freedesktop.org/software/systemd/man/systemd.unit.html
@@ -606,8 +621,7 @@ zshrc             03;38;5;29
 .in               00;38;5;235
 .old              00;38;5;235
 
-# Some kind of dump
-.cap              00;38;5;29
-.dmp              00;38;5;29
-.dump             00;38;5;99
-.pcap             00;38;5;29
+.cap              00;38;5;29 # Dump
+.dmp              00;38;5;29 # Dump
+.dump             00;38;5;29 # Dump
+.pcap             00;38;5;29 # Dump
