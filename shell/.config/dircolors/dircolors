@@ -33,10 +33,6 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .txt              00;38;5;248 # Plain text
 .nfo              01;38;5;248 # Plain text
 
-.bin              00;38;5;249
-.com              00;38;5;111
-.exe              00;38;5;111
-
 .7z               01;38;5;61 # Arhives / Packages
 .WARC             00;38;5;61 # Arhives / Packages
 .Z                01;38;5;61 # Arhives / Packages
@@ -102,21 +98,25 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .war              00;38;5;73 # Packaged apps
 .xpi              00;38;5;74 # Packaged apps
 
+.fvd              00;38;5;89 # Disk images (virtual, QEMU)
 .qcow             00;38;5;89 # Disk images (virtual, QEMU)
 .qcow2            00;38;5;89 # Disk images (virtual, QEMU)
 .vdi              00;38;5;89 # Disk images (virtual)
-.vmdk             00;38;5;89 # Disk images (virtual)
-.fvd              00;38;5;89 # Disk images (virtual, QEMU)
 .vhd              00;38;5;89 # Disk images (virtual, old)
 .vhdx             00;38;5;89 # Disk images (virtual, hyper-v)
+.vmdk             00;38;5;89 # Disk images (virtual)
+
+.bin              00;38;5;249 # Binary data
+.com              00;38;5;111 # MS Executable
+.exe              00;38;5;111 # MS Executable
 
 .dmg              01;38;5;134 # Disk images (apple)
 .img              01;38;5;134 # Disk images
 .nrg              01;38;5;134 # Disk images
 .sparseimage      01;38;5;134 # Disk images (apple)
 
-.ISO              01;38;5;134 # Disk images (cd / dvd)
 .iso              01;38;5;134 # Disk images (cd / dvd)
+.ISO              01;38;5;134 # Disk images (cd / dvd)
 .mdf              01;38;5;134 # Disk images (cd / dvd)
 .toast            01;38;5;134 # Disk images (cd / dvd)
 .vcd              01;38;5;134 # Disk images (video cd)
@@ -157,10 +157,8 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .ai               00;38;5;25 # Vector images
 .drw              00;38;5;25 # Vector images
 .eps              00;38;5;25 # Vector images
-.eps              00;38;5;25 # Vector images
 .eps2             00;38;5;25 # Vector images
 .eps3             00;38;5;25 # Vector images
-.epsf             00;38;5;25 # Vector images
 .epsf             00;38;5;25 # Vector images
 .epsi             00;38;5;25 # Vector images
 .ps               00;38;5;25 # Vector images
@@ -287,6 +285,7 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .rst              00;38;5;246 # Markup
 .wiki             00;38;5;246 # Markup
 
+*1                03;38;5;249 # Markup (alternative)
 .info             03;38;5;249 # Markup (alternative)
 .latex            03;38;5;249 # Markup (alternative)
 .nfo              03;38;5;249 # Markup (alternative)
@@ -325,10 +324,7 @@ zshrc             03;38;5;103 # UNIX Shell
 
 .agda             00;38;5;34
 .asm              00;38;5;64
-.asoundrc         00;38;5;36
-.coffee           00;38;5;36
-.cs               00;38;5;36
-.csv              00;38;5;36
+.cs               00;38;5;36 # C Sharp
 .e                01;38;5;245
 
 .ex               00;38;5;36
@@ -342,12 +338,12 @@ zshrc             03;38;5;103 # UNIX Shell
 .jsm              00;38;5;245 # Java
 .jnlp             03;38;5;245 # Java
 .jsp              00;38;5;245 # Java
+.coffee           03;38;5;74 # Javascript
 .js               03;38;5;74 # Javascript
 .js               03;38;5;74 # Typescript
-.lam              00;38;5;74
-.lisp             00;38;5;74
-.lua              03;38;5;74
-.scm              00;38;5;74
+.lisp             00;38;5;74 # Lisp
+.lua              03;38;5;74 # Lua
+.scm              00;38;5;74 # Scheme
 
 .css              00;38;5;31 # Styling (web)
 .less             00;38;5;31 # Styling (web)
@@ -409,7 +405,6 @@ zshrc             03;38;5;103 # UNIX Shell
 .deny             00;38;5;89
 
 # Files of special interest (base1 + bold)
-*1                00;38;5;60
 *Dockerfile       00;38;5;60
 *Makefile         00;38;5;60
 PKGBUILD          00;38;5;60
@@ -452,6 +447,7 @@ PKGBUILD          00;38;5;60
 .pacnew           04;38;5;33 # Config unusual
 
 .bib              00;38;5;29 # Data store # non-relational
+.csv              00;38;5;28 # Data store # non-relational
 .dtd              00;38;5;29 # Data store # non-relational
 .fxml             00;38;5;29 # Data store # non-relational
 .hjson            01;38;5;29 # Data store # non-relational
