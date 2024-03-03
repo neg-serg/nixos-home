@@ -197,7 +197,7 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .st5              00;38;5;74  # Encrypted data
 
 *#                00;38;5;236 # Scum
-*~                01;38;5;236 # Scum
+*~                03;38;5;236 # Undo file
 .added            00;38;5;236 # Temporary torrent
 .aux              01;38;5;236 # LaTeX helper
 .bbl              01;38;5;236 # Scum
@@ -207,6 +207,7 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .incomplete       01;38;5;236 # Scum
 .mfasl            01;38;5;236 # Mozilla XUL precompiled javacript
 .o                01;38;5;236 # *nix Object file (shared libraries, core dumps etc)
+.orig             04;38;5;241 # Undo files
 .pyc              01;38;5;236 # Scum (python compiled)
 
 .bak              01;38;5;236 # Backup / temporary files
@@ -479,9 +480,11 @@ zshrc             03;38;5;103 # UNIX Shell
 .mka              03;38;5;37 # Audio formats (lossy, matroska audio container)
 .mp2              03;38;5;37 # Audio formats (lossy)
 .mp3              03;38;5;37 # Audio formats (lossy)
+.mp4a             03;38;5;37 # Audio (lossy)
 .mpc              03;38;5;37 # Audio formats (lossy, musepack)
 .oga              03;38;5;37 # Audio formats (lossy)
 .ogg              03;38;5;37 # Audio formats (lossy)
+.opus             03;38;5;37 # Audio (lossy)
 .ra               03;38;5;37 # Audio formats (lossy, real audio)
 .spx              03;38;5;37 # Audio formats (lossy, compressed ogg)
 .wma              03;38;5;37 # Audio formats (lossy)
@@ -491,7 +494,9 @@ zshrc             03;38;5;103 # UNIX Shell
 
 .alac             01;03;38;5;34 # Audio formats (lossless, Apple)
 .ape              01;03;38;5;34 # Audio formats (lossless)
+.cda              01;38;5;34 # Audio (lossless)
 .flac             01;03;38;5;34 # Audio formats (lossless)
+.pcm              01;38;5;34 # Audio (lossless)
 .wav              01;03;38;5;34 # Audio formats (lossy)
 
 .dff              01;03;38;5;36 # Audio formats (dsd)
@@ -503,27 +508,29 @@ zshrc             03;38;5;103 # UNIX Shell
 .pls              03;38;5;28 # Sheets
 .xspf             03;38;5;28 # Sheets
 
+.3ga              00;38;5;5 # Another audio formats
 .aiff             00;38;5;5 # Another audio formats (Apple legacy)
+.amr              00;38;5;5 # Another audio formats
 .au               00;38;5;5 # Another audio formats (lossy, Sun legacy)
+.caf              00;38;5;5 # Another audio formats
 .dat              00;38;5;5 # Another audio formats
+.dts              00;38;5;5 # Another audio formats
 .fcm              00;38;5;5 # Another audio formats
 .m4               03;38;5;5 # Another audio formats
 .mod              00;38;5;5 # Another audio formats
-.oga              00;38;5;5 # Another audio formats
 .s3m              01;38;5;5 # Another audio formats
 .S3M              01;38;5;5 # Another audio formats
+.sid              00;38;5;5 # Another audio formats
 .sid              01;38;5;5 # Another audio formats
 .spl              00;38;5;5 # Another audio formats
 .wv               00;38;5;5 # Another audio formats
 .wvc              00;38;5;5 # Another audio formats
 
-.asf              01;38;5;75 # Video
 .avi              01;38;5;75 # Video
 .AVI              01;38;5;75 # Video
 .divx             01;38;5;75 # Video
 .flc              01;38;5;75 # Video
 .fli              01;38;5;75 # Video
-.flv              01;38;5;75 # Video
 .gl               01;38;5;75 # Video
 .m2ts             01;38;5;75 # Video
 .m2v              01;38;5;75 # Video
@@ -538,7 +545,6 @@ zshrc             03;38;5;103 # UNIX Shell
 .mpg              01;38;5;75 # Video
 .nuv              01;38;5;75 # Video
 .ogm              01;38;5;75 # Video
-.ogv              01;38;5;75 # Video
 .qt               01;38;5;75 # Video
 .rm               01;38;5;75 # Video
 .rmvb             01;38;5;75 # Video
@@ -546,15 +552,29 @@ zshrc             03;38;5;103 # UNIX Shell
 .ts               00;38;5;75 # Video
 .vob              01;38;5;75 # Video (lossless)
 .VOB              01;38;5;75 # Video (lossless)
-.webm             00;38;5;75 # Video
 .wmv              00;38;5;75 # Video
+
+.3g2              03;38;5;75 # Video (mobile/streaming)
+.3gp              03;38;5;75 # Video (mobile/streaming)
+.asf              03;38;5;75 # Video (mobile/streaming)
+.f4v              03;38;5;75 # Video (mobile/streaming)
+.flv              03;38;5;75 # Video (mobile/streaming)
+.gp3              03;38;5;75 # Video (mobile/streaming)
+.gp4              03;38;5;75 # Video (mobile/streaming)
+.ogv              03;38;5;75 # Video (mobile/streaming)
+.webm             03;38;5;75 # Video (mobile/streaming)
 
 # http://wiki.xiph.org/index.php/MIME_Types_and_File_Extensions
 .anx              01;38;5;13
-.ass              01;38;5;116
 .axv              01;38;5;13
 .ogx              01;38;5;13
-.srt              01;38;5;116
+
+.ass              01;38;5;116 # Subtitles
+.srt              01;38;5;116 # Subtitles
+.ssa              01;38;5;116 # Subtitles
+.sub              01;38;5;116 # Subtitles
+.sup              01;38;5;116 # Subtitles
+.vtt              01;38;5;116 # Subtitles
 
 .afm              01;38;5;61 # Fonts (Adobe metrics file)
 .bdf              00;38;5;61 # Fonts
@@ -653,7 +673,6 @@ zshrc             03;38;5;103 # UNIX Shell
 .el               03;38;5;64 # Emacs config
 .erl              03;38;5;70 # Erlang
 .fnl              03;38;5;64 # Fennel
-.glsl             03;38;5;70 # GLSL Shaders
 .go               03;38;5;70 # Go
 .ml               03;38;5;70 # ML
 .pas              03;38;5;73 # Pascal
@@ -663,6 +682,28 @@ zshrc             03;38;5;103 # UNIX Shell
 .t                01;38;5;28
 .tcl              03;38;5;34 # Tcl
 .tk               03;38;5;34 # Tk
+
+.comp             00;38;5;142 # SPIR-V shaders
+.frag             00;38;5;142 # SPIR-V shaders
+.glsl             03;38;5;70  # GLSL Shaders
+.spv              00;38;5;136 # SPIR-V compiled shaders
+.vert             00;38;5;142 # SPIR-V shaders
+.wgsl             00;38;5;97  # WGSL shaders
+
+.vb               00;38;5;81 # VBA
+.vba              00;38;5;81 # VBA
+.vbs              00;38;5;81 # VBA
+
+.stl              00;38;5;216 # 3D printing
+.dwg              00;38;5;216 # 3D printing
+.ply              00;38;5;216 # 3D printing
+.wrl              00;38;5;216 # 3D printing
+
+.8xp              00;38;5;204 # Texas Instruments Calculator files
+.8eu              00;38;5;204 # Texas Instruments Calculator files
+.82p              00;38;5;204 # Texas Instruments Calculator files
+.83p              00;38;5;204 # Texas Instruments Calculator files
+.8xe              00;38;5;204 # Texas Instruments Calculator files
 
 # headers
 .f                00;38;5;29
@@ -683,10 +724,13 @@ zshrc             03;38;5;103 # UNIX Shell
 .in               00;38;5;235
 .old              00;38;5;235
 
+.aria2            00;38;5;29 # Dump
 .cap              00;38;5;29 # Dump
 .dmp              00;38;5;29 # Dump
 .dump             00;38;5;29 # Dump
 .pcap             00;38;5;29 # Dump
+.stackdump        00;38;5;29 # Dump
+.zcompdump        00;38;5;29 # Dump
 
 *AUTHORS          38;5;243;04 # Documentation
 *CHANGELOG        38;5;243;04 # Documentation
