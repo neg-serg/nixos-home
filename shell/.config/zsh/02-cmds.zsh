@@ -4,7 +4,8 @@ alias qe='cd ^.git*(/om[1]D)'
 alias ls="${aliases[ls]:-ls} --time-style=+\"%d.%m.%Y %H:%M\" --color=auto --hyperlink=auto"
 alias l="${aliases[ls]:-ls}"
 _exists eza && {
-    alias ls="eza --icons=auto --hyperlink"
+    alias eza="eza --icons=auto --hyperlink"
+    alias ls="${aliases[eza]:-eza}"
     alias l="${aliases[eza]:-eza}"
     alias ll="${aliases[eza]:-eza} -l"
     alias lcr="${aliases[eza]:-eza} -r -sort=changed"
