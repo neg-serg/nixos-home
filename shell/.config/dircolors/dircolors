@@ -29,9 +29,10 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 *dir_colors 48;5;89;38;5;197;1;3;4;7 # :-)
 
 .lesshst          01;38;5;248 # Plain text
+.log              01;38;5;238 # Plain text (logs)
 .map              01;38;5;248 # Plain text
-.txt              00;38;5;248 # Plain text
 .nfo              01;38;5;248 # Plain text
+.txt              00;38;5;248 # Plain text
 
 .7z               01;38;5;61 # Arhives / Packages
 .WARC             00;38;5;61 # Arhives / Packages
@@ -81,7 +82,9 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .zz               01;38;5;61 # Arhives / Packages
 
 .apk              00;38;5;74 # Packaged apps
+.bsp              00;38;5;74 # Packaged apps (valve bsp)
 .cab              00;38;5;74 # Packaged apps
+.crx              04;38;5;74 # Packaged apps # Google Chrome extension
 .deb              00;38;5;74 # Packaged apps
 .ear              00;38;5;73 # Packaged apps
 .egg              00;38;5;74 # Packaged apps
@@ -90,13 +93,15 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .jar              00;38;5;73 # Packaged apps
 .msi              00;38;5;74 # Packaged apps
 .pak              00;38;5;74 # Packaged apps
-.pk3              00;38;5;74 # Packaged apps
-.pkg              00;38;5;74 # Packaged apps
+.pk3              00;38;5;74 # Packaged apps (quake)
+.pkg              00;38;5;74 # Packaged apps (quake)
 .rpm              00;38;5;74 # Packaged apps
 .sar              00;38;5;73 # Packaged apps
 .udeb             00;38;5;74 # Packaged apps
+.vdf              00;38;5;74 # Packaged apps (valve data file)
+.vpk              00;38;5;74 # Packaged apps (valve data file)
 .war              00;38;5;73 # Packaged apps
-.xpi              00;38;5;74 # Packaged apps
+.xpi              04;38;5;74 # Packaged apps # Mozilla Firefox extension
 
 .fvd              00;38;5;89 # Disk images (virtual, QEMU)
 .qcow             00;38;5;89 # Disk images (virtual, QEMU)
@@ -112,6 +117,7 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 
 .dmg              01;38;5;134 # Disk images (apple)
 .img              01;38;5;134 # Disk images
+.ipa              01;38;5;134 # Ipad archive
 .nrg              01;38;5;134 # Disk images
 .sparseimage      01;38;5;134 # Disk images (apple)
 
@@ -219,7 +225,6 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .localized            00;38;5;236 # macOS
 .mfasl                01;38;5;236 # Mozilla XUL precompiled javacript
 .nib                  38;5;57     # macOS UI
-.o                    01;38;5;236 # *nix Object file (shared libraries, core dumps etc)
 .orig                 04;38;5;241 # Undo files
 .pbxproj              1           # Xcode files
 *PkgInfo              00;38;5;236 # macOS app bundle id
@@ -234,17 +239,21 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .bak              01;38;5;236 # Backup / temporary files
 .bck              00;38;5;244 # Backup / temporary files
 .ii               00;38;5;244 # Backup / temporary files (gcc tmp file)
-.part             01;38;5;244 # Archive temporarypart
 .sassc            00;38;5;244 # Backup / temporary files
 .swo              00;38;5;244 # Backup / temporary files
 .swp              01;38;5;244 # Backup / temporary files
 .temp             00;38;5;244 # Backup / temporary files
 .tmp              00;38;5;244 # Backup / temporary files
 
-.log              01;38;5;238 # logs
+.part             01;38;5;244 # Archive temporarypart
+.r[0-9]{0,2}      01;38;5;244 # Archive temporarypart
+.z[0-9]{0,2}      01;38;5;244 # Archive temporarypart
+.zx[0-9]{0,2}     01;38;5;244 # Archive temporarypart
 
+*core             38;5;160;1 # Linux user core dump file (from /proc/sys/kernel/core_pattern)
 .err              38;5;160;1 # error logs
 .error            38;5;160;1 # error logs
+.mdump            38;5;160;1 # Mini DuMP crash report
 .stderr           38;5;160;1 # error logs
 
 .cbr              01;38;5;7 # Documents # binary (comix archive)
@@ -368,18 +377,26 @@ zshrc             03;38;5;103 # UNIX Shell
 .eln              00;38;5;64 # LISP (Emacs)
 .gs               03;38;5;74 # Google apps script
 .lisp             00;38;5;74 # Lisp
-.lua              03;38;5;74 # Lua
+.lua              00;38;5;74 # Code (interpreted) (Lua)
+.moon             00;38;5;74 # Code (interpreted) (Moonscript)
 .ml               00;38;5;74 # LISP
 .rkt              00;38;5;74 # LISP
 .scm              00;38;5;74 # Scheme
 
 .cjs              03;38;5;74 # CommonJS
 .coffee           03;38;5;74 # Javascript
+.dart             03;38;5;74 # Dart
 .js               03;38;5;74 # Javascript
 .jsx              03;38;5;74 # Javascript eXtended
 .mjs              03;38;5;74 # ECMAScript
 .ts               03;38;5;74 # Typescript
 .tsx              03;38;5;74 # Typescript eXtended
+.astro            01;38;5;250 # Templating (Web)
+.ejs              01;38;5;250 # Templating (Web)
+.mustache         01;38;5;250 # Templating (Web)
+.pug              01;38;5;250 # Templating (Web)
+.svelte           01;38;5;250 # Templating (Web)
+.vue              01;38;5;250 # Templating (Web)
 
 .css              00;38;5;31 # Styling (web)
 .less             00;38;5;31 # Styling (web)
@@ -413,8 +430,11 @@ zshrc             03;38;5;103 # UNIX Shell
 .vimrc            04;38;5;56 # Vim (legacy)
 
 .snippets         00;38;5;31
+.eml              01;38;5;90 # Email (Web)
+.http             01;38;5;90 # Request (Web)
 .ttytterrc        01;38;5;5
 .urlview          01;38;5;5
+.webloc           01;38;5;5 # URL-like stuff
 .Xauthority       01;38;5;4
 .xinitrc          01;38;5;4
 .Xmodmap          00;38;5;4
@@ -443,34 +463,38 @@ zshrc             03;38;5;103 # UNIX Shell
 .mk               00;38;5;60 # Build files
 .sbt              00;38;5;60 # Build files
 
-.cfg              03;38;5;2 # Config
-.conf             03;38;5;2 # Config
+*authorized_keys  03;38;5;2 # Config
+.cfg              00;38;5;2 # Config
+*cfg              03;38;5;2 # Config
+.conf             00;38;5;2 # Config
+*conf             03;38;5;2 # Config
+*config           03;38;5;2 # Config
 .hgignore         03;38;5;2 # Config
-.hgrc             03;38;5;2 # Config
-.htoprc           03;38;5;2 # Config
-.ini              03;38;5;2 # Config
-.json             03;38;5;2 # Config
-.mf               03;38;5;2 # Java manifest(config)
-.msmtprc          03;38;5;2 # Config
-.muttrc           03;38;5;2 # Config
-.netrc            03;38;5;2 # Config
-.nix              03;38;5;2 # Config
-.ovpn             03;38;5;2 # Config
+.hgrc             00;38;5;2 # Config
+.htoprc           00;38;5;2 # Config
+.ini              00;38;5;2 # Config
+.json             00;38;5;2 # Config
+*known_hosts      03;38;5;2 # Config
+.mf               00;38;5;2 # Java manifest(config)
+.msmtprc          00;38;5;2 # Config
+.muttrc           00;38;5;33 # Config unusual
+.netrc            03;38;5;33 # Config
+.nix              00;38;5;29 # Config functional
+.ovpn             03;38;5;33 # Config unusual
+.pacnew           04;38;5;33 # Config unusual
+.prisma           04;38;5;33 # Prisma Schema/Config
 .psf              03;38;5;2 # Config (photoshop settings)
+*rc               03;38;5;2 # Config
 .rc               03;38;5;2 # Config
-.reg              03;38;5;2 # Config
+.reg              04;38;5;33 # Config unusual
 .sls              03;38;5;2 # Config (yaml usually)
 .xkb              03;38;5;2 # Config
 
-.pacnew           04;38;5;33 # Config unusual
-.prisma           04;38;5;33 # Prisma Schema/Config
-
-*authorized_keys  03;38;5;2 # Config
-*cfg              03;38;5;2 # Config
-*conf             03;38;5;2 # Config
-*config           03;38;5;2 # Config
-*known_hosts      03;38;5;2 # Config
-*rc               03;38;5;2 # Config
+# *Containerfile        38;5;155            # Build process # Containers
+# *MANIFEST             38;5;243            # Build process (Make)
+# *pm_to_blib           38;5;240            # Build process (Perl)
+# .dhall                38;5;178            # Functional configuration
+# .rake                 38;5;155            # Build process (Ruby)
 
 .bib              00;38;5;29 # Data store # non-relational
 .dtd              00;38;5;29 # Data store # non-relational
@@ -504,6 +528,8 @@ zshrc             03;38;5;103 # UNIX Shell
 
 .a                01;38;5;22 # Libraries
 .dll              01;38;5;22 # Libraries
+.o                01;38;5;236 # *nix Object file (shared libraries, core dumps etc)
+.rlib             01;38;5;236 # Static rust library
 .so               01;38;5;22 # Libraries
 
 .aac              03;38;5;37 # Audio formats (lossy, Apple)
@@ -536,8 +562,8 @@ zshrc             03;38;5;103 # UNIX Shell
 .dff              01;03;38;5;36 # Audio formats (dsd)
 .dsf              01;03;38;5;36 # Audio formats (dsd)
 
-.IFO              00;38;5;28 # Video (metainformation)
-.cue              03;38;5;28 # Sheets
+.IFO              00;38;5;28 # Video metainformation
+.cue              03;38;5;28 # Audio metainformation
 .m3u              03;38;5;28 # Sheets
 .m3u8             03;38;5;28 # Sheets
 .pls              03;38;5;28 # Sheets
@@ -682,18 +708,30 @@ zshrc             03;38;5;103 # UNIX Shell
 .gemspec          00;03;38;5;33 # Code (interpreted) (ruby)
 .gnumeric         00;38;5;14
 .hi               00;38;5;34 # Haskell headers
-.hs               00;38;5;34 # Haskell
-.lhs              03;38;5;34 # Haskell (literate)
+.hs               00;38;5;29 # Haskell
 .ipynb            00;03;38;5;33 # Code (interpreted) (Python)
 .irb              01;38;5;33
+.lhs              03;38;5;34 # Haskell (literate)
 .mf               03;38;5;110
+.nim              00;38;5;64 # Nim
+.nimble           00;38;5;64 # Nim
 .pc               00;38;5;4
 .pfa              00;38;5;4
+.sx               00;38;5;64 # SimplexNumerica
+.tf               00;38;5;29 # Code (Terraform)
+.tfstate          00;38;5;29 # Code (Terraform)
+.tfvars           00;38;5;29 # Code (Terraform)
+.v                00;38;5;64 # V
+.vala             00;38;5;64 # Vala
+.vapi             00;38;5;64 # Vala
+.zig              00;38;5;64 # Zig
 
 .git              00;38;5;36 # Version control
 .gitattributes    00;38;5;36 # Version control
 .github           00;38;5;36 # Version control
-.gitignore        00;38;5;238 # Version control
+.gitignore        00;38;5;240 # Version control
+.containerignore  00;38;5;240 # Build process # Containers
+.dockerignore     00;38;5;240 # Build process (Docker)
 
 # source files
 .agda             00;38;5;34 # Agda
@@ -701,6 +739,9 @@ zshrc             03;38;5;103 # UNIX Shell
 .c++              01;03;38;5;24 # C++
 .C                01;03;38;5;24 # C++
 .c                01;38;5;110 # Pure C
+.tcc              01;38;5;110 # Pure C
+.M                00;38;5;110 # Objective C method file
+.m                00;38;5;110 # Objective C method file
 .cc               01;03;38;5;24 # C++
 .clj              03;38;5;64 # Clojure
 .cljc             00;38;5;64 # Clojure
@@ -743,7 +784,6 @@ zshrc             03;38;5;103 # UNIX Shell
 .R                00;38;5;28 # R
 .rb               01;03;38;5;33 # Code (interpreted) (Ruby)
 .rs               03;38;5;73 # Rust
-.ru               00;38;5;4
 .sc               03;38;5;70 # Scala
 .scala            03;38;5;70 # Scala
 .t                01;38;5;28 # Perl stuff or turing language
@@ -786,7 +826,6 @@ zshrc             03;38;5;103 # UNIX Shell
 .s                00;38;5;247 # Pascal or asm
 .S                00;38;5;247 # Pascal or asm
 .sx               00;38;5;247
-.tcc              00;38;5;247
 
 .am               00;38;5;235 # Build process (Automake)
 .hin              00;38;5;235 # Build process (Automake)
