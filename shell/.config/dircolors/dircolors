@@ -28,12 +28,18 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 *dircolors  48;5;89;38;5;197;1;3;4;7 # :-)
 *dir_colors 48;5;89;38;5;197;1;3;4;7 # :-)
 
+# ┌───────────────────────────────────────────────────────────┐
+# │ Plain text                                                │
+# └───────────────────────────────────────────────────────────┘
 .lesshst          01;38;5;248 # Plain text
 .log              01;38;5;238 # Plain text (logs)
 .map              01;38;5;248 # Plain text
 .nfo              01;38;5;248 # Plain text
 .txt              00;38;5;248 # Plain text
 
+# ┌───────────────────────────────────────────────────────────┐
+# │ Arhives / Packages                                        │
+# └───────────────────────────────────────────────────────────┘
 .7z               01;38;5;61 # Arhives / Packages
 .WARC             00;38;5;61 # Arhives / Packages
 .Z                01;38;5;61 # Arhives / Packages
@@ -81,6 +87,17 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .zstd             01;38;5;61 # Arhives / Packages
 .zz               01;38;5;61 # Arhives / Packages
 
+# ┌───────────────────────────────────────────────────────────┐
+# │ Archive temporarypart                                     │
+# └───────────────────────────────────────────────────────────┘
+.part             01;38;5;244 # Archive temporarypart
+.r[0-9]{0,2}      01;38;5;244 # Archive temporarypart
+.z[0-9]{0,2}      01;38;5;244 # Archive temporarypart
+.zx[0-9]{0,2}     01;38;5;244 # Archive temporarypart
+
+# ┌───────────────────────────────────────────────────────────┐
+# │ Packaged apps                                             │
+# └───────────────────────────────────────────────────────────┘
 .apk              00;38;5;74 # Packaged apps
 .bsp              00;38;5;74 # Packaged apps (valve bsp)
 .cab              00;38;5;74 # Packaged apps
@@ -103,6 +120,9 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .war              00;38;5;73 # Packaged apps
 .xpi              04;38;5;74 # Packaged apps # Mozilla Firefox extension
 
+# ┌───────────────────────────────────────────────────────────┐
+# │ Disk images                                               │
+# └───────────────────────────────────────────────────────────┘
 .fvd              00;38;5;89 # Disk images (virtual, QEMU)
 .qcow             00;38;5;89 # Disk images (virtual, QEMU)
 .qcow2            00;38;5;89 # Disk images (virtual, QEMU)
@@ -111,23 +131,31 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .vhdx             00;38;5;89 # Disk images (virtual, hyper-v)
 .vmdk             00;38;5;89 # Disk images (virtual)
 
+# ┌───────────────────────────────────────────────────────────┐
+# │ Binary files                                              │
+# └───────────────────────────────────────────────────────────┘
 .bin              00;38;5;249 # Binary data
 .com              00;38;5;111 # MS Executable
 .exe              00;38;5;111 # MS Executable
 
+# ┌───────────────────────────────────────────────────────────┐
+# │ Disk images                                               │
+# └───────────────────────────────────────────────────────────┘
 .dmg              01;38;5;134 # Disk images (apple)
 .img              01;38;5;134 # Disk images
 .ipa              01;38;5;134 # Ipad archive
-.nrg              01;38;5;134 # Disk images
-.sparseimage      01;38;5;134 # Disk images (apple)
-
 .iso              01;38;5;134 # Disk images (cd / dvd)
 .ISO              01;38;5;134 # Disk images (cd / dvd)
 .mdf              01;38;5;134 # Disk images (cd / dvd)
+.nrg              01;38;5;134 # Disk images
+.sparseimage      01;38;5;134 # Disk images (apple)
 .toast            01;38;5;134 # Disk images (cd / dvd)
 .vcd              01;38;5;134 # Disk images (video cd)
 .vfd              01;38;5;134 # Disk images (floppy)
 
+# ┌───────────────────────────────────────────────────────────┐
+# │ Graphics                                                  │
+# └───────────────────────────────────────────────────────────┘
 .bpg              01;38;5;24 # Graphics
 .cgm              01;38;5;24 # Graphics
 .CR2              01;38;5;24 # Graphics
@@ -147,7 +175,6 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .xcf              01;38;5;24 # Graphics
 .xwd              01;38;5;24 # Graphics
 .yuv              01;38;5;24 # Graphics
-
 .bmp              01;38;5;110 # Bitmap
 .cdr              00;38;5;110 # Graphics (unusual)
 .dicom            00;38;5;110 # Graphics (unusual)
@@ -160,11 +187,15 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .tga              00;38;5;110 # Bitmap
 .xbm              00;38;5;111 # Bitmap
 .xpm              00;38;5;110 # Bitmap
-
 .tif              00;38;5;33 # Big picture format
 .tiff             00;38;5;33 # Big picture format
 .TIFF             00;38;5;33 # Big picture format
-
+.gif              01;38;5;25 # Images, animated
+.icns             01;38;5;25 # Icons
+.ico              01;38;5;25 # Icons
+# ┌───────────────────────────────────────────────────────────┐
+# │ Vector images                                             │
+# └───────────────────────────────────────────────────────────┘
 .ai               00;38;5;25 # Vector images
 .drw              00;38;5;25 # Vector images
 .eps              00;38;5;25 # Vector images
@@ -176,23 +207,20 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .svg              00;38;5;25 # Vector images
 .svgz             00;38;5;25 # Vector images
 
-.gif              01;38;5;25 # Images, animated
-
-.icns             01;38;5;25 # Icons
-.ico              01;38;5;25 # Icons
-
+ # ┌───────────────────────────────────────────────────────────┐
+ # │ Color profiles                                            │
+ # └───────────────────────────────────────────────────────────┘
 .icc              00;38;5;249 # Color profiles
 .icm              00;38;5;249 # Color profiles
 
+# ┌───────────────────────────────────────────────────────────┐
+# │ Encrypted data                                            │
+# └───────────────────────────────────────────────────────────┘
 .asc              01;38;5;74  # Encrypted data
 .bfe              00;38;5;74  # Encrypted data
 .enc              00;38;5;74  # Encrypted data
 .ffp              00;38;5;74  # Encrypted data
 .gpg              00;38;5;74  # Encrypted data
-*id_dsa           00;38;5;74  # Encrypted data
-*id_ecdsa         00;38;5;74  # Encrypted data
-*id_ed25519       00;38;5;74  # Encrypted data
-*id_rsa           00;38;5;74  # Encrypted data
 .key              01;38;5;74  # Encrypted data
 .md5              00;38;5;74  # Encrypted data
 .p12              00;38;5;74  # Encrypted data
@@ -206,7 +234,14 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .sig              00;38;5;74  # Encrypted data
 .signature        00;38;5;74  # Encrypted data
 .st5              00;38;5;74  # Encrypted data
+*id_dsa           00;38;5;74  # Encrypted data
+*id_ecdsa         00;38;5;74  # Encrypted data
+*id_ed25519       00;38;5;74  # Encrypted data
+*id_rsa           00;38;5;74  # Encrypted data
 
+# ┌───────────────────────────────────────────────────────────┐
+# │ Scum                                                      │
+# └───────────────────────────────────────────────────────────┘
 *#                    00;38;5;236 # Scum
 *~                    03;38;5;236 # Undo file
 .added                00;38;5;236 # Temporary torrent
@@ -236,7 +271,10 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .xcuserstate          1           # Xcode files
 .xcworkspacedata      1           # Xcode files
 
-.bak              01;38;5;236 # Backup / temporary files
+# ┌───────────────────────────────────────────────────────────┐
+# │ Backup / temporary files                                  │
+# └───────────────────────────────────────────────────────────┘
+.bak              01;38;5;244 # Backup / temporary files
 .bck              00;38;5;244 # Backup / temporary files
 .ii               00;38;5;244 # Backup / temporary files (gcc tmp file)
 .sassc            00;38;5;244 # Backup / temporary files
@@ -245,31 +283,48 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .temp             00;38;5;244 # Backup / temporary files
 .tmp              00;38;5;244 # Backup / temporary files
 
-.part             01;38;5;244 # Archive temporarypart
-.r[0-9]{0,2}      01;38;5;244 # Archive temporarypart
-.z[0-9]{0,2}      01;38;5;244 # Archive temporarypart
-.zx[0-9]{0,2}     01;38;5;244 # Archive temporarypart
-
+# ┌───────────────────────────────────────────────────────────┐
+# │ Error                                                     │
+# └───────────────────────────────────────────────────────────┘
 .err              38;5;160;1 # error logs
 .error            38;5;160;1 # error logs
 .mdump            38;5;160;1 # Mini DuMP crash report
 .stderr           38;5;160;1 # error logs
 *core             38;5;160;1 # Linux user core dump file (from /proc/sys/kernel/core_pattern)
 
-.cbr              01;38;5;7 # Documents # binary (comix archive)
-.cbz              01;38;5;7 # Documents # binary
-.chm              01;38;5;7 # Documents # binary
-.epub             00;38;5;7 # Documents # binary
-.fb2              00;38;5;7 # Documents # binary
-.lit              00;38;5;7 # Documents # binary
-.mobi             00;38;5;7 # Documents # binary
-.pdf              01;38;5;7 # Documents # binary
-.PDF              01;38;5;7 # Documents # binary
-
-.djv              00;38;5;249 # Documents # binary (djvu)
-.djvu             00;38;5;249 # Documents # binary (djvu)
-.dvi              01;38;5;249 # Documents # binary (djvu)
-
+# ┌───────────────────────────────────────────────────────────┐
+# │ Documents (binary)                                        │
+# └───────────────────────────────────────────────────────────┘
+.cbr              01;38;5;7 # Documents (binary) (comix archive)
+.cbz              01;38;5;7 # Documents (binary)
+.chm              01;38;5;7 # Documents (binary)
+.epub             00;38;5;7 # Documents (binary)
+.fb2              00;38;5;7 # Documents (binary)
+.lit              00;38;5;7 # Documents (binary)
+.mobi             00;38;5;7 # Documents (binary)
+.pdf              01;38;5;7 # Documents (binary)
+.PDF              01;38;5;7 # Documents (binary)
+.djv              00;38;5;249 # Documents (djvu)
+.djvu             00;38;5;249 # Documents (djvu)
+.dvi              01;38;5;249 # Documents (djvu)
+.doc              00;38;5;175 # Documents with macros (office)
+.docm             00;38;5;175 # Documents (office)
+.docx             00;38;5;175 # Documents (office)
+.dot              00;38;5;175 # Documents (office)
+.dotm             00;38;5;175 # Documents (office)
+.odb              00;38;5;175 # Documents (office)
+.odm              00;38;5;175 # Documents (office)
+.odt              00;38;5;175 # Documents (office)
+.pages            00;38;5;175 # Documents (office)
+.chrt             01;38;5;14 # KOffice chart
+.numbers          00;38;5;14 # Spreadsheet
+.ods              00;38;5;14 # Spreadsheet
+.xla              00;38;5;14 # Spreadsheet
+.xls              00;38;5;14 # Spreadsheet
+.xlsm             00;38;5;14 # Spreadsheet
+.xlsx             04;38;5;14 # Spreadsheet
+.xltm             04;38;5;14 # Spreadsheet (with macros)
+.xltx             04;38;5;14 # Spreadsheet (with macros)
 .odp              00;38;5;31 # Presentation
 .pps              00;38;5;31 # Presentation
 .ppt              00;38;5;31 # Presentation (with macros)
@@ -278,6 +333,9 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .pptsm            00;38;5;31;4 # Presentation (with macros)
 .pptxm            00;38;5;31;4 # Presentation (with macros)
 
+# ┌───────────────────────────────────────────────────────────┐
+# │ Data store                                                │
+# └───────────────────────────────────────────────────────────┘
 .btm              00;38;5;99 # Data store
 .db               00;38;5;99 # Data store
 .fmp12            00;38;5;99 # Data store
@@ -294,26 +352,9 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .accdr            00;38;5;161 # Data store # MS Access
 .accdt            00;38;5;161 # Data store # MS Access
 
-.doc              00;38;5;175 # Documents # with macros
-.docm             00;38;5;175 # Documents
-.docx             00;38;5;175 # Documents
-.dot              00;38;5;175 # Documents
-.dotm             00;38;5;175 # Documents
-.odb              00;38;5;175 # Documents
-.odm              00;38;5;175 # Documents
-.odt              00;38;5;175 # Documents
-.pages            00;38;5;175 # Documents
-
-.chrt             01;38;5;14 # KOffice chart
-.numbers          00;38;5;14 # Spreadsheet
-.ods              00;38;5;14 # Spreadsheet
-.xla              00;38;5;14 # Spreadsheet
-.xls              00;38;5;14 # Spreadsheet
-.xlsm             00;38;5;14 # Spreadsheet
-.xlsx             04;38;5;14 # Spreadsheet
-.xltm             04;38;5;14 # Spreadsheet (with macros)
-.xltx             04;38;5;14 # Spreadsheet (with macros)
-
+# ┌───────────────────────────────────────────────────────────┐
+# │ Markup                                                    │
+# └───────────────────────────────────────────────────────────┘
 .adoc             00;38;5;246 # Markup
 .asciidoc         00;38;5;246 # Markup
 .etx              00;38;5;246 # Markup
@@ -324,7 +365,6 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .pod              00;38;5;246 # Markup
 .rst              00;38;5;246 # Markup
 .wiki             00;38;5;246 # Markup
-
 *1                03;38;5;249 # Markup (alternative)
 .info             03;38;5;249 # Markup (alternative)
 .latex            03;38;5;249 # Markup (alternative)
@@ -333,9 +373,9 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .tex              03;38;5;249 # Markup (alternative)
 .textile          03;38;5;249 # Markup (alternative)
 
-.bat              00;38;5;31 # MS Shell
-.cmd              00;38;5;31 # MS Shell
-
+# ┌───────────────────────────────────────────────────────────┐
+# │ Shell                                                     │
+# └───────────────────────────────────────────────────────────┘
 .awk              00;38;5;103 # UNIX Shell
 .bash             01;38;5;103 # UNIX Shell
 .bash_history     01;38;5;103 # UNIX Shell
@@ -359,58 +399,36 @@ bashrc            03;38;5;103 # UNIX Shell
 .zsh              01;38;5;103 # UNIX Shell
 zshrc             03;38;5;103 # UNIX Shell
 .zwc              01;38;5;103 # UNIX Shell
+.bat              00;38;5;31 # MS Shell
+.cmd              00;38;5;31 # MS Shell
 
-.msql             00;38;5;83 # Code (SQL)
-.mysql            00;38;5;83 # Code (SQL)
-.pgsql            00;38;5;83 # Code (SQL)
-.prql             00;38;5;83 # Code (SQL)
-.sql              00;38;5;83 # Code (SQL)
+# ┌───────────────────────────────────────────────────────────┐
+# │ Web stuff                                                 │
+# └───────────────────────────────────────────────────────────┘
+.astro            01;38;5;250 # Web templates
+.ejs              01;38;5;250 # Web templates
+.mustache         01;38;5;250 # Web templates
+.pug              01;38;5;250 # Web templates
+.svelte           01;38;5;250 # Web templates
+.vue              01;38;5;250 # Web templates
+.css              00;38;5;31 # Web styles
+.less             00;38;5;31 # Web styles
+.sass             00;38;5;31 # Web styles
+.scss             00;38;5;31 # Web styles
+.htm              00;38;5;29 # Web markup
+.html             00;38;5;29 # Web markup
+.jhtm             00;38;5;29 # Web markup
+.mht              00;38;5;29 # Web markup
 
-.java             03;38;5;245 # Java
-.jsm              00;38;5;245 # Java
-.jnlp             03;38;5;245 # Java
-.jsp              00;38;5;245 # Java
-
-.cl               00;38;5;74 # LISP
-.el               03;38;5;64 # LISP (Emacs)
-.elc              00;38;5;64 # LISP (Emacs)
-.eln              00;38;5;64 # LISP (Emacs)
-.gs               03;38;5;74 # Google apps script
-.lisp             00;38;5;74 # Lisp
-.lua              00;38;5;74 # Code (interpreted) (Lua)
-.moon             00;38;5;74 # Code (interpreted) (Moonscript)
-.ml               00;38;5;74 # LISP
-.rkt              00;38;5;74 # LISP
-.scm              00;38;5;74 # Scheme
-
-.cjs              03;38;5;74 # CommonJS
-.coffee           03;38;5;74 # Javascript
-.dart             03;38;5;74 # Dart
-.js               03;38;5;74 # Javascript
-.jsx              03;38;5;74 # Javascript eXtended
-.mjs              03;38;5;74 # ECMAScript
-.ts               03;38;5;74 # Typescript
-.tsx              03;38;5;74 # Typescript eXtended
-.astro            01;38;5;250 # Templating (Web)
-.ejs              01;38;5;250 # Templating (Web)
-.mustache         01;38;5;250 # Templating (Web)
-.pug              01;38;5;250 # Templating (Web)
-.svelte           01;38;5;250 # Templating (Web)
-.vue              01;38;5;250 # Templating (Web)
-
-.css              00;38;5;31 # Styling (web)
-.less             00;38;5;31 # Styling (web)
-.sass             00;38;5;31 # Styling (web)
-.scss             00;38;5;31 # Styling (web)
-
-.htm              00;38;5;29 # Markup (web)
-.html             00;38;5;29 # Markup (web)
-.jhtm             00;38;5;29 # Markup (web)
-.mht              00;38;5;29 # Markup (web)
-
+# ┌───────────────────────────────────────────────────────────┐
+# │ Diff / patch                                              │
+# └───────────────────────────────────────────────────────────┘
 .diff             48;5;7;38;5;16;1 # diff file
 .patch            48;5;7;38;5;16;1 # patch file
 
+# ┌───────────────────────────────────────────────────────────┐
+# │ Theme                                                     │
+# └───────────────────────────────────────────────────────────┘
 .attheme          01;38;5;5 # Theme (android telegram theme data)
 .colors           01;38;5;5 # Theme
 .rasi             01;38;5;5 # Theme
@@ -435,16 +453,15 @@ zshrc             03;38;5;103 # UNIX Shell
 .ttytterrc        01;38;5;5
 .urlview          01;38;5;5
 .webloc           01;38;5;5 # URL-like stuff
-.Xauthority       01;38;5;4
-.xinitrc          01;38;5;4
-.Xmodmap          00;38;5;4
-.Xresources       01;38;5;33
 
-# /etc/hosts.{deny,allow}
+# ┌───────────────────────────────────────────────────────────┐
+# │ /etc/hosts.{deny,allow}                                   │
+# └───────────────────────────────────────────────────────────┘
 .allow            00;38;5;24
 .deny             00;38;5;89
-
-# Files of special interest
+# ┌───────────────────────────────────────────────────────────┐
+# │ Files of special interest                                 │
+# └───────────────────────────────────────────────────────────┘
 .icls             00;38;5;60
 .jidgo            00;38;5;60
 .modulemap        00;38;5;60
@@ -455,7 +472,9 @@ zshrc             03;38;5;103 # UNIX Shell
 .rdf              00;38;5;60
 .torrent          00;38;5;60
 .ttl              00;38;5;60
-
+# ┌───────────────────────────────────────────────────────────┐
+# │ Build                                                     │
+# └───────────────────────────────────────────────────────────┘
 .dhall            00;38;5;29  # Functional configuration
 .mk               00;38;5;60  # Build files
 .rake             00;38;5;60  # Build process (Ruby)
@@ -467,7 +486,9 @@ zshrc             03;38;5;103 # UNIX Shell
 *build.xml        00;38;5;60  # Build files
 *MANIFEST         00;38;5;243 # Build process (Make)
 *pm_to_blib       00;38;5;250 # Build process (Perl)
-
+# ┌───────────────────────────────────────────────────────────┐
+# │ Config                                                    │
+# └───────────────────────────────────────────────────────────┘
 *authorized_keys  03;38;5;2 # Config
 .cfg              00;38;5;2 # Config
 *cfg              03;38;5;2 # Config
@@ -494,7 +515,16 @@ zshrc             03;38;5;103 # UNIX Shell
 .reg              04;38;5;33 # Config unusual
 .sls              03;38;5;2 # Config (yaml usually)
 .xkb              03;38;5;2 # Config
-
+# ┌───────────────────────────────────────────────────────────┐
+# │ X11 config files                                          │
+# └───────────────────────────────────────────────────────────┘
+.Xauthority       01;38;5;4 # X11 config files
+.xinitrc          01;38;5;4 # X11 config files
+.Xmodmap          00;38;5;4 # X11 config files
+.Xresources       01;38;5;33 # X11 config files
+# ┌───────────────────────────────────────────────────────────┐
+# │ Data store ( non-relational )                             │
+# └───────────────────────────────────────────────────────────┘
 .bib              00;38;5;29 # Data store # non-relational
 .dtd              00;38;5;29 # Data store # non-relational
 .epf              00;38;5;29 # Data store # non-relational # Autodesk preferences
@@ -521,16 +551,22 @@ zshrc             03;38;5;103 # UNIX Shell
 .xsd              00;38;5;29 # Data store # non-relational
 .yaml             00;38;5;29 # Data store # non-relational
 .yml              00;38;5;29 # Data store # non-relational
-
+# ┌───────────────────────────────────────────────────────────┐
+# │ Spreadsheet (plain text)                                  │
+# └───────────────────────────────────────────────────────────┘
 .csv              00;38;5;28 # Spreadsheet (plain text)
 .tsv              00;38;5;28 # Spreadsheet (plain text)
-
+# ┌───────────────────────────────────────────────────────────┐
+# │ Libraries                                                 │
+# └───────────────────────────────────────────────────────────┘
 .a                01;38;5;22 # Libraries
 .dll              01;38;5;22 # Libraries
 .o                01;38;5;236 # *nix Object file (shared libraries, core dumps etc)
 .rlib             01;38;5;236 # Static rust library
 .so               01;38;5;22 # Libraries
-
+# ┌───────────────────────────────────────────────────────────┐
+# │ Audio formats (lossy)                                     │
+# └───────────────────────────────────────────────────────────┘
 .aac              03;38;5;37 # Audio formats (lossy, Apple)
 .axa              03;38;5;37 # Audio formats (lossy, CSIRO)
 .m4a              03;38;5;37 # Audio formats (lossy, container, aac usually)
@@ -547,27 +583,28 @@ zshrc             03;38;5;103 # UNIX Shell
 .ra               03;38;5;37 # Audio formats (lossy, real audio)
 .spx              03;38;5;37 # Audio formats (lossy, compressed ogg)
 .wma              03;38;5;37 # Audio formats (lossy)
-
-.mid              04;38;5;37 # Audio formats (midi)
-.midi             04;38;5;37 # Audio formats (midi)
-
+ # ┌───────────────────────────────────────────────────────────┐
+ # │ Audio formats (lossless)                                  │
+ # └───────────────────────────────────────────────────────────┘
 .alac             01;03;38;5;34 # Audio formats (lossless, Apple)
 .ape              01;03;38;5;34 # Audio formats (lossless)
 .cda              01;38;5;34 # Audio (lossless)
 .flac             01;03;38;5;34 # Audio formats (lossless)
 .pcm              01;38;5;34 # Audio (lossless)
 .wav              01;03;38;5;34 # Audio formats (lossy)
-
+# ┌───────────────────────────────────────────────────────────┐
+# │ Audio formats (dsd)                                       │
+# └───────────────────────────────────────────────────────────┘
 .dff              01;03;38;5;36 # Audio formats (dsd)
 .dsf              01;03;38;5;36 # Audio formats (dsd)
-
-.IFO              00;38;5;28 # Video metainformation
-.cue              03;38;5;28 # Audio metainformation
-.m3u              03;38;5;28 # Sheets
-.m3u8             03;38;5;28 # Sheets
-.pls              03;38;5;28 # Sheets
-.xspf             03;38;5;28 # Sheets
-
+# ┌───────────────────────────────────────────────────────────┐
+# │ Audio formats (midi)                                      │
+# └───────────────────────────────────────────────────────────┘
+.mid              04;38;5;37 # Audio formats (midi)
+.midi             04;38;5;37 # Audio formats (midi)
+# ┌───────────────────────────────────────────────────────────┐
+# │ Another audio formats                                     │
+# └───────────────────────────────────────────────────────────┘
 .3ga              00;38;5;5 # Another audio formats
 .aiff             00;38;5;5 # Another audio formats (Apple legacy)
 .amr              00;38;5;5 # Another audio formats
@@ -585,7 +622,18 @@ zshrc             03;38;5;103 # UNIX Shell
 .spl              00;38;5;5 # Another audio formats
 .wv               00;38;5;5 # Another audio formats
 .wvc              00;38;5;5 # Another audio formats
-
+# ┌───────────────────────────────────────────────────────────┐
+# │ Metainformation                                           │
+# └───────────────────────────────────────────────────────────┘
+.IFO              00;38;5;28 # Video metainformation
+.cue              03;38;5;28 # Audio metainformation
+.m3u              03;38;5;28 # Sheets
+.m3u8             03;38;5;28 # Sheets
+.pls              03;38;5;28 # Sheets
+.xspf             03;38;5;28 # Sheets
+# ┌───────────────────────────────────────────────────────────┐
+# │ Video                                                     │
+# └───────────────────────────────────────────────────────────┘
 .avi              01;38;5;75 # Video
 .AVI              01;38;5;75 # Video
 .divx             01;38;5;75 # Video
@@ -613,7 +661,9 @@ zshrc             03;38;5;103 # UNIX Shell
 .vob              01;38;5;75 # Video (lossless)
 .VOB              01;38;5;75 # Video (lossless)
 .wmv              00;38;5;75 # Video
-
+# ┌───────────────────────────────────────────────────────────┐
+# │ Video (mobile/streaming)                                  │
+# └───────────────────────────────────────────────────────────┘
 .3g2              03;38;5;75 # Video (mobile/streaming)
 .3gp              03;38;5;75 # Video (mobile/streaming)
 .asf              03;38;5;75 # Video (mobile/streaming)
@@ -623,19 +673,22 @@ zshrc             03;38;5;103 # UNIX Shell
 .gp4              03;38;5;75 # Video (mobile/streaming)
 .ogv              03;38;5;75 # Video (mobile/streaming)
 .webm             03;38;5;75 # Video (mobile/streaming)
-
-# http://wiki.xiph.org/index.php/MIME_Types_and_File_Extensions
-.anx              01;38;5;13
-.axv              01;38;5;13
-.ogx              01;38;5;13
-
+# ┌───────────────────────────────────────────────────────────┐
+# │ Subtitles                                                 │
+# └───────────────────────────────────────────────────────────┘
 .ass              01;38;5;116 # Subtitles
 .srt              01;38;5;116 # Subtitles
 .ssa              01;38;5;116 # Subtitles
 .sub              01;38;5;116 # Subtitles
 .sup              01;38;5;116 # Subtitles
 .vtt              01;38;5;116 # Subtitles
-
+# http://wiki.xiph.org/index.php/MIME_Types_and_File_Extensions
+.anx              01;38;5;13
+.axv              01;38;5;13
+.ogx              01;38;5;13
+# ┌───────────────────────────────────────────────────────────┐
+# │ Fonts                                                     │
+# └───────────────────────────────────────────────────────────┘
 .afm              01;38;5;61 # Fonts (Adobe metrics file)
 .bdf              00;38;5;61 # Fonts
 .dfont            01;38;5;61 # Fonts
@@ -652,30 +705,33 @@ zshrc             03;38;5;103 # UNIX Shell
 .woff             01;38;5;61 # Fonts
 .woff2            01;38;5;61 # Fonts
 
-.32x              00;38;5;232 # Emulator roms, emulator savegames
-.A64              00;38;5;232 # Emulator roms, emulator savegames
-.a00              00;38;5;232 # Emulator roms, emulator savegames
-.a52              00;38;5;232 # Emulator roms, emulator savegames
-.a64              00;38;5;232 # Emulator roms, emulator savegames
-.a78              00;38;5;232 # Emulator roms, emulator savegames
-.adf              00;38;5;232 # Emulator roms, emulator savegames
-.atr              00;38;5;232 # Emulator roms, emulator savegames
-.cdi              00;38;5;232 # Emulator roms, emulator savegames
-.fm2              00;38;5;232 # Emulator roms, emulator savegames
-.gb               00;38;5;232 # Emulator roms, emulator savegames (Nindendo)
-.gba              00;38;5;232 # Emulator roms, emulator savegames (Nindendo)
-.gbc              00;38;5;232 # Emulator roms, emulator savegames (Nindendo)
-.gel              00;38;5;232 # Emulator roms, emulator savegames (Nindendo)
-.gg               00;38;5;232 # Emulator roms, emulator savegames (Nindendo)
-.ggl              00;38;5;232 # Emulator roms, emulator savegames (Nindendo)
-.j64              00;38;5;232 # Emulator roms, emulator savegames (Nindendo)
-.nds              00;38;5;232 # Emulator roms, emulator savegames (Nintendo)
-.nes              00;38;5;232 # Emulator roms, emulator savegames (Nintendo NES)
-.rom              01;38;5;232 # Emulator roms, emulator savegames
-.sav              00;38;5;232 # Emulator roms, emulator savegames
-.sms              00;38;5;232 # Emulator roms, emulator savegames
-.st               00;38;5;232 # Emulator roms, emulator savegames
-.ipk              00;38;5;232 # Emulator roms, emulator savegames (Nintendo DS Packed Images)
+# ┌───────────────────────────────────────────────────────────┐
+# │ Emulator roms / savegames                                 │
+# └───────────────────────────────────────────────────────────┘
+.32x              00;38;5;232 # Emulator roms / savegames
+.A64              00;38;5;232 # Emulator roms / savegames
+.a00              00;38;5;232 # Emulator roms / savegames
+.a52              00;38;5;232 # Emulator roms / savegames
+.a64              00;38;5;232 # Emulator roms / savegames
+.a78              00;38;5;232 # Emulator roms / savegames
+.adf              00;38;5;232 # Emulator roms / savegames
+.atr              00;38;5;232 # Emulator roms / savegames
+.cdi              00;38;5;232 # Emulator roms / savegames
+.fm2              00;38;5;232 # Emulator roms / savegames
+.gb               00;38;5;232 # Emulator roms / savegames (Nindendo)
+.gba              00;38;5;232 # Emulator roms / savegames (Nindendo)
+.gbc              00;38;5;232 # Emulator roms / savegames (Nindendo)
+.gel              00;38;5;232 # Emulator roms / savegames (Nindendo)
+.gg               00;38;5;232 # Emulator roms / savegames (Nindendo)
+.ggl              00;38;5;232 # Emulator roms / savegames (Nindendo)
+.j64              00;38;5;232 # Emulator roms / savegames (Nindendo)
+.nds              00;38;5;232 # Emulator roms / savegames (Nintendo)
+.nes              00;38;5;232 # Emulator roms / savegames (Nintendo NES)
+.rom              01;38;5;232 # Emulator roms / savegames
+.sav              00;38;5;232 # Emulator roms / savegames
+.sms              00;38;5;232 # Emulator roms / savegames
+.st               00;38;5;232 # Emulator roms / savegames
+.ipk              00;38;5;232 # Emulator roms / savegames (Nintendo DS Packed Images)
 
 # systemd units http://www.freedesktop.org/software/systemd/man/systemd.unit.html
 .automount        00;38;5;66
@@ -725,12 +781,48 @@ zshrc             03;38;5;103 # UNIX Shell
 .vapi             00;38;5;64 # Vala
 .zig              00;38;5;64 # Zig
 
-.git              00;38;5;36 # Version control
-.gitattributes    00;38;5;36 # Version control
-.github           00;38;5;36 # Version control
-.gitignore        00;38;5;240 # Version control
-.containerignore  00;38;5;240 # Build process # Containers
-.dockerignore     00;38;5;240 # Build process (Docker)
+# ┌───────────────────────────────────────────────────────────┐
+# │ Code (SQL)                                                │
+# └───────────────────────────────────────────────────────────┘
+.msql             00;38;5;83 # Code (SQL)
+.mysql            00;38;5;83 # Code (SQL)
+.pgsql            00;38;5;83 # Code (SQL)
+.prql             00;38;5;83 # Code (SQL)
+.sql              00;38;5;83 # Code (SQL)
+
+# ┌───────────────────────────────────────────────────────────┐
+# │ Java                                                      │
+# └───────────────────────────────────────────────────────────┘
+.java             03;38;5;245 # Java
+.jsm              00;38;5;245 # Java
+.jnlp             03;38;5;245 # Java
+.jsp              00;38;5;245 # Java
+# ┌───────────────────────────────────────────────────────────┐
+# │ LISP                                                      │
+# └───────────────────────────────────────────────────────────┘
+.cl               00;38;5;74 # LISP
+.el               03;38;5;64 # LISP (Emacs)
+.elc              00;38;5;64 # LISP (Emacs)
+.eln              00;38;5;64 # LISP (Emacs)
+.lisp             00;38;5;74 # Lisp
+.ml               00;38;5;74 # LISP
+.rkt              00;38;5;74 # LISP
+.scm              00;38;5;74 # Scheme
+
+# ┌───────────────────────────────────────────────────────────┐
+# │ Code interpreted                                          │
+# └───────────────────────────────────────────────────────────┘
+.cjs              03;38;5;74 # CommonJS
+.coffee           03;38;5;74 # Javascript
+.dart             03;38;5;74 # Dart
+.js               03;38;5;74 # Javascript
+.jsx              03;38;5;74 # Javascript eXtended
+.mjs              03;38;5;74 # ECMAScript
+.ts               03;38;5;74 # Typescript
+.tsx              03;38;5;74 # Typescript eXtended
+.gs               03;38;5;74 # Google apps script
+.lua              00;38;5;74 # Code (interpreted) (Lua)
+.moon             00;38;5;74 # Code (interpreted) (Moonscript)
 
 # source files
 .agda             00;38;5;34 # Agda
@@ -825,6 +917,11 @@ zshrc             03;38;5;103 # UNIX Shell
 .s                00;38;5;247 # Pascal or asm
 .S                00;38;5;247 # Pascal or asm
 
+.git              00;38;5;36 # Version control
+.gitattributes    00;38;5;36 # Version control
+.github           00;38;5;36 # Version control
+.gitignore        00;38;5;240 # Version control
+
 .am               00;38;5;235 # Build process (Automake)
 .hin              00;38;5;235 # Build process (Automake)
 .in               00;38;5;235 # Build process (Automake)
@@ -833,6 +930,8 @@ zshrc             03;38;5;103 # UNIX Shell
 .out              00;38;5;235 # Build process (Automake)
 .scan             00;38;5;235 # Build process (Automake)
 .SKIP             00;38;5;235 # Build process (Automake)
+.containerignore  00;38;5;240 # Build process # Containers
+.dockerignore     00;38;5;240 # Build process (Docker)
 
 .aria2            00;38;5;29 # Dump
 .cap              00;38;5;29 # Dump
