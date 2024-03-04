@@ -1,6 +1,6 @@
-{ pkgs, stable, ... }: {
+{ pkgs, oldstable, ... }: {
   home.packages = with pkgs; [
-      stable.stig # transmission client
+      oldstable.stig # transmission client
       transmission # bittorrent daemon
   ];
 
