@@ -773,7 +773,7 @@ zshrc             03;38;5;103 # UNIX Shell
 .lua              00;38;5;74 # Code (interpreted) (Lua)
 .moon             00;38;5;74 # Code (interpreted) (Moonscript)
 .cl               00;38;5;74 # LISP
-.el               03;38;5;64 # LISP (Emacs)
+.el               00;38;5;64 # LISP (Emacs)
 .elc              00;38;5;64 # LISP (Emacs)
 .eln              00;38;5;64 # LISP (Emacs)
 .lisp             00;38;5;74 # Lisp
