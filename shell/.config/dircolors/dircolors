@@ -122,33 +122,38 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .vcd              01;38;5;134 # Disk images (video cd)
 .vfd              01;38;5;134 # Disk images (floppy)
 
-.bpg              01;38;5;24 # Images
-.cgm              01;38;5;24 # Images
-.CR2              01;38;5;24 # Images
-.dl               00;38;5;24 # Images
-.emf              01;38;5;24 # Images
-.jpeg             00;38;5;24 # Images
-.jpg              00;38;5;24 # Images
-.JPG              00;38;5;24 # Images
-.mng              00;38;5;24 # Images
-.pcx              00;38;5;24 # Images
-.png              01;38;5;24 # Images
-.psd              01;38;5;24 # Images (photoshop)
-.pxd              01;38;5;24 # Images (pixelmator pro)
-.pxm              01;38;5;24 # Images (pixelmator image)
-.webp             01;38;5;24 # Images
-.xcf              01;38;5;24 # Images
-.xwd              01;38;5;24 # Images
-.yuv              01;38;5;24 # Images
+.bpg              01;38;5;24 # Graphics
+.cgm              01;38;5;24 # Graphics
+.CR2              01;38;5;24 # Graphics
+.dl               00;38;5;24 # Graphics
+.emf              01;38;5;24 # Graphics
+.jpeg             00;38;5;24 # Graphics
+.jpg              00;38;5;24 # Graphics
+.JPG              00;38;5;24 # Graphics
+.jxl              01;38;5;24 # Graphics (jpeg xl)
+.mng              00;38;5;24 # Graphics
+.pcx              00;38;5;24 # Graphics
+.png              01;38;5;24 # Graphics
+.psd              01;38;5;24 # Graphics (photoshop)
+.pxd              01;38;5;24 # Graphics (pixelmator pro)
+.pxm              01;38;5;24 # Graphics (pixelmator image)
+.webp             01;38;5;24 # Graphics
+.xcf              01;38;5;24 # Graphics
+.xwd              01;38;5;24 # Graphics
+.yuv              01;38;5;24 # Graphics
 
 .bmp              01;38;5;110 # Bitmap
+.cdr              00;38;5;110 # Graphics (unusual)
+.dicom            00;38;5;110 # Graphics (unusual)
+.flif             00;38;5;110 # Graphics (unusual)
 .indd             00;38;5;110 # Bitmap
+.nth              00;38;5;110 # Graphics (unusual)
 .pbm              00;38;5;110 # Bitmap
 .pgm              00;38;5;110 # Bitmap
 .ppm              00;38;5;110 # Bitmap
-.xpm              00;38;5;110 # Bitmap
 .tga              00;38;5;110 # Bitmap
 .xbm              00;38;5;111 # Bitmap
+.xpm              00;38;5;110 # Bitmap
 
 .tif              00;38;5;33 # Big picture format
 .tiff             00;38;5;33 # Big picture format
@@ -196,19 +201,35 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .signature        00;38;5;74  # Encrypted data
 .st5              00;38;5;74  # Encrypted data
 
-*#                00;38;5;236 # Scum
-*~                03;38;5;236 # Undo file
-.added            00;38;5;236 # Temporary torrent
-.aux              01;38;5;236 # LaTeX helper
-.bbl              01;38;5;236 # Scum
-.blg              01;38;5;236 # Scum
-.cache            01;38;5;236 # Scum
-.class            01;38;5;236 # Scum
-.incomplete       01;38;5;236 # Scum
-.mfasl            01;38;5;236 # Mozilla XUL precompiled javacript
-.o                01;38;5;236 # *nix Object file (shared libraries, core dumps etc)
-.orig             04;38;5;241 # Undo files
-.pyc              01;38;5;236 # Scum (python compiled)
+*#                    00;38;5;236 # Scum
+*~                    03;38;5;236 # Undo file
+.added                00;38;5;236 # Temporary torrent
+.aux                  01;38;5;236 # LaTeX helper
+.bbl                  01;38;5;236 # Scum
+.blg                  01;38;5;236 # Scum
+.cache                01;38;5;236 # Scum
+.car                  38;5;57     # macOS asset catalog
+.CFUserTextEncoding   00;38;5;236 # macOS
+.class                01;38;5;236 # Scum
+*CodeResources        00;38;5;236 # macOS code signing apps
+.DS_Store             00;38;5;236 # macOS
+.dylib                38;5;241    # macOS shared lib
+.entitlements         1           # Xcode files
+.incomplete           01;38;5;236 # Scum
+.localized            00;38;5;236 # macOS
+.mfasl                01;38;5;236 # Mozilla XUL precompiled javacript
+.nib                  38;5;57     # macOS UI
+.o                    01;38;5;236 # *nix Object file (shared libraries, core dumps etc)
+.orig                 04;38;5;241 # Undo files
+.pbxproj              1           # Xcode files
+*PkgInfo              00;38;5;236 # macOS app bundle id
+.pyc                  01;38;5;236 # Scum (python compiled)
+.storyboard           38;5;196    # Xcode files
+.strings              1           # Xcode files
+.xcconfig             1           # Xcode files
+.xcsettings           1           # Xcode files
+.xcuserstate          1           # Xcode files
+.xcworkspacedata      1           # Xcode files
 
 .bak              01;38;5;236 # Backup / temporary files
 .bck              00;38;5;244 # Backup / temporary files
@@ -340,12 +361,20 @@ zshrc             03;38;5;103 # UNIX Shell
 .jsm              00;38;5;245 # Java
 .jnlp             03;38;5;245 # Java
 .jsp              00;38;5;245 # Java
+
+.cl               00;38;5;74 # LISP
 .coffee           03;38;5;74 # Javascript
+.el               03;38;5;64 # LISP (Emacs)
+.elc              00;38;5;64 # LISP (Emacs)
+.eln              00;38;5;64 # LISP (Emacs)
+.gs               03;38;5;74 # Google apps script
 .js               03;38;5;74 # Javascript
-.js               03;38;5;74 # Typescript
 .lisp             00;38;5;74 # Lisp
 .lua              03;38;5;74 # Lua
+.ml               00;38;5;74 # LISP
+.rkt              00;38;5;74 # LISP
 .scm              00;38;5;74 # Scheme
+.ts               03;38;5;74 # Typescript
 
 .css              00;38;5;31 # Styling (web)
 .less             00;38;5;31 # Styling (web)
@@ -502,6 +531,7 @@ zshrc             03;38;5;103 # UNIX Shell
 .dff              01;03;38;5;36 # Audio formats (dsd)
 .dsf              01;03;38;5;36 # Audio formats (dsd)
 
+.IFO              00;38;5;28 # Video (metainformation)
 .cue              03;38;5;28 # Sheets
 .m3u              03;38;5;28 # Sheets
 .m3u8             03;38;5;28 # Sheets
@@ -623,7 +653,6 @@ zshrc             03;38;5;103 # UNIX Shell
 .device           00;38;5;24
 .mount            00;38;5;66
 .path             00;38;5;66
-.pid              01;38;5;1 # pid file
 .service          00;38;5;81
 .snapshot         00;38;5;97
 .socket           00;38;5;75
@@ -632,7 +661,13 @@ zshrc             03;38;5;103 # UNIX Shell
 .timer            00;38;5;111
 @.service         00;38;5;45
 
+.pid              01;38;5;1 # pid file
+.state            01;38;5;1 # state files
+*lockfile         01;38;5;1 # state files
+*lock             01;38;5;1 # state files
+
 .agda             00;38;5;34 # Agda
+.ahk              00;03;38;5;33 # Code (interpreted) (AutoHotKey)
 .asm              00;38;5;64 # Assembler
 .e                01;38;5;245
 .erb              01;38;5;33
@@ -640,19 +675,22 @@ zshrc             03;38;5;103 # UNIX Shell
 .example          00;38;5;36
 .fehbg            00;38;5;36
 .fonts            00;38;5;36
+.gemspec          00;03;38;5;33 # Code (interpreted) (ruby)
 .gnumeric         00;38;5;14
 .hs               00;38;5;34
+.ipynb            00;03;38;5;33 # Code (interpreted) (Python)
 .irb              01;38;5;33
 .mf               03;38;5;110
 .pc               00;38;5;4
 .pfa              00;38;5;4
-.php              00;38;5;4 # PHP
-.pl               00;38;5;73 # Perl
-.PL               01;38;5;73 # Perl
-.pm               00;38;5;4
-.py               01;38;5;30 # Python
-.rb               01;03;38;5;33 # Ruby
+.php              00;38;5;4 # Code (interpreted) (PHP)
+.pl               00;38;5;73 # Code (interpreted) (Perl)
+.PL               01;38;5;73 # Code (interpreted) (Perl)
+.pm               00;38;5;4 # Code (interpreted) (Perl)
+.py               01;38;5;30 # Code (interpreted) (Python)
+.rb               01;03;38;5;33 # Code (interpreted) (Ruby)
 .ru               00;38;5;4
+.xsh              00;03;38;5;33 # Code (interpreted) (xonsh)
 
 .git              00;38;5;36 # Version control
 .gitattributes    00;38;5;36 # Version control
@@ -670,16 +708,21 @@ zshrc             03;38;5;103 # UNIX Shell
 .cxx              01;03;38;5;24 # C++
 
 .clj              03;38;5;64 # Clojure
-.el               03;38;5;64 # Emacs config
+.cljc             00;38;5;64 # Clojure
+.cljs             00;38;5;64 # Clojure
+.cljw             00;38;5;64 # Clojure Gorilla notebook
 .erl              03;38;5;70 # Erlang
 .fnl              03;38;5;64 # Fennel
 .go               03;38;5;70 # Go
 .ml               03;38;5;70 # ML
 .pas              03;38;5;73 # Pascal
+.r                00;38;5;28 # R
+.R                00;38;5;28 # R
 .rs               03;38;5;73 # Rust
+.sc               03;38;5;70 # Scala
 .scala            03;38;5;70 # Scala
 .swift            03;38;5;73 # Swift
-.t                01;38;5;28
+.t                01;38;5;28 # Perl stuff or turing language
 .tcl              03;38;5;34 # Tcl
 .tk               03;38;5;34 # Tk
 
@@ -720,9 +763,14 @@ zshrc             03;38;5;103 # UNIX Shell
 .sx               00;38;5;29
 .tcc              00;38;5;29
 
-.am               00;38;5;235
-.in               00;38;5;235
-.old              00;38;5;235
+.am               00;38;5;235 # Build process (Automake)
+.hin              00;38;5;235 # Build process (Automake)
+.in               00;38;5;235 # Build process (Automake)
+.m4               00;38;5;235 # Build process (Automake)
+.old              00;38;5;235 # Build process (Automake)
+.out              00;38;5;235 # Build process (Automake)
+.scan             00;38;5;235 # Build process (Automake)
+.SKIP             00;38;5;235 # Build process (Automake)
 
 .aria2            00;38;5;29 # Dump
 .cap              00;38;5;29 # Dump
