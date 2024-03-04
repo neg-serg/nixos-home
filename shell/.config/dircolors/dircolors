@@ -36,7 +36,6 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .map              01;38;5;248 # Plain text
 .nfo              01;38;5;248 # Plain text
 .txt              00;38;5;248 # Plain text
-
 # ┌───────────────────────────────────────────────────────────┐
 # │ Arhives / Packages                                        │
 # └───────────────────────────────────────────────────────────┘
@@ -86,7 +85,6 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .zst              01;38;5;61 # Arhives / Packages
 .zstd             01;38;5;61 # Arhives / Packages
 .zz               01;38;5;61 # Arhives / Packages
-
 # ┌───────────────────────────────────────────────────────────┐
 # │ Archive temporarypart                                     │
 # └───────────────────────────────────────────────────────────┘
@@ -94,7 +92,6 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .r[0-9]{0,2}      01;38;5;244 # Archive temporarypart
 .z[0-9]{0,2}      01;38;5;244 # Archive temporarypart
 .zx[0-9]{0,2}     01;38;5;244 # Archive temporarypart
-
 # ┌───────────────────────────────────────────────────────────┐
 # │ Packaged apps                                             │
 # └───────────────────────────────────────────────────────────┘
@@ -119,7 +116,6 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .vpk              00;38;5;74 # Packaged apps (valve data file)
 .war              00;38;5;73 # Packaged apps
 .xpi              04;38;5;74 # Packaged apps # Mozilla Firefox extension
-
 # ┌───────────────────────────────────────────────────────────┐
 # │ Disk images                                               │
 # └───────────────────────────────────────────────────────────┘
@@ -130,14 +126,13 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .vhd              00;38;5;89 # Disk images (virtual, old)
 .vhdx             00;38;5;89 # Disk images (virtual, hyper-v)
 .vmdk             00;38;5;89 # Disk images (virtual)
-
 # ┌───────────────────────────────────────────────────────────┐
 # │ Binary files                                              │
 # └───────────────────────────────────────────────────────────┘
 .bin              00;38;5;249 # Binary data
 .com              00;38;5;111 # MS Executable
 .exe              00;38;5;111 # MS Executable
-
+.lnk              00;38;5;39 # Windows symlink
 # ┌───────────────────────────────────────────────────────────┐
 # │ Disk images                                               │
 # └───────────────────────────────────────────────────────────┘
@@ -152,7 +147,6 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .toast            01;38;5;134 # Disk images (cd / dvd)
 .vcd              01;38;5;134 # Disk images (video cd)
 .vfd              01;38;5;134 # Disk images (floppy)
-
 # ┌───────────────────────────────────────────────────────────┐
 # │ Graphics                                                  │
 # └───────────────────────────────────────────────────────────┘
@@ -206,13 +200,11 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .ps               00;38;5;25 # Vector images
 .svg              00;38;5;25 # Vector images
 .svgz             00;38;5;25 # Vector images
-
  # ┌───────────────────────────────────────────────────────────┐
  # │ Color profiles                                            │
  # └───────────────────────────────────────────────────────────┘
 .icc              00;38;5;249 # Color profiles
 .icm              00;38;5;249 # Color profiles
-
 # ┌───────────────────────────────────────────────────────────┐
 # │ Encrypted data                                            │
 # └───────────────────────────────────────────────────────────┘
@@ -238,51 +230,6 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 *id_ecdsa         00;38;5;74  # Encrypted data
 *id_ed25519       00;38;5;74  # Encrypted data
 *id_rsa           00;38;5;74  # Encrypted data
-
-# ┌───────────────────────────────────────────────────────────┐
-# │ Scum                                                      │
-# └───────────────────────────────────────────────────────────┘
-*#                    00;38;5;236 # Scum
-*~                    03;38;5;236 # Undo file
-.added                00;38;5;236 # Temporary torrent
-.aux                  01;38;5;236 # LaTeX helper
-.bbl                  01;38;5;236 # Scum
-.blg                  01;38;5;236 # Scum
-.cache                01;38;5;236 # Scum
-.car                  38;5;57     # macOS asset catalog
-.CFUserTextEncoding   00;38;5;236 # macOS
-.class                01;38;5;236 # Scum
-*CodeResources        00;38;5;236 # macOS code signing apps
-.DS_Store             00;38;5;236 # macOS
-.dylib                38;5;241    # macOS shared lib
-.entitlements         1           # Xcode files
-.incomplete           01;38;5;236 # Scum
-.localized            00;38;5;236 # macOS
-.mfasl                01;38;5;236 # Mozilla XUL precompiled javacript
-.nib                  38;5;57     # macOS UI
-.orig                 04;38;5;241 # Undo files
-.pbxproj              1           # Xcode files
-*PkgInfo              00;38;5;236 # macOS app bundle id
-.pyc                  01;38;5;236 # Scum (python compiled)
-.storyboard           38;5;196    # Xcode files
-.strings              1           # Xcode files
-.xcconfig             1           # Xcode files
-.xcsettings           1           # Xcode files
-.xcuserstate          1           # Xcode files
-.xcworkspacedata      1           # Xcode files
-
-# ┌───────────────────────────────────────────────────────────┐
-# │ Backup / temporary files                                  │
-# └───────────────────────────────────────────────────────────┘
-.bak              01;38;5;244 # Backup / temporary files
-.bck              00;38;5;244 # Backup / temporary files
-.ii               00;38;5;244 # Backup / temporary files (gcc tmp file)
-.sassc            00;38;5;244 # Backup / temporary files
-.swo              00;38;5;244 # Backup / temporary files
-.swp              01;38;5;244 # Backup / temporary files
-.temp             00;38;5;244 # Backup / temporary files
-.tmp              00;38;5;244 # Backup / temporary files
-
 # ┌───────────────────────────────────────────────────────────┐
 # │ Error                                                     │
 # └───────────────────────────────────────────────────────────┘
@@ -291,7 +238,6 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .mdump            38;5;160;1 # Mini DuMP crash report
 .stderr           38;5;160;1 # error logs
 *core             38;5;160;1 # Linux user core dump file (from /proc/sys/kernel/core_pattern)
-
 # ┌───────────────────────────────────────────────────────────┐
 # │ Documents (binary)                                        │
 # └───────────────────────────────────────────────────────────┘
@@ -332,7 +278,6 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .pptx             00;38;5;31 # Presentation (with macros)
 .pptsm            00;38;5;31;4 # Presentation (with macros)
 .pptxm            00;38;5;31;4 # Presentation (with macros)
-
 # ┌───────────────────────────────────────────────────────────┐
 # │ Data store                                                │
 # └───────────────────────────────────────────────────────────┘
@@ -351,7 +296,6 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .accde            00;38;5;161 # Data store # MS Access
 .accdr            00;38;5;161 # Data store # MS Access
 .accdt            00;38;5;161 # Data store # MS Access
-
 # ┌───────────────────────────────────────────────────────────┐
 # │ Markup                                                    │
 # └───────────────────────────────────────────────────────────┘
@@ -365,14 +309,13 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .pod              00;38;5;246 # Markup
 .rst              00;38;5;246 # Markup
 .wiki             00;38;5;246 # Markup
-*1                03;38;5;249 # Markup (alternative)
 .info             03;38;5;249 # Markup (alternative)
 .latex            03;38;5;249 # Markup (alternative)
 .norg             03;38;5;249 # Markup (alternative)
 .org              03;38;5;249 # Markup (alternative)
 .tex              03;38;5;249 # Markup (alternative)
 .textile          03;38;5;249 # Markup (alternative)
-
+*1                03;38;5;249 # Markup (alternative)
 # ┌───────────────────────────────────────────────────────────┐
 # │ Shell                                                     │
 # └───────────────────────────────────────────────────────────┘
@@ -401,7 +344,6 @@ zshrc             03;38;5;103 # UNIX Shell
 .zwc              01;38;5;103 # UNIX Shell
 .bat              00;38;5;31 # MS Shell
 .cmd              00;38;5;31 # MS Shell
-
 # ┌───────────────────────────────────────────────────────────┐
 # │ Web stuff                                                 │
 # └───────────────────────────────────────────────────────────┘
@@ -419,13 +361,11 @@ zshrc             03;38;5;103 # UNIX Shell
 .html             00;38;5;29 # Web markup
 .jhtm             00;38;5;29 # Web markup
 .mht              00;38;5;29 # Web markup
-
 # ┌───────────────────────────────────────────────────────────┐
 # │ Diff / patch                                              │
 # └───────────────────────────────────────────────────────────┘
 .diff             48;5;7;38;5;16;1 # diff file
 .patch            48;5;7;38;5;16;1 # patch file
-
 # ┌───────────────────────────────────────────────────────────┐
 # │ Theme                                                     │
 # └───────────────────────────────────────────────────────────┘
@@ -440,20 +380,6 @@ zshrc             03;38;5;103 # UNIX Shell
 .tfm              01;38;5;5 # Theme
 .tfnt             01;38;5;5 # Theme
 .theme            01;38;5;5 # Theme
-
-.kak              00;38;5;56 # Kakoine
-.vim              00;38;5;56 # Vim (legacy)
-.viminfo          00;38;5;56 # Vim (legacy)
-.vimp             00;38;5;56 # Vim (legacy)
-.vimrc            04;38;5;56 # Vim (legacy)
-
-.snippets         00;38;5;31
-.eml              01;38;5;90 # Email (Web)
-.http             01;38;5;90 # Request (Web)
-.ttytterrc        01;38;5;5
-.urlview          01;38;5;5
-.webloc           01;38;5;5 # URL-like stuff
-
 # ┌───────────────────────────────────────────────────────────┐
 # │ /etc/hosts.{deny,allow}                                   │
 # └───────────────────────────────────────────────────────────┘
@@ -522,6 +448,15 @@ zshrc             03;38;5;103 # UNIX Shell
 .xinitrc          01;38;5;4 # X11 config files
 .Xmodmap          00;38;5;4 # X11 config files
 .Xresources       01;38;5;33 # X11 config files
+# ┌───────────────────────────────────────────────────────────┐
+# │ Vim and friends                                           │
+# └───────────────────────────────────────────────────────────┘
+.kak              00;38;5;56 # Kakoine
+.vim              00;38;5;56 # Vim (legacy)
+.viminfo          00;38;5;56 # Vim (legacy)
+.vimp             00;38;5;56 # Vim (legacy)
+.vimrc            04;38;5;56 # Vim (legacy)
+.snippets         00;38;5;31 # Vim snippets
 # ┌───────────────────────────────────────────────────────────┐
 # │ Data store ( non-relational )                             │
 # └───────────────────────────────────────────────────────────┘
@@ -674,6 +609,13 @@ zshrc             03;38;5;103 # UNIX Shell
 .ogv              03;38;5;75 # Video (mobile/streaming)
 .webm             03;38;5;75 # Video (mobile/streaming)
 # ┌───────────────────────────────────────────────────────────┐
+# │ Deprecated media                                          │
+# └───────────────────────────────────────────────────────────┘
+# http://wiki.xiph.org/index.php/MIME_Types_and_File_Extensions
+.anx              01;38;5;13
+.axv              01;38;5;13
+.ogx              01;38;5;13
+# ┌───────────────────────────────────────────────────────────┐
 # │ Subtitles                                                 │
 # └───────────────────────────────────────────────────────────┘
 .ass              01;38;5;116 # Subtitles
@@ -682,10 +624,6 @@ zshrc             03;38;5;103 # UNIX Shell
 .sub              01;38;5;116 # Subtitles
 .sup              01;38;5;116 # Subtitles
 .vtt              01;38;5;116 # Subtitles
-# http://wiki.xiph.org/index.php/MIME_Types_and_File_Extensions
-.anx              01;38;5;13
-.axv              01;38;5;13
-.ogx              01;38;5;13
 # ┌───────────────────────────────────────────────────────────┐
 # │ Fonts                                                     │
 # └───────────────────────────────────────────────────────────┘
@@ -704,7 +642,6 @@ zshrc             03;38;5;103 # UNIX Shell
 .ttf              01;38;5;61 # Fonts
 .woff             01;38;5;61 # Fonts
 .woff2            01;38;5;61 # Fonts
-
 # ┌───────────────────────────────────────────────────────────┐
 # │ Emulator roms / savegames                                 │
 # └───────────────────────────────────────────────────────────┘
@@ -732,8 +669,9 @@ zshrc             03;38;5;103 # UNIX Shell
 .sms              00;38;5;232 # Emulator roms / savegames
 .st               00;38;5;232 # Emulator roms / savegames
 .ipk              00;38;5;232 # Emulator roms / savegames (Nintendo DS Packed Images)
-
-# systemd units http://www.freedesktop.org/software/systemd/man/systemd.unit.html
+# ┌───────────────────────────────────────────────────────────┐
+# │ Systemd                                                   │
+# └───────────────────────────────────────────────────────────┘
 .automount        00;38;5;66
 .desktop          00;38;5;75
 .device           00;38;5;24
@@ -746,85 +684,14 @@ zshrc             03;38;5;103 # UNIX Shell
 .swap             00;38;5;95
 .target           00;38;5;73
 .timer            00;38;5;111
-
-.lnk              00;38;5;39 # Windows symlink
-
+# ┌───────────────────────────────────────────────────────────┐
+# │ State files                                               │
+# └───────────────────────────────────────────────────────────┘
 .pid              01;38;5;1 # pid file
 .state            01;38;5;1 # State files
-
-.ahk              00;03;38;5;33 # Code (interpreted) (AutoHotKey)
-.asm              00;38;5;64 # Assembler
-.e                01;38;5;245
-.erb              01;38;5;33
-.ex               00;38;5;36
-.example          00;38;5;36
-.fehbg            00;38;5;36
-.fonts            00;38;5;36
-.gemspec          00;03;38;5;33 # Code (interpreted) (ruby)
-.gnumeric         00;38;5;14
-.hi               00;38;5;34 # Haskell headers
-.hs               00;38;5;34 # Haskell
-.ipynb            03;38;5;33 # Code (interpreted) (Python)
-.irb              01;38;5;33
-.lhs              03;38;5;34 # Haskell (literate)
-.mf               03;38;5;110
-.nim              00;38;5;64 # Nim
-.nimble           00;38;5;64 # Nim
-.pc               00;38;5;4
-.pfa              00;38;5;4
-.sx               00;38;5;64 # SimplexNumerica
-.tf               00;38;5;29 # Code (Terraform)
-.tfstate          00;38;5;29 # Code (Terraform)
-.tfvars           00;38;5;29 # Code (Terraform)
-.v                00;38;5;64 # V
-.vala             00;38;5;64 # Vala
-.vapi             00;38;5;64 # Vala
-.zig              00;38;5;64 # Zig
-
 # ┌───────────────────────────────────────────────────────────┐
-# │ Code (SQL)                                                │
+# │ Code (source files)                                       │
 # └───────────────────────────────────────────────────────────┘
-.msql             00;38;5;83 # Code (SQL)
-.mysql            00;38;5;83 # Code (SQL)
-.pgsql            00;38;5;83 # Code (SQL)
-.prql             00;38;5;83 # Code (SQL)
-.sql              00;38;5;83 # Code (SQL)
-
-# ┌───────────────────────────────────────────────────────────┐
-# │ Java                                                      │
-# └───────────────────────────────────────────────────────────┘
-.java             03;38;5;245 # Java
-.jsm              00;38;5;245 # Java
-.jnlp             03;38;5;245 # Java
-.jsp              00;38;5;245 # Java
-# ┌───────────────────────────────────────────────────────────┐
-# │ LISP                                                      │
-# └───────────────────────────────────────────────────────────┘
-.cl               00;38;5;74 # LISP
-.el               03;38;5;64 # LISP (Emacs)
-.elc              00;38;5;64 # LISP (Emacs)
-.eln              00;38;5;64 # LISP (Emacs)
-.lisp             00;38;5;74 # Lisp
-.ml               00;38;5;74 # LISP
-.rkt              00;38;5;74 # LISP
-.scm              00;38;5;74 # Scheme
-
-# ┌───────────────────────────────────────────────────────────┐
-# │ Code interpreted                                          │
-# └───────────────────────────────────────────────────────────┘
-.cjs              03;38;5;74 # CommonJS
-.coffee           03;38;5;74 # Javascript
-.dart             03;38;5;74 # Dart
-.js               03;38;5;74 # Javascript
-.jsx              03;38;5;74 # Javascript eXtended
-.mjs              03;38;5;74 # ECMAScript
-.ts               03;38;5;74 # Typescript
-.tsx              03;38;5;74 # Typescript eXtended
-.gs               03;38;5;74 # Google apps script
-.lua              00;38;5;74 # Code (interpreted) (Lua)
-.moon             00;38;5;74 # Code (interpreted) (Moonscript)
-
-# source files
 .agda             00;38;5;34 # Agda
 .agdai            00;38;5;34 # Agda
 .c++              01;03;38;5;24 # C++
@@ -881,33 +748,91 @@ zshrc             03;38;5;103 # UNIX Shell
 .tcl              03;38;5;34 # Tcl
 .tk               03;38;5;34 # Tk
 .xsh              00;03;38;5;33 # Code (interpreted) (xonsh)
-
 .scpt             03;38;5;219 # AppleScript
 .swift            03;38;5;219 # Swift
-
 .comp             00;38;5;142 # SPIR-V shaders
 .frag             00;38;5;142 # SPIR-V shaders
 .glsl             03;38;5;70  # GLSL Shaders
 .spv              00;38;5;136 # SPIR-V compiled shaders
 .vert             00;38;5;142 # SPIR-V shaders
 .wgsl             00;38;5;97  # WGSL shaders
-
 .vb               00;38;5;81 # VBA
 .vba              00;38;5;81 # VBA
 .vbs              00;38;5;81 # VBA
-
+.cjs              03;38;5;74 # CommonJS
+.coffee           03;38;5;74 # Javascript
+.dart             03;38;5;74 # Dart
+.js               03;38;5;74 # Javascript
+.jsx              03;38;5;74 # Javascript eXtended
+.mjs              03;38;5;74 # ECMAScript
+.ts               03;38;5;74 # Typescript
+.tsx              03;38;5;74 # Typescript eXtended
+.gs               03;38;5;74 # Google apps script
+.lua              00;38;5;74 # Code (interpreted) (Lua)
+.moon             00;38;5;74 # Code (interpreted) (Moonscript)
+.cl               00;38;5;74 # LISP
+.el               03;38;5;64 # LISP (Emacs)
+.elc              00;38;5;64 # LISP (Emacs)
+.eln              00;38;5;64 # LISP (Emacs)
+.lisp             00;38;5;74 # Lisp
+.ml               00;38;5;74 # LISP
+.rkt              00;38;5;74 # LISP
+.scm              00;38;5;74 # Scheme
+.ahk              00;03;38;5;33 # Code (interpreted) (AutoHotKey)
+.asm              00;38;5;64 # Assembler
+.e                01;38;5;245
+.erb              01;38;5;33
+.ex               00;38;5;36
+.example          00;38;5;36
+.fehbg            00;38;5;36
+.fonts            00;38;5;36
+.gemspec          00;03;38;5;33 # Code (interpreted) (ruby)
+.gnumeric         00;38;5;14
+.hi               00;38;5;34 # Haskell headers
+.hs               00;38;5;34 # Haskell
+.ipynb            03;38;5;33 # Code (interpreted) (Python)
+.irb              01;38;5;33
+.lhs              03;38;5;34 # Haskell (literate)
+.mf               03;38;5;110
+.nim              00;38;5;64 # Nim
+.nimble           00;38;5;64 # Nim
+.pc               00;38;5;4
+.pfa              00;38;5;4
+.sx               00;38;5;64 # SimplexNumerica
+.tf               00;38;5;29 # Code (Terraform)
+.tfstate          00;38;5;29 # Code (Terraform)
+.tfvars           00;38;5;29 # Code (Terraform)
+.v                00;38;5;64 # V
+.vala             00;38;5;64 # Vala
+.vapi             00;38;5;64 # Vala
+.zig              00;38;5;64 # Zig
+.msql             00;38;5;83 # Code (SQL)
+.mysql            00;38;5;83 # Code (SQL)
+.pgsql            00;38;5;83 # Code (SQL)
+.prql             00;38;5;83 # Code (SQL)
+.sql              00;38;5;83 # Code (SQL)
+.java             03;38;5;245 # Java
+.jsm              00;38;5;245 # Java
+.jnlp             03;38;5;245 # Java
+.jsp              00;38;5;245 # Java
+# ┌───────────────────────────────────────────────────────────┐
+# │ 3D printing                                               │
+# └───────────────────────────────────────────────────────────┘
 .stl              00;38;5;216 # 3D printing
 .dwg              00;38;5;216 # 3D printing
 .ply              00;38;5;216 # 3D printing
 .wrl              00;38;5;216 # 3D printing
-
+# ┌───────────────────────────────────────────────────────────┐
+# │ Texas Instruments Calculator files                        │
+# └───────────────────────────────────────────────────────────┘
 .8xp              00;38;5;204 # Texas Instruments Calculator files
 .8eu              00;38;5;204 # Texas Instruments Calculator files
 .82p              00;38;5;204 # Texas Instruments Calculator files
 .83p              00;38;5;204 # Texas Instruments Calculator files
 .8xe              00;38;5;204 # Texas Instruments Calculator files
-
-# headers
+# ┌───────────────────────────────────────────────────────────┐
+# │ Headers                                                   │
+# └───────────────────────────────────────────────────────────┘
 .h                00;38;5;247 # C header
 .H                00;38;5;247 # C header
 .h++              00;38;5;247 # C++ header
@@ -916,12 +841,16 @@ zshrc             03;38;5;103 # UNIX Shell
 .hxx              00;38;5;247 # C++ header
 .s                00;38;5;247 # Pascal or asm
 .S                00;38;5;247 # Pascal or asm
-
+# ┌───────────────────────────────────────────────────────────┐
+# │ Version control                                           │
+# └───────────────────────────────────────────────────────────┘
 .git              00;38;5;36 # Version control
 .gitattributes    00;38;5;36 # Version control
 .github           00;38;5;36 # Version control
 .gitignore        00;38;5;240 # Version control
-
+# ┌───────────────────────────────────────────────────────────┐
+# │ Build process                                             │
+# └───────────────────────────────────────────────────────────┘
 .am               00;38;5;235 # Build process (Automake)
 .hin              00;38;5;235 # Build process (Automake)
 .in               00;38;5;235 # Build process (Automake)
@@ -930,9 +859,11 @@ zshrc             03;38;5;103 # UNIX Shell
 .out              00;38;5;235 # Build process (Automake)
 .scan             00;38;5;235 # Build process (Automake)
 .SKIP             00;38;5;235 # Build process (Automake)
-.containerignore  00;38;5;240 # Build process # Containers
+.containerignore  00;38;5;240 # Build process (Containers)
 .dockerignore     00;38;5;240 # Build process (Docker)
-
+# ┌───────────────────────────────────────────────────────────┐
+# │ Dump                                                      │
+# └───────────────────────────────────────────────────────────┘
 .aria2            00;38;5;29 # Dump
 .cap              00;38;5;29 # Dump
 .dmp              00;38;5;29 # Dump
@@ -940,7 +871,56 @@ zshrc             03;38;5;103 # UNIX Shell
 .pcap             00;38;5;29 # Dump
 .stackdump        00;38;5;29 # Dump
 .zcompdump        00;38;5;29 # Dump
-
+.eml              01;38;5;90 # Email (Web)
+.http             01;38;5;90 # Request (Web)
+.ttytterrc        01;38;5;5
+.urlview          01;38;5;5
+.webloc           01;38;5;5 # URL-like stuff
+# ┌───────────────────────────────────────────────────────────┐
+# │ Scum                                                      │
+# └───────────────────────────────────────────────────────────┘
+*#                    00;38;5;236 # Scum
+*~                    03;38;5;236 # Undo file
+.added                00;38;5;236 # Temporary torrent
+.aux                  01;38;5;236 # LaTeX helper
+.bbl                  01;38;5;236 # Scum
+.blg                  01;38;5;236 # Scum
+.cache                01;38;5;236 # Scum
+.car                  38;5;57     # macOS asset catalog
+.CFUserTextEncoding   00;38;5;236 # macOS
+.class                01;38;5;236 # Scum
+*CodeResources        00;38;5;236 # macOS code signing apps
+.DS_Store             00;38;5;236 # macOS
+.dylib                38;5;241    # macOS shared lib
+.entitlements         1           # Xcode files
+.incomplete           01;38;5;236 # Scum
+.localized            00;38;5;236 # macOS
+.mfasl                01;38;5;236 # Mozilla XUL precompiled javacript
+.nib                  38;5;57     # macOS UI
+.orig                 04;38;5;241 # Undo files
+.pbxproj              1           # Xcode files
+*PkgInfo              00;38;5;236 # macOS app bundle id
+.pyc                  01;38;5;236 # Scum (python compiled)
+.storyboard           38;5;196    # Xcode files
+.strings              1           # Xcode files
+.xcconfig             1           # Xcode files
+.xcsettings           1           # Xcode files
+.xcuserstate          1           # Xcode files
+.xcworkspacedata      1           # Xcode files
+# ┌───────────────────────────────────────────────────────────┐
+# │ Backup / temporary files                                  │
+# └───────────────────────────────────────────────────────────┘
+.bak              01;38;5;244 # Backup / temporary files
+.bck              00;38;5;244 # Backup / temporary files
+.ii               00;38;5;244 # Backup / temporary files (gcc tmp file)
+.sassc            00;38;5;244 # Backup / temporary files
+.swo              00;38;5;244 # Backup / temporary files
+.swp              01;38;5;244 # Backup / temporary files
+.temp             00;38;5;244 # Backup / temporary files
+.tmp              00;38;5;244 # Backup / temporary files
+# ┌───────────────────────────────────────────────────────────┐
+# │ Documentation                                             │
+# └───────────────────────────────────────────────────────────┘
 *AUTHORS          38;5;243;04 # Documentation
 *CHANGELOG        38;5;243;04 # Documentation
 *CHANGELOG.md     38;5;243;04 # Documentation
