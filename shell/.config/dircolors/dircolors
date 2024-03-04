@@ -363,18 +363,23 @@ zshrc             03;38;5;103 # UNIX Shell
 .jsp              00;38;5;245 # Java
 
 .cl               00;38;5;74 # LISP
-.coffee           03;38;5;74 # Javascript
 .el               03;38;5;64 # LISP (Emacs)
 .elc              00;38;5;64 # LISP (Emacs)
 .eln              00;38;5;64 # LISP (Emacs)
 .gs               03;38;5;74 # Google apps script
-.js               03;38;5;74 # Javascript
 .lisp             00;38;5;74 # Lisp
 .lua              03;38;5;74 # Lua
 .ml               00;38;5;74 # LISP
 .rkt              00;38;5;74 # LISP
 .scm              00;38;5;74 # Scheme
+
+.cjs              03;38;5;74 # CommonJS
+.coffee           03;38;5;74 # Javascript
+.js               03;38;5;74 # Javascript
+.jsx              03;38;5;74 # Javascript eXtended
+.mjs              03;38;5;74 # ECMAScript
 .ts               03;38;5;74 # Typescript
+.tsx              03;38;5;74 # Typescript eXtended
 
 .css              00;38;5;31 # Styling (web)
 .less             00;38;5;31 # Styling (web)
@@ -653,20 +658,21 @@ zshrc             03;38;5;103 # UNIX Shell
 .device           00;38;5;24
 .mount            00;38;5;66
 .path             00;38;5;66
+@.service         00;38;5;45
 .service          00;38;5;81
 .snapshot         00;38;5;97
 .socket           00;38;5;75
-.swap             00;38;5;97
+.swap             00;38;5;95
 .target           00;38;5;73
 .timer            00;38;5;111
-@.service         00;38;5;45
+
+.lnk              00;38;5;39 # Windows symlink
 
 .pid              01;38;5;1 # pid file
-.state            01;38;5;1 # state files
-*lockfile         01;38;5;1 # state files
-*lock             01;38;5;1 # state files
+.state            01;38;5;1 # State files
+*lockfile         01;38;5;246 # State files
+*lock             01;38;5;246 # State files
 
-.agda             00;38;5;34 # Agda
 .ahk              00;03;38;5;33 # Code (interpreted) (AutoHotKey)
 .asm              00;38;5;64 # Assembler
 .e                01;38;5;245
@@ -677,20 +683,14 @@ zshrc             03;38;5;103 # UNIX Shell
 .fonts            00;38;5;36
 .gemspec          00;03;38;5;33 # Code (interpreted) (ruby)
 .gnumeric         00;38;5;14
-.hs               00;38;5;34
+.hi               00;38;5;34 # Haskell headers
+.hs               00;38;5;34 # Haskell
+.lhs              03;38;5;34 # Haskell (literate)
 .ipynb            00;03;38;5;33 # Code (interpreted) (Python)
 .irb              01;38;5;33
 .mf               03;38;5;110
 .pc               00;38;5;4
 .pfa              00;38;5;4
-.php              00;38;5;4 # Code (interpreted) (PHP)
-.pl               00;38;5;73 # Code (interpreted) (Perl)
-.PL               01;38;5;73 # Code (interpreted) (Perl)
-.pm               00;38;5;4 # Code (interpreted) (Perl)
-.py               01;38;5;30 # Code (interpreted) (Python)
-.rb               01;03;38;5;33 # Code (interpreted) (Ruby)
-.ru               00;38;5;4
-.xsh              00;03;38;5;33 # Code (interpreted) (xonsh)
 
 .git              00;38;5;36 # Version control
 .gitattributes    00;38;5;36 # Version control
@@ -698,33 +698,63 @@ zshrc             03;38;5;103 # UNIX Shell
 .gitignore        00;38;5;238 # Version control
 
 # source files
-.c                01;38;5;110 # Pure C
+.agda             00;38;5;34 # Agda
+.agdai            00;38;5;34 # Agda
 .c++              01;03;38;5;24 # C++
 .C                01;03;38;5;24 # C++
+.c                01;38;5;110 # Pure C
 .cc               01;03;38;5;24 # C++
-.cp               01;03;38;5;24 # C++
-.cpp              01;03;38;5;24 # C++
-.cs               00;38;5;36 # C Sharp
-.cxx              01;03;38;5;24 # C++
-
 .clj              03;38;5;64 # Clojure
 .cljc             00;38;5;64 # Clojure
 .cljs             00;38;5;64 # Clojure
 .cljw             00;38;5;64 # Clojure Gorilla notebook
+.cp               01;03;38;5;24 # C++
+.cpp              01;03;38;5;24 # C++
+.cr               00;38;5;81 # Crystal
+.cs               00;38;5;81 # C Sharp
+.cxx              01;03;38;5;24 # C++
 .erl              03;38;5;70 # Erlang
+.f03              03;38;5;245 # Fortran
+.F03              03;38;5;245 # Fortran
+.f                03;38;5;245 # Fortran
+.F                03;38;5;245 # Fortran
+.f08              03;38;5;245 # Fortran
+.F08              03;38;5;245 # Fortran
+.f90              03;38;5;245 # Fortran
+.F90              03;38;5;245 # Fortran
+.f95              03;38;5;245 # Fortran
+.F95              03;38;5;245 # Fortran
 .fnl              03;38;5;64 # Fennel
+.for              03;38;5;245 # Fortran
+.ftn              03;38;5;245 # Fortran
 .go               03;38;5;70 # Go
+.lagda            00;38;5;34 # Agda
+.lagda.md         00;38;5;34 # Agda
+.lagda.rst        00;38;5;34 # Agda
+.lagda.tex        00;38;5;34 # Agda
 .ml               03;38;5;70 # ML
 .pas              03;38;5;73 # Pascal
+.ctp              00;38;5;4 # Code (interpreted) (PHP CakePHP)
+.ctp              00;38;5;4 # Code (interpreted) (PHP Twig)
+.php              00;38;5;4 # Code (interpreted) (PHP)
+.pl               00;38;5;73 # Code (interpreted) (Perl)
+.PL               01;38;5;73 # Code (interpreted) (Perl)
+.pm               00;38;5;4 # Code (interpreted) (Perl)
+.py               01;38;5;30 # Code (interpreted) (Python)
 .r                00;38;5;28 # R
 .R                00;38;5;28 # R
+.rb               01;03;38;5;33 # Code (interpreted) (Ruby)
 .rs               03;38;5;73 # Rust
+.ru               00;38;5;4
 .sc               03;38;5;70 # Scala
 .scala            03;38;5;70 # Scala
-.swift            03;38;5;73 # Swift
 .t                01;38;5;28 # Perl stuff or turing language
 .tcl              03;38;5;34 # Tcl
 .tk               03;38;5;34 # Tk
+.xsh              00;03;38;5;33 # Code (interpreted) (xonsh)
+
+.scpt             03;38;5;219 # AppleScript
+.swift            03;38;5;219 # Swift
 
 .comp             00;38;5;142 # SPIR-V shaders
 .frag             00;38;5;142 # SPIR-V shaders
@@ -749,19 +779,16 @@ zshrc             03;38;5;103 # UNIX Shell
 .8xe              00;38;5;204 # Texas Instruments Calculator files
 
 # headers
-.f                00;38;5;29
-.for              00;38;5;29
-.ftn              00;38;5;29
-.h                00;38;5;29
-.h++              00;38;5;29
-.H                00;38;5;29
-.hh               00;38;5;29
-.hpp              00;38;5;29
-.hxx              00;38;5;29
-.s                00;38;5;29
-.S                00;38;5;29
-.sx               00;38;5;29
-.tcc              00;38;5;29
+.h                00;38;5;247
+.h++              00;38;5;247
+.H                00;38;5;247
+.hh               00;38;5;247
+.hpp              00;38;5;247
+.hxx              00;38;5;247
+.s                00;38;5;247 # Pascal or asm
+.S                00;38;5;247 # Pascal or asm
+.sx               00;38;5;247
+.tcc              00;38;5;247
 
 .am               00;38;5;235 # Build process (Automake)
 .hin              00;38;5;235 # Build process (Automake)
