@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/bin/env zsh
 readonly ftype_pref=':\ \${FAST_HIGHLIGHT_STYLES\[ftype-'
 readonly dircolors_location="${XDG_CONFIG_HOME}/dircolors/dircolors"
 readonly hi_main="${ZDOTDIR}/.zinit/plugins/neg-serg---fast-syntax-highlighting/fast-highlight"
@@ -35,9 +35,9 @@ main() {
     local -a sed_args=(
         -e "s/${fg_eq}/fg=/"
         -e "s/${bg_eq}/bg=/g"
-        -e "${bold_regex}s/$/,bold/"
-        -e "${italic_regex}s/$/,italic/"
-        -e "${uline_regex}s/$/,underline/"
+        -e "${bold_regex}s/\s*$/,bold/"
+        -e "${italic_regex}s/\s*$/,italic/"
+        -e "${uline_regex}s/\s*$/,underline/"
         -e "s/00;//"
         -e "s/${is_bold}//"
         -e "s/${is_uline}//"
@@ -48,6 +48,7 @@ main() {
         -e 's/  */ /g'
         -e 's/ /]:=/2'
         -e 's;$;};'
+        -e 's; };};'
     )
 
     echo "You should handle it by hand:"
