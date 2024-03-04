@@ -670,8 +670,6 @@ zshrc             03;38;5;103 # UNIX Shell
 
 .pid              01;38;5;1 # pid file
 .state            01;38;5;1 # State files
-*lockfile         01;38;5;246 # State files
-*lock             01;38;5;246 # State files
 
 .ahk              00;03;38;5;33 # Code (interpreted) (AutoHotKey)
 .asm              00;38;5;64 # Assembler
