@@ -3,6 +3,7 @@ input * {
     xkb_options "grp:alt_shift_toggle"
 }
 
+output "*" adaptive_sync on
 output "*" bg ~/pic/wl/wallhaven-49pqxk.jpg fill
 output "Samsung Electric Company Odyssey G85SB H1AK500000" {
     mode 3440x1440@174.962Hz
