@@ -65,7 +65,7 @@ alias sort='sort --parallel 8 -S 16M'
 alias :q="exit"
 alias emptydir='ls -ld **/*(/^F)'
 _exists nh && {
-    alias swh="nh home switch $(readlink -f $XDG_CONFIG_HOME/home-manager)"
+    alias swh="nh home switch $(readlink -f $HOME/.config/home-manager)"
     alias sws="nh os switch /etc/nixos"
     alias S="nix-shell"
 }
