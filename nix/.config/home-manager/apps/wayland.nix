@@ -8,7 +8,16 @@
         ydotool # xdotool systemwide
     ];
     wayland.windowManager.sway = {
+        enable = true;
         extraOptions = [];
+        config = {
+            modifier = "Mod4";
+            terminal = "kitty"; # Use kitty as default terminal
+            startup = [
+                # # Launch Firefox on start
+                # {command = "firefox";}
+            ];
+        };
     };
 }
 
