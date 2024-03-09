@@ -239,7 +239,7 @@ STICKY_OTHER_WRITABLE 38;5;86;48;5;234;1     # Dir that is sticky and other-writ
 .error            01;04;38;5;160 # error logs
 .mdump            01;04;38;5;160 # Mini DuMP crash report
 .stderr           01;04;38;5;160 # error logs
-*core             01;04;38;5;160 # Linux user core dump file (from /proc/sys/kernel/core_pattern)
+*core             38;5;196;48;5;52 # Linux user core dump file (from /proc/sys/kernel/core_pattern)
 # ┌───────────────────────────────────────────────────────────┐
 # │ Documents (binary)                                        │
 # └───────────────────────────────────────────────────────────┘
