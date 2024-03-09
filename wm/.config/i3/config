@@ -194,8 +194,6 @@ mode %{T4}%{T-} {
 	bindsym Shift+t exec xsettings-menu gtk, mode "default"
 	bindsym Shift+p exec scrcpy, mode "default"
 	bindsym e [urgent=latest] focus, mode "default"
-	bindsym g exec ~/bin/game toggle, mode "default"
-	bindsym h exec ~/bin/game hack, mode "default"
 	bindsym i exec audio-menu input, mode "default"
 	bindsym m exec xprop-menu, mode "default"
 	bindsym o exec audio-menu output, mode "default"
