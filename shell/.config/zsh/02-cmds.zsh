@@ -64,11 +64,6 @@ _exists bat && alias cat='bat --paging=never'
 alias sort='sort --parallel 8 -S 16M'
 alias :q="exit"
 alias emptydir='ls -ld **/*(/^F)'
-_exists nh && {
-    alias swh="nh home switch $(readlink -f $HOME/.config/home-manager)"
-    alias sws="nh os switch /etc/nixos"
-    alias S="nix-shell"
-}
 _exists sudo && {
     alias {sudo,s}='sudo '
     local sudo_list=(chmod chown modprobe umount)
@@ -135,7 +130,6 @@ if _exists wget2; then
 else
     alias wget='wget --continue --show-progress --progress=bar:force:noscroll'
 fi
-xkcdpass(){echo "$(nix run nixpkgs#xkcdpass -- -d '-' -n 3 -C capitalize)$((RANDOM % 9))"}
 local rlwrap_list=(bb fennel guile irb)
 local noglob_list=(fc find ftp history lftp links2 locate lynx nix nixos-remote nixos-rebuild rake rsync scp sftp you-get yt wget wget2)
 for c in ${noglob_list[@]}; {_exists "$c" && alias "$c=noglob $c"}
@@ -189,24 +183,33 @@ _exists systemctl && {
     alias dn='s systemctl stop'
     alias j='journalctl'
 }
-_exists nixos-rebuild && {
-    alias nrb='sudo nixos-rebuild'
-}
 
-# thx to @oni: https://discourse.nixos.org/t/nvd-simple-nix-nixos-version-diff-tool/12397/3
-hash -d nix-hm="/nix/var/nix/profiles/per-user/$USER/home-manager"
-hash -d nix-now="/run/current-system"
-hash -d nix-boot="/nix/var/nix/profiles/system"
-# thx to Mic92:
-flakify() {
-    if [ ! -e flake.nix ]; then
-        nix flake new -t github:Mic92/flake-templates#nix-develop .
-    elif [ ! -e .envrc ]; then
-        echo "use flake" > .envrc
-    fi
-    direnv allow
-    ${EDITOR:-vim} flake.nix
-}
+if [[ -e /etc/NIXOS ]]; then
+    # thx to @oni: https://discourse.nixos.org/t/nvd-simple-nix-nixos-version-diff-tool/12397/3
+    hash -d nix-hm="/nix/var/nix/profiles/per-user/$USER/home-manager"
+    hash -d nix-now="/run/current-system"
+    hash -d nix-boot="/nix/var/nix/profiles/system"
+    _exists nixos-rebuild && {
+        alias nrb='sudo nixos-rebuild'
+    }
+    xkcdpass(){echo "$(nix run nixpkgs#xkcdpass -- -d '-' -n 3 -C capitalize)$((RANDOM % 9))"}
+    _exists nh && {
+        alias swh="nh home switch $(readlink -f $HOME/.config/home-manager)"
+        alias sws="nh os switch /etc/nixos"
+        alias S="nix-shell"
+    }
+    alias nixify='nix-shell -p nur.repos.kampka.nixify'
+    # thx to Mic92:
+    flakify() {
+        if [ ! -e flake.nix ]; then
+            nix flake new -t github:Mic92/flake-templates#nix-develop .
+        elif [ ! -e .envrc ]; then
+            echo "use flake" > .envrc
+        fi
+        direnv allow
+        ${EDITOR:-vim} flake.nix
+    }
+fi
 
 autoload zc
 unfunction _exists
