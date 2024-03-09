@@ -343,7 +343,7 @@ bashrc            03;38;5;103 # UNIX Shell
 .tcsh             01;38;5;103 # UNIX Shell
 .zsh              01;38;5;103 # UNIX Shell
 zshrc             03;38;5;103 # UNIX Shell
-.zwc              01;38;5;103 # UNIX Shell
+.zwc              00;38;5;244 # UNIX Shell
 .bat              00;38;5;31 # MS Shell
 .cmd              00;38;5;31 # MS Shell
 # ┌───────────────────────────────────────────────────────────┐
