@@ -79,8 +79,6 @@ bindsym Mod4+Up focus mode_toggle
 bindsym Mod4+4 exec ~/bin/screenshot
 bindsym Mod4+Control+4 exec ~/bin/screenshot -r
 bindsym Mod4+Shift+4 exec flameshot gui
-bindsym F8 exec picom-trans -c +5
-bindsym F9 exec picom-trans -c -5
 
 bindsym Mod1+grave exec --no-startup-id ~/bin/rofi-run
 bindsym Mod4+8 exec --no-startup-id ~/bin/pl vol mute
@@ -197,6 +195,9 @@ mode %{T4}%{T-} {
 	bindsym i exec audio-menu input, mode "default"
 	bindsym m exec xprop-menu, mode "default"
 	bindsym o exec audio-menu output, mode "default"
+
+	bindsym F8 exec picom-trans -c +5
+	bindsym F9 exec picom-trans -c -5
 	bindsym f $circle subtag web floorp , mode "default"
 	bindsym 5 $circle subtag web tor , mode "default"
 	bindsym t $scratchpad subtag im tel , mode "default"
