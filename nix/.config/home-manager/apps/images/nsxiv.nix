@@ -19,7 +19,7 @@ stdenv.mkDerivation (finalAttrs: {
       owner = "neg-serg";
       repo = "nsxiv";
       rev = "acf3e83acb6b3c2ba94916919d71f2b383999d0b";
-      hash = "sha256-MvLG4E6Uy7vg6bOD+3TMXa/dQ62L2w2ozycSVKLgoEU=";
+      hash = "sha256-ZdnFq46z8f6MRd+Nd184tQB11AjUGprMitmRZXqoYjw=";
   };
 
   buildInputs = [
