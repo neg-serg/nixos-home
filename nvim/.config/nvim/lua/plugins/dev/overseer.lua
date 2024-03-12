@@ -1,12 +1,6 @@
 -- ┌───────────────────────────────────────────────────────────────────────────────────┐
--- │ █▓▒░ tpope/vim-dispatch.git                                                       │
+-- │ █▓▒░ stevearc/overseer.nvim                                                       │
 -- └───────────────────────────────────────────────────────────────────────────────────┘
-return {'tpope/vim-dispatch', -- provide async build
-    config=function()
-        map('n', 'MK', ':Make -j9')
-        map('n', 'MC', ':Make clean<cr>')
-        map('n', '[QLeader]cc', ':Make -j10<cr>')
-        map('n', '[QLeader]mc', ':Make distclean<cr>')
-    end,
-    keys={'MK','MC','[QLeader]cc','[QLeader]mc'},
-    cmd={'Dispatch','Make','Focus','Start'}}
+return {'stevearc/overseer.nvim', -- provide async build, modern dispatch-vim alternative
+    opts = {},
+}
