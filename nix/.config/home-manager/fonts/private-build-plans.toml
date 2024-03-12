@@ -2,23 +2,23 @@
 [buildOptions]
 optimizeWithTtx = true
 
-[buildPlans.iosevka-neg]
+[buildPlans.Iosevkaneg]
     family = "Iosevka"
     desc = "Default"
     calt = false
-    export-glyph-names = true
+    exportGlyphNames = true
     webfont-formats = ['otf']
     spacing = "fontconfig-mono"
     snapshotFamily = 'iosevka'
     snapshotFeature = '"NWID" off'
-[buildPlans.iosevka-neg.ligations]
+[buildPlans.Iosevkaneg.ligations]
     inherits = "dlig"
     brace-bar = false
     brack-bar = false
     connected-tilde-as-wave = false
     connected-hyphen-as-solid-line = false
     connected-hyphen-as-semi-dashed-line = false
-[buildPlans.iosevka-neg.variants.design]
+[buildPlans.Iosevkaneg.variants.design]
     capital-a = 'straight-top-serifed'
     capital-b = 'standard-unilateral-serifed'
     capital-c = 'unilateral-inward-serifed'
@@ -115,10 +115,10 @@ optimizeWithTtx = true
     lig-ltgteq = 'slanted'
     # lig-plus-chain = 'with-notch'
 
-[collectPlans.iosevka-neg]
+[collectPlans.Iosevkaneg]
 release = true
 from = [
-	"iosevka-neg",
+	"Iosevkaneg",
 ]
 
 [weights.thin]
