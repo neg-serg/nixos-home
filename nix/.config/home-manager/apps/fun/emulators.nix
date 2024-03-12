@@ -1,6 +1,6 @@
-{ pkgs, ... }: {
+{ pkgs, stable, ... }: {
   home.packages = with pkgs; [
       pcem # emulator for ibm pc and clones
-      retroarchFull # multiplatform emulator frontend
+      stable.retroarchFull # multiplatform emulator frontend
   ];
 }
