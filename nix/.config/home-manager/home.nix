@@ -26,6 +26,7 @@
     ./apps/media
     ./apps/neovim.nix
     ./apps/pass.nix
+    ./apps/sway.nix
     ./apps/terminal
     ./apps/text
     ./apps/torrent
@@ -34,7 +35,6 @@
     ./apps/x11
     ./apps/yubikey.nix
     ./misc-pkgs.nix
-    ./apps/wayland.nix
 
     ./systemd/targets.nix
     ./systemd/services.nix
