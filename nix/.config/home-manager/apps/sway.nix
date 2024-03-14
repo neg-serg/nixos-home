@@ -6,39 +6,8 @@
         swww # wallpaper daemon for wayland
         wtype # xdotool for wayland
         ydotool # xdotool systemwide
+	sway
     ];
-
-    wayland.windowManager.sway = {
-        enable = true;
-        extraOptions = [];
-        config = {
-            modifier = "Mod4";
-            terminal = "kitty"; # Use kitty as default terminal
-            startup = [
-                # # Launch Firefox on start
-                # {command = "firefox";}
-            ];
-            # Samsung Electric Company Odyssey G85SB H1AK500000
-            input = {
-	      "*" = {
-                xkb_layout = "us,ru";
-                xkb_options = "grp:alt_shift_toggle";
-
-              };
-              "type:keyboard" = {
-                  repeat_delay = "250";
-                  repeat_rate = "60";
-              };
-	    };
-	    output = {
-               "*" = {
-                    mode = "3440x1440@174.962Hz";
-                    adaptive_sync = "on";
-                    bg = lib.mkForce "~/pic/wl/wallhaven-49pqxk.jpg fill";
-	    };	    
-        };
-    };
-  };
 }
 
 # bindsym Mod4+Return exec kitty
