@@ -8,6 +8,31 @@
         ydotool # xdotool systemwide
 	sway
     ];
+    wayland.windowManager.sway = {
+        enable = true;
+        systemdIntegration = true;
+	config = {
+            terminal = "kitty";
+            modifier = "Mod4";
+            output = {
+                "*" = {
+                     mode = "3440x1440@174.962Hz";
+                     adaptive_sync = "on";
+                     #bg = lib.mkForce "~/pic/wl/wallhaven-49pqxk.jpg fill";
+                };
+            };
+	    input = {
+	        "*" = {
+                    xkb_layout = "us,ru";
+                    xkb_options = "grp:alt_shift_toggle";
+                };
+                "type:keyboard" = {
+                    repeat_delay = "250";
+                    repeat_rate = "60";
+                };
+           };
+	};
+    };
 }
 
 # bindsym Mod4+Return exec kitty

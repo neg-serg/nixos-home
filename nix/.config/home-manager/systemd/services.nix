@@ -244,23 +244,23 @@ with {
             };
         };
 
-        sway = {
-            Unit = {
-                Description = "sway - SirCmpwn's Wayland window manager";
-                Documentation = "man:sway(5)";
-                BindsTo = ["graphical-session.target"];
-                Wants = ["graphical-session-pre.target"];
-                After = ["graphical-session-pre.target"];
-	    };
-            Service = {
-                Type = "simple";
-                EnvironmentFile = "-%h/.config/sway/env";
-                ExecStartPre = "${pkgs.systemd}/bin/systemctl --user unset-environment WAYLAND_DISPLAY DISPLAY"; # This line make you able to logout to dm and login into sway again
-                ExecStart = "${pkgs.sway}/bin/sway";
-                Restart = "on-failure";
-                RestartSec = "1";
-                TimeoutStopSec = "10";
-	    };
-	};
+        # sway = {
+        #     Unit = {
+        #         Description = "sway - SirCmpwn's Wayland window manager";
+        #         Documentation = "man:sway(5)";
+        #         BindsTo = ["graphical-session.target"];
+        #         Wants = ["graphical-session-pre.target"];
+        #         After = ["graphical-session-pre.target"];
+	#     };
+        #     Service = {
+        #         Type = "simple";
+        #         EnvironmentFile = "-%h/.config/sway/env";
+        #         ExecStartPre = "${pkgs.systemd}/bin/systemctl --user unset-environment WAYLAND_DISPLAY DISPLAY"; # This line make you able to logout to dm and login into sway again
+        #         ExecStart = "${pkgs.sway}/bin/sway";
+        #         Restart = "on-failure";
+        #         RestartSec = "1";
+        #         TimeoutStopSec = "10";
+	#     };
+	# };
     };
 }
