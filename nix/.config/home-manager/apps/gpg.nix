@@ -22,7 +22,6 @@
         enableSshSupport = false;
         enable = true;
         extraConfig = '' pinentry-program ${pinentryRofi}/bin/pinentry-rofi-with-env '';
-        pinentryFlavor = null;
         verbose = true;
     };
 }
