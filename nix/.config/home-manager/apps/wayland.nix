@@ -19,6 +19,17 @@
                 # {command = "firefox";}
             ];
             # Samsung Electric Company Odyssey G85SB H1AK500000
+            input = {
+	      "*" = {
+                xkb_layout = "us,ru";
+                xkb_options = "grp:alt_shift_toggle";
+
+              };
+              "type:keyboard" = {
+                  repeat_delay = "250";
+                  repeat_rate = "60";
+              };
+	    };
 	    output = {
                "*" = {
                     mode = "3440x1440@174.962Hz";
@@ -30,23 +41,9 @@
   };
 }
 
-
-# input * {
-#     xkb_layout "us,ru"
-#     xkb_options "grp:alt_shift_toggle"
-# }
-# 
-# exec dbus-sway-environment
-# exec configure-gtk
-# 
 # bindsym Mod4+Return exec kitty
 # bindsym Mod1+grave exec ~/bin/rofi-run
 # 
-# input "type:keyboard" {
-#     repeat_delay 250
-#     repeat_rate 60
-# }
-
 # systemd.user.services.wpaperd = {
 #     Unit = {
 #         Description = "Wallpaper daemon";
