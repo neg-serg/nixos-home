@@ -1,10 +1,4 @@
-{ pkgs, ... }:
-with {
-    home_vars = {
-        __GL_GSYNC_ALLOWED = "0"; # picom/compositing compatibility(for now)
-        __GL_VRR_ALLOWED = "0"; # picom/compositing compatibility(for now)
-    };
-};{
+{ pkgs, ... }: {
   nix.package = pkgs.nix;
   imports = [
     ./dotfiles.nix
@@ -40,6 +34,7 @@ with {
     ./apps/x11
     ./apps/yubikey.nix
     ./misc-pkgs.nix
+    ./apps/wayland.nix
 
     ./systemd/targets.nix
     ./systemd/services.nix
@@ -77,6 +72,5 @@ with {
       homeDirectory = "/home/neg";
       stateVersion = "23.11"; # Please read the comment before changing.
       username = "neg";
-      sessionVariables = home_vars;
   };
 }

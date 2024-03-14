@@ -62,7 +62,7 @@
         "kitty" = { source = l "${dots}/wm/.config/kitty"; recursive = true; };
         "negwm" = { source = l "${dots}/wm/.config/negwm"; recursive = true; };
         "picom" = { source = l "${dots}/wm/.config/picom"; recursive = true; };
-        "sway" = { source = l "${dots}/wm/.config/sway"; recursive = true; };
+        #"sway" = { source = l "${dots}/wm/.config/sway"; recursive = true; };
         "warpd" = { source = l "${dots}/wm/.config/warpd"; recursive = true; };
     };
     xdg.dataFile = {

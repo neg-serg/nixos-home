@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ pkgs, lib, ... }: {
     home.sessionVariables = {};
     home.packages = with pkgs; [
         fnott # wayland notifications
@@ -7,6 +7,7 @@
         wtype # xdotool for wayland
         ydotool # xdotool systemwide
     ];
+
     wayland.windowManager.sway = {
         enable = true;
         extraOptions = [];
@@ -17,9 +18,34 @@
                 # # Launch Firefox on start
                 # {command = "firefox";}
             ];
+            # Samsung Electric Company Odyssey G85SB H1AK500000
+	    output = {
+               "*" = {
+                    mode = "3440x1440@174.962Hz";
+                    adaptive_sync = "on";
+                    bg = lib.mkForce "~/pic/wl/wallhaven-49pqxk.jpg fill";
+	    };	    
         };
     };
+  };
 }
+
+
+# input * {
+#     xkb_layout "us,ru"
+#     xkb_options "grp:alt_shift_toggle"
+# }
+# 
+# exec dbus-sway-environment
+# exec configure-gtk
+# 
+# bindsym Mod4+Return exec kitty
+# bindsym Mod1+grave exec ~/bin/rofi-run
+# 
+# input "type:keyboard" {
+#     repeat_delay 250
+#     repeat_rate 60
+# }
 
 # systemd.user.services.wpaperd = {
 #     Unit = {
