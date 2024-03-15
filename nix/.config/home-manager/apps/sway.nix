@@ -18,6 +18,7 @@
                 "*" = {
                      mode = "3440x1440@174.962Hz";
                      adaptive_sync = "on";
+		     scale = "1.0";
                      #bg = lib.mkForce "~/pic/wl/wallhaven-49pqxk.jpg fill";
                 };
             };
