@@ -4,6 +4,7 @@
     ./dotfiles.nix
     ./sops.nix
     ./theme
+    ./systemd
     ./xdg.nix
 
     ./apps/android.nix
@@ -35,10 +36,6 @@
     ./apps/x11
     ./apps/yubikey.nix
     ./misc-pkgs.nix
-
-    ./systemd/targets.nix
-    ./systemd/services.nix
-    ./systemd/session_variables.nix
   ];
 
   services = {
