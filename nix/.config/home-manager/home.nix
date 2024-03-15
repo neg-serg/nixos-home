@@ -38,18 +38,12 @@
 
     ./systemd/targets.nix
     ./systemd/services.nix
+    ./systemd/session_variables.nix
   ];
 
   services = {
       udiskie = { enable = true; };
       mpdris2 = { enable = false; };
-  };
-
-  systemd.user.sessionVariables = {
-      GDK_BACKEND = "x11";
-      XDG_CURRENT_DESKTOP = "i3";
-      XDG_SESSION_DESKTOP = "i3";
-      XDG_SESSION_TYPE = "x11";
   };
 
   qt = {
