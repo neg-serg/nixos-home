@@ -8,6 +8,12 @@ with {
             package = pkgs.kora-icon-theme;
         };
     };
+
+    qt = {
+        enable = true;
+        platformTheme = "qtct";
+    };
+
     dconf = {
         enable = true;
         settings = {

@@ -3,8 +3,8 @@
   imports = [
     ./dotfiles.nix
     ./sops.nix
-    ./theme
     ./systemd
+    ./theme
     ./xdg.nix
 
     ./apps/android.nix
@@ -41,11 +41,6 @@
   services = {
       udiskie = { enable = true; };
       mpdris2 = { enable = false; };
-  };
-
-  qt = {
-      enable = true;
-      platformTheme = "qtct";
   };
 
   manual = {
