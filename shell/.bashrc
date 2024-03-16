@@ -1,4 +1,3 @@
-[ -f "$HOME/.profile" ] && source "$HOME/.profile"
 # Make sure the terminal type we're using is supported (tmux-256color doesn't
 # work everywhere yet)
 if ! infocmp "$TERM" > /dev/null 2>&1; then
@@ -67,5 +66,3 @@ export LS_COLORS='no=00:fi=00:rs=00:di=07;38;5;234;48;5;25:so=01;38;5;075:bd=38;
 
 # [ -f "$HOME/.config/broot/launcher/bash/br" ] && source "$HOME/.config/broot/launcher/bash/br"
 # vim: ft=sh
-
-source /home/neg/.config/broot/launcher/bash/br
