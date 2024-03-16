@@ -70,7 +70,6 @@
     };
     home.file = {
         "bin" = { source = l "${dots}/bin"; recursive = false; };
-        ".bashrc"   = { source = l "${dots}/shell/.bashrc"; recursive = true; };
         ".fdignore" = { source = l "${dots}/shell/.fdignore"; recursive = true; };
         ".psqlrc" = { source = l "${dots}/sys/.psqlrc"; recursive = true; };
         ".ugrep" = { source = l "${dots}/shell/.ugrep"; recursive = true; };
