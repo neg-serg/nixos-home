@@ -74,6 +74,7 @@
           };
           Service = {
               Type = "notify";
+              Environment = "PW_KEY_CONFIG_NAME=client-rt.conf";
               ExecStart = "${pkgs.mpd}/bin/mpd --no-daemon";
               WatchdogSec = 120;
               CPUSchedulingPolicy="rr";
