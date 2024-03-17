@@ -76,14 +76,12 @@
               Type = "notify";
               ExecStart = "${pkgs.mpd}/bin/mpd --no-daemon";
               WatchdogSec = 120;
-              LimitRTPRIO = "90"; # allow MPD to use real-time priority 90
-              LimitRTTIME = "infinity";
-              LimitMEMLOCK = "64M"; # for io_uring
+              CPUSchedulingPolicy="rr";
+              CPUSchedulingPriority="90";
               ProtectSystem = "yes"; # disallow writing to /usr, /bin, /sbin, ...
               NoNewPrivileges = "yes";
               ProtectKernelTunables = "yes";
               ProtectControlGroups = "yes";
-              # AF_NETLINK is required by libsmbclient, or it will exit() .. *sigh*
               RestrictAddressFamilies = ["AF_INET" "AF_INET6" "AF_UNIX" "AF_NETLINK"];
               RestrictNamespaces = "yes";
               Restart = "on-failure";
