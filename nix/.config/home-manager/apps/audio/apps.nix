@@ -4,7 +4,6 @@
       cdparanoia # cdrip / cdrecord
       cider # apple music player
       dr14_tmeter # compute the DR14 of a given audio file according to the procedure from Pleasurize Music Foundation
-      easytag # use this for tags
       id3v2 # id3v2 edit
       jamesdsp # pipewire dsp
       mpc-cli # mpd client
@@ -91,5 +90,4 @@
           Install = { WantedBy = ["default.target"]; };
       };
   };
-
 }
