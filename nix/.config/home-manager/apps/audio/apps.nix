@@ -77,8 +77,8 @@
               Environment = "PW_KEY_CONFIG_NAME=client-rt.conf";
               ExecStart = "${pkgs.mpd}/bin/mpd --no-daemon";
               WatchdogSec = 120;
-              CPUSchedulingPolicy="rr";
-              CPUSchedulingPriority="90";
+              CPUSchedulingPolicy="fifo";
+              CPUSchedulingPriority="39";
               ProtectSystem = "yes"; # disallow writing to /usr, /bin, /sbin, ...
               NoNewPrivileges = "yes";
               ProtectKernelTunables = "yes";
