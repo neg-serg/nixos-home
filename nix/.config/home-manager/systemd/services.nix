@@ -251,7 +251,7 @@ with {
         #         BindsTo = ["graphical-session.target"];
         #         Wants = ["graphical-session-pre.target"];
         #         After = ["graphical-session-pre.target"];
-	#     };
+	    #     };
         #     Service = {
         #         Type = "simple";
         #         EnvironmentFile = "-%h/.config/sway/env";
