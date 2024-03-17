@@ -76,7 +76,7 @@
               Type = "notify";
               ExecStart = "${pkgs.mpd}/bin/mpd --no-daemon";
               WatchdogSec = 120;
-              LimitRTPRIO = "40"; # allow MPD to use real-time priority 40
+              LimitRTPRIO = "90"; # allow MPD to use real-time priority 90
               LimitRTTIME = "infinity";
               LimitMEMLOCK = "64M"; # for io_uring
               ProtectSystem = "yes"; # disallow writing to /usr, /bin, /sbin, ...
