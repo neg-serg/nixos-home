@@ -23,6 +23,7 @@
        neomutt # email client
        pango # for pango-list
        pwgen # generate passwords
+       # pritunl-client # alternative openvpn client
        (python3-lto.withPackages (ps: with ps; [ docopt i3ipc psutil colored pynvim requests ]))
   ];
 }
