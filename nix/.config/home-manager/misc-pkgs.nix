@@ -1,16 +1,4 @@
 { pkgs, ... }: {
-    nixpkgs = {
-        config.allowUnfree = true;
-        config.packageOverrides = super: {
-            python3-lto = super.python3.override {
-                packageOverrides = python-self: python-super: {
-                    enableOptimizations = true;
-                    enableLTO = true;
-                    reproducibleBuild = false;
-                };
-            };
-        };
-    };
     home.packages = with pkgs; [
        blesh # bluetooth shell
        ccrypt # Secure encryption and decryption of files and streams
@@ -24,6 +12,5 @@
        pango # for pango-list
        pwgen # generate passwords
        # pritunl-client # alternative openvpn client
-       (python3-lto.withPackages (ps: with ps; [ docopt i3ipc psutil colored pynvim requests ]))
   ];
 }

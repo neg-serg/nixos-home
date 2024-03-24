@@ -27,6 +27,7 @@
     ./apps/media
     ./apps/neovim.nix
     ./apps/pass.nix
+    ./apps/python
     ./apps/sway.nix
     ./apps/terminal
     ./apps/text
