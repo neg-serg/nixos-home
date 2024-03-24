@@ -5,6 +5,7 @@
   home.packages = with pkgs; [
       ffmpeg-full # famous multimedia lib
       ffmpegthumbnailer # thumbnail for video
+      imagemagick # for convert
       mediainfo # tag information about video or audio
       media-player-info # repository of data files describing media player capabilities
       mpvc # CLI controller for mpv
