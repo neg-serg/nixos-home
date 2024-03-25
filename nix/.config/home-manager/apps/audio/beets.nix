@@ -16,9 +16,9 @@
             per_disc_numbering = "no";
             original_date = "yes";
             import = {
-                copy = "no";
-                incremental_skip_later = "yes";
-                quiet_fallback = "yes";
+                copy = false;
+                incremental_skip_later = true;
+                quiet_fallback = true;
                 none_rec_action = "skip";
                 duplicate_action = "remove";
             };
