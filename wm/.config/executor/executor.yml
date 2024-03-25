@@ -1,8 +1,7 @@
 ncmpcpp:
   classw: ncmpcpp
   exec: ncmpcpp
-  font: Iosevka
-  # font_normal: Medium
+  font: Iosevka Medium
   font_size: 17
   opacity: 0.95
   padding: [4, 4]
@@ -12,8 +11,7 @@ neomutt: {classw: neomutt, exec: neomutt, font: Iosevka, font_size: 17, term: ki
 nwim:
   classw: nwim
   exec: nvim --listen /tmp/nvim.sock
-  font: Iosevka
-  # font_normal: Medium
+  font: Iosevka Medium
   font_size: 17
   instance_group: smaller_term
   opacity: 0.95
@@ -23,8 +21,7 @@ nwim:
 teardrop:
   classw: teardrop
   exec: btop
-  font: Iosevka
-  # font_normal: Medium
+  font: Iosevka Medium
   font_size: 14.5
   instance_group: teardrop
   padding: [8, 8]
@@ -33,7 +30,7 @@ teardrop:
 term:
   classw: term
   exec: zsh
-  font: Iosevka
+  font: Iosevka Medium
   font_size: 19
   padding: [2, 2]
   statusline: 1
@@ -42,7 +39,7 @@ term:
 torrment:
   classw: torrment
   exec: stig
-  font: Iosevka
+  font: Iosevka Medium
   font_size: 15.5
   instance_group: torrment
   padding: [8, 8]
@@ -51,7 +48,6 @@ torrment:
 ncpamixer:
   classw: ncpamixer
   exec: ncpamixer
-  font: Iosevka
-  # font_normal: Medium
+  font: Iosevka Medium
   font_size: 14
   opacity: 0.95
