@@ -100,9 +100,10 @@ with {
             serif = { name = "Cantarell"; package = pkgs.cantarell-fonts; };
             sansSerif = { name = "Cantarell"; package = pkgs.cantarell-fonts; };
             monospace = { name = "Iosevka";
-                package = (pkgs.iosevka.override {
-                  set = "neg";
-                  privateBuildPlan = builtins.readFile ../fonts/private-build-plans.toml;
+                package = (
+                    pkgs.iosevka.override {
+                    set = "neg";
+                    privateBuildPlan = builtins.readFile ../fonts/iosevka-neg.toml;
                 }); };
             sizes = { applications = 10; desktop = 10; };
         };
