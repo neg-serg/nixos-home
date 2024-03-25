@@ -8,6 +8,7 @@ with {
         libsForQt5.qtstyleplugin-kvantum # kvantum theme support
         qt6Packages.qtstyleplugin-kvantum # kvantum theme support
     ];
+
     gtk = {
         iconTheme = {
             name = "kora";
@@ -71,7 +72,9 @@ with {
             url = "https://i.imgur.com/t3bTk2b.jpg";
             sha256 = "sha256-WVDIxyy9ww39JNFkMOJA2N6KxLMh9cKjmeQwLY7kCjk=";
         };
+
         targets.kitty.enable = false;
+
         base16Scheme = {
             base00 = "#020202"; # Background
             base01 = "#010912"; # Alternate background(for toolbars)
@@ -90,12 +93,15 @@ with {
             base0E = "#5B5BBB"; # Purple
             base0F = "#162b44"; # Brown
         };
+
         cursor = {
             size = 35;
             name = "Alkano-aio";
             package = alkano-aio;
         };
+
         polarity = "dark";
+
         fonts = {
             serif = { name = "Cantarell"; package = pkgs.cantarell-fonts; };
             sansSerif = { name = "Cantarell"; package = pkgs.cantarell-fonts; };
@@ -108,5 +114,4 @@ with {
             sizes = { applications = 10; desktop = 10; };
         };
     };
-
 }
