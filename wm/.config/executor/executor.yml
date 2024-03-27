@@ -30,7 +30,7 @@ teardrop:
 term:
   classw: term
   exec: zsh
-  font: Iosevka Medium
+  font: Iosevka
   font_size: 19
   padding: [2, 2]
   statusline: 1
@@ -39,7 +39,7 @@ term:
 torrment:
   classw: torrment
   exec: stig
-  font: Iosevka Medium
+  font: Iosevka
   font_size: 15.5
   instance_group: torrment
   padding: [8, 8]
