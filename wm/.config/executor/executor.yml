@@ -31,7 +31,7 @@ term:
   classw: term
   exec: zsh
   font: Iosevka
-  font_size: 19
+  font_size: 17
   padding: [2, 2]
   statusline: 1
   term: kitty
