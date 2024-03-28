@@ -6,7 +6,11 @@ ncmpcpp:
   opacity: 0.95
   padding: [4, 4]
 
-neomutt: {classw: neomutt, exec: neomutt, font: Iosevka, font_size: 17, term: kitty}
+neomutt: 
+  classw: neomutt
+  exec: neomutt
+  font: Iosevka
+  font_size: 17
 
 nwim:
   classw: nwim
