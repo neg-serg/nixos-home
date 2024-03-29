@@ -61,23 +61,17 @@ def_key "0"
 def_key "1"
   show_playlist
 
-def_key "f2"
-  show_browser
-
-def_key "f2"
-  change_browse_mode
-
 def_key "3"
-  show_search_engine
+  dummy
+
+def_key "4"
+  dummy
+
+def_key "5"
+  dummy
 
 def_key "y"
   start_searching
-
-def_key "4"
-  show_tag_editor
-
-def_key "5"
-  show_visualizer
 
 def_key "@"
   show_server_info
@@ -111,9 +105,6 @@ def_key "f"
 
 def_key "b"
   seek_backward
-
-def_key "r"
-  dummy
 
 def_key "z"
   dummy
@@ -181,7 +172,7 @@ def_key "a"
 def_key "c"
   clear_main_playlist
 
-def_key "o"
+def_key "r"
   jump_to_playing_song
 
 def_key "R"
@@ -191,6 +182,9 @@ def_key "~"
   jump_to_media_library
 
 def_key "E"
+  jump_to_tag_editor
+
+def_key "t"
   jump_to_tag_editor
 
 def_key "\\"
@@ -241,14 +235,8 @@ def_key "right"
 def_key "2"
   show_media_library
 
-def_key "t"
-  show_tag_editor
-
 def_key "M"
   toggle_media_library_columns_mode
-
-def_key "v"
-  show_visualizer
 
 def_key "S"
   show_search_engine
