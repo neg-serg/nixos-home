@@ -131,14 +131,14 @@
     css   = 500
 
 [weights.semibold]
-    shape = 600
-    menu  = 600
-    css   = 600
+    shape = 500
+    menu  = 500
+    css   = 500
 
 [weights.bold]
-    shape = 600
-    menu  = 600
-    css   = 600
+    shape = 500
+    menu  = 500
+    css   = 500
 
 # slope mappings (style => slope angle, shape slope grade, menu slope, CSS slope)
 [slopes.upright]
