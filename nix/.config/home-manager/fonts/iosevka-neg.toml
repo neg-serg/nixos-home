@@ -130,11 +130,6 @@
     menu  = 500
     css   = 500
 
-[weights.semibold]
-    shape = 500
-    menu  = 500
-    css   = 500
-
 [weights.bold]
     shape = 500
     menu  = 500
