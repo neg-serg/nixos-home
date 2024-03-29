@@ -125,10 +125,7 @@ def_key "/"
   find_item_forward
 
 def_key "?"
-  find
-
-def_key "?"
-  find_item_backward
+  show_search_engine
 
 def_key "n"
   next_found_item
@@ -240,6 +237,3 @@ def_key "M"
 
 def_key "S"
   show_search_engine
-
-def_key "f"
-  change_browse_mode
