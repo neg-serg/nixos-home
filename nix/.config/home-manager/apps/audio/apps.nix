@@ -73,17 +73,9 @@
           };
           Service = {
               Type = "notify";
-              Environment = "PW_KEY_CONFIG_NAME=client-rt.conf";
               ExecStart = "${pkgs.mpd}/bin/mpd --no-daemon";
               WatchdogSec = 120;
-              CPUSchedulingPolicy="fifo";
-              CPUSchedulingPriority="39";
               ProtectSystem = "yes"; # disallow writing to /usr, /bin, /sbin, ...
-              NoNewPrivileges = "yes";
-              ProtectKernelTunables = "yes";
-              ProtectControlGroups = "yes";
-              RestrictAddressFamilies = ["AF_INET" "AF_INET6" "AF_UNIX" "AF_NETLINK"];
-              RestrictNamespaces = "yes";
               Restart = "on-failure";
               RestartSec = "5";
           };
