@@ -6,15 +6,14 @@
     desc = 'Default'
     calt = false
     exportGlyphNames = true
-    webfont-formats = ['otf']
     spacing = 'fontconfig-mono'
     snapshotFamily = 'iosevka'
     snapshotFeature = '"NWID" off'
 
 [buildPlans.Iosevkaneg.ligations]
     inherits = 'dlig'
-    brace-bar = true
-    brack-bar = true
+    brace-bar = false
+    brack-bar = false
     connected-tilde-as-wave = false
     connected-hyphen-as-solid-line = false
     connected-hyphen-as-semi-dashed-line = false
