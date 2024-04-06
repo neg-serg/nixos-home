@@ -70,6 +70,12 @@ def_key "4"
 def_key "5"
   dummy
 
+def_key "6"
+  dummy
+
+def_key "7"
+  dummy
+
 def_key "y"
   start_searching
 
