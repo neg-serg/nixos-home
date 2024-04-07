@@ -8,7 +8,7 @@
       convmv # convert filename encodings
       dash # faster sh
       dcfldd # better dd with progress bar and inline hash verification
-      diffoscope # diff for various format
+      stable.diffoscope # diff for various format
       diff-so-fancy # human-readable diff
       dos2unix # file convertation
       du-dust # better du
