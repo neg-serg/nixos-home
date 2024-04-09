@@ -31,7 +31,6 @@
       oil # better bash
       par # better fmt
       patool # python archive unpack
-      plocate # much faster locate
       rhash # compute hashsums
       rmlint # remove duplicates
       sad # more simple sed alternative
