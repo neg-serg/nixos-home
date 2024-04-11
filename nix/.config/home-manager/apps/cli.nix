@@ -41,6 +41,7 @@
       tealdeer # short man, tldr replacement written in rust
       topgrade # upgrade all the stuff for all distros
       ugrep # better grep, rg alternative
+      ugrep-indexer # file indexer for accelerated recursive search
       urlscan # extract urls from text
       viddy # modern watch command
       zoxide # better fasd for some
