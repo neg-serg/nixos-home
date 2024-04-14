@@ -40,8 +40,8 @@
   ];
 
   services = {
-      udiskie = { enable = true; };
       mpdris2 = { enable = false; };
+      udiskie = { enable = true; };
   };
 
   manual = {
