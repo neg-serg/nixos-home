@@ -1,0 +1,9 @@
+#!/bin/sh
+# abstract: remove songs matching PATTERN from mpd playlist
+
+pattern="$1"
+
+mpc --format "%position% %artist% %album% %title%" playlist \
+  | grep -iP "$pattern" \
+  | awk '{print $1}'  \
+  | mpc del
