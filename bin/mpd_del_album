@@ -21,30 +21,30 @@ if [[ $answer != 'y' ]]; then
 else
     mv -v "$base/$album" ~/trash/music/
 
-    more_albums=$(mpc search artist "$mpd_del_album_artist" \
-        | perl -pe 's{(.+)/.+$}{$1}' \
-        | sort -u \
-        | grep -vF "$album" \
-        | grep -vP '^(Music_[1-7]/)?(VA|OST|GAME|.new)/')
+    # more_albums=$(mpc search artist "$mpd_del_album_artist" \
+    #     | perl -pe 's{(.+)/.+$}{$1}' \
+    #     | sort -u \
+    #     | grep -vF "$album" \
+    #     | grep -vP '^(Music_[1-7]/)?(VA|OST|GAME|.new)/')
 
-    if [[ -n $more_albums ]]; then
-        perl -e '
-        warn "=" x 80, "\n";
-        printf "Found additional albums by \e[1m%s\e[m:\n",
-        $ENV{mpd_del_album_artist},
-        '
-        for next_album in $more_albums; do
-            printf " \e[38;5;30m$next_album\e[m [y/N] "
-            read answer
-            if [[ $answer != 'y' ]]; then
-                continue
-            else
-                mv "$base/$next_album" ~/trash/music/
-            fi
-        done
-    else
-        exit
-    fi
+    # if [[ -n $more_albums ]]; then
+    #     perl -e '
+    # warn "=" x 80, "\n";
+    # printf "Found additional albums by \e[1m%s\e[m:\n",
+    # $ENV{mpd_del_album_artist},
+    # '
+    #     for next_album in $more_albums; do
+    #         printf " \e[38;5;30m$next_album\e[m [y/N] "
+    #         read answer
+    #         if [[ $answer != 'y' ]]; then
+    #             continue
+    #         else
+    #             mv "$base/$next_album" ~/trash/music/
+    #         fi
+    #     done
+    # else
+    #     exit
+    # fi
 fi
 
 unset -v mpd_del_album_artist
