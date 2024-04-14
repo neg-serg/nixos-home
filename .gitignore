@@ -325,3 +325,4 @@ music/.config/mpd/mpd.db
 music/.config/beets/config.yaml
 misc/.config/transmission-daemon/torrents/
 shell/.config/zsh/.zcompdump
+misc/.config/icedtea-web/security/
