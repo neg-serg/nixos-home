@@ -766,6 +766,22 @@
         "url": "https://flakehub.com/f/NixOS/nixpkgs/0.1.%2A.tar.gz"
       }
     },
+    "nixpkgs-master": {
+      "locked": {
+        "lastModified": 1713132898,
+        "narHash": "sha256-q+uV0ZsTghNgLZA1IDw1K6wJ1pA2EBDwFee9eC1RCO0=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "1f54fa2ddf2623784a2b4431b35a1b5ce91a14bf",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "master",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs-oldstable": {
       "locked": {
         "lastModified": 1704290814,
@@ -967,6 +983,7 @@
         "home-manager": "home-manager_2",
         "negwm": "negwm",
         "nixpkgs": "nixpkgs_4",
+        "nixpkgs-master": "nixpkgs-master",
         "nixpkgs-oldstable": "nixpkgs-oldstable",
         "nixpkgs-stable": "nixpkgs-stable_2",
         "sops-nix": "sops-nix",

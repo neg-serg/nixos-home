@@ -5,6 +5,7 @@
         executor.url = "github:neg-serg/executor";
         home-manager = { url = "github:nix-community/home-manager"; inputs.nixpkgs.follows = "nixpkgs"; };
         negwm.url = "github:neg-serg/negwm";
+        nixpkgs-master.url = "github:nixos/nixpkgs/master";
         nixpkgs-oldstable.url = "github:nixos/nixpkgs/nixos-23.05";
         nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-23.11";
         nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -22,6 +23,7 @@
         , executor
         , home-manager
         , negwm
+        , nixpkgs-master
         , nixpkgs-oldstable
         , nixpkgs-stable
         , sops-nix
@@ -37,6 +39,7 @@
         pkgs = nixpkgs.legacyPackages.${system};
         stable = nixpkgs-stable.legacyPackages.${system};
         oldstable = nixpkgs-oldstable.legacyPackages.${system};
+        master = nixpkgs-master.legacyPackages.${system};
         negwmPkg = negwm.packages.${system};
         executorPkg = executor.packages.${system};
     }; {
@@ -46,6 +49,7 @@
             extraSpecialArgs = {
                 inherit inputs;
                 inherit oldstable;
+                inherit master;
                 inherit stable;
                 inherit negwmPkg;
                 inherit executorPkg;
