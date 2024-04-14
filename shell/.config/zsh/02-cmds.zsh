@@ -192,6 +192,7 @@ if [[ -e /etc/NIXOS ]]; then
     _exists nixos-rebuild && {
         alias nrb='sudo nixos-rebuild'
     }
+    foobar(){nix run github:emmanuelrosa/erosanix#foobar2000}
     xkcdpass(){echo "$(nix run nixpkgs#xkcdpass -- -d '-' -n 3 -C capitalize)$((RANDOM % 9))"}
     _exists nh && {
         alias swh="nh home switch $(readlink -f $HOME/.config/home-manager)"
