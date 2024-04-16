@@ -1,4 +1,20 @@
 { ... }: {
+    services = {
+        mpdris2 = { enable = false; };
+        udiskie = { enable = true; };
+    };
+
+    programs = {
+        home-manager.enable = true; # Let Home Manager install and manage itself.
+            mangohud.enable = true; # gaming hud
+    };
+
+    manual = {
+        html.enable = false;
+        json.enable = false;
+        manpages.enable = true;
+    };
+
     imports = [
         ./android.nix
         ./archives.nix
