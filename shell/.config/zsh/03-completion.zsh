@@ -65,8 +65,6 @@ zstyle ':completion:*:wine:*' file-patterns '(#i)*.(exe):exe'
 zstyle ':completion:*:parameters' list-colors "=[^a-zA-Z]*=$color[cyan]"
 # highlight aliases
 zstyle ':completion:*:aliases' list-colors "=*=$color[green]"
-# highlight the original input.
-zstyle ':completion:*:original' list-colors "=*=$color[blue];$color[bold]"
 # highlight words like 'esac' or 'end'
 zstyle ':completion:*:reserved-words' list-colors "=*=$color[blue]"
 # colorize processlist for 'kill'
