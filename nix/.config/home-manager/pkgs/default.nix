@@ -24,6 +24,7 @@
         ./cli.nix
         ./dev.nix
         ./distros.nix
+        ./emacs.nix
         ./fetch.nix
         ./fonts
         ./fun
