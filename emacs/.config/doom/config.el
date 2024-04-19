@@ -41,10 +41,6 @@
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/org/")
-;; Add functions to emms list
-;; (add-to-list 'emms-info-functions 'emms-info-mpd)
-;; (add-to-list 'emms-player-list 'emms-player-mpd)
-(emms-player-mpd-connect)
 
 
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
