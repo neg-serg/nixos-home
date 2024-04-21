@@ -1,8 +1,8 @@
 {
   imports = [
-      ./misc.nix
-      ./games.nix
-      ./emulators.nix
-      ./launchers.nix
+    ./misc.nix
+    ./games.nix
+    ./emulators.nix
+    ./launchers.nix
   ];
 }

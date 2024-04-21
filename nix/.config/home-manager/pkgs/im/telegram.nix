@@ -1,5 +1,4 @@
-{ python3Packages }:
-
+{python3Packages}:
 python3Packages.buildPythonApplication rec {
   pname = "telegram-send";
   version = "0.25";

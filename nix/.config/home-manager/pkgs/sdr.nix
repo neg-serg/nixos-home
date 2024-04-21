@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{pkgs, ...}: {
   home.packages = with pkgs; [
     # chirp # Configuration tool for amateur radios
     # gnuradio # GNU Radio Software Radio Toolkit

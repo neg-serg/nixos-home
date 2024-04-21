@@ -1,7 +1,7 @@
-{ pkgs, ... }: {
+{pkgs, ...}: {
   home.packages = with pkgs; [
-      fontforge # font processing
-      pango # for pango-list
-      ueberzugpp # better w3mimgdisplay
+    fontforge # font processing
+    pango # for pango-list
+    ueberzugpp # better w3mimgdisplay
   ];
 }

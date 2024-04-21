@@ -1,6 +1,6 @@
 {
   imports = [
-      ./hid.nix
-      ./info.nix
+    ./hid.nix
+    ./info.nix
   ];
 }

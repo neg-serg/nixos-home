@@ -1,8 +1,8 @@
 {
   imports = [
-      ./aria.nix
-      ./browsing.nix
-      ./floorp.nix
-      ./misc.nix
+    ./aria.nix
+    ./browsing.nix
+    ./floorp.nix
+    ./misc.nix
   ];
 }

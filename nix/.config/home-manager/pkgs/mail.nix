@@ -1,7 +1,7 @@
-{ pkgs, ... }: {
+{pkgs, ...}: {
   home.packages = with pkgs; [
-      kyotocabinet # mail client helper library
-      neomutt # mail client
-      notmuch # mail indexer
+    kyotocabinet # mail client helper library
+    neomutt # mail client
+    notmuch # mail indexer
   ];
 }

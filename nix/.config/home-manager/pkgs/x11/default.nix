@@ -1,7 +1,7 @@
 {
   imports = [
-      ./apps.nix
-      ./rofi.nix
-      ./stuff.nix
+    ./apps.nix
+    ./rofi.nix
+    ./stuff.nix
   ];
 }
