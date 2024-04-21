@@ -1,4 +1,10 @@
-{ lib, fzf, makeWrapper, nix-index, stdenvNoCC }:
+{
+  lib,
+  fzf,
+  makeWrapper,
+  nix-index,
+  stdenvNoCC,
+}:
 stdenvNoCC.mkDerivation rec {
   pname = "comma";
   version = "0.1.0";
@@ -32,9 +38,9 @@ stdenvNoCC.mkDerivation rec {
   meta = with lib; {
     description = "A simple script inspired by Shopify's comma, for modern Nix";
     homepage = "https://git.belanyi.fr/ambroisie/nix-config";
-    license = with licenses; [ mit ];
+    license = with licenses; [mit];
     mainProgram = ",";
-    maintainers = with maintainers; [ ambroisie ];
+    maintainers = with maintainers; [ambroisie];
     platforms = platforms.unix;
   };
 }
