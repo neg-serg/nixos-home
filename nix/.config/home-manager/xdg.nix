@@ -1,119 +1,132 @@
-{ config, pkgs, ... }:
+{
+  config,
+  pkgs,
+  ...
+}:
 with rec {
-    defaultApplications = {
-        terminal = { cmd = "${pkgs.kitty}/bin/kitty"; desktop = "kitty"; };
-        browser = { cmd = "${pkgs.floorp}/bin/floorp"; desktop = "floorp"; };
-        editor = { cmd = "${pkgs.neovim}/bin/nvim"; desktop = "nvim"; };
+  defaultApplications = {
+    terminal = {
+      cmd = "${pkgs.kitty}/bin/kitty";
+      desktop = "kitty";
     };
-
-    browser = "${defaultApplications.browser.desktop}.desktop";
-    pdfreader = "org.pwmt.zathura.desktop";
-    telegram = "org.telegram.desktop.desktop";
-    torrent = "transmission.desktop";
-    video = "mpv.desktop";
-    image = "nsxiv.desktop";
-    editor = "${defaultApplications.editor.desktop}.desktop";
-
-    my_associations = {
-        "text/html*" = browser;
-        "x-scheme-handler/http" = browser;
-        "x-scheme-handler/https" = browser;
-        "x-scheme-handler/ftp" = browser;
-        "x-scheme-handler/about" = browser;
-        "x-scheme-handler/unknown" = browser;
-        "x-scheme-handler/chrome" = browser;
-        "application/x-extension-htm" = browser;
-        "application/x-extension-html" = browser;
-        "application/x-extension-shtml" = browser;
-        "application/xhtml+xml" = browser;
-        "application/x-extension-xhtml" = browser;
-        "application/x-extension-xht" = browser;
-
-        "audio/*" = video;
-        "video/*" = video;
-        "image/*" = image;
-        "application/pdf" = pdfreader;
-        "application/postscript" = pdfreader;
-        "application/epub+zip" = pdfreader;
-        "x-scheme-handler/tg" = telegram;
-        "x-scheme-handler/vkteams" = ["vkteamsdesktop.desktop"];
-        "x-scheme-handler/spotify" = ["spotify.desktop"];
-        "x-scheme-handler/discord" = ["WebCord.desktop"];
-        "x-scheme-handler/magnet" = torrent;
-        "x-scheme-handler/application/x-bittorrent" = torrent;
-
-        "x-scheme-handler/nxm" = ["vortex-downloads-handler.desktop"];
-        "x-scheme-handler/nxm-protocol" = ["vortex-downloads-handler.desktop"];
-
-        "text/english" = editor;
-        "text/plain" = editor;
-        "text/x-makefile" = editor;
-        "text/x-c++hdr" = editor;
-        "text/x-c++src" = editor;
-        "text/x-chdr" = editor;
-        "text/x-csrc" = editor;
-        "text/x-java" = editor;
-        "text/x-moc" = editor;
-        "text/x-pascal" = editor;
-        "text/x-tcl" = editor;
-        "text/x-tex" = editor;
-        "application/x-shellscript" = editor;
-        "application/json" = editor;
-        "application/xml" = editor;
-        "text/xml" = editor;
-        "text/x-c" = editor;
-        "text/x-c++" = editor;
+    browser = {
+      cmd = "${pkgs.floorp}/bin/floorp";
+      desktop = "floorp";
     };
+    editor = {
+      cmd = "${pkgs.neovim}/bin/nvim";
+      desktop = "nvim";
+    };
+  };
 
-    associations_removed = {
-        "application/vnd.ms-htmlhelp" = "wine-extension-chm.desktop";
-        "image/gif" = ["wine-extension-gif.desktop"];
-        "application/winhlp" = "wine-extension-hlp.desktop";
-        "application/x-wine-extension-ini" = "wine-extension-ini.desktop";
-        "application/x-wine-extension-msp" = "wine-extension-msp.desktop";
-        "application/pdf" = ["wine-extension-pdf.desktop"];
-        "application/rtf" = "wine-extension-rtf.desktop";
-        "text/plain" = "wine-extension-txt.desktop";
-        "application/x-mswinurl" = "wine-extension-url.desktop";
-        "application/x-wine-extension-vbs" = "wine-extension-vbs.desktop";
-        "application/x-mswrite" = "wine-extension-wri.desktop";
-        "application/xml" = "wine-extension-xml.desktop";
-        "text/html" = ["wine-extension-htm.desktop"];
-        "image/jpeg" = ["wine-extension-jfif.desktop" "wine-extension-jpe.desktop"];
-        "image/png" = ["wine-extension-png.desktop"];
+  browser = "${defaultApplications.browser.desktop}.desktop";
+  pdfreader = "org.pwmt.zathura.desktop";
+  telegram = "org.telegram.desktop.desktop";
+  torrent = "transmission.desktop";
+  video = "mpv.desktop";
+  image = "nsxiv.desktop";
+  editor = "${defaultApplications.editor.desktop}.desktop";
+
+  my_associations = {
+    "text/html*" = browser;
+    "x-scheme-handler/http" = browser;
+    "x-scheme-handler/https" = browser;
+    "x-scheme-handler/ftp" = browser;
+    "x-scheme-handler/about" = browser;
+    "x-scheme-handler/unknown" = browser;
+    "x-scheme-handler/chrome" = browser;
+    "application/x-extension-htm" = browser;
+    "application/x-extension-html" = browser;
+    "application/x-extension-shtml" = browser;
+    "application/xhtml+xml" = browser;
+    "application/x-extension-xhtml" = browser;
+    "application/x-extension-xht" = browser;
+
+    "audio/*" = video;
+    "video/*" = video;
+    "image/*" = image;
+    "application/pdf" = pdfreader;
+    "application/postscript" = pdfreader;
+    "application/epub+zip" = pdfreader;
+    "x-scheme-handler/tg" = telegram;
+    "x-scheme-handler/vkteams" = ["vkteamsdesktop.desktop"];
+    "x-scheme-handler/spotify" = ["spotify.desktop"];
+    "x-scheme-handler/discord" = ["WebCord.desktop"];
+    "x-scheme-handler/magnet" = torrent;
+    "x-scheme-handler/application/x-bittorrent" = torrent;
+
+    "x-scheme-handler/nxm" = ["vortex-downloads-handler.desktop"];
+    "x-scheme-handler/nxm-protocol" = ["vortex-downloads-handler.desktop"];
+
+    "text/english" = editor;
+    "text/plain" = editor;
+    "text/x-makefile" = editor;
+    "text/x-c++hdr" = editor;
+    "text/x-c++src" = editor;
+    "text/x-chdr" = editor;
+    "text/x-csrc" = editor;
+    "text/x-java" = editor;
+    "text/x-moc" = editor;
+    "text/x-pascal" = editor;
+    "text/x-tcl" = editor;
+    "text/x-tex" = editor;
+    "application/x-shellscript" = editor;
+    "application/json" = editor;
+    "application/xml" = editor;
+    "text/xml" = editor;
+    "text/x-c" = editor;
+    "text/x-c++" = editor;
+  };
+
+  associations_removed = {
+    "application/vnd.ms-htmlhelp" = "wine-extension-chm.desktop";
+    "image/gif" = ["wine-extension-gif.desktop"];
+    "application/winhlp" = "wine-extension-hlp.desktop";
+    "application/x-wine-extension-ini" = "wine-extension-ini.desktop";
+    "application/x-wine-extension-msp" = "wine-extension-msp.desktop";
+    "application/pdf" = ["wine-extension-pdf.desktop"];
+    "application/rtf" = "wine-extension-rtf.desktop";
+    "text/plain" = "wine-extension-txt.desktop";
+    "application/x-mswinurl" = "wine-extension-url.desktop";
+    "application/x-wine-extension-vbs" = "wine-extension-vbs.desktop";
+    "application/x-mswrite" = "wine-extension-wri.desktop";
+    "application/xml" = "wine-extension-xml.desktop";
+    "text/html" = ["wine-extension-htm.desktop"];
+    "image/jpeg" = ["wine-extension-jfif.desktop" "wine-extension-jpe.desktop"];
+    "image/png" = ["wine-extension-png.desktop"];
+  };
+}; {
+  home.packages = with pkgs; [
+    handlr # xdg-open
+    xdg-ninja # autodetect stuff that should be moved from HOME dir
+  ];
+  xdg = {
+    enable = true;
+    userDirs = {
+      enable = true;
+      createDirectories = true;
+      desktop = "${config.home.homeDirectory}/1st_level/desktop";
+      documents = "${config.home.homeDirectory}/doc";
+      download = "${config.home.homeDirectory}/dw";
+      music = "${config.home.homeDirectory}/music";
+      pictures = "${config.home.homeDirectory}/pic";
+      publicShare = "${config.home.homeDirectory}/1st_level/public";
+      templates = "${config.home.homeDirectory}/1st_level/templates";
+      videos = "${config.home.homeDirectory}/vid";
+      extraConfig = {
+        XDG_BIN_HOME = "${config.home.homeDirectory}/.local/bin";
+        XDG_CACHE_HOME = "${config.home.homeDirectory}/.cache";
+        XDG_CONFIG_HOME = "${config.home.homeDirectory}/.config";
+        XDG_DATA_HOME = "${config.home.homeDirectory}/.local/share";
+        XDG_STATE_HOME = "${config.home.homeDirectory}/.local/state";
+      };
     };
-};{
-    home.packages = with pkgs; [
-        handlr # xdg-open
-        xdg-ninja # autodetect stuff that should be moved from HOME dir
-    ];
-    xdg = {
-        enable = true;
-        userDirs = {
-            enable = true;
-            createDirectories = true;
-            desktop = "${config.home.homeDirectory}/1st_level/desktop";
-            documents = "${config.home.homeDirectory}/doc";
-            download = "${config.home.homeDirectory}/dw";
-            music = "${config.home.homeDirectory}/music";
-            pictures = "${config.home.homeDirectory}/pic";
-            publicShare = "${config.home.homeDirectory}/1st_level/public";
-            templates = "${config.home.homeDirectory}/1st_level/templates";
-            videos = "${config.home.homeDirectory}/vid";
-            extraConfig = {
-                XDG_BIN_HOME = "${config.home.homeDirectory}/.local/bin";
-                XDG_CACHE_HOME = "${config.home.homeDirectory}/.cache";
-                XDG_CONFIG_HOME = "${config.home.homeDirectory}/.config";
-                XDG_DATA_HOME = "${config.home.homeDirectory}/.local/share";
-                XDG_STATE_HOME = "${config.home.homeDirectory}/.local/state";
-            };
-        };
-        mime.enable = true;
-        mimeApps = {
-            enable = true;
-            associations.added = my_associations;
-            associations.removed = associations_removed;
-            defaultApplications = my_associations;
-        };
+    mime.enable = true;
+    mimeApps = {
+      enable = true;
+      associations.added = my_associations;
+      associations.removed = associations_removed;
+      defaultApplications = my_associations;
     };
+  };
 }
