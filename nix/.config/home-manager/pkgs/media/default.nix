@@ -18,7 +18,6 @@
 
   xdg.configFile = {
       "mpv" = { source = l "${dots}/media/.config/mpv"; recursive = true; };
-      "pipewire" = { source = l "${dots}/media/.config/pipewire"; recursive = true; };
   };
 
   systemd.user.services = {
