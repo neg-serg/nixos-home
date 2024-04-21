@@ -26,6 +26,10 @@ with {
       source = l "${dots}/media/.config/mpv";
       recursive = true;
     };
+    "wireplumber" = {
+      source = l "${dots}/media/.config/wireplumber";
+      recursive = true;
+    };
   };
 
   systemd.user.services = {
