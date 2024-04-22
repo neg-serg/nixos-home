@@ -162,19 +162,6 @@ with {
       Install = {WantedBy = ["graphical-session.target"];};
     };
 
-    xiccd = {
-      Unit = {
-        Description = "X color management";
-        PartOf = "graphical-session.target";
-        BindsTo = ["graphical-session.target"];
-      };
-      Service = {
-        ExecStart = "${pkgs.xiccd}/bin/xiccd --edid";
-        Restart = "on-failure";
-      };
-      Install = {WantedBy = ["graphical-session.target"];};
-    };
-
     xss-lock = {
       Unit = {
         Description = "Session locker";
