@@ -75,11 +75,11 @@
         Description = "Music Player Daemon";
         Documentation = "man:mpd(1) man:mpd.conf(5)";
         After = ["network.target" "sound.target"];
-        ConditionPathExists = "${pkgs.mpd}/bin/mpd";
+        ConditionPathExists = "${master.mpd}/bin/mpd";
       };
       Service = {
         Type = "notify";
-        ExecStart = "${pkgs.mpd}/bin/mpd --no-daemon";
+        ExecStart = "${master.mpd}/bin/mpd --no-daemon";
         WatchdogSec = 120;
         ProtectSystem = "yes"; # disallow writing to /usr, /bin, /sbin, ...
         Restart = "on-failure";
