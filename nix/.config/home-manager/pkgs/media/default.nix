@@ -22,16 +22,12 @@ with {
   ];
 
   xdg.configFile = {
-    "wireplumber" = {
-      source = l "${dots}/media/.config/wireplumber";
-      recursive = true;
-    };
     "mpv" = {
       source = l "${dots}/media/.config/mpv";
       recursive = true;
     };
-    "pipewire" = {
-      source = l "${dots}/media/.config/pipewire";
+    "wireplumber" = {
+      source = l "${dots}/media/.config/wireplumber";
       recursive = true;
     };
   };
