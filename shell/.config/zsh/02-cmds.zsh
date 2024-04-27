@@ -193,6 +193,14 @@ if [[ -e /etc/NIXOS ]]; then
         alias nrb='sudo nixos-rebuild'
     }
     foobar(){nix run github:emmanuelrosa/erosanix#foobar2000}
+    kernel-shell(){
+        nix-shell -E 'with import <nixpkgs> {};
+            (builtins.getFlake "github:chaotic-cx/nyx/nyxpkgs-unstable").packages.x86_64-linux.linuxPackages_cachyos.kernel.overrideAttrs
+            (o: {nativeBuildInputs=o.nativeBuildInputs ++ [ pkg-config ncurses ];})'
+        # unpackPhase && cd linux-*
+        # patchPhase
+        # make nconfig
+    }
     xkcdpass(){echo "$(nix run nixpkgs#xkcdpass -- -d '-' -n 3 -C capitalize)$((RANDOM % 9))"}
     _exists nh && {
         alias swh="nh home switch $(readlink -f $HOME/.config/home-manager)"
