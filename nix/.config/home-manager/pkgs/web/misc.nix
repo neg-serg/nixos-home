@@ -5,7 +5,6 @@
 }: {
   home.packages = with pkgs; [
     gallery-dl # download image galleries/collections
-    magic-wormhole # tool for local file sharing
     monolith # download all webpage stuff as one file
     pipe-viewer # lightweight youtube client
     plowshare # download/upload from popular sites
