@@ -22,7 +22,7 @@
     sonic-visualiser # audio analyzer
     master.sox # audio processing
     stable.audiowaveform # shows soundwaveform
-    streamlink # CLI for extracting streams from websites
+    stable.streamlink # CLI for extracting streams from websites
     tauon # fancy standalone music player
     unflac # split2flac alternative
   ];
