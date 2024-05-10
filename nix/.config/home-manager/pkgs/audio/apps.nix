@@ -1,6 +1,5 @@
 {
   pkgs,
-  config,
   stable,
   master,
   ...
@@ -28,14 +27,15 @@
   ];
 
   systemd.user.services = {
-    mpdas = {
+    yams = {
       Unit = {
-        Description = "mpdas last.fm scrobbler";
+        Description = "yams last.fm scrobbler";
         After = ["network.target" "sound.target" "mpd.service"];
         Requires = "mpd.service";
       };
       Service = {
-        ExecStart = "${pkgs.mpdas}/bin/mpdas -c ${config.sops.secrets.mpdas_negrc.path}";
+        Type = "simple";
+        ExecStart = "${pkgs.yams}/bin/yams -m ::1 -p 6600 -N";
         Restart = "on-failure";
         RestartSec = "10";
       };
