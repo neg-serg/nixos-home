@@ -11,7 +11,7 @@
     nixpkgs-master.url = "github:nixos/nixpkgs/master";
     nixpkgs-oldstable.url = "github:nixos/nixpkgs/nixos-23.05";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-23.11";
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/staging-next";
     sops-nix.url = "github:Mic92/sops-nix";
     stylix.url = "github:danth/stylix";
     # nixos-generators = { url = "github:nix-community/nixos-generators"; inputs.nixpkgs.follows = "nixpkgs"; };
