@@ -16,6 +16,7 @@ with {
     scdaemonSettings = {
       disable-ccid = true;
       pcsc-shared = true;
+      reader-port = "Yubico Yubi";
     };
   };
   services.gpg-agent = {
