@@ -20,5 +20,8 @@ return {'neovim/nvim-lspconfig',
         lspconfig.clangd.setup{}
         lspconfig.nil_ls.setup{}
         lspconfig.pyright.setup{}
+        lspconfig.ruff_lsp.setup{
+            init_options={settings={args={},}}
+        }
     end,
 }
