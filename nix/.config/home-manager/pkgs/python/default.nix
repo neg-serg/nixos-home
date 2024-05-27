@@ -20,6 +20,7 @@
         psutil
         pynvim
         requests
+        ruff # python linter
       ]))
   ];
 }
