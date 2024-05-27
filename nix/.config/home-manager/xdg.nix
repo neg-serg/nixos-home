@@ -1,5 +1,6 @@
 {
   config,
+  master,
   pkgs,
   ...
 }:
@@ -14,7 +15,7 @@ with rec {
       desktop = "floorp";
     };
     editor = {
-      cmd = "${pkgs.neovim}/bin/nvim";
+      cmd = "${master.neovim}/bin/nvim";
       desktop = "nvim";
     };
   };

@@ -2,6 +2,7 @@
   pkgs,
   config,
   stable,
+  master,
   ...
 }:
 with {
@@ -9,6 +10,7 @@ with {
   dots = "${config.home.homeDirectory}/.dotfiles";
 }; {
   home.packages = with pkgs; [
+    master.neovim
     neovim-remote # nvr for neovim
     nodePackages.bash-language-server # bash lsp
     nodePackages.pyright # python lsp
