@@ -6,6 +6,7 @@
   ...
 }: {
   home.packages = with pkgs; [
+    carla # audio plugin host
     cdparanoia # cdrip / cdrecord
     cider # apple music player
     dr14_tmeter # compute the DR14 of a given audio file according to the procedure from Pleasurize Music Foundation
