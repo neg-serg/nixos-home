@@ -6,6 +6,7 @@
   ...
 }: {
   home.packages = with pkgs; [
+    ape # monkey audio codec
     carla # audio plugin host
     cdparanoia # cdrip / cdrecord
     cider # apple music player
@@ -13,17 +14,16 @@
     id3v2 # id3v2 edit
     jamesdsp # pipewire dsp
     lsp-plugins # various linux dsp
-    master.ape # monkey audio codec
-    master.mpc-cli # mpd client
-    master.ncmpcpp # curses mpd client
-    master.ncpamixer # cli-pavucontrol
-    master.picard # autotags
-    master.sox # audio processing
+    mpc-cli # mpd client
+    ncmpcpp # curses mpd client
+    ncpamixer # cli-pavucontrol
     nicotine-plus # download music via soulseek
     opensoundmeter # sound measurement application for tuning audio systems in real-time
+    picard # autotags
     roomeqwizard # room acoustics software
     screenkey # screencast tool to display your keys inspired by Screenflick
     sonic-visualiser # audio analyzer
+    sox # audio processing
     stable.audiowaveform # shows soundwaveform
     stable.streamlink # CLI for extracting streams from websites
     tauon # fancy standalone music player
