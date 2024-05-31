@@ -7,13 +7,10 @@
 }: {
   home.packages = with pkgs; [
     ape # monkey audio codec
-    carla # audio plugin host
     cdparanoia # cdrip / cdrecord
     cider # apple music player
     dr14_tmeter # compute the DR14 of a given audio file according to the procedure from Pleasurize Music Foundation
     id3v2 # id3v2 edit
-    jamesdsp # pipewire dsp
-    lsp-plugins # various linux dsp
     mpc-cli # mpd client
     ncmpcpp # curses mpd client
     ncpamixer # cli-pavucontrol
