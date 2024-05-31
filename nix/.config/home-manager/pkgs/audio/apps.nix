@@ -11,6 +11,7 @@
     dr14_tmeter # compute the DR14 of a given audio file according to the procedure from Pleasurize Music Foundation
     id3v2 # id3v2 edit
     jamesdsp # pipewire dsp
+    lsp-plugins # various linux dsp
     master.ape # monkey audio codec
     master.mpc-cli # mpd client
     master.ncmpcpp # curses mpd client
