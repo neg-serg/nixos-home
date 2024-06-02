@@ -24,8 +24,8 @@ set $circle-term [instance="term"]
 set $circle-vid [class="mpv"]
 set $circle-vm [class="spicy"]
 set $circle-web [class="^(firefox|floorpdeveloperedition|floorp|Tor Browser|Chromium|Chromium-browser|Thorium-browser|Palemoon|Pale moon)$"]
-for_window $circle-bitwig move to workspace $sound,focus
-for_window $circle-patchbay move to workspace $sound,focus
+for_window $circle-bitwig move to workspace $daw,focus
+for_window $circle-patchbay move to workspace $patchbay,focus
 for_window $circle-dev move to workspace $dev,focus
 for_window $circle-doc move to workspace $doc,focus
 for_window $circle-games move to workspace $games,focus
@@ -66,6 +66,8 @@ set $games " 𐌸:games"
 set $sys " 𐌹:sys"
 set $vm " 𐌺:vm"
 set $wine " 𐌻:wine"
+set $patchbay " 𐌼:patchbay"
+set $daw " 𐌽:daw"
 
 # :>> Config section default
 
