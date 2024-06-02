@@ -186,9 +186,9 @@ mode %{T4}%{T-} {
 	bindsym Control+G, mode "default"
 }
 
-# :>> Config section mod4-g
-bindsym Mod4+g mode "%{T1}Patchbay%{T-}"
-mode %{T1}Patchbay%{T-} {	bindsym c $circle next patchbay, mode "default"
+# :>> Config section f1
+bindsym F1 mode "%{T1}Patchbay%{T-}"
+mode %{T1}Patchbay%{T-} {	bindsym F1 $circle next patchbay, mode "default"
 	bindsym Return, mode "default"
 	bindsym Escape, mode "default"
 	bindsym space, mode "default"
