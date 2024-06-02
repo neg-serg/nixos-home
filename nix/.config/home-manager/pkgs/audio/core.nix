@@ -9,6 +9,7 @@
     helvum # pipewire router
     open-music-kontrollers.patchmatrix # alternative patcher
     pw-volume # pipewire volume
+    qpwgraph # yet another pipewire router
     stable.pwvucontrol # pavucontrol for pipewire
   ];
 }
