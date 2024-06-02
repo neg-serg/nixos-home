@@ -189,6 +189,7 @@ mode %{T4}%{T-} {
 # :>> Config section f1
 bindsym F1 mode "%{T1}Patchbay%{T-}"
 mode %{T1}Patchbay%{T-} {	bindsym F1 $circle next patchbay, mode "default"
+	bindsym F2 $circle subtag patchbay qpwgraph , mode "default"
 	bindsym Return, mode "default"
 	bindsym Escape, mode "default"
 	bindsym space, mode "default"
