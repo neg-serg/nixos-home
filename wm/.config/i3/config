@@ -13,6 +13,7 @@ set $lastgo nop lastgo
 set $reflection nop reflection
 set $scratchpad nop scratchpad
 set $circle-bitwig [class="Bitwig Studio"]
+set $circle-patchbay [class="Carla2"]
 set $circle-dev [class="nwim"]
 set $circle-doc [class="^(Zathura|cr3)$"]
 set $circle-games [class="^(Steam|steam)$"]
@@ -24,6 +25,7 @@ set $circle-vid [class="mpv"]
 set $circle-vm [class="spicy"]
 set $circle-web [class="^(firefox|floorpdeveloperedition|floorp|Tor Browser|Chromium|Chromium-browser|Thorium-browser|Palemoon|Pale moon)$"]
 for_window $circle-bitwig move to workspace $sound,focus
+for_window $circle-patchbay move to workspace $sound,focus
 for_window $circle-dev move to workspace $dev,focus
 for_window $circle-doc move to workspace $doc,focus
 for_window $circle-games move to workspace $games,focus
@@ -177,6 +179,16 @@ mode %{T4}%{T-} {
 	bindsym Shift+d $actions resize right -4
 	bindsym Shift+k $actions resize top -4
 	bindsym Shift+w $actions resize top -4
+	bindsym Return, mode "default"
+	bindsym Escape, mode "default"
+	bindsym space, mode "default"
+	bindsym Control+C, mode "default"
+	bindsym Control+G, mode "default"
+}
+
+# :>> Config section mod4-g
+bindsym Mod4+g mode "%{T1}Patchbay%{T-}"
+mode %{T1}Patchbay%{T-} {	bindsym c $circle next patchbay, mode "default"
 	bindsym Return, mode "default"
 	bindsym Escape, mode "default"
 	bindsym space, mode "default"
