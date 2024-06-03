@@ -14,14 +14,14 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     sops-nix.url = "github:Mic92/sops-nix";
     stylix.url = "github:danth/stylix";
-    # nixos-generators = { url = "github:nix-community/nixos-generators"; inputs.nixpkgs.follows = "nixpkgs"; };
-    # nixpkgs-wayland = { url = "github:colemickens/nixpkgs-wayland"; flake = false; };
-    # nvfetcher= {url = "github:berberman/nvfetcher"; inputs.nixpkgs.follows = "nixpkgs"; };
-    # schizofox = { url = "github:schizofox/schizofox"; inputs.nixpkgs.follows = "nixpkgs"; };
-    # simple-osd-daemons.url = "github:balsoft/simple-osd-daemons";
+    nixos-generators = { url = "github:nix-community/nixos-generators"; inputs.nixpkgs.follows = "nixpkgs"; };
+    nixpkgs-wayland = { url = "github:colemickens/nixpkgs-wayland"; flake = false; };
+    nvfetcher= {url = "github:berberman/nvfetcher"; inputs.nixpkgs.follows = "nixpkgs"; };
+    schizofox = { url = "github:schizofox/schizofox"; inputs.nixpkgs.follows = "nixpkgs"; };
+    simple-osd-daemons.url = "github:balsoft/simple-osd-daemons";
   };
 
-  outputs = {
+  outputs = inputs@{
     nixpkgs,
     chaotic,
     executor,
@@ -32,13 +32,13 @@
     nixpkgs-stable,
     sops-nix,
     stylix,
-    # , nixos-generators
-    # , nixpkgs-wayland
-    # , nvfetcher
-    # , schizofox
-    # , simple-osd-daemons
+    nixos-generators,
+    nixpkgs-wayland,
+    nvfetcher,
+    schizofox,
+    simple-osd-daemons,
     ...
-  } @ inputs:
+  }:
     with rec {
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
