@@ -201,7 +201,6 @@ local servers = {
     settings = {omnisharp = {useGlobalMono = "always"}},
     cmd = {'omnisharp', "-l", "Error", "--languageserver", "--hostPID", tostring(vim.fn.getpid())}
   },
-  pyright = {settings = {python = {formatting = {provider = 'yapf'}}}},
   rust_analyzer = {
     settings = {
       ["rust-analyzer"] = {
@@ -214,18 +213,6 @@ local servers = {
     }
   },
   stylelint_lsp = {cmd = {"stylelint"}}, -- not yet working, needs stylelint-lsp in nixpkgs upstream
-  -- lua_ls = {
-  --   cmd = {'lua-language-server'},
-  --   settings = {
-  --     Lua = {
-  --       diagnostics = {globals = {'vim'}},
-  --       runtime = {version = 'LuaJIT', path = vim.split(package.path, ';')},
-  --       workspace = {
-  --         library = {[vim.fn.expand("$VIMRUNTIME/lua")] = true, [vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true}
-  --       }
-  --     }
-  --   }
-  -- },
   svelte = {},
   taplo = {},
   texlab = {
