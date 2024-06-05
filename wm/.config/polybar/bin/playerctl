@@ -5,62 +5,55 @@ import datetime
 import time
 from unicodedata import east_asian_width
 
-global current_player, players
-
-# Config options
-# (int) : Length of media info string. If length of string exceedes this value, the text will scroll. Default value is 20
-message_display_len = 60
-# (int) : Font index of polybar. this value should be 1 more than the font value specified in polybar config.
-font_index = 1
-# (float) : Update speed of the text in seconds.
-update_delay = 0.3
-# (list) : list of chars containing previous, play, pause, next glyphs for media controls in respective order
-control_chars = ['','','','']
-# (dict) : dict of char icons to display as prefix.
-# If player name is available as key, then use the corressponding icon,
-# else default key value.
-# example:
+global players, message, last_player_name
+message_display_len = 60 # (int) : Length of media info string. If length of string exceedes this value, the text will scroll. Default value is 20
+font_index = 1 # (int) : Font index of polybar. this value should be 1 more than the font value specified in polybar config.
+update_delay = 0.3 # (float) : Update speed of the text in seconds.
 display_player_prefix = {
+    # dict of char icons to display as prefix.
     "default":  '',
     "firefox":  '',
     "mpd": '%{T4} %{T-}',
     "playerctld": '%{T4} %{T-}',
     "spotify":  '',
 }
-
 # (list) : list of metadata fields based on mpris sepecification.
 # For more details/ field names, refer [mpris sepecification](https://www.freedesktop.org/wiki/Specifications/mpris-spec/metadata/)
-metadata_fields = ["xesam:title", "xesam:artist"]
-# (char) : separator for metadata fields
-metadata_separator = "-"
-# (bool) : Hide text when no player is available? True disables the output for no players.
-hide_output = False
-
-current_player = None
-player_names = None
-players = None
-message = None
-display_text, display_prefix, display_suffix  = "", "", ""
-last_player_name = None
-
+metadata_fields = [
+    "xesam:title",
+    "xesam:artist"
+]
+metadata_separator = "-" # (char) : separator for metadata fields
+hide_output = True # (bool) : Hide text when no player is available? True disables the output for no players.
+players, message, last_player_name = None, None, None
+display_text, display_suffix  = "", ""
 session_bus = dbus.SessionBus()
 
 class NowPlaying():
+    def __init__(self):
+        self.display_prefix = ""
+        self.player_names = []
+        self.current_player = 0
+
     def get_name(self, player_name):
-        if player_name not in player_names:
+        if player_name not in self.player_names:
             return
         name = ".".join(player_name.split(".")[3:])
         return name
     
     def get_name_by_index(self, index):
-        if index >= len(player_names):
+        if index >= len(self.player_names):
             return
-        return self.get_name(player_names[index])
+        return self.get_name(self.player_names[index])
     
     def get_status(self, player):
         status = ""
         try:
-            status = player.Get('org.mpris.MediaPlayer2.Player', 'PlaybackStatus', dbus_interface='org.freedesktop.DBus.Properties')
+            status = player.Get(
+                'org.mpris.MediaPlayer2.Player',
+                'PlaybackStatus',
+                dbus_interface='org.freedesktop.DBus.Properties'
+            )
         except Exception as _:
             pass
         return status
@@ -68,7 +61,11 @@ class NowPlaying():
     def get_position(self, player):
         status = ""
         try:
-            status = player.Get('org.mpris.MediaPlayer2.Player', 'Position', dbus_interface='org.freedesktop.DBus.Properties')
+            status = player.Get(
+                'org.mpris.MediaPlayer2.Player',
+                'Position',
+                dbus_interface='org.freedesktop.DBus.Properties'
+            )
         except Exception as _:
             pass
         return status
@@ -76,53 +73,57 @@ class NowPlaying():
     def get_metadata(self, player):
         metadata = {}
         try:
-            metadata = player.Get('org.mpris.MediaPlayer2.Player', 'Metadata', dbus_interface='org.freedesktop.DBus.Properties')
+            metadata = player.Get(
+                'org.mpris.MediaPlayer2.Player',
+                'Metadata',
+                dbus_interface='org.freedesktop.DBus.Properties'
+            )
         except Exception as _:
             pass
         return metadata
     
     def update_prefix_suffix(self, player_name="", status=""):
-        global display_prefix, display_suffix, status_paused
+        global display_suffix, paused
         suffix = ""
         if status == "Playing":
-            status_paused = False
+            paused = False
         else:
-            status_paused = True
+            paused = True
         display_suffix = suffix
         for key in display_player_prefix.keys():
             if key in player_name:
-                display_prefix = display_player_prefix[key]
+                self.display_prefix = display_player_prefix[key]
                 break
         else:
-            display_prefix = display_player_prefix["default"]
+            self.display_prefix = display_player_prefix["default"]
     
     def update_players(self):
-        global player_names, players, session_bus, current_player, last_player_name
-        player_names = [service  for service in session_bus.list_names() if service.startswith('org.mpris.MediaPlayer2.')]
-        players = [session_bus.get_object(service, '/org/mpris/MediaPlayer2') for service in player_names]
-        if last_player_name != self.get_name(current_player):
-            for index, player in enumerate(player_names):
+        global players, session_bus, last_player_name
+        self.player_names = [service  for service in session_bus.list_names() if service.startswith('org.mpris.MediaPlayer2.')]
+        players = [session_bus.get_object(service, '/org/mpris/MediaPlayer2') for service in self.player_names]
+        if last_player_name != self.get_name(self.current_player):
+            for index, player in enumerate(self.player_names):
                 if self.get_name(player) == last_player_name:
-                    current_player = index
+                    self.current_player = index
     
     def handle_event(self):
         global current_player, players, last_player_name
-        update_players()
+        self.update_players()
         if len(players) == 0:
             return
-        current_player += 1
-        current_player %= len(players)
-        last_player_name = get_name_by_index(current_player)
+        self.current_player += 1
+        self.current_player %= len(players)
+        last_player_name = get_name_by_index(self.current_player)
     
     def update_message(self):
-        global players, current_player,player_names, message, display_text, message_display_len, display_suffix, last_player_name
+        global players, message, display_text, message_display_len, display_suffix, last_player_name
         if len(players) == 0:
             tmp_message = "No player available"
-            update_prefix_suffix()
+            self.update_prefix_suffix()
         else:
-            name = self.get_name_by_index(current_player)
-            status = self.get_status(players[current_player])
-            metadata_obj = self.get_metadata(players[current_player])
+            name = self.get_name_by_index(self.current_player)
+            status = self.get_status(players[self.current_player])
+            metadata_obj = self.get_metadata(players[self.current_player])
             metadata_string_list = []
             for field in metadata_fields:
                 result = metadata_obj.get(field)
@@ -145,8 +146,8 @@ class NowPlaying():
             display_text = message
     
     def scroll(self):
-        global display_text, message_display_len, status_paused
-        if not status_paused:
+        global display_text, message_display_len, paused
+        if not paused:
             if self.visual_len(display_text) > message_display_len:
                 display_text = display_text[1:] + display_text[0]
             elif self.visual_len(display_text) < message_display_len:
@@ -180,8 +181,10 @@ class NowPlaying():
             altered_text += ' ' * (visual_desired_length - visual_length)
         return altered_text
     
-    def pretty_print_position(self):
-        position = self.get_position(players[current_player])
+    def position(self):
+        position = self.get_position(
+            players[self.current_player]
+        )
         if not position:
             return ""
         seconds = float(position) / 1000000
@@ -193,18 +196,18 @@ class NowPlaying():
                 return delta
     
     def print_text(self):
-        global display_text, message_display_len, players, player_names, display_prefix, display_suffix
+        global display_text, message_display_len, players, display_suffix
         if hide_output and len(players)==0:
             print("", flush = True)
             return
         self.scroll()
-        print(display_prefix + " " +
-            "%%{T%d}" % (font_index) +
-            self.make_visual_len(display_text, message_display_len).rstrip() + " " + self.pretty_print_position() +
-            "%{T-}" + display_suffix, flush=True)
+        print(self.display_prefix + " " + f"%{{T{font_index}}}" +
+            self.make_visual_len(display_text, message_display_len).rstrip() + " " + self.position() +
+            "%{T-}" + display_suffix,
+            flush=True
+        )
 
 if __name__ == '__main__':
-    current_player = 0
     n = NowPlaying()
     signal.signal(signal.SIGUSR1, n.handle_event)
     n.update_players()
