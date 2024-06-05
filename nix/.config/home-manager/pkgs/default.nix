@@ -34,6 +34,7 @@
     ./images
     ./mail.nix
     ./media
+    ./mail
     ./neovim.nix
     ./pass.nix
     ./python
