@@ -1,13 +1,13 @@
-#!/usr/bin/env -S python -u
+#!/usr/bin/env -S python
 import dbus
 import signal
+import datetime
 import time
 from unicodedata import east_asian_width
 
 # Config options
-
 # (int) : Length of media info string. If length of string exceedes this value, the text will scroll. Default value is 20
-message_display_len = 40
+message_display_len = 44
 # (int) : Font index of polybar. this value should be 1 more than the font value specified in polybar config.
 font_index = 1
 # (float) : Update speed of the text in seconds.
@@ -22,6 +22,7 @@ display_player_prefix = {
     "spotify":  '',
     "firefox":  '',
     "mpd": '%{T4} %{T-}',
+    "playerctld": '%{T4} %{T-}',
     "default":  '',
 }
 
@@ -61,6 +62,14 @@ def get_status(player):
         pass
     return status
 
+def get_position(player):
+    status = ""
+    try:
+        status = player.Get('org.mpris.MediaPlayer2.Player', 'Position', dbus_interface='org.freedesktop.DBus.Properties')
+    except Exception as _:
+        pass
+    return status
+
 def get_metadata(player):
     metadata = {}
     try:
@@ -93,7 +102,7 @@ def update_players():
             if get_name(player) == last_player_name:
                 current_player = index
 
-def handle_event(*args):
+def handle_event():
     global current_player, players, last_player_name
     update_players()
     if len(players) == 0:
@@ -115,14 +124,15 @@ def update_message():
         for field in metadata_fields:
             result = metadata_obj.get(field)
             if type(result) == dbus.Array:
-                result = result[0]
+                if result and result[0] is not None:
+                    result = result[0]
             if not result:
-                result = "No "+field.split(":")[1]
+                result = ""
             metadata_string_list.append(str(result))
         metadata_string = (" "+metadata_separator+" ").join(metadata_string_list)
         if visual_len(metadata_string) > message_display_len:
-            metadata_string = " " + metadata_string + " |"
-        update_prefix_suffix(name,status)
+            metadata_string = " " + metadata_string
+        update_prefix_suffix(name, status)
         tmp_message = ""
         if metadata_string:
             tmp_message += str(metadata_string)
@@ -167,6 +177,19 @@ def make_visual_len(text, visual_desired_length):
         altered_text += ' ' * (visual_desired_length - visual_length)
     return altered_text
 
+def pretty_print_position():
+    position = get_position(players[current_player])
+    if not position:
+        return ""
+    seconds = float(position) / 1000000
+    if seconds is not None and seconds:
+        delta = str(datetime.timedelta(seconds=seconds))
+        if delta[0:2] == '0:':
+            return delta[3:]
+        else:
+            return delta
+
+
 def print_text():
     global display_text, message_display_len, players, player_names, display_prefix, display_suffix
     if hide_output and len(players)==0:
@@ -175,7 +198,7 @@ def print_text():
     scroll()
     print(display_prefix + " " +
         "%%{T%d}" % (font_index) +
-        make_visual_len(display_text, message_display_len) +
+        make_visual_len(display_text, message_display_len).rstrip() + " " + pretty_print_position() +
         "%{T-}" + display_suffix, flush=True)
 
 def main():
