@@ -15,6 +15,7 @@
     (python3-lto.withPackages (ps:
       with ps; [
         colored
+        dbus # need for some scripts
         docopt
         i3ipc
         psutil
