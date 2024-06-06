@@ -256,11 +256,11 @@ class NowPlaying():
         ret = '0:00'
         if self.get_status() == 'Stopped':
             return ''
-        position = self.get_position(
+        pos = self.get_position(
             self.players[self.current_player]
         )
-        if position:
-            ret = NowPlaying.time_extract(position)
+        if pos:
+            ret = NowPlaying.time_extract(pos)
         end = NowPlaying.extract_field(self.get_meta(), 'mpris:length')
         if end is not None and end:
             end = NowPlaying.time_extract(end)
