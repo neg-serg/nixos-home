@@ -68,8 +68,10 @@ class NowPlaying():
             return ""
         return self.get_name(self.player_names[index])
 
-    def get_status(self, player):
+    def get_status(self, player=None):
         status = ""
+        if player is None:
+            player = self.players[self.current_player]
         try:
             status = player.Get(
                 'org.mpris.MediaPlayer2.Player',
@@ -141,27 +143,33 @@ class NowPlaying():
         self.current_player %= len(self.players)
         self.last_player_name = self.get_name_by_index(self.current_player)
 
+    @staticmethod
+    def extract_field(metadata_obj, field):
+        result = metadata_obj.get(field)
+        if type(result) == dbus.Array:
+            if result and result[0] is not None:
+                result = result[0]
+        if not result:
+            result = ""
+        return result
+
+    def get_meta(self):
+        return self.get_metadata(self.players[self.current_player])
+
     def update_message(self):
         if len(self.players) == 0:
             tmp_message = "No player available"
             self.update_prefix()
         else:
             name = self.get_name_by_index(self.current_player)
-            status = self.get_status(self.players[self.current_player])
-            metadata_obj = self.get_metadata(self.players[self.current_player])
             metadata_string_list = []
             for field in NowPlaying.metadata_fields:
-                result = metadata_obj.get(field)
-                if type(result) == dbus.Array:
-                    if result and result[0] is not None:
-                        result = result[0]
-                if not result:
-                    result = ""
+                result = NowPlaying.extract_field(self.get_meta(), field)
                 metadata_string_list.insert(0, str(result))
             metadata_string = (" " + NowPlaying.metadata_separator + " ").join(metadata_string_list)
             if self.visual_len(metadata_string) > NowPlaying.message_display_len:
                 metadata_string = " " + metadata_string
-            self.update_prefix(name, status)
+            self.update_prefix(name, self.get_status())
             tmp_message = ""
             if metadata_string:
                 tmp_message += str(metadata_string)
@@ -176,6 +184,8 @@ class NowPlaying():
                 self.display_text = self.display_text[1:] + self.display_text[0]
             elif self.visual_len(self.display_text) < NowPlaying.message_display_len:
                 self.display_text += " "*(NowPlaying.message_display_len - len(self.display_text))
+        else:
+            self.display_text = ""
 
     def visual_len(self, text):
         visual_length = 0
