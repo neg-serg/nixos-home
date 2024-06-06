@@ -102,17 +102,22 @@ class NowPlaying():
 
     def update_players(self):
         self.player_names = [
-            service for service in self.list_names()
+            service for service in getattr(self.session_bus, 'list_names')()
             if service.startswith('org.mpris.MediaPlayer2.')
         ]
-        self.players = [self.session_bus.get_object(service, '/org/mpris/MediaPlayer2') for service in self.player_names]
+        self.players = [
+            self.session_bus.get_object(
+                service,
+                '/org/mpris/MediaPlayer2'
+            )
+            for service in self.player_names
+        ]
         if self.last_player_name != self.get_name(self.current_player):
             for index, player in enumerate(self.player_names):
                 if self.get_name(player) == self.last_player_name:
                     self.current_player = index
 
-    def handle_event(self):
-        global current_player, players
+    def handle_event(self, _, __):
         self.update_players()
         if len(self.players) == 0:
             return
@@ -136,7 +141,7 @@ class NowPlaying():
                         result = result[0]
                 if not result:
                     result = ""
-                metadata_string_list.append(str(result))
+                metadata_string_list.insert(0, str(result))
             metadata_string = (" " + NowPlaying.metadata_separator + " ").join(metadata_string_list)
             if self.visual_len(metadata_string) > NowPlaying.message_display_len:
                 metadata_string = " " + metadata_string
@@ -184,7 +189,7 @@ class NowPlaying():
             altered_text += ' ' * (visual_desired_length - visual_length)
         return altered_text
 
-    def position(self):
+    def position(self) -> str:
         position = self.get_position(
             self.players[self.current_player]
         )
@@ -197,6 +202,7 @@ class NowPlaying():
                 return delta[3:]
             else:
                 return delta
+        return ""
 
     def print_text(self):
         global display_text, players, display_suffix
@@ -204,11 +210,16 @@ class NowPlaying():
             print("", flush = True)
             return
         self.scroll()
+        metadata_info = self.make_visual_len(
+            self.display_text, 
+            NowPlaying.message_display_len
+        ).rstrip()
+        set_font = f"%{{T{NowPlaying.font_index}}}"
         print(
             self.display_prefix
             + " "
-            + f"%{{T{NowPlaying.font_index}}}"
-            + self.make_visual_len(self.display_text, NowPlaying.message_display_len).rstrip()
+            + set_font
+            + metadata_info
             + " " + self.position() +
             "%{T-}" + self.display_suffix
             , flush=True
@@ -216,7 +227,10 @@ class NowPlaying():
 
 if __name__ == '__main__':
     n = NowPlaying()
-    signal.signal(signal.SIGUSR1, n.handle_event)
+    signal.signal(
+        signal.SIGUSR1,
+        n.handle_event
+    )
     n.update_players()
     while True:
         time.sleep(NowPlaying.update_delay)
