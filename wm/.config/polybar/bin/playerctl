@@ -94,7 +94,7 @@ class NowPlaying():
             pass
         return status
 
-    def get_metadata(self, player):
+    def metadata(self, player):
         metadata = {}
         try:
             metadata = player.Get(
@@ -154,7 +154,7 @@ class NowPlaying():
         return result
 
     def get_meta(self):
-        return self.get_metadata(self.players[self.current_player])
+        return self.metadata(self.players[self.current_player])
 
     def update_message(self):
         if len(self.players) == 0:
@@ -215,20 +215,33 @@ class NowPlaying():
             altered_text += ' ' * (visual_desired_length - visual_length)
         return altered_text
 
+    @staticmethod
+    def time_extract(t) -> str:
+        ret = ''
+        seconds = float(t) / 1000000
+        if seconds is not None and seconds:
+            ret = str(datetime.timedelta(seconds=seconds))
+            if ret[0:2] == '0:':
+                ret = ret[3:]
+        return ret
+
+    @staticmethod
+    def pos_delim() -> str:
+        return NowPlaying.colorize('/')
+
     def position(self) -> str:
+        ret = ''
         position = self.get_position(
             self.players[self.current_player]
         )
         if not position:
-            return ""
-        seconds = float(position) / 1000000
-        if seconds is not None and seconds:
-            delta = str(datetime.timedelta(seconds=seconds))
-            if delta[0:2] == '0:':
-                return delta[3:]
-            else:
-                return delta
-        return ""
+            return ''
+        ret = NowPlaying.time_extract(position)
+        end = NowPlaying.extract_field(self.get_meta(), 'mpris:length')
+        if end is not None and end:
+            end = NowPlaying.time_extract(end)
+            ret = f'{ret}{NowPlaying.pos_delim()}{end}'
+        return ret
 
     @staticmethod
     def colorize(s, color="#395573") -> str:
