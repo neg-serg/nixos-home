@@ -28,7 +28,7 @@ from unicodedata import east_asian_width
 class NowPlaying():
     font_index = 1 # (int) : Font index of polybar. this value should be 1 more than the font value specified in polybar config.
     message_display_len = 60 # (int) : Length of media info string. If length of string exceedes this value, the text will scroll. Default value is 20
-    update_delay = 0.3 # (float) : Update speed of the text in seconds.
+    update_delay = 0.1 # (float) : Update speed of the text in seconds.
     display_player_prefix = {
         # dict of char icons to display as prefix.
         "default":  '',
@@ -57,6 +57,23 @@ class NowPlaying():
         self.display_text = ""
         self.paused = None
 
+    def make_output(self):
+        self.update_players()
+        self.update_message()
+        self.print_text()
+
+    @staticmethod
+    def pos_delim() -> str:
+        return NowPlaying.colorize('/')
+
+    @staticmethod
+    def colorize(s, color="#395573") -> str:
+        return f"%{{F{color}}}{s}%{{F-}}"
+
+    @staticmethod
+    def smallfont(s) -> str:
+        return f"%{{T5}}{s}%{{T-}}"
+
     def get_name(self, player_name) -> str:
         if player_name not in self.player_names:
             return ""
@@ -83,16 +100,16 @@ class NowPlaying():
         return status
 
     def get_position(self, player):
-        status = ""
+        ret = ""
         try:
-            status = player.Get(
+            ret = player.Get(
                 'org.mpris.MediaPlayer2.Player',
                 'Position',
                 dbus_interface='org.freedesktop.DBus.Properties'
             )
         except Exception as _:
             pass
-        return status
+        return ret
 
     def metadata(self, player):
         metadata = {}
@@ -229,35 +246,26 @@ class NowPlaying():
         seconds = float(t) / 1000000
         if seconds is not None and seconds:
             ret = str(datetime.timedelta(seconds=seconds))
-            if ret[0:2] == '0:':
-                ret = ret[3:]
+            if ret.startswith('0:'):
+                ret = ret[2:]
+            if ret.startswith('0'):
+                ret = ret[1:]
         return ret
 
-    @staticmethod
-    def pos_delim() -> str:
-        return NowPlaying.colorize('/')
-
     def position(self) -> str:
-        ret = ''
+        ret = '0:00'
+        if self.get_status() == 'Stopped':
+            return ''
         position = self.get_position(
             self.players[self.current_player]
         )
-        if not position:
-            return ''
-        ret = NowPlaying.time_extract(position)
+        if position:
+            ret = NowPlaying.time_extract(position)
         end = NowPlaying.extract_field(self.get_meta(), 'mpris:length')
         if end is not None and end:
             end = NowPlaying.time_extract(end)
             ret = f'{ret}{NowPlaying.pos_delim()}{end}'
         return ret
-
-    @staticmethod
-    def colorize(s, color="#395573") -> str:
-        return f"%{{F{color}}}{s}%{{F-}}"
-
-    @staticmethod
-    def smallfont(s) -> str:
-        return f"%{{T5}}{s}%{{T-}}"
 
     def print_text(self):
         if NowPlaying.hide_output and not len(self.players):
@@ -270,9 +278,7 @@ class NowPlaying():
         ).rstrip()
         set_font = f"%{{T{NowPlaying.font_index}}}"
         pref = NowPlaying.colorize(self.display_prefix)
-        pos = NowPlaying.smallfont(
-            self.position()
-        )
+        pos = NowPlaying.smallfont(self.position())
         print(
             f'{pref}%{{O5}}{set_font}{metadata_info} {pos}'
             , flush=True
@@ -287,6 +293,4 @@ if __name__ == '__main__':
     n.update_players()
     while True:
         time.sleep(NowPlaying.update_delay)
-        n.update_players()
-        n.update_message()
-        n.print_text()
+        n.make_output()
