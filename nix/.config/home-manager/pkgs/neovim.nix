@@ -10,10 +10,11 @@ with {
   dots = "${config.home.homeDirectory}/.dotfiles";
 }; {
   home.packages = with pkgs; [
-    master.neovim
+    master.neovim # neovim from master
     neovim-remote # nvr for neovim
     nodePackages.bash-language-server # bash lsp
     nodePackages.pyright # python lsp
+    ruff # python linter
     rust-analyzer # rust lsp
     stable.nil # nixos language server
   ];

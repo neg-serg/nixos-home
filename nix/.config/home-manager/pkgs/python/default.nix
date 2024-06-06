@@ -12,7 +12,6 @@
     };
   };
   home.packages = with pkgs; [
-    ruff # python linter
     (python3-lto.withPackages (ps:
       with ps; [
         colored
