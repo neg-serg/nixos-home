@@ -149,9 +149,12 @@ local servers = {
   bashls = {},
   clangd = {
     cmd = {
-      'clangd', -- '--background-index',
-      '--clang-tidy', '--completion-style=bundled', '--header-insertion=iwyu', '--suggest-missing-includes',
-      '--cross-file-rename'
+      'clangd' -- '--background-index',
+      , '--clang-tidy'
+      , '--completion-style=bundled'
+      , '--header-insertion=iwyu'
+      , '--suggest-missing-includes'
+      , '--cross-file-rename'
     },
     handlers = lsp_status.extensions.clangd.setup(),
     init_options = {
@@ -255,7 +258,11 @@ for server, config in pairs(servers) do
     update_in_insert = true
   })
   local cmp_capabilities = require('cmp_nvim_lsp').default_capabilities()
-  config.capabilities = vim.tbl_deep_extend('keep', config.capabilities or {}, lsp_status.capabilities,
-                                            cmp_capabilities, snippet_capabilities)
+  config.capabilities = vim.tbl_deep_extend(
+    'keep',
+    config.capabilities or {},
+    lsp_status.capabilities,
+    cmp_capabilities,
+    snippet_capabilities)
   lspconfig[server].setup(config)
 end
