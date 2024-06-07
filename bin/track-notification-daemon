@@ -21,7 +21,7 @@ def compare_images() -> str:
 def on_track_change(player, data):
     cover=False
     retry=0
-    retry_count=25
+    retry_count=5
     while True:
         if data is None or not data:
             log.error('No data')
@@ -35,8 +35,8 @@ def on_track_change(player, data):
             log.error(f'No cover :: {data}')
             retry+=1
             if retry >= retry_count:
-                sys.exit()
-            time.sleep(5)
+                return
+            time.sleep(1)
             continue
         if cover:
             try:
@@ -47,6 +47,7 @@ def on_track_change(player, data):
                 md5sums.append(cover_sum.split()[0])
             except subprocess.CalledProcessError:
                 log.error('Cannot do mpd5sum for file')
+                return
             if player:
                 import os
                 track_notify=os.path.expanduser('~/bin/track-notify')
