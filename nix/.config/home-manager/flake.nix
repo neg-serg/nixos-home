@@ -7,36 +7,50 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    mpd-mpris.url = "github:natsukagami/mpd-mpris";
     negwm.url = "github:neg-serg/negwm";
+    nixos-generators = {
+      url = "github:nix-community/nixos-generators";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nixpkgs-master.url = "github:nixos/nixpkgs/master";
     nixpkgs-oldstable.url = "github:nixos/nixpkgs/nixos-23.05";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-23.11";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-wayland = {
+      url = "github:colemickens/nixpkgs-wayland";
+      flake = false;
+    };
+    nvfetcher = {
+      url = "github:berberman/nvfetcher";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    schizofox = {
+      url = "github:schizofox/schizofox";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    simple-osd-daemons.url = "github:balsoft/simple-osd-daemons";
     sops-nix.url = "github:Mic92/sops-nix";
     stylix.url = "github:danth/stylix";
-    nixos-generators = { url = "github:nix-community/nixos-generators"; inputs.nixpkgs.follows = "nixpkgs"; };
-    nixpkgs-wayland = { url = "github:colemickens/nixpkgs-wayland"; flake = false; };
-    nvfetcher= {url = "github:berberman/nvfetcher"; inputs.nixpkgs.follows = "nixpkgs"; };
-    schizofox = { url = "github:schizofox/schizofox"; inputs.nixpkgs.follows = "nixpkgs"; };
-    simple-osd-daemons.url = "github:balsoft/simple-osd-daemons";
   };
 
-  outputs = inputs@{
+  outputs = inputs @ {
     nixpkgs,
     chaotic,
     executor,
     home-manager,
+    mpd-mpris,
     negwm,
+    nixos-generators,
     nixpkgs-master,
     nixpkgs-oldstable,
     nixpkgs-stable,
-    sops-nix,
-    stylix,
-    nixos-generators,
     nixpkgs-wayland,
     nvfetcher,
     schizofox,
     simple-osd-daemons,
+    sops-nix,
+    stylix,
     ...
   }:
     with rec {

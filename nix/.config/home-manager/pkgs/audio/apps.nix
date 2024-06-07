@@ -5,6 +5,7 @@
   master,
   ...
 }: {
+  services.mpd-mpris.enable = true;
   home.packages = with pkgs; [
     ape # monkey audio codec
     cdparanoia # cdrip / cdrecord
@@ -45,8 +46,7 @@
     cover-notify = {
       Unit = {
         Description = "Music track notification with cover";
-        After = ["network.target" "sound.target" "playerctld.service" "mpd.service" "mpDris.service"];
-        BindsTo = "mpDris.service";
+        After = ["network.target" "sound.target" "playerctld.service" "mpd.service"];
         StartLimitIntervalSec = "0";
       };
       Service = {
@@ -54,20 +54,6 @@
         Restart = "always";
         RestartSec = "3";
       };
-    };
-
-    mpDris = {
-      Unit = {
-        Description = "mpDris2 - Music Player Daemon D-Bus bridge";
-        After = ["playerctld.service" "network.target" "sound.target" "mpd.service"];
-        PartOf = ["mpd.socket" "mpd.service"];
-      };
-      Service = {
-        Type = "simple";
-        Restart = "on-failure";
-        ExecStart = "${pkgs.writeShellScriptBin "delay-mpdris2" "${pkgs.coreutils}/bin/sleep 1 && ${pkgs.mpdris2}/bin/mpDris2"}/bin/delay-mpdris2";
-      };
-      Install = {WantedBy = ["default.target"];};
     };
 
     mpd = {
