@@ -1,7 +1,7 @@
 -- ┌───────────────────────────────────────────────────────────────────────────────────┐
--- │ █▓▒░ hiphish/rainbow-delimiters.nvim                                              │
+-- │ █▓▒░ HiPhish/rainbow-delimiters.nvim                                              │
 -- └───────────────────────────────────────────────────────────────────────────────────┘
-return {'hiphish/rainbow-delimiters.nvim', -- rainbow parenthesis
+return {'HiPhish/rainbow-delimiters.nvim', -- rainbow parenthesis
     config=function()
         local rainbow_delimiters=require'rainbow-delimiters'
         vim.g.rainbow_delimiters={
@@ -14,13 +14,13 @@ return {'hiphish/rainbow-delimiters.nvim', -- rainbow parenthesis
                 lua='rainbow-blocks',
             },
             highlight={
-                'TSRainbowRed',
-                'TSRainbowYellow',
-                'TSRainbowBlue',
-                'TSRainbowOrange',
-                'TSRainbowGreen',
-                'TSRainbowViolet',
-                'TSRainbowCyan',
+                'RainbowDelimiterRed',
+                'RainbowDelimiterYellow',
+                'RainbowDelimiterBlue',
+                'RainbowDelimiterOrange',
+                'RainbowDelimiterGreen',
+                'RainbowDelimiterViolet',
+                'RainbowDelimiterCyan',
             },
         }
     end
