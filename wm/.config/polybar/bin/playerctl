@@ -244,7 +244,7 @@ class NowPlaying():
     @staticmethod
     def time_extract(t) -> str:
         ret = ''
-        seconds = float(t) / 1000000
+        seconds = int(float(t) / 1000000)
         if seconds is not None and seconds:
             ret = str(datetime.timedelta(seconds=seconds))
             if ret.startswith('0:'):
