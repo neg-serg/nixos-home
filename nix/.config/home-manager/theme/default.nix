@@ -117,12 +117,10 @@ with {
       };
       monospace = {
         name = "Iosevka";
-        package = (
-          pkgs.iosevka.override {
-            set = "neg";
-            privateBuildPlan = builtins.readFile ../fonts/iosevka-neg.toml;
-          }
-        );
+        package = pkgs.iosevka.override {
+          set = "neg";
+          privateBuildPlan = builtins.readFile ../fonts/iosevka-neg.toml;
+        };
       };
       sizes = {
         applications = 10;
