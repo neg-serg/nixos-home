@@ -45,7 +45,7 @@ set $scratchpad-teardrop [instance="teardrop"]
 set $scratchpad-torrment [instance="torrment"]
 set $scratchpad-transients [instance="Places" window_role="^(GtkFileChooserDialog|gimp-file-open)$"]
 for_window $scratchpad-discord floating enable, move absolute position 1734 550, resize set 1880 950
-for_window $scratchpad-im floating enable, move absolute position 2351 1, resize set 1088 1406
+for_window $scratchpad-im floating enable, move absolute position 2359 1, resize set 1088 1390
 for_window $scratchpad-ncmpcpp floating enable, move absolute position 674 803, resize set 2016 552
 for_window $scratchpad-neomutt floating enable, move absolute position 0 0, resize set 3440 1397
 for_window $scratchpad-mixer floating enable, move absolute position 1828 804, resize set 1612 590
