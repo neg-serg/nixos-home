@@ -1,4 +1,4 @@
-{...}: {
+{
   systemd.user.sessionVariables = {
     GDK_BACKEND = "x11";
     XDG_CURRENT_DESKTOP = "i3";
