@@ -176,6 +176,7 @@ class NowPlaying():
         return self.metadata(self.players[self.current_player])
 
     def update_message(self):
+        tmp_message = ""
         if len(self.players) == 0:
             self.message = "No player available"
             self.update_prefix()
