@@ -28,7 +28,7 @@ from unicodedata import east_asian_width
 class NowPlaying():
     font_index = 1 # (int) : Font index of polybar. this value should be 1 more than the font value specified in polybar config.
     message_display_len = 140 # (int) : Length of media info string. If length of string exceedes this value, the text will scroll.
-    update_delay = 0.1 # (float) : Update speed of the text in seconds.
+    update_delay = 0.3 # (float) : Update speed of the text in seconds.
     display_player_prefix = {
         # dict of char icons to display as prefix.
         "default":  '',
