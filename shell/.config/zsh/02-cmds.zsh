@@ -193,6 +193,7 @@ if [[ -e /etc/NIXOS ]]; then
         alias nrb='sudo nixos-rebuild'
     }
     foobar(){nix run github:emmanuelrosa/erosanix#foobar2000}
+    flake-checker(){nix run github:DeterminateSystems/flake-checker}
     kernel-shell(){
         nix-shell -E 'with import <nixpkgs> {};
             (builtins.getFlake "github:chaotic-cx/nyx/nyxpkgs-unstable").packages.x86_64-linux.linuxPackages_cachyos.kernel.overrideAttrs
