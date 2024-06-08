@@ -13,6 +13,8 @@ with {
     neovim-remote # nvr for neovim
     nodePackages.bash-language-server # bash lsp
     nodePackages.pyright # python lsp
+    pylyzer # python type checker
+    ruff-lsp # pyton lsp
     ruff # python linter
     rust-analyzer # rust lsp
     stable.nil # nixos language server
