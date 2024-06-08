@@ -5,7 +5,6 @@
   master,
   ...
 }: {
-  services.mpd-mpris.enable = true;
   home.packages = with pkgs; [
     ape # monkey audio codec
     cdparanoia # cdrip / cdrecord
@@ -43,18 +42,32 @@
       Install = {WantedBy = ["default.target"];};
     };
 
+    mpd-mpris = {
+      Unit = {
+        BindsTo = ["mpd.service"];
+      };
+      Service = {
+        ExecStart = "${pkgs.mpd-mpris}/bin/mpd-mpris -no-instance";
+        Restart = "on-failure";
+        Type = "simple";
+        RestartSec = "5s";
+      };
+      Install = {WantedBy = ["default.target"];};
+    };
+
     cover-notify = {
       Unit = {
         Description = "Music track notification with cover";
-        After = ["network.target" "sound.target" "playerctld.service" "mpd.service"];
-        StartLimitIntervalSec = "0";
-        BindsTo = ["mpd-mpris.service"];
+        After = ["mpd.service"];
+        StartLimitIntervalSec = "1";
+        BindsTo = ["mpd.service"];
       };
       Service = {
         ExecStart = "${pkgs.cached-nix-shell}/bin/cached-nix-shell -p 'python3.withPackages (p: [p.pygobject3 p.systemd])' -p gobject-introspection -p playerctl -p zsh --run %h/bin/track-notification-daemon";
         Restart = "always";
         RestartSec = "3";
       };
+      Install = {WantedBy = ["default.target"];};
     };
 
     mpd = {
