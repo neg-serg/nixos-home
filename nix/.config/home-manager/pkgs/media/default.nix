@@ -40,7 +40,6 @@ with {
     playerctld = {
       Unit = {
         Description = "Keep track of media player activity";
-        After = ["network.target" "sound.target"];
       };
       Service = {
         Type = "oneshot";
