@@ -41,12 +41,13 @@ with {
       Unit = {
         Description = "Keep track of media player activity";
         After = ["network.target" "sound.target"];
+        BindsTo = ["mpd-mpris.service"];
       };
       Service = {
         Type = "forking";
         ExecStart = "${pkgs.playerctl}/bin/playerctld daemon";
-        RestartSec = "3";
-        StartLimitBurst = "0";
+        RestartSec = "1";
+        StartLimitBurst = "120";
       };
       Install = {WantedBy = ["default.target"];};
     };

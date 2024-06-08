@@ -48,6 +48,7 @@
         Description = "Music track notification with cover";
         After = ["network.target" "sound.target" "playerctld.service" "mpd.service"];
         StartLimitIntervalSec = "0";
+        BindsTo = ["mpd-mpris.service"];
       };
       Service = {
         ExecStart = "${pkgs.cached-nix-shell}/bin/cached-nix-shell -p 'python3.withPackages (p: [p.pygobject3 p.systemd])' -p gobject-introspection -p playerctl -p zsh --run %h/bin/track-notification-daemon";
