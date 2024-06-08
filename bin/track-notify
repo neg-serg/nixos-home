@@ -11,7 +11,6 @@ def fa(arg):
 
 def main():
     XDG_CONFIG_HOME = os.environ.get("XDG_CONFIG_HOME")
-    magic_pie='9174'
     with open(f'{XDG_CONFIG_HOME}/mpd/mpd.conf', 'r') as fp:
         lines = fp.readlines()
         for row in lines:
@@ -79,12 +78,13 @@ def main():
     song_info=f'{prefix["quality"]} {song_info}{bitrate}·{samplerate}K/{precision}·{channels}'.strip()
     info_lines.append(nr(song_info))
     output=""
-    for l in info_lines:
-        if l is not None and l:
-            output += l + '\n'
+    for line in info_lines:
+        if line is not None and line:
+            output += line + '\n'
     print(info_lines)
     output=f"\n{output}\n​"
-    subprocess.check_output(["dunstify", "-p", "-a", "mpd", "-h", "string:fgcolor:#17272D",
+    subprocess.check_output(
+        ["dunstify", "-p", "-a", "mpd", "-h", "string:fgcolor:#17272D",
         "-u", "normal", "-i", art, "", output, "-t", "4000"])
 
 main()
