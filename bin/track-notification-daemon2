@@ -1,0 +1,92 @@
+#!/usr/bin/env python
+import sys
+import subprocess
+import logging
+import time
+from systemd import journal
+
+def remove_prefix(text, prefix):
+    return text[text.startswith(prefix) and len(prefix):]
+
+# Not used now, I think there is no need in this, thx to mpDris2
+def compare_images() -> str:
+    from PIL import Image
+    from imagehash import dhash
+    img1,img2=Image.open(sys.argv[1]),Image.open(sys.argv[2])
+    if dhash(img1) == dhash(img2):
+        return 'fail'
+    else:
+        return 'ok'
+
+def on_track_change(player, data):
+    cover=False
+    retry=0
+    retry_count=5
+    while True:
+        if data is None or not data:
+            log.error('No data')
+            retry+=1
+            if retry >= retry_count:
+                return
+            continue
+        try:
+            cover=data['mpris:artUrl']
+        except:
+            log.error(f'No cover :: {data}')
+            retry+=1
+            if retry >= retry_count:
+                return
+            time.sleep(1)
+            continue
+        if cover:
+            try:
+                cover=remove_prefix(cover, 'file://')
+                cover_sum=subprocess.check_output(
+                    ["md5sum", cover]
+                ).decode("utf-8").strip()
+                md5sums.append(cover_sum.split()[0])
+            except subprocess.CalledProcessError:
+                log.error('Cannot do mpd5sum for file')
+                return
+            if player:
+                import os
+                track_notify=os.path.expanduser('~/bin/track-notify')
+                if not md5sums:
+                    log.error('No md5sums')
+                    retry+=1
+                    if retry == 10:
+                        return
+                    time.sleep(0.5)
+                    continue
+                elif len(md5sums) == 1:
+                    subprocess.Popen([track_notify, cover])
+                elif md5sums[-1] != md5sums[-2]:
+                    subprocess.Popen([track_notify, cover])
+                del md5sums[:-2]
+            else:
+                log.error('There is no player')
+                sys.exit()
+        else:
+            log.error('No cover')
+            retry+=1
+            if retry == retry_count:
+                sys.exit()
+            time.sleep(0.5)
+            continue
+
+while True:
+    log=logging.getLogger()
+    try:
+        log.addHandler(journal.JournalHandler())
+    except:
+        log.error('Cannot setup systemd log')
+
+    import gi
+    gi.require_version('Playerctl', '2.0')
+    from gi.repository import Playerctl, GLib
+
+    player=Playerctl.Player()
+    md5sums=[]
+
+    player.connect('metadata', on_track_change)
+    GLib.MainLoop().run()
