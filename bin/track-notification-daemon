@@ -9,6 +9,89 @@ import dbus.mainloop.glib
 def remove_prefix(text, prefix):
     return text[text.startswith(prefix) and len(prefix):]
 
+def nr(arg): 
+    return f"<span color='#b8c5d9'>{arg}</span>"
+
+def fa(arg): 
+    return f"<span color=\'{arg}\' font-family='Font Awesome 6 Pro'>"
+
+def mpd_music_dir() -> str:
+    XDG_CONFIG_HOME = os.environ.get("XDG_CONFIG_HOME")
+    mpd_music_dir = ""
+    with open(f'{XDG_CONFIG_HOME}/mpd/mpd.conf', 'r') as fp:
+        lines = fp.readlines()
+        for row in lines:
+            word = 'music_directory'
+            if row.find(word) != -1:
+                mpd_music_dir=row.split()[1].strip('\"')
+                if mpd_music_dir[0] == '~':
+                    mpd_music_dir = os.environ.get("HOME") + mpd_music_dir[1:]
+                break
+    return mpd_music_dir
+
+def track_notify(art):
+    if art is None or not art:
+        return
+
+    track_path=subprocess.check_output(["mpc", "current", "-f", f"{mpd_music_dir()}/%file%"]).decode().rstrip()
+    prefix={
+        "artist":         f"{fa('#004E4E')}  </span>",
+        "album":          f"{fa('#004E4E')}  </span>",
+        "label":          f"{fa('#004E4E')}  </span>",
+        "audio_quality":  f"{fa('#004E4E')}  </span>",
+        "genre":          f"{fa('#004E4E')}  </span>",
+        "quality":        f"{fa('#004E4E')}  </span>",
+        "year":           f"{fa('#004E4E')}  </span>",
+        "date":           f"{fa('#004E4E')}  </span>",
+    }
+
+    info_lines=[]
+    info={}
+    audio_quality={}
+
+    if not track_path:
+        return
+
+    track_metadata=subprocess.check_output(["sox", "--i", track_path]).decode().split('\n')
+    for t in track_metadata:
+        if '=' in t:
+            split=t.split('=')
+            split[0] = split[0].strip().lower()
+            info[split[0].lower()]=split[1]
+    for t in 'artist', 'album', 'label', 'genre', 'year', 'date':
+        if t in info.keys():
+            info_lines.append(nr(f"{prefix[t]} {info[t]}"))
+
+    for t in track_metadata:
+        if ':' in t:
+            split=t.split(':')
+            split[0] = split[0].strip().lower()
+            if split[0] not in {'comments', 'comment', 'input file', 'duration'}:
+                audio_quality[split[0]]=split[1].split(',')[0].strip()
+
+    song_info=""
+    encoding=audio_quality.get('sample encoding','')
+    channels=audio_quality.get('channels','')
+    bitrate=audio_quality.get('bit rate','')
+    samplerate=int(float(audio_quality.get('sample rate',''))/1000.)
+    precision=audio_quality.get('precision','')
+    if 'FLAC' in encoding:
+        song_info+='FLAC·'
+    if 'MPEG' in encoding:
+        song_info+='mpeg·'
+    if 'Direct Stream Digital' in encoding:
+        song_info+='DSD·'
+    song_info=f'{prefix["quality"]} {song_info}{bitrate}·{samplerate}K/{precision}·{channels}'.strip()
+    info_lines.append(nr(song_info))
+    output=""
+    for line in info_lines:
+        if line is not None and line:
+            output += line + '\n'
+    output=f"\n{output}\n​"
+    subprocess.check_output(
+        ["dunstify", "-p", "-a", "mpd", "-h", "string:fgcolor:#17272D",
+        "-u", "normal", "-i", art, "", output, "-t", "4000"])
+
 class TrackNotification():
     debug=False
     def __init__(self):
@@ -74,13 +157,12 @@ class TrackNotification():
             except subprocess.CalledProcessError:
                 log.error('Cannot do mpd5sum for file')
                 return
-            track_notify=os.path.expanduser('~/bin/track-notify')
             if not self.md5sums:
                 log.error('No md5sums')
             elif len(self.md5sums) == 1:
-                subprocess.Popen([track_notify, cover])
+                track_notify(cover)
             elif self.md5sums[-1] != self.md5sums[-2]:
-                subprocess.Popen([track_notify, cover])
+                track_notify(cover)
             del self.md5sums[:-2]
 
     def update_players(self):
