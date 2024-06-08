@@ -1,38 +1,88 @@
 #!/usr/bin/env python
-import time
+import os
+import subprocess
 import logging
+from gi.repository import GLib
 import dbus
 import dbus.mainloop.glib
-from gi.repository import GLib
 
 def remove_prefix(text, prefix):
     return text[text.startswith(prefix) and len(prefix):]
 
 class TrackNotification():
+    debug=False
     def __init__(self):
+        dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
         self.display_prefix = ""
         self.player = None
-        dbus.mainloop.glib.DBusGMainLoop(set_as_default = True)
         self.bus = dbus.SessionBus()
         self.update_players()
-        self.player.connect_to_signal("playingUriChanged", self.playing_song_changed)
-        print(self.player)
-        mainloop = GLib.MainLoop().run()
+        self.md5sums=[]
+        proxy=self.bus.get_object("org.mpris.MediaPlayer2.mpd", "/org/mpris/MediaPlayer2")
+        proxy.connect_to_signal("PropertiesChanged", self.playing_song_changed)
+        if TrackNotification.debug:
+            self.bus.add_signal_receiver(
+                self.catchall_signal_handler,
+                interface_keyword='dbus_interface',
+                dbus_interface="org.mpris.MediaPlayer2.Player",
+                member_keyword='member'
+            )
+        mainloop = GLib.MainLoop()
         mainloop.run()
-        # t.on_track_change()
-        # proxy = self.bus.get_object("org.gnome.Rhythmbox", "/org/gnome/Rhythmbox/Player")
-        # player = dbus.Interface(proxy, "org.gnome.Rhythmbox.Player")
-        # player.connect_to_signal("playingUriChanged", self.playing_song_changed)
-        
+
+    def prop(self, ret, prop_name):
+        try:
+            ret = self.player.Get(
+                'org.mpris.MediaPlayer2.Player',
+                prop_name,
+                dbus_interface='org.freedesktop.DBus.Properties'
+            )
+        except Exception as _:
+            pass
+        return ret
+
+    def metadata(self): return self.prop({}, 'Metadata')
+
+    def catchall_signal_handler(self, *args, **kwargs):
+        print ("Caught signal (in catchall handler) " + kwargs['dbus_interface'] + "." + kwargs['member'])
+        for arg in args:
+            print("        " + str(arg))
+
     def get_name(self, player_name, player_names) -> str:
         if player_name not in player_names:
             return ""
         name = ".".join(player_name.split(".")[3:])
         return name
 
-    def playing_song_changed(self):
-        print("HOOOOOOOOOOOOOOPOOOOOOOOOOOOE")
-    
+    def playing_song_changed(self, one, two, three):
+        print(one)
+        print(two)
+        print(three)
+        cover=False
+        data = self.metadata()
+        try:
+            cover=data['mpris:artUrl']
+        except Exception as _:
+            log.error(f'No cover :: {data}')
+        if cover:
+            try:
+                cover=remove_prefix(cover, 'file://')
+                cover_sum=subprocess.check_output(
+                    ["md5sum", cover]
+                ).decode("utf-8").strip()
+                self.md5sums.append(cover_sum.split()[0])
+            except subprocess.CalledProcessError:
+                log.error('Cannot do mpd5sum for file')
+                return
+            track_notify=os.path.expanduser('~/bin/track-notify')
+            if not self.md5sums:
+                log.error('No md5sums')
+            elif len(self.md5sums) == 1:
+                subprocess.Popen([track_notify, cover])
+            elif self.md5sums[-1] != self.md5sums[-2]:
+                subprocess.Popen([track_notify, cover])
+            del self.md5sums[:-2]
+
     def update_players(self):
         player_names = [
             service for service in getattr(self.bus, 'list_names')()
@@ -45,67 +95,6 @@ class TrackNotification():
         for index, player in enumerate(player_names):
             if self.get_name(player, player_names) == 'mpd':
                 self.player = players[index]
-    
-    def on_track_change(self):
-        print('shit')
-        time.sleep(5)
-        return
-    
-    # def on_track_change(player, data):
-    #     cover=False
-    #     retry=0
-    #     retry_count=5
-    #     while True:
-    #         if data is None or not data:
-    #             log.error('No data')
-    #             retry+=1
-    #             if retry >= retry_count:
-    #                 return
-    #             continue
-    #         try:
-    #             cover=data['mpris:artUrl']
-    #         except:
-    #             log.error(f'No cover :: {data}')
-    #             retry+=1
-    #             if retry >= retry_count:
-    #                 return
-    #             time.sleep(1)
-    #             continue
-    #         if cover:
-    #             try:
-    #                 cover=remove_prefix(cover, 'file://')
-    #                 cover_sum=subprocess.check_output(
-    #                     ["md5sum", cover]
-    #                 ).decode("utf-8").strip()
-    #                 md5sums.append(cover_sum.split()[0])
-    #             except subprocess.CalledProcessError:
-    #                 log.error('Cannot do mpd5sum for file')
-    #                 return
-    #             if player:
-    #                 track_notify=os.path.expanduser('~/bin/track-notify')
-    #                 if not md5sums:
-    #                     log.error('No md5sums')
-    #                     retry+=1
-    #                     if retry == 10:
-    #                         return
-    #                     time.sleep(0.5)
-    #                     continue
-    #                 elif len(md5sums) == 1:
-    #                     subprocess.Popen([track_notify, cover])
-    #                 elif md5sums[-1] != md5sums[-2]:
-    #                     subprocess.Popen([track_notify, cover])
-    #                 del md5sums[:-2]
-    #             else:
-    #                 log.error('There is no player')
-    #                 sys.exit()
-    #         else:
-    #             log.error('No cover')
-    #             retry+=1
-    #             if retry == retry_count:
-    #                 sys.exit()
-    #             time.sleep(0.5)
-    #             continue
 
-while True:
-    log=logging.getLogger()
-    t=TrackNotification()
+log=logging.getLogger()
+t=TrackNotification()
