@@ -51,7 +51,7 @@ for_window $scratchpad-neomutt floating enable, move absolute position 0 0, resi
 for_window $scratchpad-mixer floating enable, move absolute position 1828 804, resize set 1612 590
 for_window $scratchpad-teardrop floating enable, move absolute position 0 0, resize set 3440 866
 for_window $scratchpad-torrment floating enable, move absolute position 0 0, resize set 3440 866
-for_window $scratchpad-transients floating enable, move absolute position 685 621, resize set 1897 765
+for_window $scratchpad-transients floating enable, move absolute position 686 504, resize set 1896 890
 
 # :>> Config section workspaces
 set $term "︁ 𐌰:term"
