@@ -8,10 +8,11 @@ Usage:
 Suppoused to be used inside polybar for now.
 Config example:
 
-[module/mpd]
-type = custom/script
-exec = python -u $XDG_CONFIG_HOME/polybar/bin/mpd
-tail = true
+[module/playerctl]
+type=custom/script
+exec=$XDG_CONFIG_HOME/polybar/bin/playerctl
+click-right="kill -USR1 $(pgrep --oldest --parent %pid%)"
+tail=true
 
 Created by :: d093w1z (https://github.com/d093w1z/polybar-now-playing)
 Extended by :: Neg <serg.zorg@gmail.com>
@@ -26,13 +27,12 @@ import time
 
 class NowPlaying():
     font_index = 1 # (int) : Font index of polybar. this value should be 1 more than the font value specified in polybar config.
-    update_delay = 0.3 # (float) : Update speed of the text in seconds.
+    delay = 0.3 # (float) : Update speed of the text in seconds.
     display_player_prefix = {
         # dict of char icons to display as prefix.
         "default":  '',
         "firefox":  '',
         "mpd": '%{T4} %{T-}',
-        "playerctld": '%{T4} %{T-}',
         "spotify":  '',
     }
     # (list) : list of metadata fields based on mpris sepecification.
@@ -133,7 +133,7 @@ class NowPlaying():
                 if self.get_name(player) == self.last_player_name:
                     self.current_player = index
 
-    def shift_player(self, _, __):
+    def next_player(self, _, __):
         self.update_players()
         if len(self.players) == 0:
             return
@@ -155,8 +155,8 @@ class NowPlaying():
         return self.metadata(self.players[self.current_player])
 
     def update_message(self):
-        tmp_message = ""
-        if len(self.players) == 0:
+        tmp = ""
+        if not len(self.players):
             self.message = "No player available"
             self.update_prefix()
         else:
@@ -167,18 +167,17 @@ class NowPlaying():
                 self.update_prefix(status=status)
                 return
             name = self.get_name_by_index(self.current_player)
-            metadata_string_list = []
+            metadata = []
             for field in NowPlaying.metadata_fields:
                 result = NowPlaying.extract_field(self.get_meta(), field)
-                metadata_string_list.insert(0, str(result))
-            metadata_string = (" " + NowPlaying.metadata_separator + " ").join(metadata_string_list)
+                metadata.insert(0, str(result))
+            metadata_string = (f' {NowPlaying.metadata_separator} ').join(metadata)
             self.update_prefix(name, status)
-            tmp_message = ""
             if metadata_string:
-                tmp_message += str(metadata_string)
+                tmp += str(metadata_string)
             self.last_player_name = name
-        if self.message != tmp_message:
-            self.message = tmp_message
+        if self.message != tmp:
+            self.message = tmp
             self.display_text = self.message
 
     @staticmethod
@@ -223,8 +222,8 @@ class NowPlaying():
 
 if __name__ == '__main__':
     n = NowPlaying()
-    signal.signal(signal.SIGUSR1, n.shift_player)
+    signal.signal(signal.SIGUSR1, n.next_player)
     n.update_players()
     while True:
-        time.sleep(NowPlaying.update_delay)
+        time.sleep(NowPlaying.delay)
         n.make_output()
