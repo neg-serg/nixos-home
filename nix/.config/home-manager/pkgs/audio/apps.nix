@@ -1,5 +1,6 @@
 {
   pkgs,
+  lib,
   config,
   stable,
   master,
@@ -63,7 +64,13 @@
         BindsTo = ["mpd.service"];
       };
       Service = {
-        ExecStart = "${pkgs.cached-nix-shell}/bin/cached-nix-shell -p 'python3.withPackages (p: [p.pygobject3 p.systemd p.dbus-python])' -p gobject-introspection -p mpc-cli -p sox --run %h/bin/track-notification-daemon";
+        ExecStart = lib.strings.concatStringsSep " " ["${pkgs.cached-nix-shell}/bin/cached-nix-shell "
+            "-p 'python3.withPackages (p: [p.pygobject3 p.systemd p.dbus-python])' "
+            "-p gobject-introspection"
+            "-p mpc-cli"
+            "-p sox"
+            "-p dunst"
+            "--run %h/bin/track-notification-daemon"];
         Restart = "always";
         RestartSec = "3";
       };
