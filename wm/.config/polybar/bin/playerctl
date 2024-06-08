@@ -23,7 +23,6 @@ import dbus
 import signal
 import datetime
 import time
-from unicodedata import east_asian_width
 
 class NowPlaying():
     font_index = 1 # (int) : Font index of polybar. this value should be 1 more than the font value specified in polybar config.
@@ -84,43 +83,27 @@ class NowPlaying():
             return ""
         return self.get_name(self.player_names[index])
 
-    def get_status(self, player=None):
-        status = ""
+    def prop(self, ret, player, prop_name):
         if player is None:
             player = self.players[self.current_player]
         try:
-            status = player.Get(
-                'org.mpris.MediaPlayer2.Player',
-                'PlaybackStatus',
-                dbus_interface='org.freedesktop.DBus.Properties'
-            )
-        except Exception as _:
-            pass
-        return status
-
-    def get_position(self, player):
-        ret = ""
-        try:
             ret = player.Get(
                 'org.mpris.MediaPlayer2.Player',
-                'Position',
+                prop_name,
                 dbus_interface='org.freedesktop.DBus.Properties'
             )
         except Exception as _:
             pass
         return ret
 
+    def get_status(self, player=None):
+        return self.prop("", player, 'PlaybackStatus')
+
+    def get_position(self, player):
+        return self.prop("", player, 'Position')
+
     def metadata(self, player):
-        metadata = {}
-        try:
-            metadata = player.Get(
-                'org.mpris.MediaPlayer2.Player',
-                'Metadata',
-                dbus_interface='org.freedesktop.DBus.Properties'
-            )
-        except Exception as _:
-            pass
-        return metadata
+        return self.prop({}, player, 'Metadata')
 
     def update_prefix(self, player_name="", status=""):
         if status == "Paused":
