@@ -27,7 +27,6 @@ from unicodedata import east_asian_width
 
 class NowPlaying():
     font_index = 1 # (int) : Font index of polybar. this value should be 1 more than the font value specified in polybar config.
-    message_display_len = 140 # (int) : Length of media info string. If length of string exceedes this value, the text will scroll.
     update_delay = 0.3 # (float) : Update speed of the text in seconds.
     display_player_prefix = {
         # dict of char icons to display as prefix.
@@ -143,10 +142,7 @@ class NowPlaying():
             if service.startswith('org.mpris.MediaPlayer2.')
         ]
         self.players = [
-            self.session_bus.get_object(
-                service,
-                '/org/mpris/MediaPlayer2'
-            )
+            self.session_bus.get_object(service, '/org/mpris/MediaPlayer2')
             for service in self.player_names
         ]
         if self.last_player_name != self.get_name(self.current_player):
@@ -154,7 +150,7 @@ class NowPlaying():
                 if self.get_name(player) == self.last_player_name:
                     self.current_player = index
 
-    def handle_event(self, _, __):
+    def shift_player(self, _, __):
         self.update_players()
         if len(self.players) == 0:
             return
@@ -193,8 +189,6 @@ class NowPlaying():
                 result = NowPlaying.extract_field(self.get_meta(), field)
                 metadata_string_list.insert(0, str(result))
             metadata_string = (" " + NowPlaying.metadata_separator + " ").join(metadata_string_list)
-            if self.visual_len(metadata_string) > NowPlaying.message_display_len:
-                metadata_string = " " + metadata_string
             self.update_prefix(name, status)
             tmp_message = ""
             if metadata_string:
@@ -203,43 +197,6 @@ class NowPlaying():
         if self.message != tmp_message:
             self.message = tmp_message
             self.display_text = self.message
-
-    def scroll(self):
-        if not self.paused:
-            if self.visual_len(self.display_text) > NowPlaying.message_display_len:
-                self.display_text = self.display_text[1:] + self.display_text[0]
-            elif self.visual_len(self.display_text) < NowPlaying.message_display_len:
-                self.display_text += " "*(NowPlaying.message_display_len - len(self.display_text))
-        else:
-            self.display_text = ""
-
-    def visual_len(self, text):
-        visual_length = 0
-        for ch in text:
-            width = east_asian_width(ch)
-            if width == 'W' or width == 'F':
-                visual_length += 2
-            visual_length += 1
-        return visual_length
-
-    def make_visual_len(self, text, visual_desired_length):
-        visual_length = 0
-        altered_text = ''
-        for char in text:
-            if visual_length < visual_desired_length:
-                width = east_asian_width(char)
-                if width == 'W' or width == 'F':
-                    visual_length += 2
-                else:
-                    visual_length += 1
-                altered_text += char
-            else:
-                break
-        if visual_length == visual_desired_length + 1:
-            altered_text = altered_text[:-1] + ' '
-        elif visual_length < visual_desired_length:
-            altered_text += ' ' * (visual_desired_length - visual_length)
-        return altered_text
 
     @staticmethod
     def time_extract(t) -> str:
@@ -272,11 +229,7 @@ class NowPlaying():
         if NowPlaying.hide_output and not len(self.players):
             print("", flush=True)
             return
-        self.scroll()
-        metadata_info = self.make_visual_len(
-            self.display_text, 
-            NowPlaying.message_display_len
-        ).rstrip()
+        metadata_info = self.display_text.rstrip()
         set_font = f"%{{T{NowPlaying.font_index}}}"
         pref = NowPlaying.colorize(self.display_prefix)
         pos = NowPlaying.smallfont(self.position())
@@ -287,10 +240,7 @@ class NowPlaying():
 
 if __name__ == '__main__':
     n = NowPlaying()
-    signal.signal(
-        signal.SIGUSR1,
-        n.handle_event
-    )
+    signal.signal(signal.SIGUSR1, n.shift_player)
     n.update_players()
     while True:
         time.sleep(NowPlaying.update_delay)
