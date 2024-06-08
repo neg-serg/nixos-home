@@ -70,6 +70,7 @@
             "-p mpc-cli"
             "-p sox"
             "-p dunst"
+            "-p id3lib"
             "--run %h/bin/track-notification-daemon"];
         Restart = "always";
         RestartSec = "3";
