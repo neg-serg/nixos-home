@@ -27,7 +27,7 @@ def on_track_change(player, data):
             log.error('No data')
             retry+=1
             if retry >= retry_count:
-                sys.exit()
+                return
             continue
         try:
             cover=data['mpris:artUrl']
@@ -55,8 +55,8 @@ def on_track_change(player, data):
                     log.error('No md5sums')
                     retry+=1
                     if retry == 10:
-                        sys.exit()
-                    time.sleep(1)
+                        return
+                    time.sleep(0.5)
                     continue
                 elif len(md5sums) == 1:
                     subprocess.Popen([track_notify, cover])
@@ -71,21 +71,22 @@ def on_track_change(player, data):
             retry+=1
             if retry == retry_count:
                 sys.exit()
-            time.sleep(1)
+            time.sleep(0.5)
             continue
 
-log=logging.getLogger()
-try:
-    log.addHandler(journal.JournalHandler())
-except:
-    log.error('Cannot setup systemd log')
+while True:
+    log=logging.getLogger()
+    try:
+        log.addHandler(journal.JournalHandler())
+    except:
+        log.error('Cannot setup systemd log')
 
-import gi
-gi.require_version('Playerctl', '2.0')
-from gi.repository import Playerctl, GLib
+    import gi
+    gi.require_version('Playerctl', '2.0')
+    from gi.repository import Playerctl, GLib
 
-player=Playerctl.Player()
-md5sums=[]
+    player=Playerctl.Player()
+    md5sums=[]
 
-player.connect('metadata', on_track_change)
-GLib.MainLoop().run()
+    player.connect('metadata', on_track_change)
+    GLib.MainLoop().run()
