@@ -63,7 +63,7 @@
         BindsTo = ["mpd.service"];
       };
       Service = {
-        ExecStart = "${pkgs.cached-nix-shell}/bin/cached-nix-shell -p 'python3.withPackages (p: [p.pygobject3 p.systemd p.dbus-python])' -p gobject-introspection -p zsh --run %h/bin/track-notification-daemon";
+        ExecStart = "${pkgs.cached-nix-shell}/bin/cached-nix-shell -p 'python3.withPackages (p: [p.pygobject3 p.systemd p.dbus-python])' -p gobject-introspection --run %h/bin/track-notification-daemon";
         Restart = "always";
         RestartSec = "3";
       };
