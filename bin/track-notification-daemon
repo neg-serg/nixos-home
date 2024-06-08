@@ -1,92 +1,100 @@
 #!/usr/bin/env python
-import sys
+import os
 import subprocess
 import logging
-import time
-from systemd import journal
+from gi.repository import GLib
+import dbus
+import dbus.mainloop.glib
 
 def remove_prefix(text, prefix):
     return text[text.startswith(prefix) and len(prefix):]
 
-# Not used now, I think there is no need in this, thx to mpDris2
-def compare_images() -> str:
-    from PIL import Image
-    from imagehash import dhash
-    img1,img2=Image.open(sys.argv[1]),Image.open(sys.argv[2])
-    if dhash(img1) == dhash(img2):
-        return 'fail'
-    else:
-        return 'ok'
+class TrackNotification():
+    debug=False
+    def __init__(self):
+        dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
+        self.display_prefix = ""
+        self.player = None
+        self.bus = dbus.SessionBus()
+        self.update_players()
+        self.md5sums=[]
+        proxy=self.bus.get_object("org.mpris.MediaPlayer2.mpd", "/org/mpris/MediaPlayer2")
+        proxy.connect_to_signal("PropertiesChanged", self.playing_song_changed)
+        if TrackNotification.debug:
+            self.bus.add_signal_receiver(
+                self.catchall_signal_handler,
+                interface_keyword='dbus_interface',
+                dbus_interface="org.mpris.MediaPlayer2.Player",
+                member_keyword='member'
+            )
+        mainloop = GLib.MainLoop()
+        mainloop.run()
 
-def on_track_change(player, data):
-    cover=False
-    retry=0
-    retry_count=5
-    while True:
-        if data is None or not data:
-            log.error('No data')
-            retry+=1
-            if retry >= retry_count:
-                return
-            continue
+    def prop(self, ret, prop_name):
+        try:
+            ret = self.player.Get(
+                'org.mpris.MediaPlayer2.Player',
+                prop_name,
+                dbus_interface='org.freedesktop.DBus.Properties'
+            )
+        except Exception as _:
+            pass
+        return ret
+
+    def metadata(self): return self.prop({}, 'Metadata')
+
+    def catchall_signal_handler(self, *args, **kwargs):
+        print ("Caught signal (in catchall handler) " + kwargs['dbus_interface'] + "." + kwargs['member'])
+        for arg in args:
+            print("        " + str(arg))
+
+    def get_name(self, player_name, player_names) -> str:
+        if player_name not in player_names:
+            return ""
+        name = ".".join(player_name.split(".")[3:])
+        return name
+
+    def playing_song_changed(self, one, two, three):
+        print(one)
+        print(two)
+        print(three)
+        cover=False
+        data = self.metadata()
         try:
             cover=data['mpris:artUrl']
-        except:
+        except Exception as _:
             log.error(f'No cover :: {data}')
-            retry+=1
-            if retry >= retry_count:
-                return
-            time.sleep(1)
-            continue
         if cover:
             try:
                 cover=remove_prefix(cover, 'file://')
                 cover_sum=subprocess.check_output(
                     ["md5sum", cover]
                 ).decode("utf-8").strip()
-                md5sums.append(cover_sum.split()[0])
+                self.md5sums.append(cover_sum.split()[0])
             except subprocess.CalledProcessError:
                 log.error('Cannot do mpd5sum for file')
                 return
-            if player:
-                import os
-                track_notify=os.path.expanduser('~/bin/track-notify')
-                if not md5sums:
-                    log.error('No md5sums')
-                    retry+=1
-                    if retry == 10:
-                        return
-                    time.sleep(0.5)
-                    continue
-                elif len(md5sums) == 1:
-                    subprocess.Popen([track_notify, cover])
-                elif md5sums[-1] != md5sums[-2]:
-                    subprocess.Popen([track_notify, cover])
-                del md5sums[:-2]
-            else:
-                log.error('There is no player')
-                sys.exit()
-        else:
-            log.error('No cover')
-            retry+=1
-            if retry == retry_count:
-                sys.exit()
-            time.sleep(0.5)
-            continue
+            track_notify=os.path.expanduser('~/bin/track-notify')
+            if not self.md5sums:
+                log.error('No md5sums')
+            elif len(self.md5sums) == 1:
+                subprocess.Popen([track_notify, cover])
+            elif self.md5sums[-1] != self.md5sums[-2]:
+                subprocess.Popen([track_notify, cover])
+            del self.md5sums[:-2]
 
-while True:
-    log=logging.getLogger()
-    try:
-        log.addHandler(journal.JournalHandler())
-    except:
-        log.error('Cannot setup systemd log')
+    def update_players(self):
+        player_names = [
+            service for service in getattr(self.bus, 'list_names')()
+            if service.startswith('org.mpris.MediaPlayer2.')
+        ]
+        players = [
+            self.bus.get_object(service, '/org/mpris/MediaPlayer2')
+            for service in player_names
+        ]
+        for index, player in enumerate(player_names):
+            if self.get_name(player, player_names) == 'mpd':
+                self.player = players[index]
 
-    import gi
-    gi.require_version('Playerctl', '2.0')
-    from gi.repository import Playerctl, GLib
-
-    player=Playerctl.Player()
-    md5sums=[]
-
-    player.connect('metadata', on_track_change)
-    GLib.MainLoop().run()
+log=logging.getLogger()
+t=TrackNotification()
