@@ -215,10 +215,7 @@ class NowPlaying():
         set_font = f"%{{T{NowPlaying.font_index}}}"
         pref = NowPlaying.colorize(self.display_prefix)
         pos = NowPlaying.smallfont(self.position())
-        print(
-            f'{pref}%{{O5}}{set_font}{metadata_info} {pos}'
-            , flush=True
-        )
+        print(f'{pref}%{{O5}}{set_font}{metadata_info} {pos}', flush=True)
 
 if __name__ == '__main__':
     n = NowPlaying()
