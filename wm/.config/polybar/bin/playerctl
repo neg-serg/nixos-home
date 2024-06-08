@@ -51,7 +51,7 @@ class NowPlaying():
         self.current_player = 0
         self.message = ""
         self.last_player_name = None
-        self.session_bus = dbus.SessionBus()
+        self.bus = dbus.SessionBus()
         self.display_text = ""
         self.paused = None
 
@@ -121,11 +121,11 @@ class NowPlaying():
 
     def update_players(self):
         self.player_names = [
-            service for service in getattr(self.session_bus, 'list_names')()
+            service for service in getattr(self.bus, 'list_names')()
             if service.startswith('org.mpris.MediaPlayer2.')
         ]
         self.players = [
-            self.session_bus.get_object(service, '/org/mpris/MediaPlayer2')
+            self.bus.get_object(service, '/org/mpris/MediaPlayer2')
             for service in self.player_names
         ]
         if self.last_player_name != self.get_name(self.current_player):
