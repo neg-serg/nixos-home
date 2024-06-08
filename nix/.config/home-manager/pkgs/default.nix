@@ -28,13 +28,14 @@
     ./fonts
     ./fun
     ./gpg.nix
+    ./graphical-session
     ./hack.nix
     ./hardware
     ./im
     ./images
+    ./mail
     ./mail.nix
     ./media
-    ./mail
     ./neovim.nix
     ./pass.nix
     ./python
