@@ -12,7 +12,7 @@ with {
     neovim # neovim from master
     neovim-remote # nvr for neovim
     nodePackages.bash-language-server # bash lsp
-    nodePackages.pyright # python lsp
+    pyright # python lsp
     pylyzer # python type checker
     ruff-lsp # pyton lsp
     ruff # python linter
