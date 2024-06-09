@@ -10,15 +10,17 @@ with {
   i3-get-window-criteria = pkgs.callPackage ../../packages/i3-get-window-criteria {};
   i3-lock-fancy-rapid = pkgs.callPackage ../../packages/i3lock-fancy-rapid {};
   i3-balance-workspace = pkgs.callPackage ../../packages/i3-balance-workspace {};
+  # dup-img-finder = pkgs.callPackage ../../packages/dup-img-finder {};
 }; {
   home.packages = with pkgs; [
     dunst # notification daemon
     flameshot # interactive screenshot tool
     herbe # notification without daemon and dbus
     hsetroot # set x11 root image
+    dup-img-finder # TRY: img duplicates finder
     i3-get-window-criteria # xwindowinfo (test)
-    i3lock-fancy-rapid # try better lock
-    i3-balance-workspace # try balance workspaces
+    i3lock-fancy-rapid # TRY: better lock
+    i3-balance-workspace # TRY: balance workspaces
     i3 # my favorite wm
     maim # screenshot tool for x11
     negwmPkg.negwm # my own i3 helper
