@@ -88,8 +88,6 @@
       Service = {
         Type = "notify";
         ExecStart = "${master.mpd}/bin/mpd --no-daemon";
-        WatchdogSec = 120;
-        ProtectSystem = "yes"; # disallow writing to /usr, /bin, /sbin, ...
         Restart = "on-failure";
         RestartSec = "5";
       };
