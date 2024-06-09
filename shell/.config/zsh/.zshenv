@@ -30,4 +30,4 @@ typeset -gx FZF_CTRL_T_OPTS="--preview '(highlight -O ansi -l {} 2> /dev/null ||
 typeset -gx FZF_COMPLETION_TRIGGER='~~'
 [[ $(readlink -e ~/tmp) == "" ]] && rm -f ~/tmp
 [[ ! -L ${HOME}/tmp ]] && { rm -f ~/tmp && tmp_loc=$(mktemp -d) && ln -fs "${tmp_loc}" ${HOME}/tmp }
-if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]; then startx; fi
+if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]] && [[ $USER = "neg" ]]; then startx; fi
