@@ -17,7 +17,7 @@ with {
     flameshot # interactive screenshot tool
     herbe # notification without daemon and dbus
     hsetroot # set x11 root image
-    dup-img-finder # TRY: img duplicates finder
+    # dup-img-finder # TRY: img duplicates finder
     i3-get-window-criteria # xwindowinfo (test)
     i3lock-fancy-rapid # TRY: better lock
     i3-balance-workspace # TRY: balance workspaces
