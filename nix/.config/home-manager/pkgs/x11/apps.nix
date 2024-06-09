@@ -7,12 +7,14 @@
 with {
   l = config.lib.file.mkOutOfStoreSymlink;
   dots = "${config.home.homeDirectory}/.dotfiles";
+  i3-get-window-criteria = pkgs.callPackage ../../packages/i3-get-window-criteria {};
 }; {
   home.packages = with pkgs; [
     dunst # notification daemon
     flameshot # interactive screenshot tool
     herbe # notification without daemon and dbus
     hsetroot # set x11 root image
+    i3-get-window-criteria # xwindowinfo (test)
     i3lock-fancy-rapid
     i3 # my favorite wm
     maim # screenshot tool for x11
