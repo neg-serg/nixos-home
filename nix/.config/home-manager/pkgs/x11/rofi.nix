@@ -1,6 +1,11 @@
-{pkgs, ...}: {
+{pkgs, ...}: with {
+  rofi-games = pkgs.callPackage ../../packages/rofi-games {};
+}; {
   home.packages = with pkgs; [
-    (rofi.override {plugins = [rofi-file-browser];}) # modern dmenu alternative
+    (rofi.override {plugins = [
+        rofi-file-browser
+        rofi-games
+    ];}) # modern dmenu alternative
     rofi-pass # pass integration for pass
   ];
 }
