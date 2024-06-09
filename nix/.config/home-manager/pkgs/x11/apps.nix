@@ -8,6 +8,8 @@ with {
   l = config.lib.file.mkOutOfStoreSymlink;
   dots = "${config.home.homeDirectory}/.dotfiles";
   i3-get-window-criteria = pkgs.callPackage ../../packages/i3-get-window-criteria {};
+  i3-lock-fancy-rapid = pkgs.callPackage ../../packages/i3lock-fancy-rapid {};
+  i3-balance-workspace = pkgs.callPackage ../../packages/i3-balance-workspace {};
 }; {
   home.packages = with pkgs; [
     dunst # notification daemon
@@ -15,7 +17,8 @@ with {
     herbe # notification without daemon and dbus
     hsetroot # set x11 root image
     i3-get-window-criteria # xwindowinfo (test)
-    i3lock-fancy-rapid
+    i3lock-fancy-rapid # try better lock
+    i3-balance-workspace # try balance workspaces
     i3 # my favorite wm
     maim # screenshot tool for x11
     negwmPkg.negwm # my own i3 helper
