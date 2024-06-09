@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-[ -z "$USE_GPASTE" ] && USE_GPASTE=true
+[ -z "$USE_GPASTE" ] && USE_GPASTE=false
 alias yt='yt-dlp --downloader aria2c -f "(bestvideo+bestaudio/best)"'
 
 read_command() {
@@ -67,8 +67,7 @@ clip_main() {
             gpaste-client select "$uuid"
         fi
     else
-        CM_HISTLENGTH=16 clipmenu -i --font 'Iosevka' --nb '#000000' || \
-            rofi -show clipboard -modi 'clipboard:greenclip print'
+        clipcat-menu -c ~/.config/clipcat/clipcat-menu.toml
     fi
 }
 
