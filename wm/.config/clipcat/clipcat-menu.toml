@@ -1,0 +1,28 @@
+finder = "rofi"
+
+[log]
+# file_path = "/tmp/log"
+emit_journald = true # Emit log message to systemd-journald.
+emit_stdout = false # Emit log message to stdout.
+emit_stderr = false # Emit log message to stderr.
+level = "INFO" # Log level.
+
+[rofi]
+line_length = 100 # Length of line.
+menu_length = 10 # Length of menu.
+menu_prompt = "⟬clip⟭ ❯" # Prompt of menu.
+# Extra arguments to pass to `rofi`.
+extra_arguments = [
+    "-no-plugins",
+    "-matching",
+    "glob",
+    "-theme",
+    "clip.rasi",
+]
+
+# # Customize your finder.
+# [custom_finder]
+# # External program name.
+# program = "fzf"
+# # Arguments for calling external program.
+# args = []
