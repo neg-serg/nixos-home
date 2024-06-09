@@ -1,10 +1,10 @@
 # Skip the not really helping Ubuntu global compinit
 skip_global_compinit=1
 [[ -z "${HOME}/src/1st_level/pacaur" ]] && mkdir -p "${HOME}/src/1st_level/pacaur"
-typeset -gx WORDCHARS='*?_-.[]~&;!#$%^(){}<>~` '
-typeset -gx KEYTIMEOUT=10
-typeset -gx REPORTTIME=60
-typeset -gx ESCDELAY=1
+export WORDCHARS='*/?_-.[]~&;!#$%^(){}<>~` '
+export KEYTIMEOUT=10
+export  REPORTTIME=60
+export ESCDELAY=1
 typeset -gx FZF_DEFAULT_OPTS="
 --bind 'alt-d:change-prompt(Directories> )+reload(fd . -t d)'
 --bind 'alt-f:change-prompt(Files> )+reload(fd . -t f)'
