@@ -6,6 +6,7 @@
 with {
   l = config.lib.file.mkOutOfStoreSymlink;
   dots = "${config.home.homeDirectory}/.dotfiles";
+  mkvcleaner = pkgs.callPackage ../../packages/mkvcleaner {};
 }; {
   home.packages = with pkgs; [
     davinci-resolve # video editor
@@ -15,6 +16,7 @@ with {
     mediainfo # tag information about video or audio
     media-player-info # repository of data files describing media player capabilities
     mpvc # CLI controller for mpv
+    mkvcleaner # TRY: mkvcleaner
     mpvScripts.mpris # playerctl support for mpv
     mpv # video player
     playerctl # media controller for everything
