@@ -13,6 +13,10 @@ configuration {
     threads:                       0;
     dpi:                           0;
 
+    display-run:                   "ﰌ Run  ﰌ ";
+    display-drun:                  "󱓞 Applications 󱓞";
+    display-window:                "  Tasks  ";
+
     kb-primary-paste:              "Control+Shift+v,Shift+Insert";
     kb-secondary-paste:            "Control+v,Insert";
     kb-move-front:                 "Control+a";
