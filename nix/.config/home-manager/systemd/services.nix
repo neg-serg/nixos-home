@@ -225,6 +225,22 @@ with {
       Install = {WantedBy = ["graphical-session.target"];};
     };
 
+    clipcat = {
+      Unit = {
+        Description = "Clipcat daemon";
+        PartOf = ["graphical-session.target"];
+      };
+
+      Service = {
+        ExecStart = "${pkgs.clipcat}/bin/clipcatd --no-daemon --replace";
+        Restart = "on-failure";
+        Type = "simple";
+      };
+
+      Install = {WantedBy = ["graphical-session.target"];};
+    };
+    
+
     inputplug = {
       Unit = {
         Description = "XInput event monitor";
