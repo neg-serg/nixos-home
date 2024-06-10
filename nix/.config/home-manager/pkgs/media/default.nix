@@ -15,8 +15,8 @@ with {
     imagemagick # for convert
     mediainfo # tag information about video or audio
     media-player-info # repository of data files describing media player capabilities
+    mkvcleaner # clean mkv files from useless data
     mpvc # CLI controller for mpv
-    mkvcleaner # TRY: mkvcleaner
     mpvScripts.mpris # playerctl support for mpv
     mpv # video player
     playerctl # media controller for everything
