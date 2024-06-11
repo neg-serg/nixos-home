@@ -10,8 +10,10 @@ with {
   i3-get-window-criteria = pkgs.callPackage ../../packages/i3-get-window-criteria {};
   i3-lock-fancy-rapid = pkgs.callPackage ../../packages/i3lock-fancy-rapid {};
   i3-balance-workspace = pkgs.callPackage ../../packages/i3-balance-workspace {};
+  alluvium = pkgs.callPackage ../../packages/alluvium {};
 }; {
   home.packages = with pkgs; [
+    alluvium # show i3 bindings
     dunst # notification daemon
     flameshot # interactive screenshot tool
     herbe # notification without daemon and dbus
