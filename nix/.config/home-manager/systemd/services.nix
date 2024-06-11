@@ -2,6 +2,7 @@
   pkgs,
   negwmPkg,
   executorPkg,
+  stable,
   ...
 }:
 with {
@@ -232,7 +233,7 @@ with {
       };
 
       Service = {
-        ExecStart = "${pkgs.clipcat}/bin/clipcatd --no-daemon --replace";
+        ExecStart = "${stable.clipcat}/bin/clipcatd --no-daemon --replace";
         Restart = "on-failure";
         Type = "simple";
       };
