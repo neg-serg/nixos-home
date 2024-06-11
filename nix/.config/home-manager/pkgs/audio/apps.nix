@@ -71,7 +71,7 @@
             "-p sox"
             "-p dunst"
             "-p id3lib"
-            "--run %h/bin/track-notification-daemon"];
+            "--run %h/bin/track-notification"];
         Restart = "always";
         RestartSec = "3";
       };
