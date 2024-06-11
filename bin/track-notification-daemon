@@ -25,7 +25,9 @@ def mpd_music_dir() -> str:
             if row.find(word) != -1:
                 mpd_music_dir=row.split()[1].strip('\"')
                 if mpd_music_dir[0] == '~':
-                    mpd_music_dir = os.environ.get("HOME") + mpd_music_dir[1:]
+                    home = os.environ.get("HOME")
+                    if home is not None and home:
+                        mpd_music_dir = home + mpd_music_dir[1:]
                 break
     return mpd_music_dir
 
@@ -75,6 +77,9 @@ def track_notify(art):
     info={}
 
     if not track_path:
+        return
+
+    if not os.access(track_path, os.R_OK):
         return
 
     track_metadata=subprocess.check_output(["sox", "--i", track_path]).decode().split('\n')
