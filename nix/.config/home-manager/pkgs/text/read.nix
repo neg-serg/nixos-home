@@ -6,6 +6,7 @@
     glow # markdown viewer
     mdcat # cat for markdown
     recoll # full-text search tool
+    sioyek # nice zathura alternative
     zathura # pdf/djvu viewer
   ];
 }
