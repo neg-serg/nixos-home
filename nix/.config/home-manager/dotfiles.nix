@@ -245,7 +245,7 @@ with {
         fi
         systemctl --user import-environment DISPLAY XAUTHORITY
         if command -v dbus-update-activation-environment >/dev/null 2>&1; then
-            dbus-update-activation-environment DISPLAY XAUTHORITY
+            dbus-update-activation-environment --systemd --all
         fi
         systemctl --user start --wait i3
         while true; do
