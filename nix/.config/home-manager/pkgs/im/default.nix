@@ -1,8 +1,6 @@
 {pkgs, ...}: {
   home.packages = with pkgs; [
-    betterdiscord-installer
-    betterdiscordctl # better discord
-    discord # audio / video calls for gaming
+    vesktop # alternative discord client
     telegram-desktop # famous cloud-based im
     zoom-us # weird shit
   ];

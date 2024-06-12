@@ -31,11 +31,6 @@ with {
       source = l "${dots}/git/.config/tig";
       recursive = true;
     };
-    # █▓▒░ im ───────────────────────────────────────────────────────────────────────────
-    "BetterDiscord" = {
-      source = l "${dots}/im/.config/BetterDiscord";
-      recursive = true;
-    };
     # █▓▒░ mail ─────────────────────────────────────────────────────────────────────────
     "imapnotify" = {
       source = l "${dots}/mail/.config/imapnotify";

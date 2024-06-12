@@ -52,7 +52,7 @@ with rec {
     "x-scheme-handler/tg" = telegram;
     "x-scheme-handler/vkteams" = ["vkteamsdesktop.desktop"];
     "x-scheme-handler/spotify" = ["spotify.desktop"];
-    "x-scheme-handler/discord" = ["WebCord.desktop"];
+    "x-scheme-handler/discord" = ["vesktop.desktop"];
     "x-scheme-handler/magnet" = torrent;
     "x-scheme-handler/application/x-bittorrent" = torrent;
 
