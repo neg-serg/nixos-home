@@ -26,6 +26,7 @@ with {
     negwmPkg.negwm # my own i3 helper
     picom # x11 compositing
     polybar # my favorite panel so far
+    xdragon # drag and drop from console
   ];
   services.sxhkd = {
     enable = false;
