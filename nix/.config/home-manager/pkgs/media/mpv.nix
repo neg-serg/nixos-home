@@ -111,13 +111,17 @@
         "p" = "cycle pause; script-binding uosc/flash-pause-indicator";
         "ctrl+enter" = "script-binding uosc/open-file";
 
-        "a" = "show_text '\$\{path\}'";
+        "a" = "cycle audio";
         "i" = "script-message-to uosc flash-top-bar";
 
         ## the line under this one is not a comment
         "[" = "multiply speed 0.9091";
         "]" = "multiply speed 1.1";
         "BS" = "set speed 1.0";
+        "Ctrl+h" = "multiply speed 1/1.1";
+        "Ctrl+l" = "multiply speed 1.1";
+        "Ctrl+H" = "set speed 1.0";
+        
 
         "d" = "cycle framedrop 1";
         # Next 3 currently only work with --no-ass
@@ -126,14 +130,13 @@
         "v" = "cycle sub-visibility 1";
         "f" = "cycle fullscreen 1";
         "F" = "cycle fullscreen 1";
-
         #--[ Sometimes I double click and the window will resize ]--
         #--[ This makes it idiot proof ]----------------------------
         #--[ Navigation ]---------------
         "right" = "seek +5; script-binding uosc/flash-timeline";
         "left" = "seek -5; script-binding uosc/flash-timeline";
-        "up" = "seek +5; script-binding uosc/flash-timeline";
-        "down" = "seek -5; script-binding uosc/flash-timeline";
+        "up" = "seek +30; script-binding uosc/flash-timeline";
+        "down" = "seek -30; script-binding uosc/flash-timeline";
         "l" = "seek +5; script-binding uosc/flash-timeline";
         "h" = "seek -5; script-binding uosc/flash-timeline";
         "L" = "seek +60; script-binding uosc/flash-timeline";
@@ -147,42 +150,13 @@
         ">" = "script-binding uosc/next; script-message-to uosc flash-elements top_bar,timeline";
         "<" = "script-binding uosc/prev; script-message-to uosc flash-elements top_bar,timeline";
         "ESC" = "playlist_next";
+        "R" = "cycle_values window-scale 2 0.5 1"; # switch between 2x, 1/2, unresized window size
         "j" = "cycle sub";
+        "s" = "cycle sub";
 
         "mbtn_left" = "cycle pause 1";
         "mbtn_right" = "script-binding uosc/menu";
         ## vim: set cc= tw=0 ft=input.conf:
-        
-        # "Y" = "add sub-scale +0.1"; # increase subtitle font size
-        # "G" = "add sub-scale -0.1"; # decrease subtitle font size
-        # "y" = "sub_step -1"; # immediately display next subtitle
-        # "g" = "sub_step +1"; # previous
-        # "R" = "cycle_values window-scale 2 0.5 1"; # switch between 2x, 1/2, unresized window size
-
-        # "l" = "seek 5";
-        # "h" = "seek -5";
-        # "j" = "seek -60";
-        # "k" = "seek 60";
-
-        # "s" = "cycle sub";
-        # "a" = "cycle audio";
-
-        # "Alt+h" = "add chapter -1";
-        # "Alt+l" = "add chapter 1";
-        # "Ctrl+SPACE" = "add chapter 1";
-
-        # "Alt+j" = "add video-zoom -0.25";
-        # "Alt+k" = "add video-zoom 0.25";
-
-        # "Alt+J" = "add sub-pos -1";
-        # "Alt+K" = "add sub-pos +1";
-
-        # "Ctrl+h" = "multiply speed 1/1.1";
-        # "Ctrl+l" = "multiply speed 1.1";
-        # "Ctrl+H" = "set speed 1.0";
-
-        # merge low1k's keybindings into mpv bindings section
-        # low1k
       }];
     };
 }

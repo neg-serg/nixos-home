@@ -23,11 +23,10 @@ with {
     simplescreenrecorder # screen recorder
   ];
 
+  imports = [
+      ./mpv.nix
+  ];
   xdg.configFile = {
-    "mpv" = {
-      source = l "${dots}/media/.config/mpv";
-      recursive = true;
-    };
     "wireplumber" = {
       source = l "${dots}/media/.config/wireplumber";
       recursive = true;
