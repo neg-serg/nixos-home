@@ -243,7 +243,7 @@ with {
         if test -z "$DBUS_SESSION_BUS_ADDRESS"; then
             eval $(dbus-launch --exit-with-session --sh-syntax)
         fi
-        systemctl --user import-environment DISPLAY XAUTHORITY
+        systemctl --user import-environment DISPLAY XAUTHORITY MOZ_ENABLE_WAYLAND MOZ_DBUS_REMOTE QT_QPA_PLATFORM QT_QPA_PLATFORMTHEME QT_WAYLAND_DISABLE_WINDOWDECORATION SDL_VIDEODRIVER _JAVA_AWT_WM_NONREPARENTING JDK_JAVA_OPTIONS XCURSOR_SIZE XCURSOR_THEME
         if command -v dbus-update-activation-environment >/dev/null 2>&1; then
             dbus-update-activation-environment --systemd --all
         fi
