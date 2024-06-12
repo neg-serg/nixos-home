@@ -3,31 +3,14 @@
       enable = true;
 
       config = {
-        # ytdl-format = "bestvideo+bestaudio/best";
-        # audio-display = false;
-        # force-window = true;
-        # hidpi-window-scale = false;
-        # hwdec = "auto";
-        # keep-open = true;
-        # keep-open-pause = false;
-        # osd-on-seek = false;
-        # profile = "gpu-hq";
-        # script-opts = "osc-seekbarstyle=knob,osc-deadzonesize=1,osc-minmousemove=1";
-        # slang = "chi";
-        # sub-auto = "fuzzy";
-        # sub-codepage = "gbk";
-        # osc = "no";
-        # osd-bar = "no";
-        # border = "no";
-
         #--[Main]--------------------------------------------------
         input-ipc-server = "~/.config/mpv/socket";
         target-prim = "adobe";
         hidpi-window-scale = false;
-        # icc-profile-auto
+        icc-profile-auto = true;
         #--[Decoding]----------------------------------------------
         cache = "no";
-        # correct-downscaling
+        correct-downscaling = true;
         hwdec-codecs = "all";
         interpolation = "no";
         vd-lavc-threads = "12";
@@ -56,11 +39,11 @@
         #--[Language]----------------------------------------------
         alang = "en";
         slang = "ru,rus";
-        # #--[Geometry]----------------------------------------------
+        #--[Geometry]----------------------------------------------
         fullscreen = "yes";
         geometry = "100%:100%";
-        # no-border
-        # #--[Subtitles]---------------------------------------------
+        border = "no";
+        #--[Subtitles]---------------------------------------------
         sub-auto = "fuzzy";
         sub-font = ["Helvetica Neue LT Std" "HelveticaNeue LT CYR 57 Cond"];
         sub-gauss = ".82";
@@ -80,33 +63,42 @@
         osd-status-msg = "$\{time-pos\} / $\{duration\} ($\{percent-pos\}%)$\{?estimated-vf-fps: FPS: $\{estimated-vf-fps\}\}";
         #--[Youtube-DL]--------------------------------------------
         ytdl-format = "bestvideo+bestaudio/best";
-        # #--[ETC]---------------------------------------------------
+        #--[ETC]---------------------------------------------------
         screenshot-template = "~/dw/scr-%F_%P";
-        # #--[Audio]-------------------------------------------------
-        # [extension.ape]
-        # term-osd-bar-chars = "──╼ ·"
-        # term-osd-bar=yes
-        # term-osd=auto
-        # [extension.alac]
-        # term-osd-bar-chars = "──╼ ·"
-        # term-osd-bar=yes
-        # term-osd=auto
-        # [extension.flac]
-        # term-osd-bar-chars = "──╼ ·"
-        # term-osd-bar=yes
-        # term-osd=auto
-        # [extension.mp3]
-        # term-osd-bar-chars = "──╼ ·"
-        # term-osd-bar=yes
-        # term-osd=auto
-        # [extension.wav]
-        # term-osd-bar-chars = "──╼ ·"
-        # term-osd-bar=yes
-        # term-osd=auto
-        # [extension.gif]
-        # osc=no
-        # loop-file
         # vim: set ft=dosini:
+      };
+
+      profiles = {
+        #--[Audio]-------------------------------------------------
+        "extension.ape" = {
+            term-osd-bar-chars = "──╼ ·";
+            term-osd-bar = true;
+            term-osd = "auto";
+        };
+        "extension.alac" = {
+            term-osd-bar-chars = "──╼ ·";
+            term-osd-bar = true;
+            term-osd = "auto";
+        };
+        "extension.flac" = {
+            term-osd-bar-chars = "──╼ ·";
+            term-osd-bar = true;
+            term-osd = "auto";
+        };
+        "extension.mp3" = {
+            term-osd-bar-chars = "──╼ ·";
+            term-osd-bar = true;
+            term-osd = "auto";
+        };
+        "extension.wav" = {
+            term-osd-bar-chars = "──╼ ·";
+            term-osd-bar = true;
+            term-osd = "auto";
+        };
+        "extension.gif" = {
+            osc = "no";
+            loop-file = true;
+        };
       };
 
       bindings = lib.mkMerge [{   # mpv keybindings
