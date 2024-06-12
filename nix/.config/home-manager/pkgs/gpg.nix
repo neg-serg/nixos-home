@@ -24,6 +24,7 @@ with {
     enableExtraSocket = true;
     enableScDaemon = true;
     enableSshSupport = false;
+    enableZshIntegration = true;
     enable = true;
     extraConfig = ''pinentry-program ${pinentryRofi}/bin/pinentry-rofi-with-env '';
     verbose = true;
