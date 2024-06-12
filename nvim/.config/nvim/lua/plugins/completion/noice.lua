@@ -17,9 +17,6 @@ return {'folke/noice.nvim', -- better UX
                     input={icon=' ', lang='text', view='cmdline_popup', title=''},
                 },
             },
-            popupmenu = {
-                backend = 'cmp',
-            },
             presets={
                 bottom_search=true, -- use a classic bottom cmdline for search
                 command_palette=false, -- position the cmdline and popupmenu together
