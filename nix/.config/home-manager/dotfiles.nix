@@ -160,10 +160,6 @@ with {
       recursive = false;
     };
     # █▓▒░ wm ────────────────────────────────────────────────────────────────────────
-    "dunst" = {
-      source = l "${dots}/wm/.config/dunst";
-      recursive = true;
-    };
     "executor" = {
       source = l "${dots}/wm/.config/executor";
       recursive = true;

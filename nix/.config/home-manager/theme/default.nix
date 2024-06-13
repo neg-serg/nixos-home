@@ -79,6 +79,7 @@ with {
 
     targets.kitty.enable = false;
     targets.zathura.enable = false;
+    targets.dunst.enable = false;
 
     base16Scheme = {
       base00 = "#020202"; # Background
