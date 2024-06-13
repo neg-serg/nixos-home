@@ -51,21 +51,21 @@
 
       audio_output {
           type "alsa"
-              name "RME ADI-2/4 PRO SE"
-              device "hw:CARD=SE53011083"
-              auto_resample "no"
-              auto_format "no"
-              auto_channels "no"
-              replay_gain_handler "none"
-              dsd_native "yes"
-              dop "no"
-              tags "yes"
+          name "RME ADI-2/4 PRO SE"
+          device "hw:CARD=SE53011083"
+          auto_resample "no"
+          auto_format "no"
+          auto_channels "no"
+          replay_gain_handler "none"
+          dsd_native "yes"
+          dop "no"
+          tags "yes"
       }
 
       audio_output {
           type "pipewire"
-              name "PipeWire"
-              dsd "yes"
+          name "PipeWire"
+          dsd "yes"
       }
       '';
   };
