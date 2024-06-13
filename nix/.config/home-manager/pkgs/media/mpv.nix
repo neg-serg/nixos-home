@@ -99,6 +99,16 @@
             osc = "no";
             loop-file = true;
         };
+        ###################################
+        # Protocol Specific Configuration #
+        ###################################
+        "protocol.http" = {
+            hls-bitrate = "max"; # use max quality for HLS streams
+            cache = true;
+            cache-pause = false; # don't pause when the cache runs low
+        };
+        "protocol.https" = { profile="protocol.http"; };
+        "protocol.ytdl" = { profile="protocol.http"; };
       };
 
       bindings = lib.mkMerge [{   # mpv keybindings
