@@ -102,10 +102,6 @@ with {
       source = l "${dots}/misc/.config/tridactyl";
       recursive = true;
     };
-    "zathura" = {
-      source = l "${dots}/misc/.config/zathura";
-      recursive = true;
-    };
     # █▓▒░ music ────────────────────────────────────────────────────────────────────────
     "mpd" = {
       source = l "${dots}/music/.config/mpd";
