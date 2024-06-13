@@ -329,3 +329,5 @@ misc/.config/icedtea-web/security/
 media/.config/mpv/mpv.conf
 input.conf
 media/.config/mpv/input.conf
+misc/.config/zathura/
+media/.config/mpv/shaders/
