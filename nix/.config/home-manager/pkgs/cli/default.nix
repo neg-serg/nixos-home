@@ -5,6 +5,7 @@
 }: {
   imports = [
       ./btop.nix
+      ./fetch.nix
   ];
   home.packages = with pkgs; [
     as-tree # represent smth as tree

@@ -62,7 +62,6 @@
     ./dev.nix
     ./distros.nix
     # ./fastfetch
-    ./fetch.nix
     ./fonts
     ./fun
     ./gpg.nix
@@ -76,7 +75,6 @@
     ./neovim
     ./pass.nix
     ./python
-    ./sway.nix
     ./terminal
     ./text
     ./torrent
