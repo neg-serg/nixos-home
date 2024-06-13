@@ -61,10 +61,8 @@
         # For detailed analysis of upscaler/downscaler quality, see https://artoriuz.github.io/blog/mpv_upscaling.html
         fbo-format = "rgba16hf"; # use with gpu-api=vulkan
         glsl-shaders-clr = true;
-
         # chroma upscaling and downscaling
         # glsl-shaders-append="~/etc/mpv/shaders/KrigBilateral.glsl"
-
         # # luma upscaling
         # # note: any FSRCNNX above FSRCNNX_x2_8-0-4-1 is not worth the additional computional overhead
         # glsl-shaders="~/etc/mpv/shaders/FSRCNNX_x2_8-0-4-1.glsl"
@@ -72,7 +70,6 @@
         # # luma downscaling
         # # note: ssimdownscaler is tuned for mitchell and downscaling=no
         # glsl-shaders-append="~/etc/mpv/shaders/SSimDownscaler.glsl"
-
         #--[Antiringing]-------------------------------------------
         cscale-antiring = "0.7"; # chroma upscale deringing
         dscale-antiring = "0.7"; # luma downscale deringing
@@ -144,9 +141,7 @@
             osc = "no";
             loop-file = true;
         };
-        ###################################
-        # Protocol Specific Configuration #
-        ###################################
+        #--[Protocol Specific Configuration]-----------------------
         "protocol.http" = {
             hls-bitrate = "max"; # use max quality for HLS streams
             cache = true;
@@ -154,6 +149,7 @@
         };
         "protocol.https" = { profile="protocol.http"; };
         "protocol.ytdl" = { profile="protocol.http"; };
+
         "4k60" = { # 2160p @ 60fps (3840x2160 UHDTV)
             profile-desc = "4k60";
             profile-cond = "((width ==3840 and height ==2160) and p[\"estimated-vf-fps\"]>=31)";
@@ -165,6 +161,7 @@
             glsl-shaders-clr=true;
             # glsl-shaders="~/etc/mpv/shaders/KrigBilateral.glsl" # enable if your hardware can support it
         };
+
         "4k30" = { # 2160p @ 24-30fps (3840x2160 UHDTV)
             profile-desc = "4k30";
             profile-cond = "((width ==3840 and height ==2160) and p[\"estimated-vf-fps\"]<31)";
@@ -175,18 +172,21 @@
             glsl-shaders-clr=true;
             # glsl-shaders="~/etc/mpv/shaders/KrigBilateral.glsl" # enable if your hardware can support it
         };
+
         "full-hd60" = {  # 1080p @ 60fps (progressive ATSC)
             profile-desc = "full-hd60";
             profile-cond = "((width ==1920 and height ==1080) and not p[\"video-frame-info/interlaced\"] and p[\"estimated-vf-fps\"]>=31)";
             # apply all luma and chroma upscaling and downscaling settings
             interpolation = false; # no motion interpolation required because 60fps is hardware ceiling
         };
+
         "full-hd30" = {  # 1080p @ 24-30fps (NextGen TV/ATSC 3.0, progressive Blu-ray)
             profile-desc = "full-hd30";
             profile-cond = "((width ==1920 and height ==1080) and not p[\"video-frame-info/interlaced\"] and p[\"estimated-vf-fps\"]<31)";
             # apply all luma and chroma upscaling and downscaling settings
             interpolation = false; # no motion interpolation required because 60fps is hardware ceiling
         };
+
         "full-hd-interlaced" = {  # 1080i @ 24-30fps (HDTV, interlaced Blu-rays)
             profile-desc = "full-hd-interlaced";
             profile-cond = "((width ==1920 and height ==1080) and p[\"video-frame-info/interlaced\"] and p[\"estimated-vf-fps\"]<31)";
@@ -194,6 +194,7 @@
             # apply motion interpolation
             vf = "bwdif"; # apply FFMPEG's bwdif deinterlacer
         };
+
         "hd" = { # 720p @ 60 fps (HDTV, Blu-ray - progressive)
             profile-desc = "hd";
             profile-cond = "(width == 1280 and height == 720)";
@@ -201,6 +202,7 @@
             interpolation = false; # no motion interpolation required because 60fps is hardware ceiling
             # no deinterlacer required because progressive
         };
+
         "sdtv-ntsc" = { # 640x480, 704x480, 720x480 @ 30fps (NTSC DVD - interlaced)
             profile-desc = "sdtv-ntsc";
             profile-cond = "((width == 640 and height == 480) or (width == 704 and height == 480) or (width == 720 and height == 480))";
@@ -209,7 +211,7 @@
             vf = "bwdif"; # apply FFMPEG's bwdif deinterlacer
         };
 
-        sdtv-pal = {  # 352x576, 480x576, 544x576, 720x576 @ 30fps (PAL broadcast or DVD - interlaced)
+        "sdtv-pal" = {  # 352x576, 480x576, 544x576, 720x576 @ 30fps (PAL broadcast or DVD - interlaced)
             profile-desc = "sdtv-pal";
             profile-cond = "((width==352 and height==576) or (width==480 and height==576) or (width==544 and height==576) or (width==720 and height==576))";
             # # apply all luma and chroma upscaling and downscaling settings
