@@ -61,19 +61,19 @@
     ./cli
     ./dev.nix
     ./distros.nix
-    ./fetch.nix
     # ./fastfetch
+    ./fetch.nix
     ./fonts
     ./fun
     ./gpg.nix
-    ./graphical-session
+    ./gui
     ./hack.nix
     ./hardware
     ./im
     ./images
     ./mail
     ./media
-    ./neovim.nix
+    ./neovim
     ./pass.nix
     ./python
     ./sway.nix
