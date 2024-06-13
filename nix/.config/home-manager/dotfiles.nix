@@ -196,7 +196,6 @@ with {
       source = l "${dots}/wm/.config/picom";
       recursive = true;
     };
-    #"sway" = { source = l "${dots}/wm/.config/sway"; recursive = true; };
     "warpd" = {
       source = l "${dots}/wm/.config/warpd";
       recursive = true;
