@@ -103,10 +103,6 @@ with {
       recursive = true;
     };
     # █▓▒░ music ────────────────────────────────────────────────────────────────────────
-    "mpd" = {
-      source = l "${dots}/music/.config/mpd";
-      recursive = true;
-    };
     "ncmpcpp" = {
       source = l "${dots}/music/.config/ncmpcpp";
       recursive = true;

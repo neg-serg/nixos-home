@@ -3,7 +3,6 @@
   lib,
   config,
   stable,
-  master,
   ...
 }: {
   home.packages = with pkgs; [
@@ -28,6 +27,55 @@
     unflac # split2flac alternative
   ];
 
+  services.mpd = {
+      enable = true;
+      dataDir = "${config.home.homeDirectory}/music";
+      network.startWhenNeeded = true;
+      network.listenAddress = "127.0.0.1";
+      extraConfig = ''
+      log_file "/dev/null"
+      max_output_buffer_size "131072"
+      max_connections "100"
+      connection_timeout "864000"
+      restore_paused "yes"
+      save_absolute_paths_in_playlists "yes"
+      #metadata_to_use "artist,album,title,track,name,genre,date"
+      follow_inside_symlinks "yes"
+      replaygain "off"
+      auto_update "yes"
+      mixer_type "software"
+
+      input_cache {
+          size "1 GB"
+      }
+
+      audio_output {
+          type "alsa"
+              name "RME ADI-2/4 PRO SE"
+              device "hw:CARD=SE53011083"
+              auto_resample "no"
+              auto_format "no"
+              auto_channels "no"
+              replay_gain_handler "none"
+              dsd_native "yes"
+              dop "no"
+              tags "yes"
+      }
+
+      audio_output {
+          type "pipewire"
+              name "PipeWire"
+              dsd "yes"
+      }
+      '';
+  };
+
+  services.mpd-mpris = {
+    enable = true;
+    mpd.port = "6600";
+    mpd.host = "127.0.0.1";
+  };
+
   systemd.user.services = {
     mpdas = {
       Unit = {
@@ -39,19 +87,6 @@
         ExecStart = "${pkgs.mpdas}/bin/mpdas -c ${config.sops.secrets.mpdas_negrc.path}";
         Restart = "on-failure";
         RestartSec = "10";
-      };
-      Install = {WantedBy = ["default.target"];};
-    };
-
-    mpd-mpris = {
-      Unit = {
-        BindsTo = ["mpd.service"];
-      };
-      Service = {
-        ExecStart = "${pkgs.mpd-mpris}/bin/mpd-mpris -no-instance";
-        Restart = "on-failure";
-        Type = "simple";
-        RestartSec = "5s";
       };
       Install = {WantedBy = ["default.target"];};
     };
@@ -74,22 +109,6 @@
             "--run %h/bin/track-notification"];
         Restart = "always";
         RestartSec = "3";
-      };
-      Install = {WantedBy = ["default.target"];};
-    };
-
-    mpd = {
-      Unit = {
-        Description = "Music Player Daemon";
-        Documentation = "man:mpd(1) man:mpd.conf(5)";
-        After = ["network.target" "sound.target"];
-        ConditionPathExists = "${master.mpd}/bin/mpd";
-      };
-      Service = {
-        Type = "notify";
-        ExecStart = "${master.mpd}/bin/mpd --no-daemon";
-        Restart = "on-failure";
-        RestartSec = "5";
       };
       Install = {WantedBy = ["default.target"];};
     };
