@@ -17,18 +17,21 @@ def fa(arg):
 
 def mpd_music_dir() -> str:
     XDG_CONFIG_HOME = os.environ.get("XDG_CONFIG_HOME")
-    mpd_music_dir = ""
-    with open(f'{XDG_CONFIG_HOME}/mpd/mpd.conf', 'r') as fp:
-        lines = fp.readlines()
-        for row in lines:
-            word = 'music_directory'
-            if row.find(word) != -1:
-                mpd_music_dir=row.split()[1].strip('\"')
-                if mpd_music_dir[0] == '~':
-                    home = os.environ.get("HOME")
-                    if home is not None and home:
-                        mpd_music_dir = home + mpd_music_dir[1:]
-                break
+    mpd_music_dir = os.environ.get("XDG_MUSIC_DIR") or "~/music/"
+    try:
+        with open(f'{XDG_CONFIG_HOME}/mpd/mpd.conf', 'r') as fp:
+            lines = fp.readlines()
+            for row in lines:
+                word = 'music_directory'
+                if row.find(word) != -1:
+                    mpd_music_dir=row.split()[1].strip('\"')
+                    if mpd_music_dir[0] == '~':
+                        home = os.environ.get("HOME")
+                        if home is not None and home:
+                            mpd_music_dir = home + mpd_music_dir[1:]
+                    break
+    except FileNotFoundError:
+        return mpd_music_dir
     return mpd_music_dir
 
 def track_notify(art):
@@ -61,6 +64,7 @@ def track_notify(art):
     if art is None or not art:
         return
 
+    print(f'mpd_music_dir={mpd_music_dir}')
     track_path=subprocess.check_output(["mpc", "current", "-f", f"{mpd_music_dir()}/%file%"]).decode().rstrip()
     prefix={
         "artist":         f"{fa('#004E4E')}  </span>",
