@@ -27,7 +27,7 @@
         # profile=gpu-hq # used for any other OS on modern hardware
         # profile=gpu-next # for future use
         #--[ Debanding ]-------------------------------------------
-        deband = true; # enabled by default 
+        deband = true; # enabled by default
         deband-iterations = 4; # deband steps
         deband-threshold = 48; # deband strength
         deband-range = 16; # deband range
@@ -48,13 +48,31 @@
         vf="format=colorlevels=full:colormatrix=auto";
         video-output-levels = "full";
         #--[Scaling]-----------------------------------------------
+        scale = "ewa_lanczos";
         cscale = "ewa_lanczossharp";
         dither-depth = "auto";
         dither = "fruit";
         temporal-dither = "yes";
         dscale = "mitchell";
-        linear-downscaling = "yes";
+        linear-downscaling = false;
         sigmoid-upscaling = "yes";
+        # Chroma subsampling means that chroma information is encoded at lower resolution than luma
+        # In MPV, chroma is upscaled to luma resolution (video size) and then the converted RGB is upscaled to target resolution (screen size)
+        # For detailed analysis of upscaler/downscaler quality, see https://artoriuz.github.io/blog/mpv_upscaling.html
+        fbo-format = "rgba16hf"; # use with gpu-api=vulkan
+        glsl-shaders-clr = true;
+
+        # chroma upscaling and downscaling
+        # glsl-shaders-append="~/etc/mpv/shaders/KrigBilateral.glsl"
+
+        # # luma upscaling
+        # # note: any FSRCNNX above FSRCNNX_x2_8-0-4-1 is not worth the additional computional overhead
+        # glsl-shaders="~/etc/mpv/shaders/FSRCNNX_x2_8-0-4-1.glsl"
+        # glsl-shaders="~/etc/mpv/shaders/FSRCNNX_x2_8-0-4-1.glsl"
+        # # luma downscaling
+        # # note: ssimdownscaler is tuned for mitchell and downscaling=no
+        # glsl-shaders-append="~/etc/mpv/shaders/SSimDownscaler.glsl"
+
         #--[Antiringing]-------------------------------------------
         cscale-antiring = "0.7"; # chroma upscale deringing
         dscale-antiring = "0.7"; # luma downscale deringing
@@ -141,7 +159,7 @@
             profile-cond = "((width ==3840 and height ==2160) and p[\"estimated-vf-fps\"]>=31)";
             # deband=yes # necessary to avoid blue screen with KrigBilateral.glsl
             deband = false; # turn off debanding because presume wide color gamut
-            interpolation = false; # turn off interpolation because presume 60fps 
+            interpolation = false; # turn off interpolation because presume 60fps
             # UHD videos are already 4K so no luma upscaling is needed
             # UHD videos are YUV420 so chroma upscaling is still needed
             glsl-shaders-clr=true;
@@ -189,7 +207,7 @@
             # apply all luma and chroma upscaling and downscaling settings
             # apply motion interpolation
             vf = "bwdif"; # apply FFMPEG's bwdif deinterlacer
-        }; 
+        };
 
         sdtv-pal = {  # 352x576, 480x576, 544x576, 720x576 @ 30fps (PAL broadcast or DVD - interlaced)
             profile-desc = "sdtv-pal";
@@ -220,7 +238,7 @@
         "Ctrl+h" = "multiply speed 1/1.1";
         "Ctrl+l" = "multiply speed 1.1";
         "Ctrl+H" = "set speed 1.0";
-        
+
 
         "d" = "cycle framedrop 1";
         # Next 3 currently only work with --no-ass
@@ -259,29 +277,3 @@
       }];
     };
 }
-
-# #############################################################
-# # Upscaling & Processing Based on Source Video's Resolution #
-# #############################################################
-# # Chroma subsampling means that chroma information is encoded at lower resolution than luma
-# # In MPV, chroma is upscaled to luma resolution (video size) and then the converted RGB is upscaled to target resolution (screen size)
-# # For detailed analysis of upscaler/downscaler quality, see https://artoriuz.github.io/blog/mpv_upscaling.html
-# fbo-format=rgba16f # use with gpu-api=opengl
-# # fbo-format=rgba16hf # use with gpu-api=vulkan
-# # fbo-format is not not supported in gpu-next profile
-# glsl-shaders-clr
-# # luma upscaling
-# # note: any FSRCNNX above FSRCNNX_x2_8-0-4-1 is not worth the additional computional overhead
-# glsl-shaders="~/etc/mpv/shaders/FSRCNNX_x2_8-0-4-1.glsl"
-# glsl-shaders="~/etc/mpv/shaders/FSRCNNX_x2_8-0-4-1.glsl"
-# scale=ewa_lanczos
-# # luma downscaling
-# # note: ssimdownscaler is tuned for mitchell and downscaling=no
-# glsl-shaders-append="~/etc/mpv/shaders/SSimDownscaler.glsl"
-# dscale=mitchell
-# linear-downscaling=no
-# # chroma upscaling and downscaling
-# glsl-shaders-append="~/etc/mpv/shaders/KrigBilateral.glsl" 
-# cscale=mitchell # ignored with gpu-next
-# sigmoid-upscaling=yes
-
