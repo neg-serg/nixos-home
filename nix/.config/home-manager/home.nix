@@ -3,7 +3,7 @@
   imports = [
     ./dotfiles.nix
     ./pkgs
-    ./sops.nix
+    ./secrets
     ./systemd
     ./theme
     ./xdg.nix
