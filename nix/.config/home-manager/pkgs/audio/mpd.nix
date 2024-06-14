@@ -8,15 +8,11 @@ with {
   l = config.lib.file.mkOutOfStoreSymlink;
   dots = "${config.home.homeDirectory}/.dotfiles";
 }; {
-  xdg.configFile = {
-    "ncmpcpp" = {
-      source = l "${dots}/music/.config/ncmpcpp";
-      recursive = true;
-    };
-  };
+  imports = [
+      ./ncmpcpp.nix
+  ];
   home.packages = with pkgs; [
     mpc-cli # mpd client
-    ncmpcpp # curses mpd client
   ];
   services.mpd = {
     enable = true;
