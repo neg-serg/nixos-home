@@ -17,8 +17,6 @@ with {
     media-player-info # repository of data files describing media player capabilities
     mkvcleaner # clean mkv files from useless data
     mpvc # CLI controller for mpv
-    mpvScripts.mpris # playerctl support for mpv
-    mpv # video player
     playerctl # media controller for everything
     simplescreenrecorder # screen recorder
   ];
