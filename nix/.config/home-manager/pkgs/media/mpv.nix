@@ -261,73 +261,10 @@
             timeline_style = "line";
             timeline_line_width = 4;
             timeline_size = 30;
-            # Comma separated states when timeline should always be visible. available: paused, audio, image, video, idle
-            timeline_persistency = "paused";
-            # Top border of background color to help visually separate timeline from video
-            timeline_border = 1;
-            # When scrolling above timeline, wheel will seek by this amount of seconds
-            timeline_step = 5;
-            # Render cache indicators for streaming content
-            timeline_cache = "yes";
-            # A comma delimited list of items to construct the controls bar above the timeline. Set to `never` to disable.
-            # Parameter spec: enclosed in `{}` means value, enclosed in `[]` means optional
-            # Full item syntax: `[<[!]{disposition1}[,[!]{dispositionN}]>]{element}[:{paramN}][#{badge}[>{limit}]][?{tooltip}]`
-            # Common properties:
-            #   `{icon}` - parameter used to specify an icon name (example: `face`)
-            #            - you can pick one here: https://fonts.google.com/icons?selected=Material+Icons&icon.style=Rounded
-            # `{element}`s and their parameters:
-            #   `{usoc_command}` - preconfigured shorthands for uosc commands that make sense to have as buttons:
-            #      - `menu`, `subtitles`, `audio`, `video`, `playlist`, `chapters`, `editions`, `stream-quality`,
-            #        `open-file`, `items`, `next`, `prev`, `first`, `last`, `audio-device`
-            #   `fullscreen` - toggle fullscreen
-            #   `loop-playlist` - button to toggle playlist looping
-            #   `loop-file` - button to toggle current file looping
-            #   `shuffle` - toggle for uosc's shuffle mode
-            #   `speed[:{scale}]` - display speed slider, [{scale}] - factor of controls_size, default: 1.3
-            #   `command:{icon}:{command}` - button that executes a {command} when pressed
-            #   `toggle:{icon}:{prop}[@{owner}]` - button that toggles mpv property
-            #   `cycle:{default_icon}:{prop}[@{owner}]:{value1}[={icon1}][!]/{valueN}[={iconN}][!]`
-            #     - button that cycles mpv property between values, each optionally having different icon and active flag
-            #     - presence of `!` at the end will style the button as active
-            #     - `{owner}` is the name of a scrip that manages this property if any
-            #   `gap[:{scale}]` - display an empty gap, {scale} - factor of controls_size, default: 0.3
-            #   `space` - fills all available space between previous and next item, useful to align items to the right
-            #           - multiple spaces divide the available space among themselves, which can be used for centering
-            # Item visibility control:
-            #   `<[!]{disposition1}[,[!]{dispositionN}]>` - optional prefix to control element's visibility
-            #   - `{disposition}` can be one of:
-            #     - `idle` - true if mpv is in idle mode (no file loaded)
-            #     - `image` - true if current file is a single image
-            #     - `audio` - true for audio only files
-            #     - `video` - true for files with a video track
-            #     - `has_many_video` - true for files with more than one video track
-            #     - `has_audio` - true for files with an audio track
-            #     - `has_many_audio` - true for files with more than one audio track
-            #     - `has_sub` - true for files with an subtitle track
-            #     - `has_many_sub` - true for files with more than one subtitle track
-            #     - `has_many_edition` - true for files with more than one edition
-            #     - `has_chapter` - true for files with chapter list
-            #     - `stream` - true if current file is read from a stream
-            #     - `has_playlist` - true if current playlist has 2 or more items in it
-            #   - prefix with `!` to negate the required disposition
-            #   Examples:
-            #     - `<stream>stream-quality` - show stream quality button only for streams
-            #     - `<has_audio,!audio>audio` - show audio tracks button for all files that have
-            #                                   an audio track, but are not exclusively audio only files
-            # Place `#{badge}[>{limit}]` after the element params to give it a badge. Available badges:
-            #   `sub`, `audio`, `video` - track type counters
-            #   `{mpv_prop}` - any mpv prop that makes sense to you: https://mpv.io/manual/master/#property-list
-            #                - if prop value is an array it'll display its size
-            #   `>{limit}` will display the badge only if it's numerical value is above this threshold.
-            #   Example: `#audio>1`
-            # Place `?{tooltip}` after the element config to give it a tooltip.
-            #   Example: `<stream>stream-quality?Stream quality`
-            # Example implementations of some of the available shorthands:
-            #   menu = command:menu:script-binding uosc/menu-blurred?Menu
-            #   subtitles = command:subtitles:script-binding uosc/subtitles#sub?Subtitles
-            #   fullscreen = cycle:crop_free:fullscreen:no/yes=fullscreen_exit!?Fullscreen
-            #   loop-playlist = cycle:repeat:loop-playlist:no/inf!?Loop playlist
-            #   toggle:{icon}:{prop} = cycle:{icon}:{prop}:no/yes!
+            timeline_persistency = "paused"; # Comma separated states when timeline should always be visible. available: paused, audio, image, video, idle
+            timeline_border = 1; # Top border of background color to help visually separate timeline from video
+            timeline_step = 5; # When scrolling above timeline, wheel will seek by this amount of seconds
+            timeline_cache = "yes"; # Render cache indicators for streaming content
             controls = "menu,gap,subtitles,<has_many_audio>audio,<has_many_video>video,<has_many_edition>editions,<stream>stream-quality,gap,space,speed,space,shuffle,loop-playlist,loop-file,gap,prev,items,next,gap,fullscreen";
             controls_size = 32;
             controls_margin = 8;
@@ -358,8 +295,7 @@
             top_bar = "no-border";
             top_bar_size = 40;
             top_bar_controls = "no";
-            # Can be: `no` (hide), `yes` (inherit title from mpv.conf), or a custom template string
-            top_bar_title = "no";
+            top_bar_title = "no"; # Can be: `no` (hide), `yes` (inherit title from mpv.conf), or a custom template string
             # Template string to enable alternative top bar title. If alt title matches main title,
             # it'll be hidden. Tip: use `${media-title}` for main, and `${filename}` for alt title.
             top_bar_alt_title = "";
@@ -370,14 +306,9 @@
             top_bar_alt_title_place = "below";
             top_bar_persistency = "";
             top_bar_flash_on="video";
-            # Window border drawn in no-border mode
-            window_border_size = 1;
-            # If there's no playlist and file ends, load next file in the directory
-            # Requires `keep-open=yes` in `mpv.conf`.
-            autoload = "no";
-            # What types to accept as next item when autoloading or requesting to play next file
-            # Can be: video, audio, image, subtitle
-            autoload_types = "video,audio,image";
+            window_border_size = 1; # Window border drawn in no-border mode
+            autoload = "no"; # If there's no playlist and file ends, load next file in the directory Requires `keep-open=yes` in `mpv.conf`.
+            autoload_types = "video,audio,image"; # What types to accept as next item when autoloading or requesting to play next file Can be: video, audio, image, subtitle
             # Enable uosc's playlist/directory shuffle mode
             # This simply makes the next selected playlist or directory item be random, just
             # like any other player in the world. It also has an easily togglable control button.
@@ -415,16 +346,6 @@
             default_directory = "~/";
             use_trash = "no";
             adjust_osd_margins = "yes";
-            # Adds chapter range indicators to some common chapter types.
-            # Additionally to displaying the start of the chapter as a diamond icon on top of the timeline,
-            # the portion of the timeline of that chapter range is also colored based on the config below.
-            # The syntax is a comma-delimited list of `{type}:{color}` pairs, where:
-            # `{type}` => range type. Currently supported ones are:
-            #   - `openings`, `endings` => anime openings/endings
-            #   - `intros`, `outros` => video intros/outros
-            #   - `ads` => segments created by sponsor-block software like https://github.com/po5/mpv_sponsorblock
-            # `{color}` => an RGB(A) HEX color code (`rrggbb`, or `rrggbbaa`)
-            # To exclude marking any of the range types, simply remove them from the list.
             chapter_ranges = "openings:30abf964,endings:30abf964,ads:c54e4e80";
             chapter_range_patterns = "openings:オープニング;endings:エンディング";
           };
