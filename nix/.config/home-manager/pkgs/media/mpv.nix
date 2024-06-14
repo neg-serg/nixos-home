@@ -260,20 +260,13 @@
             # Display style of current position. available: line, bar
             timeline_style = "line";
             timeline_line_width = 4;
-            timeline_size_min = 0;
-            timeline_size_max = 40; # Timeline size when fully expanded, in pixels, 0 to disable
-            # Same as ^ but when in fullscreen
-            # Same thing as calling toggle-progress command once on startup
-            timeline_start_hidden = "no";
+            timeline_size = 30;
             # Comma separated states when timeline should always be visible. available: paused, audio, image, video, idle
             timeline_persistency = "paused";
-            timeline_opacity = 0.9; # Timeline opacity
             # Top border of background color to help visually separate timeline from video
             timeline_border = 1;
             # When scrolling above timeline, wheel will seek by this amount of seconds
             timeline_step = 5;
-            # Opacity of chapter indicators in timeline, 0 to disable
-            timeline_chapters_opacity = 0.7;
             # Render cache indicators for streaming content
             timeline_cache = "yes";
             # A comma delimited list of items to construct the controls bar above the timeline. Set to `never` to disable.
@@ -340,32 +333,33 @@
             controls_margin = 8;
             controls_spacing = 2;
             controls_persistency = "";
+            # A comma delimited list of color overrides in RGB HEX format. Defaults:
+            # foreground=ffffff,foreground_text=000000,background=000000,background_text=ffffff,curtain=111111,success=a5e075,error=ff616e
+            color="foreground=005faf,foreground_text=000000,background=000000,background_text=6d839e";
+            # A comma delimited list of opacity overrides for various UI element backgrounds and shapes.
+            # This does not affect any text, which is always rendered fully opaque. Defaults:
+            # timeline=0.9,position=1,chapters=0.8,slider=0.9,slider_gauge=1,controls=0,speed=0.6,menu=1,submenu=0.4,border=1,title=1,tooltip=1,thumbnail=1,curtain=0.8,idle_indicator=0.8,audio_indicator=0.5,buffering_indicator=0.3,playlist_position=0.8
+            opacity="volume=0.9,speed=0.6,menu=1,menu_parent=0.4,top_bar_title=0.8,window_border=0.8,curtain=0.5,timeline=0.9,timeline_chapters=0.7";
             # Where to display volume controls: none, left, right
             volume = "right";
             volume_size = 40;
-            volume_opacity = 0.9;
             volume_border = 1;
             volume_step = 1;
             volume_persistency = "";
             # Playback speed widget: mouse drag or wheel to change, click to reset
-            speed_opacity = 0.6;
             speed_step = 0.1;
             speed_step_is_factor = "no";
             speed_persistency = "";
             # Controls all menus, such as context menu, subtitle loader/selector, etc
             menu_item_height = 36;
-            menu_item_height_fullscreen = 36;
             menu_min_width = 260;
-            menu_min_width_fullscreen = 260;
-            menu_opacity = 1;
-            menu_parent_opacity = 0.4;
             # Top bar with window controls and media title
             # Can be: never, no-border, always
             top_bar = "no-border";
             top_bar_size = 40;
             top_bar_controls = "no";
             # Can be: `no` (hide), `yes` (inherit title from mpv.conf), or a custom template string
-            top_bar_title = "yes";
+            top_bar_title = "no";
             # Template string to enable alternative top bar title. If alt title matches main title,
             # it'll be hidden. Tip: use `${media-title}` for main, and `${filename}` for alt title.
             top_bar_alt_title = "";
@@ -374,11 +368,10 @@
             #   `toggle` => toggle the top bar title text between main and alt by clicking
             #               the top bar, or calling `toggle-title` binding
             top_bar_alt_title_place = "below";
-            top_bar_title_opacity = 0.8;
             top_bar_persistency = "";
+            top_bar_flash_on="video";
             # Window border drawn in no-border mode
             window_border_size = 1;
-            window_border_opacity = 0.8;
             # If there's no playlist and file ends, load next file in the directory
             # Requires `keep-open=yes` in `mpv.conf`.
             autoload = "no";
@@ -389,10 +382,10 @@
             # This simply makes the next selected playlist or directory item be random, just
             # like any other player in the world. It also has an easily togglable control button.
             shuffle = "no";
-            ui_scale = 1.3;
-            font_scale = 1.3;
+            scale = 1.1;
+            scale_fullscreen = 1.1;
+            font_scale = 1.1;
             text_border = 1.2;
-            text_width_estimation = "yes";
             # Execute command for background clicks shorter than this number of milliseconds, 0 to disable
             # Execution always waits for `input-doubleclick-time` to filter out double-clicks
             click_threshold = 0;
@@ -402,7 +395,6 @@
             # Distances in pixels below which elements are fully faded in/out
             proximity_in = 40;
             proximity_out = 120;
-            color="foreground=005faf,foreground_text=000000,background=000000,background_text=6d839e";
             font_bold = "no"; # Use only bold font weight throughout the whole UI
             # One of `total`, `playtime-remaining` (scaled by the current speed), `time-remaining` (remaining length of file)
             destination_time = "playtime-remaining";
@@ -412,8 +404,6 @@
             autohide = "yes"; # Hide UI when mpv autohides the cursor
             # Can be: none, flash, static, manual (controlled by flash-pause-indicator and decide-pause-indicator commands)
             pause_indicator = "flash";
-            # Screen dim when stuff like menu is open, 0 to disable
-            curtain_opacity = 0.5;
             # Sizes to list in stream quality menu
             stream_quality_options = "4320,2160,1440,1080,720,480";
             # Types to identify media files
