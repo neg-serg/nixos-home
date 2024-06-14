@@ -78,9 +78,11 @@ with {
       sha256 = "sha256-WVDIxyy9ww39JNFkMOJA2N6KxLMh9cKjmeQwLY7kCjk=";
     };
 
-    targets.kitty.enable = false;
-    targets.zathura.enable = false;
-    targets.dunst.enable = false;
+    targets = {
+      kitty.enable = false;
+      zathura.enable = false;
+      dunst.enable = false;
+    };
 
     base16Scheme = {
       base00 = "#020202"; # Background
