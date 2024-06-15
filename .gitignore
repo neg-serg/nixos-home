@@ -331,3 +331,4 @@ input.conf
 media/.config/mpv/input.conf
 misc/.config/zathura/
 media/.config/mpv/shaders/
+media/.config/mpv/
