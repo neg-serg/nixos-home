@@ -1,6 +1,7 @@
 {
   config,
   master,
+  stable,
   pkgs,
   ...
 }:
@@ -11,7 +12,7 @@ with rec {
       desktop = "kitty";
     };
     browser = {
-      cmd = "${pkgs.floorp}/bin/floorp";
+      cmd = "${stable.floorp}/bin/floorp";
       desktop = "floorp";
     };
     editor = {

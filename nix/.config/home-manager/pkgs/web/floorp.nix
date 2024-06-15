@@ -1,7 +1,7 @@
-{pkgs, ...}: {
-  home.packages = [pkgs.floorp]; # Module installing  as default browser
+{stable, ...}: {
+  home.packages = [stable.floorp]; # Module installing  as default browser
   home.sessionVariables = {
-    DEFAULT_BROWSER = "${pkgs.floorp}/bin/floorp";
+    DEFAULT_BROWSER = "${stable.floorp}/bin/floorp";
     MOZ_DBUS_REMOTE = "1";
     MOZ_ENABLE_WAYLAND = "1";
   };
