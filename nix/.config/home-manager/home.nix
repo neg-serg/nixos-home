@@ -1,4 +1,7 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  ...
+}: {
   nix.package = pkgs.nix;
   imports = [
     ./dotfiles.nix
