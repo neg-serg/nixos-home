@@ -1,5 +1,8 @@
 {pkgs, ...}: {
-  imports = [./floorp.nix];
+  imports = [
+      ./floorp.nix
+      ./schizofox.nix
+  ];
   home.packages = with pkgs; [
     passff-host # host app for the WebExtension PassFF
     tor-browser
