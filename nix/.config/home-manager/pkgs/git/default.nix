@@ -53,12 +53,13 @@
                 };
             };
             delta = {
-                decorations = true;
                 inspect-raw-lines = true;
                 light = false;
+                # line-numbers-left-format = "";
+                # line-numbers-right-format = "";
                 line-numbers-left-format = "";
-                line-numbers-right-format = "";
-                navigate = true;
+                line-numbers-right-format = "│ ";
+                navigate = false;
                 side-by-side = false;
                 syntax-theme = "base16-256";
                 minus-emph-style = "\"#781f34\" bold \"#000000\"";
@@ -67,11 +68,11 @@
                 plus-emph-style = "\"#357B63\" bold \"#000000\"";
                 plus-style = "\"#017978\" \"#000000\"";
                 zero-style = "#c6c6c6";
-            };
-            "delta \"decorations\"" = {
-                commit-decoration-style = "bold yellow box ul";
-                file-decoration-style = "none";
-                file-style = "bold yellow ul";
+                decorations = {
+                    commit-decoration-style = "bold yellow box ul";
+                    file-decoration-style = "none";
+                    file-style = "bold yellow ul";
+                };
             };
             man = {
                 viewer = "nvimpager -p";
@@ -97,7 +98,7 @@
             interactive = {
                 diffFilter = "delta --color-only";
             };
-            "filter \"lfs\"" = {
+            filter.lfs = {
                 required = true;
                 clean = "git-lfs clean -- %f";
                 smudge = "git-lfs smudge -- %f";
@@ -106,21 +107,13 @@
             push = { default = "simple"; };
             pull = { rebase = true; };
             rebase = { autoStash = true; autosquash = true; };
-            "url \"git@github.com:\"" = {
-                pushInsteadOf = ["https://github.com/" "git://github.com/"];
+            url = {
+                "git@github.com:".pushInsteadOf = ["https://github.com/" "git://github.com/"];
+                "https://aur.archlinux.org/".insteadOf = "aur:";
+                "ssh://aur@aur.archlinux.org/".pushInsteadOf = "aur:";
+                "https://codeberg.org/".insteadOf = "codeberg:";
+                "ssh://git@codeberg.org/".pushInsteadOf = "codeberg:";
             };
-            # url = {
-            #   "https://github.com/".insteadOf = "github:";
-            #   "ssh://git@github.com/".pushInsteadOf = "github:";
-            #   "https://gitlab.com/".insteadOf = "gitlab:";
-            #   "ssh://git@gitlab.com/".pushInsteadOf = "gitlab:";
-            #   "https://aur.archlinux.org/".insteadOf = "aur:";
-            #   "ssh://aur@aur.archlinux.org/".pushInsteadOf = "aur:";
-            #   "https://git.sr.ht/".insteadOf = "srht:";
-            #   "ssh://git@git.sr.ht/".pushInsteadOf = "srht:";
-            #   "https://codeberg.org/".insteadOf = "codeberg:";
-            #   "ssh://git@codeberg.org/".pushInsteadOf = "codeberg:";
-            # };
             rerere = {
                 enabled = true;
                 autoupdate = true;
@@ -134,13 +127,13 @@
             credential = {
                 helper = "cache --timeout=28800";
             };
-            "difftool \"nwim\"" = {
+            difftool.nwim = {
                 cmd = "~/bin/v -d $LOCAL $REMOTE";
             };
-            "mergetool \"nwim\"" = {
+            mergetool.nwim = {
                 cmd = "~/bin/v -d $LOCAL $BASE $REMOTE $MERGED -c 'wincmd J | wincmd ='";
             };
-            "mergetool \"nvimdiff\"" = {
+            mergetool.nvimdiff = {
                 keepBackup = true;
                 cmd = "nvim -d \"$LOCAL\" \"$MERGED\" \"$REMOTE\"";
                 trustExitCode = true;
