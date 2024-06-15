@@ -66,6 +66,7 @@
     ./fun
     ./gpg.nix
     ./gui
+    ./git
     ./hack.nix
     ./hardware
     ./im

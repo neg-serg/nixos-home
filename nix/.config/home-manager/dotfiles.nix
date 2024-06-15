@@ -23,10 +23,6 @@ with {
       recursive = true;
     };
     # █▓▒░ git ──────────────────────────────────────────────────────────────────────────
-    "git" = {
-      source = l "${dots}/git/.config/git";
-      recursive = true;
-    };
     "tig" = {
       source = l "${dots}/git/.config/tig";
       recursive = true;
