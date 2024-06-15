@@ -11,7 +11,7 @@ with {
   home.packages = with pkgs; [
     neovim # neovim from master
     neovim-remote # nvr for neovim
-    nodePackages.bash-language-server # bash lsp
+    bash-language-server # bash lsp
     pyright # python lsp
     pylyzer # python type checker
     ruff-lsp # pyton lsp
