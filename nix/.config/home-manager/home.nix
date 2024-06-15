@@ -5,7 +5,6 @@
   nix.package = pkgs.nix;
   imports = [
     ./dotfiles.nix
-    ./fzf.nix
     ./pkgs
     ./secrets
     ./systemd

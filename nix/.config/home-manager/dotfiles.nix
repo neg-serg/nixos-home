@@ -13,10 +13,6 @@ with {
       source = l "${dots}/environment.d/.config/environment.d/envvars.conf";
       recursive = false;
     };
-    "environment.d/fzf.conf" = {
-      source = l "${dots}/environment.d/.config/environment.d/fzf.conf";
-      recursive = false;
-    };
     # █▓▒░ gdb ──────────────────────────────────────────────────────────────────────────
     "gdb" = {
       source = l "${dots}/gdb/.config/gdb";

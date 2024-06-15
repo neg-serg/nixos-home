@@ -6,6 +6,7 @@
   imports = [
       ./btop.nix
       ./fetch.nix
+      ./fzf.nix
   ];
   home.packages = with pkgs; [
     as-tree # represent smth as tree
@@ -26,7 +27,6 @@
     expect # do tty stuff noninteractively
     fasd # my favorite mru autocompletion
     frawk # small text processing language
-    fzf # famous fuzzy finder
     fzy # fuzzy finder that's faster/better than fzf
     grex # tool to generate regexes
     has # better which (availability and version of executables)
