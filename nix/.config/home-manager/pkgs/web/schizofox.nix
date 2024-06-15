@@ -3,8 +3,8 @@
   programs.schizofox = {
     enable = true;
     theme = {
-      font = "Iosevka Medium";
-      colors = { background-darker = "181825"; background = "1e1e2e"; foreground = "cdd6f4"; };
+      font = "Iosevka";
+      colors = { background-darker = "000000"; background = "071526"; foreground = "6C7E96"; };
     };
 
     search = rec {
