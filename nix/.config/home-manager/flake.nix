@@ -25,10 +25,6 @@
       url = "github:berberman/nvfetcher";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    schizofox = {
-      url = "github:schizofox/schizofox";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     simple-osd-daemons.url = "github:balsoft/simple-osd-daemons";
     sops-nix.url = "github:Mic92/sops-nix";
     stylix.url = "github:danth/stylix";
@@ -47,7 +43,6 @@
     nixpkgs-stable,
     nixpkgs-wayland,
     nvfetcher,
-    schizofox,
     simple-osd-daemons,
     sops-nix,
     stylix,
