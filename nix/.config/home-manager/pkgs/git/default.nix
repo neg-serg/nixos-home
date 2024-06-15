@@ -106,21 +106,21 @@
             push = { default = "simple"; };
             pull = { rebase = true; };
             rebase = { autoStash = true; autosquash = true; };
-            # "url \"git@github.com:\"" = {
-            #     pushInsteadOf = ["https://github.com/" "git://github.com/"];
-            # };
-            url = {
-              "https://github.com/".insteadOf = "github:";
-              "ssh://git@github.com/".pushInsteadOf = "github:";
-              "https://gitlab.com/".insteadOf = "gitlab:";
-              "ssh://git@gitlab.com/".pushInsteadOf = "gitlab:";
-              "https://aur.archlinux.org/".insteadOf = "aur:";
-              "ssh://aur@aur.archlinux.org/".pushInsteadOf = "aur:";
-              "https://git.sr.ht/".insteadOf = "srht:";
-              "ssh://git@git.sr.ht/".pushInsteadOf = "srht:";
-              "https://codeberg.org/".insteadOf = "codeberg:";
-              "ssh://git@codeberg.org/".pushInsteadOf = "codeberg:";
+            "url \"git@github.com:\"" = {
+                pushInsteadOf = ["https://github.com/" "git://github.com/"];
             };
+            # url = {
+            #   "https://github.com/".insteadOf = "github:";
+            #   "ssh://git@github.com/".pushInsteadOf = "github:";
+            #   "https://gitlab.com/".insteadOf = "gitlab:";
+            #   "ssh://git@gitlab.com/".pushInsteadOf = "gitlab:";
+            #   "https://aur.archlinux.org/".insteadOf = "aur:";
+            #   "ssh://aur@aur.archlinux.org/".pushInsteadOf = "aur:";
+            #   "https://git.sr.ht/".insteadOf = "srht:";
+            #   "ssh://git@git.sr.ht/".pushInsteadOf = "srht:";
+            #   "https://codeberg.org/".insteadOf = "codeberg:";
+            #   "ssh://git@codeberg.org/".pushInsteadOf = "codeberg:";
+            # };
             rerere = {
                 enabled = true;
                 autoupdate = true;
