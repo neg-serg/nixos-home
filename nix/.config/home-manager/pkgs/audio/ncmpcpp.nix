@@ -17,7 +17,7 @@
       mouse_support = "no";
       mouse_list_scroll_whole_page = "no";
       use_console_editor = "yes";
-      external_editor = "~/bin/v";
+      external_editor = "nvim";
       jump_to_now_playing_song_at_start = "yes";
       ask_before_clearing_playlists = "no";
       song_window_title_format = "ncmpcpp";
@@ -35,7 +35,7 @@
       lines_scrolled = "1";
       #--=[ Progressbar ]=--------
       progressbar_look = "─╼ ";
-      progressbar_color = "white";
+      progressbar_color = "black";
       progressbar_elapsed_color = "239";
       #--=[ Bars ]=---------------
       song_status_format = "{$8%a} $(26)❯$(26)> {$8%t} $(26)❯$(26)> $b{$8%b}$/b $b({$8%y})$/b$(end)";
