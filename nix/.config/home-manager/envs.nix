@@ -18,7 +18,6 @@
       CARGO_HOME = "${config.home.sessionVariables.XDG_DATA_HOME}/cargo";
       CCACHE_CONFIGPATH = "${config.home.sessionVariables.XDG_CONFIG_HOME}/ccache.config";
       CCACHE_DIR = "${config.home.sessionVariables.XDG_CACHE_HOME}/ccache";
-      DISPLAY = ":0";
       EZA_COLORS = "da=03:uu=01:gu=0:ur=0:uw=03:ux=04;38;5;24:gr=0:gx=01;38;5;24:tx=01;38;5;24;ur=00;ue=00:tr=00:tw=00:tx=00";
       GHCUP_USE_XDG_DIRS = "true";
       GREP_COLOR = "37;45";
@@ -38,7 +37,7 @@
       TERMINFO_DIRS = "${config.home.sessionVariables.XDG_DATA_HOME}/terminfo:/usr/share/terminfo";
       VAGRANT_HOME = "${config.home.sessionVariables.XDG_DATA_HOME}/vagrant";
       WINEPREFIX = "${config.home.sessionVariables.XDG_DATA_HOME}/wineprefixes/default";
-      WORDCHARS = "*?_-.[]~&;!#$%^(){}<>~` ";
+      WORDCHARS = "*?_-.[]~&;!#$%^(){}<>~\\` ";
       XAUTHORITY = "${config.home.sessionVariables.XDG_RUNTIME_DIR}/Xauthority";
       XINITRC = "${config.home.sessionVariables.XDG_CONFIG_HOME}/xinit/xinitrc";
       XSERVERRC = "${config.home.sessionVariables.XDG_CONFIG_HOME}/xinit/xserverrc";
