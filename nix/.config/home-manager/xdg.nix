@@ -107,7 +107,7 @@ with rec {
     userDirs = {
       enable = true;
       createDirectories = true;
-      desktop = "${config.home.homeDirectory}/1st_level/desktop";
+      desktop = "${config.home.homeDirectory}/.local/desktop";
       documents = "${config.home.homeDirectory}/doc";
       download = "${config.home.homeDirectory}/dw";
       music = "${config.home.homeDirectory}/music";

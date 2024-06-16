@@ -4,6 +4,7 @@
 }: {
   nix.package = pkgs.nix;
   imports = [
+    ./envs.nix
     ./dotfiles.nix
     ./pkgs
     ./secrets
