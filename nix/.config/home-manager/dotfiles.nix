@@ -135,10 +135,6 @@ with {
       source = l "${dots}/shell/.config/inputrc";
       recursive = true;
     };
-    "ripgreprc" = {
-      source = l "${dots}/shell/.config/ripgreprc";
-      recursive = true;
-    };
     "tmux" = {
       source = l "${dots}/shell/.config/tmux";
       recursive = true;
