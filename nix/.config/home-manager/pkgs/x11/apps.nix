@@ -24,7 +24,6 @@ with {
     i3 # my favorite wm
     maim # screenshot tool for x11
     negwmPkg.negwm # my own i3 helper
-    picom # x11 compositing
     polybar # my favorite panel so far
     xdragon # drag and drop from console
   ];

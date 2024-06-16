@@ -173,24 +173,6 @@ with {
       };
     };
 
-    picom = {
-      Unit = {
-        Description = "Compositing manager";
-        Documentation = "man:Xorg(1)";
-        After = ["dbus.socket"];
-        PartOf = ["graphical-session.target"];
-        StartLimitIntervalSec = "60";
-      };
-      Service = {
-        ExecStart = "${pkgs.picom}/bin/picom --dbus --backend glx";
-        ExecReload = "${pkgs.util-linux}/bin/kill -SIGUSR1 $MAINPID";
-        Restart = "on-failure";
-        RestartSec = "1";
-        StartLimitBurst = "3000";
-      };
-      Install = {WantedBy = ["graphical-session.target"];};
-    };
-
     warpd = {
       Unit = {
         Description = "Modal keyboard driven interface for mouse manipulation";

@@ -172,10 +172,6 @@ with {
       source = l "${dots}/wm/.config/negwm";
       recursive = true;
     };
-    "picom" = {
-      source = l "${dots}/wm/.config/picom";
-      recursive = true;
-    };
     "warpd" = {
       source = l "${dots}/wm/.config/warpd";
       recursive = true;
