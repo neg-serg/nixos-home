@@ -1,4 +1,4 @@
-{...}: {
+{config, ...}: {
   programs.ncmpcpp = {
     enable = true;
     settings = {
@@ -7,7 +7,7 @@
       mpd_port = 6600;
       mpd_music_dir = "~/music";
       mpd_crossfade_time = "0";
-      ncmpcpp_directory = "~/.config/ncmpcpp";
+      ncmpcpp_directory = "${config.xdg.configHome}/ncmpcpp";
       #--=[ Main ]=-------------------
       autocenter_mode = "yes";
       centered_cursor = "yes";
@@ -23,6 +23,8 @@
       song_window_title_format = "ncmpcpp";
       default_find_mode = "wrapped";
       block_search_constraints_change_if_items_found = "no";
+      follow_now_playing_lyrics = "yes";
+      lyrics_fetchers = "musixmatch";
       #--=[ Playlist ]=---------------
       playlist_disable_highlight_delay = "1";
       playlist_show_remaining_time = "yes";
@@ -56,7 +58,7 @@
       browser_display_mode = "classic";
       incremental_seeking = "yes";
       seek_time = "4";
-      message_delay_time = "3";
+      message_delay_time = "1";
       #--=[ Colors ]=---------------
       colors_enabled = "yes";
       discard_colors_if_item_is_selected = "yes";
