@@ -18,8 +18,8 @@
     screenkey # screencast tool to display your keys inspired by Screenflick
     sonic-visualiser # audio analyzer
     sox # audio processing
-    stable.audiowaveform # shows soundwaveform
-    stable.streamlink # CLI for extracting streams from websites
+    audiowaveform # shows soundwaveform
+    streamlink # CLI for extracting streams from websites
     tauon # fancy standalone music player
     unflac # split2flac alternative
   ];
