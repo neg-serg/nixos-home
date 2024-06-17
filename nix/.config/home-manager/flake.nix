@@ -13,6 +13,10 @@
       url = "github:nix-community/nixos-generators";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    home-manager-shell = {
+      url = "sourcehut:~dermetfan/home-manager-shell";
+      inputs = { nixpkgs.follows = "nixpkgs"; home-manager.follows = "home-manager"; };
+    };
     nixpkgs-master.url = "github:nixos/nixpkgs/master";
     nixpkgs-oldstable.url = "github:nixos/nixpkgs/nixos-23.05";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-23.11";
@@ -35,6 +39,7 @@
     chaotic,
     executor,
     home-manager,
+    home-manager-shell,
     mpd-mpris,
     negwm,
     nixos-generators,
