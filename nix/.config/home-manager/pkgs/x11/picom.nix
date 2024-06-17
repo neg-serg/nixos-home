@@ -1,6 +1,7 @@
 {...}: {
   services.picom.enable = true;
   services.picom.settings = {
+    backend = "glx";
     active-opacity = 1.0;
     detect-client-leader = true;
     detect-client-opacity = true;
