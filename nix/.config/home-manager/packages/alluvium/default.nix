@@ -12,7 +12,7 @@ python3.pkgs.buildPythonApplication rec {
     owner = "martenlienen";
     repo = "alluvium";
     rev = "9eef3c9be008738ee72dddc7532e33f5680a56ff";
-    hash = "sha256-iDTrJVZDOSuQFiR6myLYkS+80nQYx/RKpQspPPdxxOk=";
+    hash = "sha256-BnDS1n1aIQh9HJZeZv0hR7vo2l6Kf9B/11fYFbb/cpQ=";
   };
 
   nativeBuildInputs = [
