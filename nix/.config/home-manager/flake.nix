@@ -2,12 +2,10 @@
   description = "Home Manager configuration of neg";
   inputs = {
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
-    executor.url = "github:neg-serg/executor";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    negwm.url = "github:neg-serg/negwm";
     home-manager-shell = {
       url = "sourcehut:~dermetfan/home-manager-shell";
       inputs = { nixpkgs.follows = "nixpkgs"; home-manager.follows = "home-manager"; };
@@ -18,6 +16,10 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     sops-nix.url = "github:Mic92/sops-nix";
     stylix.url = "github:danth/stylix";
+
+    executor.url = "github:neg-serg/executor";
+    negwm.url = "github:neg-serg/negwm";
+    
     # nixos-generators = {
     #   url = "github:nix-community/nixos-generators";
     #   inputs.nixpkgs.follows = "nixpkgs";
