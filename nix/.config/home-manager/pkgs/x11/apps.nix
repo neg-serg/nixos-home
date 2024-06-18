@@ -14,7 +14,7 @@ with {
 }; {
   imports = [ ./dunst.nix ];
   home.packages = with pkgs; [
-    alluvium # show i3 bindings
+    # alluvium # show i3 bindings
     flameshot # interactive screenshot tool
     herbe # notification without daemon and dbus
     hsetroot # set x11 root image
