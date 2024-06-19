@@ -1,6 +1,7 @@
 {
   pkgs,
   config,
+  stable,
   ...
 }:
 with {
@@ -8,8 +9,9 @@ with {
   dots = "${config.home.homeDirectory}/.dotfiles";
   mkvcleaner = pkgs.callPackage ../../packages/mkvcleaner {};
 }; {
+  # nixpkgs-stable.config.allowUnfree = true;
   home.packages = with pkgs; [
-    davinci-resolve # video editor
+    # stable.davinci-resolve # video editor
     ffmpeg-full # famous multimedia lib
     ffmpegthumbnailer # thumbnail for video
     imagemagick # for convert
