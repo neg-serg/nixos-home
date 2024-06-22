@@ -37,7 +37,7 @@ artist_copy(){
 }
 
 path_copy(){
-    mpd_music_dir="$(awk '/music_directory/{print $2}' "${XDG_CONFIG_HOME}/mpd/mpd.conf"|tr -d '"'|sed 's:^~:'"${HOME}"':')"
+    mpd_music_dir="$XDG_MUSIC_DIR"
     echo "$mpd_music_dir/$(mpc -f '%file%' current)" | xsel -bi
 }
 
