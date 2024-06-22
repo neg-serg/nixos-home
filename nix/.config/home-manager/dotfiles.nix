@@ -70,10 +70,10 @@ with {
       source = l "${dots}/misc/.config/dosbox";
       recursive = true;
     };
-    "fastfetch" = {
-      source = l "${dots}/misc/.config/fastfetch";
-      recursive = true;
-    };
+    # "fastfetch" = {
+    #   source = l "${dots}/misc/.config/fastfetch";
+    #   recursive = true;
+    # };
     "flameshot" = {
       source = l "${dots}/misc/.config/flameshot";
       recursive = true;
