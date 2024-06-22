@@ -14,7 +14,7 @@ with {
     bash-language-server # bash lsp
     pyright # python lsp
     pylyzer # python type checker
-    ruff-lsp # pyton lsp
+    ruff-lsp # python lsp
     ruff # python linter
     rust-analyzer # rust lsp
     stable.nil # nixos language server
