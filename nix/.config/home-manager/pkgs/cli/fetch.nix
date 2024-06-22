@@ -3,31 +3,61 @@
     fastfetch # nice fetch
     onefetch # show you git stuff
   ];
+  xdg.configFile."fastfetch/skull".text = 
+  ''
+                          :::!~!!!!!:.
+                      .xUHWH!! !!?M88WHX:.
+                    .X*#M@$!!  !X!M$$$$$$WWx:.
+                   :!!!!!!?H! :!$!$$$$$$$$$$8X:
+                  !!~  ~:~!! :~!$!#$$$$$$$$$$8X:
+                 :!~::!H!<   ~.U$X!?R$$$$$$$$MM!
+                 ~!~!!!!~~ .:XW$$$U!!?$$$$$$RMM!
+                   !:~~~ .:!M"T#$$$$WX??#MRRMMM!
+                   ~?WuxiW*`   `"#$$$$8!!!!??!!!
+                 :X- M$$$$       `"T#$T~!8$WUXU~
+                :%`  ~#$$$m:        ~!~ ?$$$$$$
+              :!`.-   ~T$$$$8xx.  .xWW- ~""##*"
+    .....   -~~:<` !    ~?T#$$@@W@*?$$      /`
+    W$@@M!!! .!~~ !!     .:XUW$W!~ `"~:    :
+    #"~~`.:x%`!!  !H:   !WM$$$$Ti.: .!WUn+!`
+    :::~:!!`:X~ .: ?H.!u "$$$B$$$!W:U!T$$M~
+    .~~   :X@!.-~   ?@WTWo("*$$$W$TH$! `
+    Wi.~!X$?!-~    : ?$$$B$Wu("**$RM!
+    $R@i.~~ !     :   ~$$$$$B$$en:``
+    ?MXT@Wx.~    :     ~"##*$$$$M~
+  '';
   xdg.configFile."fastfetch/config.jsonc".text = builtins.toJSON {
     "$schema" = "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json";
-    logo = {
-      source = "nixos_small";
-      padding = {
-        left = 1;
-        right = 3;
-      };
-    };
+    logo = { source = "~/.config/fastfetch/skull"; width = 65; padding = { left = 1; right = 3; }; };
     display = {
-      separator = " ";
-      keyWidth = 14;
+      color = { keys = "3"; title = "4"; };
+      size = { maxPrefix = "PB"; };
+      percent = { type = 3; };
     };
     modules = [
-      { type = "os"; key = " system  "; format = "{3}"; }
-      { type = "kernel"; key = " kernel  "; format = "{1} {2} ({4})"; }
-      { type = "uptime"; key = " uptime  "; }
-      { type = "wm"; key = " wm      "; }
-      {
-        type = "command";
-        key = "󰆧 packages";
-        text = "(${lib.getExe' pkgs.nix "nix-store"} --query --requisites /run/current-system | wc -l | tr -d '\n') && echo ' (nix; /run/current-system)'";
-      }
-      { type = "memory"; key = "󰍛 memory  "; }
-      { type = "disk"; key = "󱥎 storage "; format = "{1} / {2} ({3})"; folders = "/"; }
+      { type = "os"; key = " system"; format = "{3}"; }
+      { type = "kernel"; key = " kernel"; format = "{1} {2} ({4})"; }
+      { type = "uptime"; key = " uptime"; }
+      { type = "wm"; key = " wm"; }
+      { type = "wmtheme"; key = " wmtheme";  }
+      { type = "command"; key = "󰆧 packages"; text = "(${lib.getExe' pkgs.nix "nix-store"} --query --requisites /run/current-system | wc -l | tr -d '\n') && echo ' (nix; /run/current-system)'"; }
+      { type = "memory"; key = "󰍛 memory"; }
+      { type = "host"; key = "🖥 host"; }
+      { type = "shell"; key = ""; }
+      "monitor"
+      "theme"
+      "icons"
+      "cursor"
+      "locale"
+      "terminal" "terminalfont" "terminalsize"
+      "cpu"
+      "board"
+      "bios"
+      "vulkan"
+      "disk"
+      "sound"
+      "player"
+      "weather"
     ];
   };
 }
