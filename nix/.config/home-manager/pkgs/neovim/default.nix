@@ -25,9 +25,6 @@ with {
   ];
   xdg.configFile = {
     # █▓▒░ nvim ─────────────────────────────────────────────────────────────────────────
-    "nvim" = {
-      source = l "${dots}/nvim/.config/nvim";
-      recursive = true;
-    };
+    "nvim" = { source = l "${dots}/nvim/.config/nvim"; recursive = true; };
   };
 }
