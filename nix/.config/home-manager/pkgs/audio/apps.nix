@@ -1,6 +1,5 @@
 {
   pkgs,
-  stable,
   ...
 }: {
   imports = [./mpd.nix];

@@ -1,6 +1,5 @@
 {
   pkgs,
-  lib,
   ...
 }: {
   nix.package = pkgs.nix;
