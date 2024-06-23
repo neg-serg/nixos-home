@@ -3,7 +3,7 @@
     config.allowUnfree = true;
     config.packageOverrides = super: {
       python3-lto = super.python3.override {
-        packageOverrides = python-self: python-super: {
+        packageOverrides = _: _: {
           enableOptimizations = true;
           enableLTO = true;
           reproducibleBuild = false;
