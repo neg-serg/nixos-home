@@ -8,7 +8,6 @@
       ./fetch.nix
       ./fzf.nix
       ./ripgrep.nix
-      ./dircolors.nix
   ];
   home.packages = with pkgs; [
     as-tree # represent smth as tree
