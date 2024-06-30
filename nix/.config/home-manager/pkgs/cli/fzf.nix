@@ -44,19 +44,19 @@
     colors = {
       "preview-bg" = "-1";
       "gutter" = "-1";
-      "bg" = lib.mkDefault "#000000";
-      "bg+" = lib.mkDefault  "#000000";
-      "fg" = lib.mkDefault  "#4f5d78";
-      "fg+" = lib.mkDefault  "#8DA6B2";
-      "hl" = lib.mkDefault  "#546c8a";
-      "hl+" = lib.mkDefault "#005faf";
-      "header" = lib.mkDefault "#4779B3";
-      "info" = lib.mkDefault "#3f5876";
-      "pointer" = lib.mkDefault "#005faf";
-      "marker" = lib.mkDefault "#04141C";
-      "prompt" = lib.mkDefault "#005faf";
-      "spinner" = lib.mkDefault "#3f5876";
-      "preview-fg" = lib.mkDefault "#4f5d78";
+      "bg" = lib.mkForce "#000000";
+      "bg+" = lib.mkForce  "#000000";
+      "fg" = lib.mkForce  "#4f5d78";
+      "fg+" = lib.mkForce  "#8DA6B2";
+      "hl" = lib.mkForce  "#546c8a";
+      "hl+" = lib.mkForce "#005faf";
+      "header" = lib.mkForce "#4779B3";
+      "info" = lib.mkForce "#3f5876";
+      "pointer" = lib.mkForce "#005faf";
+      "marker" = lib.mkForce "#04141C";
+      "prompt" = lib.mkForce "#005faf";
+      "spinner" = lib.mkForce "#3f5876";
+      "preview-fg" = lib.mkForce "#4f5d78";
     };
 
     enableZshIntegration = true;
