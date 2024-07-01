@@ -5,7 +5,7 @@ return {'nvim-telescope/telescope.nvim', -- modern fuzzy-finder over lists
     event={'VeryLazy'},
     dependencies={
         'nvim-lua/plenary.nvim', -- lua functions
-        'neg-serg/telescope-pathogen.nvim', -- telescope change directory on the fly
+        'brookhong/telescope-pathogen.nvim', -- telescope change directory on the fly
         'debugloop/telescope-undo.nvim', -- telescope show undo
         'jvgrootveld/telescope-zoxide', -- telescope zoxide integration
         'MrcJkb/telescope-manix', -- manix support
