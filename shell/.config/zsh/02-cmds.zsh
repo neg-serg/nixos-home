@@ -226,6 +226,11 @@ _exists docker && {
     ipmi_two(){ docker run -p 8080:8080 solarkennedy/ipmi-kvm-docker; echo xdg-open localhost:8080|xsel }
 }
 
+_exists cryptsetup && {
+    horny(){ sudo cryptsetup luksOpen "$XDG_VIDEOS_DIR/1st_level/.nd/hiddenfs" cryptroot --key-file /one/hdd.key }
+    unhorny(){ sudo umount /dev/mapper/cryptroot && sudo cryptsetup close cryptroot }
+}
+
 autoload zc
 unfunction _exists
 # vim: ft=zsh:nowrap
