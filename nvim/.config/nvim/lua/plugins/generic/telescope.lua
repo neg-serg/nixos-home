@@ -10,7 +10,6 @@ return {'nvim-telescope/telescope.nvim', -- modern fuzzy-finder over lists
         'jvgrootveld/telescope-zoxide', -- telescope zoxide integration
         'MrcJkb/telescope-manix', -- manix support
         'nvim-telescope/telescope-frecency.nvim', -- MRU frecency
-        'natecraddock/telescope-zf-native.nvim', -- zf native sorter
         'renerocksai/telekasten.nvim', -- telekasten support
     }, -- telescope + telekasten
     keys={{'<M-x>', '<cmd>Telescope commands<cr>', desc='Run Command'}},
@@ -169,7 +168,6 @@ return {'nvim-telescope/telescope.nvim', -- modern fuzzy-finder over lists
             },
         }
         telescope.load_extension'frecency'
-        telescope.load_extension'zf-native'
         telescope.load_extension'undo'
 
         local opts={silent=true, noremap=true}
