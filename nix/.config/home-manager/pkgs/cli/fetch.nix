@@ -43,14 +43,16 @@
       { type = "command"; key = "󰆧 packages"; text = "(${lib.getExe' pkgs.nix "nix-store"} --query --requisites /run/current-system | wc -l | tr -d '\n') && echo ' (nix; /run/current-system)'"; }
       { type = "memory"; key = "󰍛 memory"; }
       { type = "host"; key = "🖥 host"; }
-      { type = "shell"; key = ""; }
       "monitor"
       "theme"
       "icons"
       "cursor"
       "locale"
-      "terminal" "terminalfont" "terminalsize"
-      "cpu"
+      { type = "shell"; key = "︁ shell"; }
+      { type = "terminal"; key = "︁ terminal"; }
+      { type = "terminalfont"; key = "︁ terminal font"; }
+      { type = "terminalsize"; key = "︁ terminal size"; }
+      { type = "cpu"; key = " CPU"; }
       "board"
       "bios"
       "vulkan"
