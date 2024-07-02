@@ -1,7 +1,6 @@
-local lspconfig = require('lspconfig')
-local lsp_status = require('lsp-status')
-local saga = require('lspsaga')
-local lspkind = require('lspkind')
+local lspconfig = require'lspconfig'
+local lsp_status = require'lsp-status'
+local lspkind = require'lspkind'
 local lsp = vim.lsp
 
 vim.fn.sign_define("LspDiagnosticsSignError",
@@ -52,18 +51,18 @@ lsp_status.config {
 }
 
 lsp_status.register_progress()
-lspkind.init {symbol_map = kind_symbols}
-lsp.handlers['textDocument/publishDiagnostics'] = lsp.with(lsp.diagnostic.on_publish_diagnostics, {
-  virtual_text = false,
-  signs = true,
-  update_in_insert = false,
-  underline = true
+lspkind.init{symbol_map=kind_symbols}
+lsp.handlers['textDocument/publishDiagnostics']=lsp.with(lsp.diagnostic.on_publish_diagnostics, {
+  virtual_text=false,
+  signs=true,
+  update_in_insert=false,
+  underline=true
 })
 saga.init_lsp_saga {
-  use_saga_diagnostic_sign = true,
-  code_action_prompt = {enable = false},
-  code_action_keys = {quit = '<esc>', exec = '<cr>'},
-  rename_action_keys = {quit = '<esc>', exec = '<cr>'}
+  use_saga_diagnostic_sign=true,
+  code_action_prompt={enable=false},
+  code_action_keys={quit='<esc>', exec='<cr>'},
+  rename_action_keys={quit='<esc>', exec='<cr>'}
 }
 local function on_attach(client, bufnr)
   local function buf_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
@@ -72,29 +71,17 @@ local function on_attach(client, bufnr)
   buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
   -- Mappings.
-  local opts = {noremap = true, silent = true}
+  local opts={noremap=true, silent=true}
   buf_keymap('n', '<leader>td', '<cmd>lua vim.lsp.buf.type_definition()<cr>', opts)
   buf_keymap('n', '<leader>tt', '<cmd>lua vim.lsp.buf.definition()<cr>', opts)
   buf_keymap('n', '<leader>ti', '<cmd>lua vim.lsp.buf.implementation()<cr>', opts)
   buf_keymap('n', '<leader>tr', '<cmd>lua vim.lsp.buf.references()<cr>', opts)
-  buf_keymap('n', '<leader>dd', '<cmd>lua require("lspsaga.hover").render_hover_doc()<CR>', opts)
   buf_keymap('n', '<leader>dn', '<cmd>lua vim.lsp.diagnostic.goto_next()<cr>', opts)
   buf_keymap('n', '<leader>dp', '<cmd>lua vim.lsp.diagnostic.goto_prev()<cr>', opts)
   buf_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_next()<cr>', opts)
   buf_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<cr>', opts)
-  buf_keymap('n', '<leader>ds', '<cmd>lua require("lspsaga.signaturehelp").signature_help()<cr>', opts)
-  buf_keymap('n', '<leader>dl', '<cmd>lua require("lspsaga.diagnostic").show_line_diagnostics()<cr>', opts)
-  -- buf_keymap('n', '<leader>a', '<cmd>lua require("lspsaga.codeaction").code_action()<CR>', opts)
   buf_keymap('n', '<leader>a', '<cmd>lua vim.lsp.buf.code_action()<cr>', opts)
   buf_keymap('v', '<leader>a', '<cmd>lua vim.lsp.buf.range_code_action()<cr>', opts)
-  -- buf_keymap('v', '<leader>a', ':<C-U>lua require("lspsaga.codeaction").range_code_action()<CR>', opts)
-  buf_keymap('n', '<leader>r', '<cmd>lua require("lspsaga.rename").rename()<CR>', opts)
-
-  -- scroll down hover doc or scroll in definition preview
-  buf_keymap('n', '<C-f>', '<cmd>lua require("lspsaga.action").smart_scroll_with_saga(1)<CR>', opts)
-  -- scroll up hover doc
-  buf_keymap('n', '<C-b>', '<cmd>lua require("lspsaga.action").smart_scroll_with_saga(-1)<CR>', opts)
-
   -- Set some keybinds conditional on server capabilities
   if client.server_capabilities.document_formatting then
     buf_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<cr>", opts)
@@ -121,34 +108,34 @@ local function on_attach(client, bufnr)
   lsp_status.on_attach(client, bufnr);
   require"lsp_signature".on_attach(client, bufnr)
   require'lsp_extensions'.inlay_hints {
-    highlight = "Comment",
-    prefix = " > ",
-    aligned = false,
-    only_current_line = false,
-    enabled = {"ChainingHint"}
+    highlight="Comment",
+    prefix=" > ",
+    aligned=false,
+    only_current_line=false,
+    enabled={"ChainingHint"}
   }
 end
 
 local function on_attach_without_formatting(client, bufnr)
-  client.server_capabilities.document_formatting = false
+  client.server_capabilities.document_formatting=false
   on_attach(client, bufnr)
 end
 
-local js_jsx_ts_tsx_vue_args = {
-  {formatCommand = "prettier --stdin-filepath ${INPUT}", formatStdin = true}, {
-    lintCommand = "eslint -f unix --stdin --stdin-filename ${INPUT}",
-    lintIgnoreExitCode = true,
-    lintStdin = true,
-    lintFormats = {"%f:%l:%c: %m"},
-    formatCommand = "eslint --fix-to-stdout --stdin --stdin-filename=${INPUT}",
-    formatStdin = true
+local js_jsx_ts_tsx_vue_args={
+  {formatCommand="prettier --stdin-filepath ${INPUT}", formatStdin=true}, {
+    lintCommand="eslint -f unix --stdin --stdin-filename ${INPUT}",
+    lintIgnoreExitCode=true,
+    lintStdin=true,
+    lintFormats={"%f:%l:%c: %m"},
+    formatCommand="eslint --fix-to-stdout --stdin --stdin-filename=${INPUT}",
+    formatStdin=true
   }
 }
 
-local servers = {
-  bashls = {},
-  clangd = {
-    cmd = {
+local servers={
+  bashls={},
+  clangd={
+    cmd={
       'clangd' -- '--background-index',
       , '--clang-tidy'
       , '--completion-style=bundled'
@@ -156,109 +143,109 @@ local servers = {
       , '--suggest-missing-includes'
       , '--cross-file-rename'
     },
-    handlers = lsp_status.extensions.clangd.setup(),
-    init_options = {
-      clangdFileStatus = true,
-      usePlaceholders = true,
-      completeUnimported = true,
-      semanticHighlighting = true
+    handlers=lsp_status.extensions.clangd.setup(),
+    init_options={
+      clangdFileStatus=true,
+      usePlaceholders=true,
+      completeUnimported=true,
+      semanticHighlighting=true
     }
   },
-  cmake = {},
-  cssls = {},
-  dartls = {},
-  dockerls = {},
+  cmake={},
+  cssls={},
+  dartls={},
+  dockerls={},
   -- mostly for formatting
-  efm = {
-    cmd = {"efm-langserver"},
-    init_options = {documentFormatting = true},
-    filetypes = {
+  efm={
+    cmd={"efm-langserver"},
+    init_options={documentFormatting=true},
+    filetypes={
       "lua", "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx",
       "vue", "json", "html", "css", "scss"
     },
-    settings = {
-      rootMarkers = {".git/"},
-      languages = {
-        lua = {{formatCommand = "lua-format -i --indent-width=2 --tab-width=2 --column-limit=120", formatStdin = true}},
-        nix = {{formatCommand = "nixfmt", formatStdin = true}},
-        css = js_jsx_ts_tsx_vue_args,
-        scss = js_jsx_ts_tsx_vue_args,
-        html = js_jsx_ts_tsx_vue_args,
-        javascript = js_jsx_ts_tsx_vue_args,
-        javascriptreact = js_jsx_ts_tsx_vue_args,
-        json = js_jsx_ts_tsx_vue_args,
-        typescript = js_jsx_ts_tsx_vue_args,
-        typescriptreact = js_jsx_ts_tsx_vue_args,
-        vue = js_jsx_ts_tsx_vue_args
+    settings={
+      rootMarkers={".git/"},
+      languages={
+        lua={{formatCommand="lua-format -i --indent-width=2 --tab-width=2 --column-limit=120", formatStdin=true}},
+        nix={{formatCommand="nixfmt", formatStdin=true}},
+        css=js_jsx_ts_tsx_vue_args,
+        scss=js_jsx_ts_tsx_vue_args,
+        html=js_jsx_ts_tsx_vue_args,
+        javascript=js_jsx_ts_tsx_vue_args,
+        javascriptreact=js_jsx_ts_tsx_vue_args,
+        json=js_jsx_ts_tsx_vue_args,
+        typescript=js_jsx_ts_tsx_vue_args,
+        typescriptreact=js_jsx_ts_tsx_vue_args,
+        vue=js_jsx_ts_tsx_vue_args
       }
     }
   },
-  ghcide = {},
-  html = {},
-  jdtls = {cmd = {"jdt-ls"}},
-  jsonls = {on_attach = on_attach_without_formatting},
-  julials = {settings = {julia = {format = {indent = 2}}}},
-  rnix = {},
-  ocamllsp = {},
-  omnisharp = {
-    settings = {omnisharp = {useGlobalMono = "always"}},
-    cmd = {'omnisharp', "-l", "Error", "--languageserver", "--hostPID", tostring(vim.fn.getpid())}
+  ghcide={},
+  html={},
+  jdtls={cmd={"jdt-ls"}},
+  jsonls={on_attach=on_attach_without_formatting},
+  julials={settings={julia={format={indent=2}}}},
+  rnix={},
+  ocamllsp={},
+  omnisharp={
+    settings={omnisharp={useGlobalMono="always"}},
+    cmd={'omnisharp', "-l", "Error", "--languageserver", "--hostPID", tostring(vim.fn.getpid())}
   },
-  rust_analyzer = {
-    settings = {
-      ["rust-analyzer"] = {
-        cargo = {loadOutDirsFromCheck = true},
-        checkOnSave = {command = "clippy"},
-        procMacro = {enable = true},
-        lens = {references = true, methodReferences = true},
-        experimental = {procAttrMacros = true}
+  rust_analyzer={
+    settings={
+      ["rust-analyzer"]={
+        cargo={loadOutDirsFromCheck=true},
+        checkOnSave={command="clippy"},
+        procMacro={enable=true},
+        lens={references=true, methodReferences=true},
+        experimental={procAttrMacros=true}
       }
     }
   },
-  stylelint_lsp = {cmd = {"stylelint"}}, -- not yet working, needs stylelint-lsp in nixpkgs upstream
-  svelte = {},
-  taplo = {},
-  texlab = {
-    settings = {latex = {forwardSearch = {executable = 'zathura', args = {'--synctex-forward', '%l:1:%f', '%p'}}}},
-    commands = {
-      TexlabForwardSearch = {
+  stylelint_lsp={cmd={"stylelint"}}, -- not yet working, needs stylelint-lsp in nixpkgs upstream
+  svelte={},
+  taplo={},
+  texlab={
+    settings={latex={forwardSearch={executable='zathura', args={'--synctex-forward', '%l:1:%f', '%p'}}}},
+    commands={
+      TexlabForwardSearch={
         function()
-          local pos = vim.api.nvim_win_get_cursor(0)
-          local params = {
-            textDocument = {uri = vim.uri_from_bufnr(0)},
-            position = {line = pos[1] - 1, character = pos[2]}
+          local pos=vim.api.nvim_win_get_cursor(0)
+          local params={
+            textDocument={uri=vim.uri_from_bufnr(0)},
+            position={line=pos[1] - 1, character=pos[2]}
           }
           lsp.buf_request(0, 'textDocument/forwardSearch', params,
                           function(err, _, _, _) if err then error(tostring(err)) end end)
         end,
-        description = 'Run synctex forward search'
+        description='Run synctex forward search'
       }
     }
   },
-  tsserver = {
-    filetypes = {"javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx"},
-    root_dir = require('lspconfig/util').root_pattern("package.json", "tsconfig.json", "jsconfig.json", ".git"),
-    on_attach = on_attach_without_formatting
+  tsserver={
+    filetypes={"javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx"},
+    root_dir=require('lspconfig/util').root_pattern("package.json", "tsconfig.json", "jsconfig.json", ".git"),
+    on_attach=on_attach_without_formatting
   },
-  vimls = {},
-  vuels = {},
-  yamlls = {},
-  zls = {}
+  vimls={},
+  vuels={},
+  yamlls={},
+  zls={}
 }
 
-local snippet_capabilities = {textDocument = {completion = {completionItem = {snippetSupport = true}}}}
+local snippet_capabilities={textDocument={completion={completionItem={snippetSupport=true}}}}
 
 for server, config in pairs(servers) do
-  config.on_attach = config.on_attach or on_attach
-  config.handlers = (config.handlers or {})
-  config.handlers["textDocument/publishDiagnostics"] = lsp.with(lsp.diagnostic.on_publish_diagnostics, {
-    virtual_text = true,
-    signs = true,
-    underline = true,
-    update_in_insert = true
+  config.on_attach=config.on_attach or on_attach
+  config.handlers=(config.handlers or {})
+  config.handlers["textDocument/publishDiagnostics"]=lsp.with(lsp.diagnostic.on_publish_diagnostics, {
+    virtual_text=true,
+    signs=true,
+    underline=true,
+    update_in_insert=true
   })
-  local cmp_capabilities = require('cmp_nvim_lsp').default_capabilities()
-  config.capabilities = vim.tbl_deep_extend(
+  local cmp_capabilities=require('cmp_nvim_lsp').default_capabilities()
+  config.capabilities=vim.tbl_deep_extend(
     'keep',
     config.capabilities or {},
     lsp_status.capabilities,
