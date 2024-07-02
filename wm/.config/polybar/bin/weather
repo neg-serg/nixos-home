@@ -2,7 +2,7 @@
 
 get_icon() {
     case $1 in
-        # Icons for Font Awesome 5 Pro
+        # Icons for Font Awesome 6 Pro
         01d) icon="";;
         01n) icon="";;
         02d) icon="";;
