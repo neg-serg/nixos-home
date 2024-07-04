@@ -25,6 +25,8 @@ return {'nvim-telescope/telescope.nvim', -- modern fuzzy-finder over lists
         local sorters=require'telescope.sorters'
         local long_find={'rg','--files','--hidden','-g','!.git'}
         local short_find={'fd','-H','--ignore-vcs','-d','4','--strip-cwd-prefix'}
+        local fb_actions=telescope.extensions.file_browser.actions
+        local action_state=require'telescope.actions.state'
         local ignore_patterns={
             '__pycache__/', '__pycache__/*',
             'build/', 'gradle/', 'node_modules/', 'node_modules/*',
@@ -79,7 +81,54 @@ return {'nvim-telescope/telescope.nvim', -- modern fuzzy-finder over lists
                 buffer_previewer_maker=previewers.buffer_previewer_maker
             },
             extensions={
-                pathogen={use_last_search_for_live_grep=false},
+                file_browser={
+                    theme='ivy',
+
+                    border=false,
+                    previewer=false,
+                    sorting_strategy="descending",
+                    prompt_title=false,
+                    find_command=short_find,
+                    layout_config={height=18},
+
+                    hijack_netrw=false,
+                    grouped=true,
+                    hide_parent_dir=true,
+                    prompt_path=true,
+                    display_stat=false,
+                    git_status=false,
+                    depth=2,
+                    hidden={
+                        file_browser=false,
+                        folder_browser=false 
+                    },
+                    mappings={
+                        ['i']={
+                            ["<C-w>"] = function(prompt_bufnr, bypass)
+                                local current_picker = action_state.get_current_picker(prompt_bufnr)
+                                if current_picker:_get_prompt() == "" then
+                                    fb_actions.goto_parent_dir(prompt_bufnr, bypass)
+                                else
+                                    local function t(str)
+                                        return vim.api.nvim_replace_termcodes(str, true, true, true)
+                                    end
+                                    vim.api.nvim_feedkeys(t'<C-u>', 'i', true)
+                                end
+                            end,
+                            ['<A-d>']=false,
+                            ['<bs>']=false,
+                        },
+                        ['n']={},
+                    },
+                },
+                pathogen={
+                    use_last_search_for_live_grep=false,
+                    attach_mappings = function(map, actions)
+                        map("i", "<C-o>", actions.proceed_with_parent_dir)
+                        map("i", "<C-l>", actions.revert_back_last_dir)
+                        map("i", "<C-b>", actions.change_working_directory)
+                    end,
+                },
                 frecency={
                     disable_devicons=false,
                     ignore_patterns=ignore_patterns,
@@ -167,6 +216,7 @@ return {'nvim-telescope/telescope.nvim', -- modern fuzzy-finder over lists
                 }
             },
         }
+        telescope.load_extension'file_browser'
         telescope.load_extension'frecency'
         telescope.load_extension'undo'
 
@@ -181,7 +231,7 @@ return {'nvim-telescope/telescope.nvim', -- modern fuzzy-finder over lists
         end, opts)
         Map('n', '<M-C-o>', function() builtin.lsp_dynamic_workspace_symbols() end, opts)
         Map('n', '<M-o>', function() builtin.lsp_document_symbols() end, opts)
-        Map('n', '<leader>l', function() vim.cmd'chdir %:p:h'; pathogen.find_files{} end, opts)
+        vim.keymap.set("n", "<leader>l", ":Telescope file_browser path=%:p:h select_buffer=true<CR>")
         Map('n', 'E', function()
             if vim.bo.filetype then
                 require'oil.actions'.cd.callback()
