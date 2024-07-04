@@ -11,8 +11,7 @@ return {'nvim-telescope/telescope.nvim', -- modern fuzzy-finder over lists
         'MrcJkb/telescope-manix', -- manix support
         'nvim-telescope/telescope-frecency.nvim', -- MRU frecency
         'renerocksai/telekasten.nvim', -- telekasten support
-    }, -- telescope + telekasten
-    keys={{'<M-x>', '<cmd>Telescope commands<cr>', desc='Run Command'}},
+    },
     config=function()
         local telescope=require'telescope'
         local pathogen=telescope.load_extension'pathogen'
@@ -47,12 +46,7 @@ return {'nvim-telescope/telescope.nvim', -- modern fuzzy-finder over lists
                     "--glob='!*.git*'", "--glob='!*.obsidian'",
                     "--hidden"
                 },
-                mappings={
-                    i={
-                        ["<esc>"]=actions.close,
-                        ["<C-u>"]=false,
-                    },
-                },
+                mappings={i={["<esc>"]=actions.close, ["<C-u>"]=false}},
                 dynamic_preview_title=true,
                 prompt_prefix="❯> ",
                 selection_caret="• ",
@@ -83,14 +77,12 @@ return {'nvim-telescope/telescope.nvim', -- modern fuzzy-finder over lists
             extensions={
                 file_browser={
                     theme='ivy',
-
                     border=false,
                     previewer=false,
                     sorting_strategy="descending",
                     prompt_title=false,
                     find_command=short_find,
                     layout_config={height=18},
-
                     hijack_netrw=false,
                     grouped=true,
                     hide_parent_dir=true,
@@ -217,8 +209,6 @@ return {'nvim-telescope/telescope.nvim', -- modern fuzzy-finder over lists
         Map('n', "<leader>.", function()
             vim.cmd'Telescope frecency theme=ivy layout_config={height=12} sorting_strategy=descending'
         end, opts)
-        Map('n', '<M-C-o>', function() builtin.lsp_dynamic_workspace_symbols() end, opts)
-        Map('n', '<M-o>', function() builtin.lsp_document_symbols() end, opts)
         vim.keymap.set("n", "<leader>l", ":Telescope file_browser path=%:p:h select_buffer=true<CR>")
         Map('n', 'E', function()
             if vim.bo.filetype then
@@ -228,9 +218,7 @@ return {'nvim-telescope/telescope.nvim', -- modern fuzzy-finder over lists
             end
             pathogen.find_files{}
         end, opts)
-        Map('n', '[Qleader]e', function()
-            pathogen.find_files{}
-        end, opts)
+        Map('n', '[Qleader]e', function() pathogen.find_files{} end, opts)
         Map('n', '<leader>L', function() 
             if vim.bo.filetype then
                 require'oil.actions'.cd.callback()
