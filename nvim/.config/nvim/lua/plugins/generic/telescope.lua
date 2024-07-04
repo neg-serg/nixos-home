@@ -140,18 +140,6 @@ return {'nvim-telescope/telescope.nvim', -- modern fuzzy-finder over lists
                     show_unindexed=true,
                     use_sqlite=false,
                 },
-                ["zf-native"]={
-                    file={ -- options for sorting file-like items
-                        enable=true, -- override default telescope file sorter
-                        highlight_results=true, -- highlight matching text in results
-                        match_filename=true, -- enable zf filename match priority
-                    },
-                    generic={ -- options for sorting all other items
-                        enable=true, -- override default telescope generic item sorter
-                        highlight_results=true, -- highlight matching text in results
-                        match_filename=false, -- disable zf filename match priority
-                    },
-                },
                 undo={
                     use_delta=true,
                     side_by_side=true,
