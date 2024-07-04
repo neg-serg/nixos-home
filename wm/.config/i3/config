@@ -20,7 +20,7 @@ set $circle-games [class="^(Steam|steam)$"]
 set $circle-nsxiv [class="Nsxiv"]
 set $circle-obs [class="obs"]
 set $circle-remote [class="^(xfreerdp|reminna|org.remmina.Remmina)$"]
-set $circle-dw [class="nicotine"]
+set $circle-dw [class="org.nicotine_plus.Nicotine"]
 set $circle-term [instance="term"]
 set $circle-vid [class="mpv"]
 set $circle-vm [class="spicy"]
@@ -216,6 +216,7 @@ mode %{T4}%{T-} {
 
 	bindsym F8 exec picom-trans -c +5
 	bindsym F9 exec picom-trans -c -5
+	bindsym d $circle next dw, mode "default"
 	bindsym f $circle subtag web floorp , mode "default"
 	bindsym 5 $circle subtag web tor , mode "default"
 	bindsym t $scratchpad subtag im tel , mode "default"
