@@ -20,6 +20,7 @@ set $circle-games [class="^(Steam|steam)$"]
 set $circle-nsxiv [class="Nsxiv"]
 set $circle-obs [class="obs"]
 set $circle-remote [class="^(xfreerdp|reminna|org.remmina.Remmina)$"]
+set $circle-dw [class="nicotine"]
 set $circle-term [instance="term"]
 set $circle-vid [class="mpv"]
 set $circle-vm [class="spicy"]
@@ -31,6 +32,7 @@ for_window $circle-doc move to workspace $doc,focus
 for_window $circle-games move to workspace $games,focus
 for_window $circle-obs move to workspace $obs,focus
 for_window $circle-remote move to workspace $remote,focus
+for_window $circle-dw move to workspace $dw,focus
 for_window $circle-term move to workspace $term,focus
 for_window $circle-vid move to workspace $gfx,focus
 for_window $circle-vm move to workspace $vm,focus
@@ -68,6 +70,7 @@ set $vm " 𐌺:vm"
 set $wine " 𐌻:wine"
 set $patchbay " 𐌼:patchbay"
 set $daw " 𐌽:daw"
+set $dw "💾𐌾:dw"
 
 # :>> Config section default
 
