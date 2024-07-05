@@ -1,9 +1,10 @@
-{pkgs, stable, ...}:
+{pkgs, ...}:
 with {
   nsxiv-neg = pkgs.callPackage ./../../packages/nsxiv {};
 }; {
   home.packages = with pkgs; [
     advancecomp # AdvanceCOMP PNG Compression Utility
+    darktable # photo editing
     exiftool # extract media metadata
     exiv2 # metadata manipulation
     gcolor3 # color selector
@@ -18,7 +19,6 @@ with {
     pngquant # convert png from RGBA to 8 bit with alpha-channel
     qrencode # qr encoding
     scour # svg optimizer
-    stable.darktable # photo editing
     zbar # bar code reader
   ];
 }
