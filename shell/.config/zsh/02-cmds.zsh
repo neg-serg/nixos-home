@@ -116,7 +116,7 @@ _exists mpc && {
     alias love='mpc sendmessage mpdas love'
     alias unlove='mpc sendmessage mpdas unlove'
     cdm(){
-        dirname="$(awk '/music_directory/{print $2}' "$XDG_CONFIG_HOME/mpd/mpd.conf"|tr -d '"'|sed 's:^~:'$HOME':')/$(dirname "$(mpc -f '%file%'|head -1)")"
+        dirname="$XDG_MUSIC_DIR/$(dirname "$(mpc -f '%file%'|head -1)")"
         cd "$dirname"
     }
 }
