@@ -1,46 +1,43 @@
-{
-  lib,
-  stdenv,
-  giflib,
-  imlib2,
-  libXft,
-  libexif,
-  libwebp,
-  libinotify-kqueue,
-  fetchFromGitHub,
-  conf ? null,
+{ lib
+, stdenv
+, giflib
+, imlib2
+, libXft
+, libexif
+, libwebp
+, libinotify-kqueue
+, fetchFromGitHub
+, conf ? null
 }:
 stdenv.mkDerivation (finalAttrs: {
   pname = "nsxiv";
   version = "v29";
 
-  outputs = ["out" "man" "doc"];
+  outputs = [ "out" "man" "doc" ];
 
   src = fetchFromGitHub {
-    owner = "neg-serg";
-    repo = "nsxiv";
-    rev = "acf3e83acb6b3c2ba94916919d71f2b383999d0b";
-    hash = "sha256-ZdnFq46z8f6MRd+Nd184tQB11AjUGprMitmRZXqoYjw=";
+      owner = "neg-serg";
+      repo = "nsxiv";
+      rev = "26cdf4a541794465e6115001bbf593b415e2e0a6";
+      hash = "sha256-08IjW99gzmya2MpVtOY0BPVO9YIt9Hs+Jmfs+81/laA=";
   };
 
-  buildInputs =
-    [
-      giflib
-      imlib2
-      libXft
-      libexif
-      libwebp
-    ]
-    ++ lib.optional stdenv.isDarwin libinotify-kqueue;
+  buildInputs = [
+    giflib
+    imlib2
+    libXft
+    libexif
+    libwebp
+  ] ++ lib.optional stdenv.isDarwin libinotify-kqueue;
 
   postPatch = lib.optionalString (conf != null) ''
     cp ${(builtins.toFile "config.def.h" conf)} config.def.h
   '';
 
   env.NIX_LDFLAGS = lib.optionalString stdenv.isDarwin "-linotify";
-  makeFlags = ["CC:=$(CC)"];
-  installFlags = ["PREFIX=$(out)"];
-  installTargets = ["install-all"];
+  makeFlags = [ "CC:=$(CC)" ];
+  installFlags = [ "PREFIX=$(out)" ];
+  installTargets = [ "install-all" ];
 
   meta = {
     homepage = "https://nsxiv.codeberg.page/";
@@ -61,7 +58,7 @@ stdenv.mkDerivation (finalAttrs: {
     '';
     changelog = "https://codeberg.org/nsxiv/nsxiv/src/tag/${finalAttrs.src.rev}/etc/CHANGELOG.md";
     license = lib.licenses.gpl2Plus;
-    maintainers = with lib.maintainers; [AndersonTorres sikmir];
+    maintainers = with lib.maintainers; [ AndersonTorres sikmir ];
     platforms = lib.platforms.unix;
   };
 })
