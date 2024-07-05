@@ -1,6 +1,6 @@
 {pkgs, stable, ...}:
 with {
-  nsxiv-neg = pkgs.callPackage ./nsxiv.nix {};
+  nsxiv-neg = pkgs.callPackage ./../../packages/nsxiv {};
 }; {
   home.packages = with pkgs; [
     advancecomp # AdvanceCOMP PNG Compression Utility
