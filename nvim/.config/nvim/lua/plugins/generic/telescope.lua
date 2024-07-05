@@ -77,7 +77,7 @@ return {'nvim-telescope/telescope.nvim', -- modern fuzzy-finder over lists
             extensions={
                 file_browser={
                     theme='ivy',
-                    border=false,
+                    border=true,
                     previewer=false,
                     sorting_strategy="descending",
                     prompt_title=false,
