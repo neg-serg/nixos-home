@@ -4,6 +4,7 @@
   ...
 }: {
   imports = [
+    ./archives
     ./btop.nix
     ./fetch.nix
     ./fzf.nix
