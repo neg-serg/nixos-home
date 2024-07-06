@@ -2,7 +2,7 @@
   programs.atuin = {
     enable = true;
     # I *despise* this hijacking of the up key, even though I use Ctrl-p
-    flags = [ "--disable-up-arrow" ];
+    flags = ["--disable-up-arrow"];
     settings = {
       update_check = false; # The package is managed by Nix
       style = "compact"; # I don't care for the fancy display

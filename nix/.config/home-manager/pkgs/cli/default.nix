@@ -4,10 +4,10 @@
   ...
 }: {
   imports = [
-      ./btop.nix
-      ./fetch.nix
-      ./fzf.nix
-      ./ripgrep.nix
+    ./btop.nix
+    ./fetch.nix
+    ./fzf.nix
+    ./ripgrep.nix
   ];
   home.packages = with pkgs; [
     as-tree # represent smth as tree

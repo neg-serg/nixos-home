@@ -1,8 +1,8 @@
-{ lib
-, stdenv
-, fetchFromGitHub
+{
+  lib,
+  stdenv,
+  fetchFromGitHub,
 }:
-
 stdenv.mkDerivation rec {
   pname = "i3lock-fancy-rapid";
   version = "unstable-2022-01-28";
@@ -18,7 +18,7 @@ stdenv.mkDerivation rec {
     description = "A faster implementation of i3lock-fancy";
     homepage = "https://github.com/ouzu/i3lock-fancy-rapid";
     license = licenses.bsd3;
-    maintainers = with maintainers; [ ];
+    maintainers = with maintainers; [];
     mainProgram = "i3lock-fancy-rapid";
     platforms = platforms.all;
   };

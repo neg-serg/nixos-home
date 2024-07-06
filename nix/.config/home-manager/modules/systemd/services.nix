@@ -222,7 +222,6 @@ with {
 
       Install = {WantedBy = ["graphical-session.target"];};
     };
-    
 
     inputplug = {
       Unit = {

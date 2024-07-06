@@ -1,8 +1,8 @@
-{ lib
-, python3
-, fetchFromGitHub
+{
+  lib,
+  python3,
+  fetchFromGitHub,
 }:
-
 python3.pkgs.buildPythonApplication rec {
   pname = "i3-balance-workspace";
   version = "1.8.6";
@@ -24,13 +24,13 @@ python3.pkgs.buildPythonApplication rec {
     i3ipc
   ];
 
-  pythonImportsCheck = [ "i3_balance_workspace" ];
+  pythonImportsCheck = ["i3_balance_workspace"];
 
   meta = with lib; {
     description = "Balance windows and workspaces in i3wm";
     homepage = "https://github.com/atreyasha/i3-balance-workspace";
     license = licenses.mit;
-    maintainers = with maintainers; [ ];
+    maintainers = with maintainers; [];
     mainProgram = "i3-balance-workspace";
   };
 }

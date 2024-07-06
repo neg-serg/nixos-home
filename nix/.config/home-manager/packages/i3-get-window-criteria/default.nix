@@ -1,4 +1,11 @@
-{ lib, coreutils, gnused, makeWrapper, stdenvNoCC, xorg }:
+{
+  lib,
+  coreutils,
+  gnused,
+  makeWrapper,
+  stdenvNoCC,
+  xorg,
+}:
 stdenvNoCC.mkDerivation rec {
   pname = "i3-get-window-criteria";
   version = "0.1.0";
@@ -34,9 +41,9 @@ stdenvNoCC.mkDerivation rec {
   meta = with lib; {
     description = "Helper script to query i3 window criterions";
     homepage = "https://git.belanyi.fr/ambroisie/nix-config";
-    license = with licenses; [ mit ];
+    license = with licenses; [mit];
     mainProgram = "i3-get-window-criteria";
-    maintainers = with maintainers; [ ambroisie ];
+    maintainers = with maintainers; [ambroisie];
     platforms = platforms.unix;
   };
 }

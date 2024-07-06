@@ -1,7 +1,4 @@
-{
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   home.sessionVariables = {};
   home.packages = with pkgs; [
     fnott # wayland notifications

@@ -1,10 +1,13 @@
-{pkgs, lib, ...}: {
+{
+  pkgs,
+  lib,
+  ...
+}: {
   home.packages = with pkgs; [
     fastfetch # nice fetch
     onefetch # show you git stuff
   ];
-  xdg.configFile."fastfetch/skull".text = 
-  ''
+  xdg.configFile."fastfetch/skull".text = ''
                           :::!~!!!!!:.
                       .xUHWH!! !!?M88WHX:.
                     .X*#M@$!!  !X!M$$$$$$WWx:.
@@ -28,31 +31,83 @@
   '';
   xdg.configFile."fastfetch/config.jsonc".text = builtins.toJSON {
     "$schema" = "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json";
-    logo = { source = "~/.config/fastfetch/skull"; width = 65; padding = { left = 1; right = 3; }; };
+    logo = {
+      source = "~/.config/fastfetch/skull";
+      width = 65;
+      padding = {
+        left = 1;
+        right = 3;
+      };
+    };
     display = {
-      color = { keys = "3"; title = "4"; };
-      size = { maxPrefix = "PB"; };
-      percent = { type = 3; };
+      color = {
+        keys = "3";
+        title = "4";
+      };
+      size = {maxPrefix = "PB";};
+      percent = {type = 3;};
     };
     modules = [
-      { type = "os"; key = " system"; format = "{3}"; }
-      { type = "kernel"; key = " kernel"; format = "{1} {2} ({4})"; }
-      { type = "uptime"; key = " uptime"; }
-      { type = "wm"; key = " wm"; }
-      { type = "wmtheme"; key = " wmtheme";  }
-      { type = "command"; key = "󰆧 packages"; text = "(${lib.getExe' pkgs.nix "nix-store"} --query --requisites /run/current-system | wc -l | tr -d '\n') && echo ' (nix; /run/current-system)'"; }
-      { type = "memory"; key = "󰍛 memory"; }
-      { type = "host"; key = "🖥 host"; }
+      {
+        type = "os";
+        key = " system";
+        format = "{3}";
+      }
+      {
+        type = "kernel";
+        key = " kernel";
+        format = "{1} {2} ({4})";
+      }
+      {
+        type = "uptime";
+        key = " uptime";
+      }
+      {
+        type = "wm";
+        key = " wm";
+      }
+      {
+        type = "wmtheme";
+        key = " wmtheme";
+      }
+      {
+        type = "command";
+        key = "󰆧 packages";
+        text = "(${lib.getExe' pkgs.nix "nix-store"} --query --requisites /run/current-system | wc -l | tr -d '\n') && echo ' (nix; /run/current-system)'";
+      }
+      {
+        type = "memory";
+        key = "󰍛 memory";
+      }
+      {
+        type = "host";
+        key = "🖥 host";
+      }
       "monitor"
       "theme"
       "icons"
       "cursor"
       "locale"
-      { type = "shell"; key = "︁ shell"; }
-      { type = "terminal"; key = "︁ terminal"; }
-      { type = "terminalfont"; key = "︁ terminal font"; }
-      { type = "terminalsize"; key = "︁ terminal size"; }
-      { type = "cpu"; key = " CPU"; }
+      {
+        type = "shell";
+        key = "︁ shell";
+      }
+      {
+        type = "terminal";
+        key = "︁ terminal";
+      }
+      {
+        type = "terminalfont";
+        key = "︁ terminal font";
+      }
+      {
+        type = "terminalsize";
+        key = "︁ terminal size";
+      }
+      {
+        type = "cpu";
+        key = " CPU";
+      }
       "board"
       "bios"
       "vulkan"

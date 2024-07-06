@@ -89,85 +89,322 @@
       visualizer_type = "ellipse";
     };
     bindings = [
-        { key = "0"; command = "show_browser"; }
-        { key = "1"; command = "show_playlist"; }
-        { key = "2"; command = "show_media_library"; }
-        { key = "3"; command = "dummy"; }
-        { key = "4"; command = "dummy"; }
-        { key = "5"; command = "dummy"; }
-        { key = "6"; command = "dummy"; }
-        { key = "7"; command = "dummy"; }
-        { key = "a"; command = "add_selected_items"; }
-        { key = "backspace"; command = ["jump_to_parent_directory" "replay_song" "jump_to_parent_directory" "replay_song"]; }
-        { key = "b"; command = "seek_backward"; }
-        { key = "c"; command = "clear_main_playlist"; }
-        { key = "`"; command = "add_random_items"; }
-        { key = "'"; command = "dummy"; }
-        { key = "\\\\"; command = "dummy"; }
-        { key = "`"; command = "dummy"; }
-        { key = "/"; command = "find_item_forward"; }
-        { key = "~"; command = "jump_to_media_library"; }
-        { key = ";"; command = "jump_to_position_in_song"; }
-        { key = ">"; command = "next"; }
-        { key = "<"; command = "previous"; }
-        { key = "]"; command = "scroll_down_album"; }
-        { key = "}"; command = "scroll_down_artist"; }
-        { key = "["; command = "scroll_up_album"; }
-        { key = "{"; command = "scroll_up_artist"; }
-        { key = "?"; command = "show_search_engine"; }
-        { key = "@"; command = "show_server_info"; }
-        { key = "`"; command = "toggle_browser_sort_mode"; }
-        { key = "`"; command = "toggle_library_tag_type"; }
-        { key = "|"; command = "toggle_mouse"; }
-        { key = "-"; command = "volume_down"; }
-        { key = "+"; command = "volume_up"; }
-        { key = "ctrl-d"; command = "page_down"; }
-        { key = "ctrl-l"; command = "toggle_screen_lock"; }
-        { key = "ctrl-p"; command = "set_selected_items_priority"; }
-        { key = "ctrl-u"; command = "page_up"; }
-        { key = "d"; command = "delete_playlist_items"; }
-        { key = "down"; command = "dummy"; }
-        { key = "e"; command = "edit_directory_name"; }
-        { key = "e"; command = "edit_library_album"; }
-        { key = "e"; command = "edit_library_tag"; }
-        { key = "e"; command = "edit_playlist_name"; }
-        { key = "e"; command = "edit_song"; }
-        { key = "E"; command = "jump_to_tag_editor"; }
-        { key = "f1"; command = "show_help"; }
-        { key = "F"; command = "dummy"; }
-        { key = "f"; command = "seek_forward"; }
-        { key = "G"; command = "move_end"; }
-        { key = "g"; command = "move_home"; }
-        { key = "h"; command = "previous_column"; }
-        { key = "I"; command = "show_artist_info"; }
-        { key = "i"; command = "show_song_info"; }
-        { key = "j"; command = "scroll_down"; }
-        { key = "k"; command = "scroll_up"; }
-        { key = "L"; command = "dummy"; }
-        { key = "l"; command = "next_column"; }
-        { key = "left"; command = "dummy"; }
-        { key = "M"; command = "toggle_media_library_columns_mode"; }
-        { key = "mouse"; command = "mouse_event"; }
-        { key = "n"; command = "next_found_item"; }
-        { key = "N"; command = "previous_found_item"; }
-        { key = "P"; command = "dummy"; }
-        { key = "p"; command = "pause"; }
-        { key = "q"; command = "quit"; }
-        { key = "R"; command = "jump_to_browser"; }
-        { key = "r"; command = "jump_to_playing_song"; }
-        { key = "right"; command = "dummy"; }
-        { key = "S"; command = "show_search_engine"; }
-        { key = "s"; command = "stop"; }
-        { key = "shift-tab"; command = "previous_screen"; }
-        { key = "tab"; command = "next_screen"; }
-        { key = "t"; command = "jump_to_tag_editor"; }
-        { key = "u"; command = "update_database"; }
-        { key = "up"; command = "dummy"; }
-        { key = "w"; command = "toggle_find_mode"; }
-        { key = "y"; command = "save_tag_changes"; }
-        { key = "y"; command = "start_searching"; }
-        { key = "Y"; command = "toggle_replay_gain_mode"; }
-        { key = "z"; command = "dummy"; }
+      {
+        key = "0";
+        command = "show_browser";
+      }
+      {
+        key = "1";
+        command = "show_playlist";
+      }
+      {
+        key = "2";
+        command = "show_media_library";
+      }
+      {
+        key = "3";
+        command = "dummy";
+      }
+      {
+        key = "4";
+        command = "dummy";
+      }
+      {
+        key = "5";
+        command = "dummy";
+      }
+      {
+        key = "6";
+        command = "dummy";
+      }
+      {
+        key = "7";
+        command = "dummy";
+      }
+      {
+        key = "a";
+        command = "add_selected_items";
+      }
+      {
+        key = "backspace";
+        command = ["jump_to_parent_directory" "replay_song" "jump_to_parent_directory" "replay_song"];
+      }
+      {
+        key = "b";
+        command = "seek_backward";
+      }
+      {
+        key = "c";
+        command = "clear_main_playlist";
+      }
+      {
+        key = "`";
+        command = "add_random_items";
+      }
+      {
+        key = "'";
+        command = "dummy";
+      }
+      {
+        key = "\\\\";
+        command = "dummy";
+      }
+      {
+        key = "`";
+        command = "dummy";
+      }
+      {
+        key = "/";
+        command = "find_item_forward";
+      }
+      {
+        key = "~";
+        command = "jump_to_media_library";
+      }
+      {
+        key = ";";
+        command = "jump_to_position_in_song";
+      }
+      {
+        key = ">";
+        command = "next";
+      }
+      {
+        key = "<";
+        command = "previous";
+      }
+      {
+        key = "]";
+        command = "scroll_down_album";
+      }
+      {
+        key = "}";
+        command = "scroll_down_artist";
+      }
+      {
+        key = "[";
+        command = "scroll_up_album";
+      }
+      {
+        key = "{";
+        command = "scroll_up_artist";
+      }
+      {
+        key = "?";
+        command = "show_search_engine";
+      }
+      {
+        key = "@";
+        command = "show_server_info";
+      }
+      {
+        key = "`";
+        command = "toggle_browser_sort_mode";
+      }
+      {
+        key = "`";
+        command = "toggle_library_tag_type";
+      }
+      {
+        key = "|";
+        command = "toggle_mouse";
+      }
+      {
+        key = "-";
+        command = "volume_down";
+      }
+      {
+        key = "+";
+        command = "volume_up";
+      }
+      {
+        key = "ctrl-d";
+        command = "page_down";
+      }
+      {
+        key = "ctrl-l";
+        command = "toggle_screen_lock";
+      }
+      {
+        key = "ctrl-p";
+        command = "set_selected_items_priority";
+      }
+      {
+        key = "ctrl-u";
+        command = "page_up";
+      }
+      {
+        key = "d";
+        command = "delete_playlist_items";
+      }
+      {
+        key = "down";
+        command = "dummy";
+      }
+      {
+        key = "e";
+        command = "edit_directory_name";
+      }
+      {
+        key = "e";
+        command = "edit_library_album";
+      }
+      {
+        key = "e";
+        command = "edit_library_tag";
+      }
+      {
+        key = "e";
+        command = "edit_playlist_name";
+      }
+      {
+        key = "e";
+        command = "edit_song";
+      }
+      {
+        key = "E";
+        command = "jump_to_tag_editor";
+      }
+      {
+        key = "f1";
+        command = "show_help";
+      }
+      {
+        key = "F";
+        command = "dummy";
+      }
+      {
+        key = "f";
+        command = "seek_forward";
+      }
+      {
+        key = "G";
+        command = "move_end";
+      }
+      {
+        key = "g";
+        command = "move_home";
+      }
+      {
+        key = "h";
+        command = "previous_column";
+      }
+      {
+        key = "I";
+        command = "show_artist_info";
+      }
+      {
+        key = "i";
+        command = "show_song_info";
+      }
+      {
+        key = "j";
+        command = "scroll_down";
+      }
+      {
+        key = "k";
+        command = "scroll_up";
+      }
+      {
+        key = "L";
+        command = "dummy";
+      }
+      {
+        key = "l";
+        command = "next_column";
+      }
+      {
+        key = "left";
+        command = "dummy";
+      }
+      {
+        key = "M";
+        command = "toggle_media_library_columns_mode";
+      }
+      {
+        key = "mouse";
+        command = "mouse_event";
+      }
+      {
+        key = "n";
+        command = "next_found_item";
+      }
+      {
+        key = "N";
+        command = "previous_found_item";
+      }
+      {
+        key = "P";
+        command = "dummy";
+      }
+      {
+        key = "p";
+        command = "pause";
+      }
+      {
+        key = "q";
+        command = "quit";
+      }
+      {
+        key = "R";
+        command = "jump_to_browser";
+      }
+      {
+        key = "r";
+        command = "jump_to_playing_song";
+      }
+      {
+        key = "right";
+        command = "dummy";
+      }
+      {
+        key = "S";
+        command = "show_search_engine";
+      }
+      {
+        key = "s";
+        command = "stop";
+      }
+      {
+        key = "shift-tab";
+        command = "previous_screen";
+      }
+      {
+        key = "tab";
+        command = "next_screen";
+      }
+      {
+        key = "t";
+        command = "jump_to_tag_editor";
+      }
+      {
+        key = "u";
+        command = "update_database";
+      }
+      {
+        key = "up";
+        command = "dummy";
+      }
+      {
+        key = "w";
+        command = "toggle_find_mode";
+      }
+      {
+        key = "y";
+        command = "save_tag_changes";
+      }
+      {
+        key = "y";
+        command = "start_searching";
+      }
+      {
+        key = "Y";
+        command = "toggle_replay_gain_mode";
+      }
+      {
+        key = "z";
+        command = "dummy";
+      }
     ];
   };
 }

@@ -1,6 +1,6 @@
 {pkgs, ...}: {
   imports = [
-      ./floorp.nix
+    ./floorp.nix
   ];
   home.packages = with pkgs; [
     passff-host # host app for the WebExtension PassFF

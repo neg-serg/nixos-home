@@ -1,14 +1,15 @@
-{ lib
-, boost
-, cmake
-, cxxopts
-, digestpp
-, fetchFromGitHub
-, fmt
-, jsoncons
-, pugixml
-, sqlite_orm
-, stdenv
+{
+  lib,
+  boost,
+  cmake,
+  cxxopts,
+  digestpp,
+  fetchFromGitHub,
+  fmt,
+  jsoncons,
+  pugixml,
+  sqlite_orm,
+  stdenv,
 }:
 stdenv.mkDerivation {
   pname = "bt-migrate";
@@ -55,7 +56,7 @@ stdenv.mkDerivation {
     description = "Torrent state migration tool";
     homepage = "https://github.com/mikedld/bt-migrate";
     license = licenses.gpl3Only;
-    maintainers = with maintainers; [ ambroisie ];
+    maintainers = with maintainers; [ambroisie];
     mainProgram = "BtMigrate";
   };
 }

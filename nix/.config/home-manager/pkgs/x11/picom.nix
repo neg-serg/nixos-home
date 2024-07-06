@@ -20,107 +20,137 @@
     xrender-sync-fence = true; # for nvidia only
 
     wintypes = {
-        dock = {opacity = 1.0; shadow = false; full-shadow = false;};
-        menu = {fade = false; opacity = false; shadow = false; full-shadow = false;};
-        utility = {fade = false; opacity = false; shadow = false; full-shadow = false;};
-        tooltip = {fade = false; opacity = false; shadow = false; full-shadow = false; focus = false;};
-        dropdown_menu = {opacity = 0.89; fade = false; shadow = false; full-shadow = false;};
-        popup_menu = {opacity = 0.89; fade = false; shadow = false; full-shadow = false;};
+      dock = {
+        opacity = 1.0;
+        shadow = false;
+        full-shadow = false;
+      };
+      menu = {
+        fade = false;
+        opacity = false;
+        shadow = false;
+        full-shadow = false;
+      };
+      utility = {
+        fade = false;
+        opacity = false;
+        shadow = false;
+        full-shadow = false;
+      };
+      tooltip = {
+        fade = false;
+        opacity = false;
+        shadow = false;
+        full-shadow = false;
+        focus = false;
+      };
+      dropdown_menu = {
+        opacity = 0.89;
+        fade = false;
+        shadow = false;
+        full-shadow = false;
+      };
+      popup_menu = {
+        opacity = 0.89;
+        fade = false;
+        shadow = false;
+        full-shadow = false;
+      };
     };
 
     opacity-exclude = [
-        "class_g = 'mpv'"
-        "class_i = 'mpv'"
+      "class_g = 'mpv'"
+      "class_i = 'mpv'"
     ];
 
     focus-exclude = [
-        "class_g *?= 'Steam'"
-        "class_g = 'Polybar'"
-        "class_g = 'mpv'"
-        "class_g = 'rofi'"
-        "class_g = 'slop'"
-        "name *?= 'Steam'"
+      "class_g *?= 'Steam'"
+      "class_g = 'Polybar'"
+      "class_g = 'mpv'"
+      "class_g = 'rofi'"
+      "class_g = 'slop'"
+      "name *?= 'Steam'"
     ];
 
     blur-background-exclude = [
-        "class_g *= 'Peek'"
-        "class_g *= 'overlay'"
-        "class_g = 'nwim'"
-        "class_g = 'slop'"
-        "class_g = 'term'"
-        "class_g = 'xsnow'"
-        "class_i = 'nwim'"
-        "class_i = 'term'"
-        "name *= 'overlay'"
-        "name *= 'polybar-floating_wm'"
-        "window_type = 'desktop'"
-        "window_type = 'dnd'"
+      "class_g *= 'Peek'"
+      "class_g *= 'overlay'"
+      "class_g = 'nwim'"
+      "class_g = 'slop'"
+      "class_g = 'term'"
+      "class_g = 'xsnow'"
+      "class_i = 'nwim'"
+      "class_i = 'term'"
+      "name *= 'overlay'"
+      "name *= 'polybar-floating_wm'"
+      "window_type = 'desktop'"
+      "window_type = 'dnd'"
 
-        "_GTK_FRAME_EXTENTS@:c"
+      "_GTK_FRAME_EXTENTS@:c"
     ];
 
     blur = {
-        method="dual_kawase";
-        blur-strengh=7;
-        blur-background-fixed=true;
+      method = "dual_kawase";
+      blur-strengh = 7;
+      blur-background-fixed = true;
     };
 
     opacity-rule = [
-        "80:class_g = 'i3-frame'"
-        "90:class_g = 'Joplin'"
-        "95:class_g = 'Zathura'"
-        "100:class_g = 'mpv'"
-        "100:class_g = 'slop'"
-        "100:fullscreen"
+      "80:class_g = 'i3-frame'"
+      "90:class_g = 'Joplin'"
+      "95:class_g = 'Zathura'"
+      "100:class_g = 'mpv'"
+      "100:class_g = 'slop'"
+      "100:fullscreen"
 
-        "0:_NET_WM_STATE@:32a *= '_NET_WM_STATE_HIDDEN'"
-        "100:_GTK_FRAME_EXTENTS@:c"
+      "0:_NET_WM_STATE@:32a *= '_NET_WM_STATE_HIDDEN'"
+      "100:_GTK_FRAME_EXTENTS@:c"
     ];
 
     shadow-exclude = [
-        "! name~=''"
-        "!focused"
+      "! name~=''"
+      "!focused"
 
-        "class_g *= 'overlay'"
-        "class_g = 'Conky'"
-        "class_g = 'Dunst'"
-        "class_g = 'Firefox' && argb"
-        "class_g = 'Rofi'"
-        "class_g = 'Synapse'"
-        "class_g ?= 'Cairo-dock'"
+      "class_g *= 'overlay'"
+      "class_g = 'Conky'"
+      "class_g = 'Dunst'"
+      "class_g = 'Firefox' && argb"
+      "class_g = 'Rofi'"
+      "class_g = 'Synapse'"
+      "class_g ?= 'Cairo-dock'"
 
-        "name *= 'Chromium'"
-        "name *= 'overlay'"
-        "name *= 'picom'"
-        "name *= 'polybar'"
+      "name *= 'Chromium'"
+      "name *= 'overlay'"
+      "name *= 'picom'"
+      "name *= 'polybar'"
 
-        # Zoom
-        "name = 'cpt_frame_window'"
-        "name = 'cpt_frame_xcb_window'"
-        "name = 'as_toolbar'"
+      # Zoom
+      "name = 'cpt_frame_window'"
+      "name = 'cpt_frame_xcb_window'"
+      "name = 'as_toolbar'"
 
-        "_GTK_FRAME_EXTENTS@:c"
-        "_NET_WM_STATE@:32a *= '_NET_WM_STATE_HIDDEN'"
+      "_GTK_FRAME_EXTENTS@:c"
+      "_NET_WM_STATE@:32a *= '_NET_WM_STATE_HIDDEN'"
     ];
 
     corner-radius = 15.0;
     rounded-corners-exclude = [
-        "class_g *= ''"
+      "class_g *= ''"
 
-        "class_g != 'Dunst'"
-        "class_g != 'Polybar'"
-        "class_g *= 'Thunar'"
-        "class_g *= 'thunar'"
-        "class_g = 'Alacritty'"
-        "class_g = 'URxvt'"
-        "class_g = 'XTerm'"
-        "class_g = 'awesome'"
-        "class_g = 'firefox'"
-        "class_g = 'kitty'"
+      "class_g != 'Dunst'"
+      "class_g != 'Polybar'"
+      "class_g *= 'Thunar'"
+      "class_g *= 'thunar'"
+      "class_g = 'Alacritty'"
+      "class_g = 'URxvt'"
+      "class_g = 'XTerm'"
+      "class_g = 'awesome'"
+      "class_g = 'firefox'"
+      "class_g = 'kitty'"
 
-        "window_type = 'menu'"
-        "window_type = 'normal'"
-        "window_type = 'popup'"
+      "window_type = 'menu'"
+      "window_type = 'normal'"
+      "window_type = 'popup'"
     ];
 
     shadow = true;

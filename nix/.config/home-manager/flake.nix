@@ -8,7 +8,10 @@
     };
     home-manager-shell = {
       url = "sourcehut:~dermetfan/home-manager-shell";
-      inputs = { nixpkgs.follows = "nixpkgs"; home-manager.follows = "home-manager"; };
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        home-manager.follows = "home-manager";
+      };
     };
     nixpkgs-master.url = "github:nixos/nixpkgs/master";
     nixpkgs-oldstable.url = "github:nixos/nixpkgs/nixos-23.05";
@@ -19,7 +22,7 @@
 
     executor.url = "github:neg-serg/executor";
     negwm.url = "github:neg-serg/negwm";
-    
+
     # nixos-generators = {
     #   url = "github:nix-community/nixos-generators";
     #   inputs.nixpkgs.follows = "nixpkgs";
@@ -46,7 +49,6 @@
     nixpkgs-stable,
     sops-nix,
     stylix,
-
     # home-manager-shell,
     # nixos-generators,
     # nixpkgs-wayland,
