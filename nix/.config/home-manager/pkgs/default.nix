@@ -56,29 +56,16 @@
   imports = [
     ./android.nix
     ./archives.nix
-    ./audio
     ./benchmarks.nix
-    ./cli
     ./distros.nix
-    ./fonts
-    ./fun
-    ./git
     ./gpg.nix
-    ./gui
     ./hack.nix
-    ./im
-    ./images
-    ./mail
     ./media
     ./misc.nix
     ./neovim
     ./pass.nix
-    ./python
     ./terminal
-    ./text
-    ./torrent
     ./vulnerability_scanners.nix
-    ./web
     ./x11
     ./yubikey.nix
   ];

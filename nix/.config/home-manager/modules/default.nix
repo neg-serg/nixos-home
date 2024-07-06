@@ -1,11 +1,24 @@
 {
   imports = [
+    ./audio
+    ./cli
     ./dev
     ./dotfiles
     ./envs
+    ./fonts
+    ./fun
+    ./git
+    ./gui
     ./hardware
+    ./im
+    ./images
+    ./mail
+    ./python
     ./systemd
+    ./text
     ./theme
+    ./torrent
+    ./web
     ./xdg
   ];
 }
