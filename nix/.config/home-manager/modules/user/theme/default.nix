@@ -124,7 +124,7 @@ with {
         name = "Iosevka";
         package = pkgs.iosevka.override {
           set = "neg";
-          privateBuildPlan = builtins.readFile ../../fonts/iosevka-neg.toml;
+          privateBuildPlan = builtins.readFile ../fonts/iosevka-neg.toml;
         };
       };
       sizes = {
