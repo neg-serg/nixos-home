@@ -1,6 +1,6 @@
 {pkgs, ...}:
 with {
-  rofi-games = pkgs.callPackage ../../packages/rofi-games {};
+  rofi-games = pkgs.callPackage ../../../packages/rofi-games {};
 }; {
   home.packages = with pkgs; [
     (rofi.override {

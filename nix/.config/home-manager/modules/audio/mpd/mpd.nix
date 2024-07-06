@@ -17,8 +17,9 @@ with {
   services.mpd = {
     enable = true;
     dataDir = "${config.home.homeDirectory}/music";
-    network.startWhenNeeded = true;
+    musicDirectory = "${config.home.homeDirectory}/music";
     network.listenAddress = "127.0.0.1";
+    network.startWhenNeeded = true;
     extraConfig = ''
       log_file "/dev/null"
       max_output_buffer_size "131072"

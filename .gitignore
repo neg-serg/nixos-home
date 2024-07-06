@@ -196,7 +196,7 @@ dev/.config/pylint/
 dht.dat
 doc
 dw
-games
+./games
 ghc/.ghc/ghci_history
 gimp-2.8
 gimp-2.8/pluginrc

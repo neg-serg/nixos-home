@@ -1,3 +1,3 @@
-{...}:{
-    services.mpdris2 = {enable = false;};
+{...}: {
+  services.mpdris2 = {enable = false;};
 }

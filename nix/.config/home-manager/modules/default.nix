@@ -1,6 +1,5 @@
 {
   imports = [
-    ./android
     ./archives
     ./audio
     ./benchmarks
@@ -13,32 +12,26 @@
     ./envs
     ./fonts
     ./fun
+    ./games
     ./git
     ./gpg
     ./gui
     ./hack
     ./hardware
-    ./helix
     ./home-manager
     ./im
     ./images
     ./mail
-    ./mangohud
     ./media
     ./misc
-    ./neovim
     ./pass
-    ./python
     ./systemd
-    ./terminal
     ./text
-    ./theme
     ./torrent
     ./udiskie
+    ./user
     ./vdirsyncer
     ./web
-    ./x11
-    ./xdg
     ./yubikey
   ];
 }
