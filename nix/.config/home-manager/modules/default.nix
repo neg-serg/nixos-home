@@ -1,24 +1,41 @@
 {
   imports = [
+    ./android
+    ./archives
     ./audio
+    ./benchmarks
     ./cli
     ./dev
+    ./distros
+    ./docker
     ./dotfiles
     ./envs
     ./fonts
+    ./forensics
     ./fun
     ./git
+    ./gpg
     ./gui
+    ./hack
     ./hardware
+    ./helix
     ./im
     ./images
     ./mail
+    ./media
+    ./misc
+    ./neovim
+    ./pass
     ./python
     ./systemd
+    ./terminal
     ./text
     ./theme
     ./torrent
+    ./vdirsyncer
     ./web
+    ./x11
     ./xdg
+    ./yubikey
   ];
 }

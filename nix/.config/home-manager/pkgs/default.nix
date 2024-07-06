@@ -52,21 +52,4 @@
     json.enable = false;
     manpages.enable = true;
   };
-
-  imports = [
-    ./android.nix
-    ./archives.nix
-    ./benchmarks.nix
-    ./distros.nix
-    ./gpg.nix
-    ./hack.nix
-    ./media
-    ./misc.nix
-    ./neovim
-    ./pass.nix
-    ./terminal
-    ./vulnerability_scanners.nix
-    ./x11
-    ./yubikey.nix
-  ];
 }
