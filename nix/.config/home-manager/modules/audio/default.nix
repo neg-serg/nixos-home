@@ -1,8 +1,9 @@
 {
   imports = [
     ./apps.nix
-    ./core.nix
     ./beets.nix
+    ./core.nix
     ./creation.nix
+    ./mpd
   ];
 }

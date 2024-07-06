@@ -1,5 +1,4 @@
 {pkgs, ...}: {
-  imports = [./mpd.nix];
   home.packages = with pkgs; [
     ape # monkey audio codec
     cdparanoia # cdrip / cdrecord
