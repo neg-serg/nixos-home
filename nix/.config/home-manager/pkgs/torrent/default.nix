@@ -2,8 +2,9 @@
   pkgs,
   oldstable,
   ...
-}: with {
-    bt-migrate = pkgs.callPackage ../../packages/bt-migrate {};
+}:
+with {
+  bt-migrate = pkgs.callPackage ../../packages/bt-migrate {};
 }; {
   home.packages = with pkgs; [
     bt-migrate # torrent migrator

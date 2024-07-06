@@ -9,7 +9,7 @@ with {
   dots = "${config.home.homeDirectory}/.dotfiles";
 }; {
   imports = [
-      ./ncmpcpp.nix
+    ./ncmpcpp.nix
   ];
   home.packages = with pkgs; [
     mpc-cli # mpd client

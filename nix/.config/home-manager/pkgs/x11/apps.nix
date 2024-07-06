@@ -12,7 +12,7 @@ with {
   i3-balance-workspace = pkgs.callPackage ../../packages/i3-balance-workspace {};
   alluvium = pkgs.callPackage ../../packages/alluvium {};
 }; {
-  imports = [ ./dunst.nix ];
+  imports = [./dunst.nix];
   home.packages = with pkgs; [
     # alluvium # show i3 bindings
     flameshot # interactive screenshot tool

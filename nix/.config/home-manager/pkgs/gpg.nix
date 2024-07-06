@@ -1,7 +1,4 @@
-{
-  pkgs,
-  ...
-}:
+{pkgs, ...}:
 with {
   pinentryRofi = pkgs.writeShellApplication {
     name = "pinentry-rofi-with-env";

@@ -30,25 +30,27 @@
       "--with-nth=1.."
     ];
 
-    historyWidgetOptions = [ # FZF_CTRL_R_OPTS
-        "--sort"
-        "--exact"
-        "--preview 'echo {}'"
-        "--preview-window down:3:hidden:wrap --bind '?:toggle-preview'"
+    historyWidgetOptions = [
+      # FZF_CTRL_R_OPTS
+      "--sort"
+      "--exact"
+      "--preview 'echo {}'"
+      "--preview-window down:3:hidden:wrap --bind '?:toggle-preview'"
     ];
 
-    fileWidgetOptions = [ # FZF_CTRL_T_OPTS
-        "--preview '(highlight -O ansi -l {} 2> /dev/null || cat {} || tree -C {}) 2> /dev/null | head -200'"
+    fileWidgetOptions = [
+      # FZF_CTRL_T_OPTS
+      "--preview '(highlight -O ansi -l {} 2> /dev/null || cat {} || tree -C {}) 2> /dev/null | head -200'"
     ];
 
     colors = {
       "preview-bg" = "-1";
       "gutter" = "-1";
       "bg" = lib.mkForce "#000000";
-      "bg+" = lib.mkForce  "#000000";
-      "fg" = lib.mkForce  "#4f5d78";
-      "fg+" = lib.mkForce  "#8DA6B2";
-      "hl" = lib.mkForce  "#546c8a";
+      "bg+" = lib.mkForce "#000000";
+      "fg" = lib.mkForce "#4f5d78";
+      "fg+" = lib.mkForce "#8DA6B2";
+      "hl" = lib.mkForce "#546c8a";
       "hl+" = lib.mkForce "#005faf";
       "header" = lib.mkForce "#4779B3";
       "info" = lib.mkForce "#3f5876";

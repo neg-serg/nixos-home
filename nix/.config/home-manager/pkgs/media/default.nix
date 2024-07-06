@@ -23,7 +23,7 @@ with {
   ];
 
   imports = [
-      ./mpv.nix
+    ./mpv.nix
   ];
   xdg.configFile = {
     "wireplumber" = {

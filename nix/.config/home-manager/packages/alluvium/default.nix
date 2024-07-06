@@ -1,8 +1,8 @@
-{ lib
-, python3
-, fetchFromGitHub
+{
+  lib,
+  python3,
+  fetchFromGitHub,
 }:
-
 python3.pkgs.buildPythonApplication rec {
   pname = "alluvium";
   version = "unstable-2020-08-22";
@@ -22,13 +22,13 @@ python3.pkgs.buildPythonApplication rec {
     python3.pkgs.i3ipc
   ];
 
-  pythonImportsCheck = [ "alluvium" ];
+  pythonImportsCheck = ["alluvium"];
 
   meta = with lib; {
     description = "Generate visual overlays from your i3 bindings";
     homepage = "https://github.com/martenlienen/alluvium";
     license = licenses.gpl3Only;
-    maintainers = with maintainers; [ ];
+    maintainers = with maintainers; [];
     mainProgram = "alluvium";
   };
 }
