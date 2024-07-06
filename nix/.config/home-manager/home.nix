@@ -1,7 +1,6 @@
 {pkgs, ...}: {
   nix.package = pkgs.nix;
   imports = [
-    ./pkgs
     ./secrets
     ./modules
   ];

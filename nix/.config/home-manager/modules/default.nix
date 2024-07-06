@@ -8,10 +8,10 @@
     ./dev
     ./distros
     ./docker
+    ./documentation
     ./dotfiles
     ./envs
     ./fonts
-    ./forensics
     ./fun
     ./git
     ./gpg
@@ -19,9 +19,11 @@
     ./hack
     ./hardware
     ./helix
+    ./home-manager
     ./im
     ./images
     ./mail
+    ./mangohud
     ./media
     ./misc
     ./neovim
@@ -32,6 +34,7 @@
     ./text
     ./theme
     ./torrent
+    ./udiskie
     ./vdirsyncer
     ./web
     ./x11
