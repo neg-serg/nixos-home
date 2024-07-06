@@ -8,7 +8,11 @@ with {
   dots = "${config.home.homeDirectory}/.dotfiles";
   mkvcleaner = pkgs.callPackage ../../packages/mkvcleaner {};
 }; {
-  # nixpkgs-stable.config.allowUnfree = true;
+  imports = [
+    ./audio
+    ./images
+    ./mpv.nix
+  ];
   home.packages = with pkgs; [
     # stable.davinci-resolve # video editor
     ffmpeg-full # famous multimedia lib
@@ -20,10 +24,6 @@ with {
     mpvc # CLI controller for mpv
     playerctl # media controller for everything
     simplescreenrecorder # screen recorder
-  ];
-
-  imports = [
-    ./mpv.nix
   ];
   xdg.configFile = {
     "wireplumber" = {

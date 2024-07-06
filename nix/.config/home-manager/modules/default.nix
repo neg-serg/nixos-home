@@ -1,37 +1,17 @@
 {
   imports = [
-    ./archives
-    ./audio
-    ./benchmarks
     ./cli
     ./dev
     ./distros
-    ./docker
-    ./documentation
     ./dotfiles
-    ./envs
     ./fonts
-    ./fun
-    ./games
-    ./git
-    ./gpg
-    ./gui
-    ./hack
     ./hardware
-    ./home-manager
-    ./im
-    ./images
-    ./mail
+    ./main
     ./media
     ./misc
-    ./pass
+    ./secrets
     ./systemd
     ./text
-    ./torrent
-    ./udiskie
     ./user
-    ./vdirsyncer
-    ./web
-    ./yubikey
   ];
 }
