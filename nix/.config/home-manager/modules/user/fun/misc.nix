@@ -2,7 +2,9 @@
   home.packages = with pkgs; [
     almonds # TUI fractal viewer
     bucklespring # for keyboard sounds
+    clolcat # rainbow color version of cat
     cool-retro-term # a retro terminal emulator
+    dotacat # yet another color version of cat
     figlet # ascii art
     fortune # fortune cookie
     free42 # A software clone of HP-42S Calculator
