@@ -1,13 +1,13 @@
-{ lib
-, stdenv
-, fetchFromGitHub
-, cmake
+{
+  lib,
+  stdenv,
+  fetchFromGitHub,
+  cmake,
+  libxml2,
 }:
-
 stdenv.mkDerivation rec {
   pname = "sacd-extract";
   version = "0.3.9.3";
-
   src = fetchFromGitHub {
     owner = "Sound-Linux-More";
     repo = "sacd-extract";
@@ -17,15 +17,18 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [
     cmake
+    libxml2
   ];
 
+  installPhase = ''
+    install -D sacd_extract -t $out/bin/
+  '';
+
   meta = with lib; {
-    description = "Extract tracks of SACD ISO image";
-    homepage = "https://github.com/Sound-Linux-More/sacd-extract";
-    changelog = "https://github.com/Sound-Linux-More/sacd-extract/blob/${src.rev}/CHANGELOG";
-    license = licenses.gpl2Only;
-    maintainers = with maintainers; [ ];
-    mainProgram = "sacd-extract";
+    description = "extract tracks of sacd iso image";
+    homepage = "https://github.com/sound-linux-more/sacd-extract";
+    changelog = "https://github.com/sound-linux-more/sacd-extract/blob/${src.rev}/changelog";
+    mainprogram = "sacd-extract";
     platforms = platforms.all;
   };
 }
