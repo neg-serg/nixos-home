@@ -7,6 +7,7 @@ with {
   l = config.lib.file.mkOutOfStoreSymlink;
   dots = "${config.home.homeDirectory}/.dotfiles";
   mkvcleaner = pkgs.callPackage ../../packages/mkvcleaner {};
+  sacd-extract = pkgs.callPackage ../../packages/sacd-extract {};
 }; {
   imports = [
     ./audio
@@ -16,6 +17,7 @@ with {
   home.packages = with pkgs; [
     # stable.davinci-resolve # video editor
     ffmpeg-full # famous multimedia lib
+    sacd-extract
     ffmpegthumbnailer # thumbnail for video
     imagemagick # for convert
     mediainfo # tag information about video or audio
