@@ -50,7 +50,7 @@
     modules = [
       {
         type = "os";
-        key = " system";
+        key = "󱄅 system";
         format = "{3}";
       }
       {
