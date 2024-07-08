@@ -6,7 +6,7 @@
   imports = [
     ./archives
     ./btop.nix
-    ./fetch.nix
+    ./fastfetch.nix
     ./fzf.nix
     ./ripgrep.nix
   ];
