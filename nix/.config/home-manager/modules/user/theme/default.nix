@@ -5,14 +5,12 @@
 }:
 with {
   alkano-aio = pkgs.callPackage ./alkano-aio.nix {};
-  font-patcher = pkgs.callPackage ../../../packages/font-patcher {};
 }; {
   home.packages = with pkgs; [
     dconf # gnome registry
     libsForQt5.qt5ct # kvantum theme support
     libsForQt5.qtstyleplugin-kvantum # kvantum theme support
     qt6Packages.qtstyleplugin-kvantum # kvantum theme support
-    font-patcher
   ];
 
   gtk = {
