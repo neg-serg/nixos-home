@@ -22,6 +22,7 @@
 
     executor.url = "github:neg-serg/executor";
     negwm.url = "github:neg-serg/negwm";
+    iosevka-neg.url = "github:neg-serg/iosevka-neg";
 
     # nixos-generators = {
     #   url = "github:nix-community/nixos-generators";
@@ -49,6 +50,7 @@
     nixpkgs-stable,
     sops-nix,
     stylix,
+    iosevka-neg,
     # home-manager-shell,
     # nixos-generators,
     # nixpkgs-wayland,
@@ -64,6 +66,7 @@
       master = nixpkgs-master.legacyPackages.${system};
       negwmPkg = negwm.packages.${system};
       executorPkg = executor.packages.${system};
+      iosevkaneg = iosevka-neg.packages.${system};
     }; {
       packages.${system}.default = nixpkgs.legacyPackages.${system}.zsh;
       homeConfigurations."neg" = home-manager.lib.homeManagerConfiguration {
@@ -75,6 +78,7 @@
           inherit stable;
           inherit negwmPkg;
           inherit executorPkg;
+          inherit iosevkaneg;
         };
         modules = [
           ./home.nix
