@@ -19,7 +19,7 @@
         docopt
         fontforge # for font monospacifier
         tabulate
-        i3ipc
+        # i3ipc
         psutil
         pynvim
         requests
