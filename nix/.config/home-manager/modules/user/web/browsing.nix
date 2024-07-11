@@ -1,10 +1,9 @@
 {pkgs, ...}: {
   imports = [
-    ./floorp.nix
+    ./firefox.nix
   ];
   home.packages = with pkgs; [
     chromium # google crap
-    firefox # normal browser
     passff-host # host app for the WebExtension PassFF
     tor-browser # browse web via tor
     torsocks # tor stuff

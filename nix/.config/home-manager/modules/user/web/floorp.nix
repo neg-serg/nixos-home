@@ -1,7 +1,7 @@
 {master, ...}: {
-  home.packages = [master.firefox]; # Module installing  as default browser
+  home.packages = [master.floorp]; # Module installing  as default browser
   home.sessionVariables = {
-    DEFAULT_BROWSER = "${master.firefox}/bin/firefox";
+    DEFAULT_BROWSER = "${master.floorp}/bin/floorp";
     MOZ_DBUS_REMOTE = "1";
     MOZ_ENABLE_WAYLAND = "1";
   };
