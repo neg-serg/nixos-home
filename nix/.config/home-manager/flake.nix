@@ -22,7 +22,10 @@
 
     executor.url = "github:neg-serg/executor";
     negwm.url = "github:neg-serg/negwm";
-    iosevka-neg.url = "github:neg-serg/iosevka-neg";
+    iosevka-neg = {
+        url = "git+ssh://git@github.com/neg-serg/iosevka-neg";
+        inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # nixos-generators = {
     #   url = "github:nix-community/nixos-generators";
