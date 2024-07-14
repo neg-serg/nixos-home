@@ -83,11 +83,26 @@
         type = "host";
         key = "🖥 host";
       }
-      "monitor"
-      "theme"
-      "icons"
-      "cursor"
-      "locale"
+      {
+        type = "monitor";
+        key = " monitor";
+      }
+      {
+        type = "theme";
+        key = " theme";
+      }
+      {
+        type = "icons";
+        key = " icons";
+      }
+      {
+        type = "cursor";
+        key = " cursor";
+      }
+      {
+        type = "locale";
+        key = " language";
+      }
       {
         type = "shell";
         key = "︁ shell";
@@ -98,23 +113,44 @@
       }
       {
         type = "terminalfont";
-        key = "︁ terminal font";
+        key = "︁ term-font";
       }
       {
         type = "terminalsize";
-        key = "︁ terminal size";
+        key = "︁ term-size";
       }
       {
         type = "cpu";
         key = " CPU";
       }
-      "board"
-      "bios"
-      "vulkan"
-      "disk"
-      "sound"
-      "player"
-      "weather"
+      {
+        type = "board";
+        key = " board";
+      }
+      {
+        type = "bios";
+        key = " bios";
+      }
+      {
+        type = "vulkan";
+        key = " vulkan";
+      }
+      {
+        type = "disk";
+        key = " disk";
+      }
+      {
+        type = "sound";
+        key = " sound";
+      }
+      {
+        type = "player";
+        key = " player";
+      }
+      {
+        type = "weather";
+        key = " weather";
+      }
     ];
   };
 }
