@@ -438,11 +438,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1720905310,
-        "narHash": "sha256-0VLmbBDCFpWL+mg899FLdy93ab2LiwjYsxN6gO8RfCs=",
+        "lastModified": 1720919579,
+        "narHash": "sha256-h21og90MhDuUr6knCZY48aqrvsN6JJzdoMP10S65itc=",
         "ref": "refs/heads/main",
-        "rev": "4b395feecc787efba5e4e27dab333020eadf12df",
-        "revCount": 5,
+        "rev": "28139fdc17bb9983f51203e1e3fd66bf1dd7a979",
+        "revCount": 13,
         "type": "git",
         "url": "ssh://git@github.com/neg-serg/iosevka-neg"
       },
@@ -578,11 +578,11 @@
     },
     "nixpkgs-master": {
       "locked": {
-        "lastModified": 1720904324,
-        "narHash": "sha256-dEeAHKAGpgoSvfH/V6X56OEdOds55RfVVabsjuvs3Sk=",
+        "lastModified": 1720917991,
+        "narHash": "sha256-Wvz0QOf8L4rl3S7bQK7pex2EL9+sSC7h2QazlfIlF64=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "2f2ea2fa1a0ebd6f395531281d4372c0b480f9ce",
+        "rev": "e28b6650c3876accd7af7329b46c642647e890cd",
         "type": "github"
       },
       "original": {
