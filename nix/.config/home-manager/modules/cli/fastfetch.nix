@@ -113,7 +113,7 @@
       }
       {
         type = "terminalfont";
-        key = "︁ Term-font";
+        key = "︁ Font";
       }
       {
         type = "cpu";
