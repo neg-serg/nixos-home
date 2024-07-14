@@ -70,7 +70,7 @@ class NowPlaying():
 
     @staticmethod
     def smallfont(s) -> str:
-        return f"%{{T5}}{s}%{{T-}}"
+        return f"%{{T6}}{s}%{{T-}}"
 
     def get_name(self, player_name) -> str:
         if player_name not in self.player_names:
