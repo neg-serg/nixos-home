@@ -35,7 +35,7 @@ return {'windwp/windline.nvim', -- most modern statusline
                     return {
                         {lsp_comps.lsp_error({format='  %s', show_zero=false}), 'red'},
                         {lsp_comps.lsp_warning({format='  %s', show_zero=false}), 'yellow'},
-                        {lsp_comps.lsp_hint({format='  %s', show_zero=false}), 'blue'},
+                        {lsp_comps.lsp_hint({format='  %s', show_zero=false}), 'blue'},
                     }
                 end
                 return ''
@@ -141,7 +141,7 @@ return {'windwp/windline.nvim', -- most modern statusline
                 if git_comps.is_git(bufnr) then
                     return {
                         {git_comps.diff_added({format='  %s', show_zero=false}), 'green'},
-                        {git_comps.diff_changed({format=' 柳%s', show_zero=false}), 'white'},
+                        {git_comps.diff_changed({format='  %s', show_zero=false}), 'white'},
                         {git_comps.diff_removed({format='  %s', show_zero=false}), 'red'},
                     }
                 end
@@ -199,7 +199,7 @@ return {'windwp/windline.nvim', -- most modern statusline
                 basic.file_right,
                 basic.lsp_name,
                 basic.git,
-                {git_comps.git_branch({icon='  '}), {'blue', 'black'}, breakpoint_width},
+                {git_comps.git_branch({icon='  '}), {'blue', 'black'}, breakpoint_width},
                 {' ', hl_list.Black},
             },
             inactive={
