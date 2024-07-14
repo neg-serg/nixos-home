@@ -45,79 +45,75 @@
         title = "4";
       };
       size = {maxPrefix = "PB";};
-      percent = {type = 3;};
+      percent = {type = 9;};
     };
     modules = [
       {
         type = "os";
-        key = "󱄅 system";
+        key = "󱄅 System";
         format = "{3}";
       }
       {
         type = "kernel";
-        key = " kernel";
+        key = " Kernel";
         format = "{1} {2} ({4})";
       }
       {
         type = "uptime";
-        key = " uptime";
+        key = " Uptime";
       }
       {
         type = "wm";
-        key = " wm";
-      }
-      {
-        type = "wmtheme";
-        key = " wmtheme";
+        key = " WM";
       }
       {
         type = "command";
-        key = "󰆧 packages";
+        key = "󰆧 Packages";
         text = "(${lib.getExe' pkgs.nix "nix-store"} --query --requisites /run/current-system | wc -l | tr -d '\n') && echo ' (nix; /run/current-system)'";
       }
       {
         type = "memory";
-        key = "󰍛 memory";
+        key = "󰍛 Memory";
       }
       {
         type = "host";
-        key = "🖥 host";
+        key = "🖥Host";
       }
       {
         type = "monitor";
-        key = " monitor";
+        key = " Monitor";
+      }
+      {
+        type = "display";
+        key = " Display";
       }
       {
         type = "theme";
-        key = " theme";
+        key = " Theme";
       }
       {
         type = "icons";
-        key = " icons";
+        key = " Icons";
       }
       {
         type = "cursor";
-        key = " cursor";
+        key = " Cursor";
       }
       {
         type = "locale";
-        key = " language";
+        key = " Language";
       }
       {
         type = "shell";
-        key = "︁ shell";
+        key = "︁ Shell";
       }
       {
         type = "terminal";
-        key = "︁ terminal";
+        key = "︁ Terminal";
       }
       {
         type = "terminalfont";
-        key = "︁ term-font";
-      }
-      {
-        type = "terminalsize";
-        key = "︁ term-size";
+        key = "︁ Term-font";
       }
       {
         type = "cpu";
@@ -125,31 +121,39 @@
       }
       {
         type = "board";
-        key = " board";
+        key = " Board";
+      }
+      {
+        type = "gpu";
+        key = " GPU";
       }
       {
         type = "bios";
-        key = " bios";
+        key = " BIOS";
       }
       {
         type = "vulkan";
-        key = " vulkan";
+        key = " Vulkan";
       }
       {
         type = "disk";
-        key = " disk";
+        key = " Disk";
       }
       {
         type = "sound";
-        key = " sound";
+        key = " Sound";
       }
       {
         type = "player";
-        key = " player";
+        key = " Player";
+      }
+      {
+        type = "users";
+        key = " Users";
       }
       {
         type = "weather";
-        key = " weather";
+        key = " Weather";
       }
     ];
   };
