@@ -141,7 +141,7 @@ return {'windwp/windline.nvim', -- most modern statusline
                 if git_comps.is_git(bufnr) then
                     return {
                         {git_comps.diff_added({format='  %s', show_zero=false}), 'green'},
-                        {git_comps.diff_changed({format='  %s', show_zero=false}), 'white'},
+                        {git_comps.diff_changed({format='  %s', show_zero=false}), 'white'},
                         {git_comps.diff_removed({format='  %s', show_zero=false}), 'red'},
                     }
                 end
