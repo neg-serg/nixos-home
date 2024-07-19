@@ -1,6 +1,7 @@
 {
   pkgs,
   stable,
+  master,
   ...
 }: {
   home.packages = with pkgs; [
@@ -12,6 +13,6 @@
     stable.megacmd # cli for MEGA
     whois # get domain info
     xidel # download webpage parts
-    yt-dlp_git # download from youtube and another sources
+    master.yt-dlp # download from youtube and another sources
   ];
 }
