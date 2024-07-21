@@ -188,10 +188,6 @@ with {
       source = l "${dots}/shell/.fdignore";
       recursive = true;
     };
-    ".psqlrc" = {
-      source = l "${dots}/sys/.psqlrc";
-      recursive = true;
-    };
     ".ugrep" = {
       source = l "${dots}/shell/.ugrep";
       recursive = true;
