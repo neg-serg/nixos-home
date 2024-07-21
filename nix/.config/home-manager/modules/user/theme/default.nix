@@ -23,7 +23,6 @@ with {
 
   qt = {
     enable = true;
-    platformTheme = "qtct";
   };
 
   dconf = {
