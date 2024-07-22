@@ -19,7 +19,6 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable-small";
     sops-nix.url = "github:Mic92/sops-nix";
     stylix.url = "github:danth/stylix";
-    nix-flatpak.url = "github:gmodena/nix-flatpak"; # unstable branch. Use github:gmodena/nix-flatpak/?ref=<tag> to pin releases.
 
     executor.url = "github:neg-serg/executor";
     negwm.url = "github:neg-serg/negwm";
@@ -55,7 +54,6 @@
     sops-nix,
     stylix,
     iosevka-neg,
-    nix-flatpak,
     # home-manager-shell,
     # nixos-generators,
     # nixpkgs-wayland,
@@ -89,7 +87,6 @@
           chaotic.homeManagerModules.default
           stylix.homeManagerModules.stylix
           sops-nix.homeManagerModules.sops
-          nix-flatpak.nixosModules.nix-flatpak
         ];
       };
     };
