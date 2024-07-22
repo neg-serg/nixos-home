@@ -121,7 +121,7 @@
       }
       {
         type = "board";
-        key = " Board";
+        key = " Board";
       }
       {
         type = "gpu";
