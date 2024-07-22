@@ -232,6 +232,14 @@ _exists cryptsetup && {
     unhorny(){ sudo umount /dev/mapper/cryptroot && sudo cryptsetup close cryptroot }
 }
 
+_exists flatpak && {
+    alias bottles='flatpak run com.usebottles.bottles'
+    alias obs='flatpak run com.obsproject.Studio'
+    alias onlyoffice='QT_QPA_PLATFORM=xcb flatpak run org.onlyoffice.desktopeditors'
+    alias vkteams="QT_QPA_PLATFORM=xcb flatpak run --filesystem=$HOME ru.mail.vkteams-app"
+    alias zoom='flatpak run us.zoom.Zoom'
+}
+
 autoload zc
 unfunction _exists
 # vim: ft=zsh:nowrap
