@@ -9,9 +9,6 @@ with {
 }; {
   home.packages = with pkgs; [
     dconf # gnome registry
-    libsForQt5.qt5ct # kvantum theme support
-    libsForQt5.qtstyleplugin-kvantum # kvantum theme support
-    qt6Packages.qtstyleplugin-kvantum # kvantum theme support
   ];
 
   gtk = {
