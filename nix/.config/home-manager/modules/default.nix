@@ -3,6 +3,7 @@
     ./cli
     ./dev
     ./distros
+    ./flatpak
     ./hardware
     ./main
     ./media
