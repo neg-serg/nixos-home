@@ -100,15 +100,6 @@ with {
       source = l "${dots}/nix/.config/home-manager";
       recursive = true;
     };
-    # █▓▒░ qt ───────────────────────────────────────────────────────────────────────────
-    "qt5ct" = {
-      source = l "${dots}/qt/.config/qt5ct";
-      recursive = true;
-    };
-    "qt6ct" = {
-      source = l "${dots}/qt/.config/qt6ct";
-      recursive = true;
-    };
     # █▓▒░ rofi ─────────────────────────────────────────────────────────────────────────
     "rofi-pass" = {
       source = l "${dots}/rofi/.config/rofi-pass";
