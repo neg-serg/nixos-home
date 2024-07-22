@@ -23,6 +23,7 @@ with {
 
   qt = {
     enable = true;
+    platformTheme = "qtct";
   };
 
   dconf = {
@@ -82,6 +83,7 @@ with {
       kitty.enable = false;
       zathura.enable = false;
       dunst.enable = false;
+      kde.enable = false;
     };
 
     base16Scheme = {
