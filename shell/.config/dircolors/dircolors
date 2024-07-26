@@ -647,30 +647,30 @@ zshrc             03;38;5;103 # UNIX Shell
 # ┌───────────────────────────────────────────────────────────┐
 # │ Emulator roms / savegames                                 │
 # └───────────────────────────────────────────────────────────┘
-.32x              00;38;5;232 # Emulator roms / savegames
-.A64              00;38;5;232 # Emulator roms / savegames
-.a00              00;38;5;232 # Emulator roms / savegames
-.a52              00;38;5;232 # Emulator roms / savegames
-.a64              00;38;5;232 # Emulator roms / savegames
-.a78              00;38;5;232 # Emulator roms / savegames
-.adf              00;38;5;232 # Emulator roms / savegames
-.atr              00;38;5;232 # Emulator roms / savegames
-.cdi              00;38;5;232 # Emulator roms / savegames
-.fm2              00;38;5;232 # Emulator roms / savegames
-.gb               00;38;5;232 # Emulator roms / savegames (Nindendo)
-.gba              00;38;5;232 # Emulator roms / savegames (Nindendo)
-.gbc              00;38;5;232 # Emulator roms / savegames (Nindendo)
-.gel              00;38;5;232 # Emulator roms / savegames (Nindendo)
-.gg               00;38;5;232 # Emulator roms / savegames (Nindendo)
-.ggl              00;38;5;232 # Emulator roms / savegames (Nindendo)
-.j64              00;38;5;232 # Emulator roms / savegames (Nindendo)
-.nds              00;38;5;232 # Emulator roms / savegames (Nintendo)
-.nes              00;38;5;232 # Emulator roms / savegames (Nintendo NES)
-.rom              01;38;5;232 # Emulator roms / savegames
-.sav              00;38;5;232 # Emulator roms / savegames
-.sms              00;38;5;232 # Emulator roms / savegames
-.st               00;38;5;232 # Emulator roms / savegames
-.ipk              00;38;5;232 # Emulator roms / savegames (Nintendo DS Packed Images)
+.32x              00;38;5;222 # Emulator roms / savegames
+.A64              00;38;5;222 # Emulator roms / savegames
+.a00              00;38;5;222 # Emulator roms / savegames
+.a52              00;38;5;222 # Emulator roms / savegames
+.a64              00;38;5;222 # Emulator roms / savegames
+.a78              00;38;5;222 # Emulator roms / savegames
+.adf              00;38;5;222 # Emulator roms / savegames
+.atr              00;38;5;222 # Emulator roms / savegames
+.cdi              00;38;5;222 # Emulator roms / savegames
+.fm2              00;38;5;222 # Emulator roms / savegames
+.gb               00;38;5;222 # Emulator roms / savegames (Nindendo)
+.gba              00;38;5;222 # Emulator roms / savegames (Nindendo)
+.gbc              00;38;5;222 # Emulator roms / savegames (Nindendo)
+.gel              00;38;5;222 # Emulator roms / savegames (Nindendo)
+.gg               00;38;5;222 # Emulator roms / savegames (Nindendo)
+.ggl              00;38;5;222 # Emulator roms / savegames (Nindendo)
+.j64              00;38;5;222 # Emulator roms / savegames (Nindendo)
+.nds              00;38;5;222 # Emulator roms / savegames (Nintendo)
+.nes              00;38;5;222 # Emulator roms / savegames (Nintendo NES)
+.rom              01;38;5;222 # Emulator roms / savegames
+.sav              00;38;5;222 # Emulator roms / savegames
+.sms              00;38;5;222 # Emulator roms / savegames
+.st               00;38;5;222 # Emulator roms / savegames
+.ipk              00;38;5;222 # Emulator roms / savegames (Nintendo DS Packed Images)
 # ┌───────────────────────────────────────────────────────────┐
 # │ Systemd                                                   │
 # └───────────────────────────────────────────────────────────┘
