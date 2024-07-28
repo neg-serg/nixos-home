@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+dunstify "$(echo -e "$1"\\nOpenVPN is up)"
