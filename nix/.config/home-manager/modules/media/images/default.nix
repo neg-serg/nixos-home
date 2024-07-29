@@ -1,10 +1,10 @@
-{pkgs, ...}:
+{stable, pkgs, ...}:
 with {
   nsxiv-neg = pkgs.callPackage ../../../packages/nsxiv {};
 }; {
   home.packages = with pkgs; [
     advancecomp # AdvanceCOMP PNG Compression Utility
-    darktable # photo editing
+    stable.darktable # photo editing
     exiftool # extract media metadata
     exiv2 # metadata manipulation
     gcolor3 # color selector
