@@ -3,14 +3,10 @@ local lsp_status = require'lsp-status'
 local lspkind = require'lspkind'
 local lsp = vim.lsp
 
-vim.fn.sign_define("LspDiagnosticsSignError",
-                   {texthl = "LspDiagnosticsSignError", text = "", numhl = "LspDiagnosticsSignError"})
-vim.fn.sign_define("LspDiagnosticsSignWarning",
-                   {texthl = "LspDiagnosticsSignWarning", text = "", numhl = "LspDiagnosticsSignWarning"})
-vim.fn.sign_define("LspDiagnosticsSignHint",
-                   {texthl = "LspDiagnosticsSignHint", text = "", numhl = "LspDiagnosticsSignHint"})
-vim.fn.sign_define("LspDiagnosticsSignInformation",
-                   {texthl = "LspDiagnosticsSignInformation", text = "", numhl = "LspDiagnosticsSignInformation"})
+vim.fn.sign_define("LspDiagnosticsSignError", {texthl = "LspDiagnosticsSignError", text = "", numhl = "LspDiagnosticsSignError"})
+vim.fn.sign_define("LspDiagnosticsSignWarning", {texthl = "LspDiagnosticsSignWarning", text = "", numhl = "LspDiagnosticsSignWarning"})
+vim.fn.sign_define("LspDiagnosticsSignHint", {texthl = "LspDiagnosticsSignHint", text = "", numhl = "LspDiagnosticsSignHint"})
+vim.fn.sign_define("LspDiagnosticsSignInformation", {texthl = "LspDiagnosticsSignInformation", text = "", numhl = "LspDiagnosticsSignInformation"})
 
 local kind_symbols = {
   Text = '',
@@ -43,7 +39,6 @@ lsp_status.config {
         ['start'] = {character = 0, line = vim.fn.byte2line(symbol.valueRange[1])},
         ['end'] = {character = 0, line = vim.fn.byte2line(symbol.valueRange[2])}
       }
-
       return require('lsp-status/util').in_range(cursor_pos, value_range)
     end
   end,
