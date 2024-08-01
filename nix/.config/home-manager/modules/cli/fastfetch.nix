@@ -84,10 +84,6 @@
         key = " Monitor";
       }
       {
-        type = "display";
-        key = " Display";
-      }
-      {
         type = "theme";
         key = " Theme";
       }
@@ -98,10 +94,6 @@
       {
         type = "cursor";
         key = " Cursor";
-      }
-      {
-        type = "locale";
-        key = " Language";
       }
       {
         type = "shell";
@@ -150,6 +142,10 @@
       {
         type = "users";
         key = " Users";
+      }
+      {
+        type = "locale";
+        key = " Locale";
       }
       {
         type = "weather";
