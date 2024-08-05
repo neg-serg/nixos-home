@@ -1,3 +1,5 @@
+vim.g.mapleader = ','
+
 map('n', 'e', '[Qleader]')
 
 Map('i', '<C-j>', '<ESC>', {nowait = true})
@@ -13,10 +15,8 @@ Map('n', 'q', '<NOP>')
 Map('n', 'Q', '<NOP>')
 Map('', '<F1>', '<NOP>')
 
--- Escape as normal
-map('t', '<Esc>', '<C-\\><C-n>', {silent=true})
+map('t', '<Esc>', '<C-\\><C-n>', {silent=true}) -- Escape as normal
 
--- Don't use arrow keys
 Map('', '<up>', '<NOP>')
 Map('', '<down>', '<NOP>')
 Map('', '<left>', '<NOP>')
@@ -33,7 +33,6 @@ map('n', '[Qleader]l', ':normal :<C-u>clist<CR>', {silent=true})
 map('n', '[Qleader]w', ':w!<cr>', {silent=true})
 map('n', '[Qleader]W', ':SudaWrite<cr>', {silent=true})
 map('n', '[Qleader]s', ':source %<CR>', {silent=true})
--- Fix for floating windows
 Map('n', '<C-c>', '<C-[>')
 Map('i', '<C-c>', '<C-[>')
 -- These create newlines like o and O but stay in normal mode
@@ -50,10 +49,8 @@ Map('n', '<C-g>', 'g<C-g>')
 -- column, so swap them
 Map('n', "'", "`")
 Map('n', "`", "'")
--- like firefox tabs
 map('n', '<M-w>', ':bd<CR>', {silent=true})
 Map('i', '<C-V>', '<C-R>+')
-vim.g.mapleader = ','
 Map('c', '<C-a>', '<home>', {noremap=true})
 Map('i', '<C-a>', "<C-o>^", {noremap=true})
 Map('c', '<C-n>', '<down>', {noremap=true})
