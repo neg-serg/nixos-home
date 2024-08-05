@@ -6,7 +6,6 @@ return {'smoka7/hop.nvim', -- speed motions
         local status, hop=pcall(require, 'hop')
         if (not status) then return end
         map('n', '<Space>', '<cmd>HopLineStart<cr>')
-        map('n', 'F', '<cmd>HopChar2<cr>')
         hop.setup({keys='wersdfa'})
         local hi=vim.api.nvim_set_hl
 
