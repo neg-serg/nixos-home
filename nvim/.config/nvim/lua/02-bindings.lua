@@ -13,9 +13,6 @@ Map('n', 'q', '<NOP>')
 Map('n', 'Q', '<NOP>')
 Map('', '<F1>', '<NOP>')
 
--- Map('n', '<Tab>', '<cmd> bn<CR>', {noremap=true})
--- Map('n', '<S-Tab>', '<cmd> bp<CR>', {noremap=true})
-
 -- Escape as normal
 map('t', '<Esc>', '<C-\\><C-n>', {silent=true})
 
