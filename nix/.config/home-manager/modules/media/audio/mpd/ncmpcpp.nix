@@ -1,11 +1,11 @@
 {config, ...}: {
   programs.ncmpcpp = {
     enable = true;
+    mpdMusicDir = "~/music";
     settings = {
       #--=[ mpd ]=---------------
       mpd_host = "localhost";
       mpd_port = 6600;
-      mpd_music_dir = "~/music";
       mpd_crossfade_time = "0";
       ncmpcpp_directory = "${config.xdg.configHome}/ncmpcpp";
       #--=[ Main ]=-------------------
