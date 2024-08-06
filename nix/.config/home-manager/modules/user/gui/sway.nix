@@ -3,10 +3,11 @@
   home.packages = with pkgs; [
     fnott # wayland notifications
     fuzzel # wayland launcher
+    sway # i3 for wayland
     swww # wallpaper daemon for wayland
+    wdisplays # gui for configuring displays in Wayland compositors
     wtype # xdotool for wayland
     ydotool # xdotool systemwide
-    sway
   ];
   wayland.windowManager.sway = {
     enable = true;
