@@ -19,7 +19,7 @@
       hwdec-codecs = "all";
       vd-lavc-threads = "12";
       vo = "gpu-next";
-      hwdec = "auto";
+      hwdec = "vaapi";
       gpu-api = "vulkan";
       vulkan-async-compute = true;
       vulkan-async-transfer = true;
