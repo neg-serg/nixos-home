@@ -17,7 +17,7 @@
     broot # nested fuzzy finding
     choose # yet another cut/awk alternative
     convmv # convert filename encodings
-    czkawka # find duplicate pictures and more
+    stable.czkawka # find duplicate pictures and more
     dash # faster sh
     dcfldd # better dd with progress bar and inline hash verification
     diff-so-fancy # human-readable diff
