@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{pkgs, stable, ...}: {
   home.packages = with pkgs; [
     ape # monkey audio codec
     audiowaveform # shows soundwaveform
@@ -15,7 +15,7 @@
     sonic-visualiser # audio analyzer
     sox # audio processing
     streamlink # CLI for extracting streams from websites
-    tauon # fancy standalone music player
+    stable.tauon # fancy standalone music player
     unflac # split2flac alternative
   ];
 }
