@@ -40,116 +40,114 @@
       };
     };
     display = {
-      color = {
-        keys = "3";
-        title = "4";
-      };
+      separator = " ";
       size = {maxPrefix = "PB";};
       percent = {type = 9;};
     };
     modules = [
       {
         type = "os";
-        key = "󱄅 System";
+        key = "󱄅";
         format = "{3}";
       }
       {
         type = "kernel";
-        key = " Kernel";
+        key = "";
         format = "{1} {2} ({4})";
       }
       {
         type = "uptime";
-        key = " Uptime";
+        key = "";
       }
       {
         type = "wm";
-        key = " WM";
+        key = "";
       }
       {
         type = "command";
-        key = "󰆧 Packages";
+        key = "󰆧";
         text = "(${lib.getExe' pkgs.nix "nix-store"} --query --requisites /run/current-system | wc -l | tr -d '\n') && echo ' (nix; /run/current-system)'";
       }
       {
         type = "memory";
-        key = "󰍛 Memory";
+        key = "󰍛";
       }
       {
         type = "host";
-        key = "🖥Host";
+        key = "🖥";
       }
       {
         type = "monitor";
-        key = " Monitor";
+        key = "";
       }
       {
         type = "theme";
-        key = " Theme";
+        key = "";
       }
       {
         type = "icons";
-        key = " Icons";
+        key = "";
       }
       {
         type = "cursor";
-        key = " Cursor";
+        key = "";
       }
       {
         type = "shell";
-        key = "︁ Shell";
+        key = "︁";
       }
       {
         type = "terminal";
-        key = "︁ Terminal";
+        key = "︁";
       }
       {
         type = "terminalfont";
-        key = "︁ Font";
+        key = "︁";
       }
       {
         type = "cpu";
-        key = " CPU";
+        key = "";
       }
       {
         type = "board";
-        key = " Board";
+        key = "";
       }
       {
         type = "gpu";
-        key = " GPU";
+        driverSpecific = true;
+        key = "";
       }
       {
         type = "bios";
-        key = " BIOS";
+        key = "";
       }
       {
         type = "vulkan";
-        key = " Vulkan";
+        key = "";
       }
       {
         type = "disk";
-        key = " Disk";
+        key = "";
       }
       {
         type = "sound";
-        key = " Sound";
+        key = "";
       }
       {
         type = "player";
-        key = " Player";
+        key = "";
       }
       {
         type = "users";
-        key = " Users";
+        key = "";
       }
       {
         type = "locale";
-        key = " Locale";
+        key = "";
       }
       {
         type = "weather";
-        key = " Weather";
+        key = "";
       }
     ];
   };
