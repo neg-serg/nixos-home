@@ -62,10 +62,6 @@ with {
       source = l "${dots}/misc/.config/dosbox";
       recursive = true;
     };
-    "flameshot" = {
-      source = l "${dots}/misc/.config/flameshot";
-      recursive = true;
-    };
     "icedtea-web" = {
       source = l "${dots}/misc/.config/icedtea-web";
       recursive = true;
