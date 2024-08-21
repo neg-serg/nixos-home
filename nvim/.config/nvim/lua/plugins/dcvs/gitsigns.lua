@@ -36,9 +36,6 @@ return {'lewis6991/gitsigns.nvim', -- fast git decorations
                 delay=1000,
                 ignore_whitespace=false,
             },
-            current_line_blame_formatter_opts={
-                relative_time=false,
-            },
         }
         local opts={silent=true, noremap=true}
         map('n', '<leader>gb', '<cmd>Gitsigns blame_line<cr>', opts)
