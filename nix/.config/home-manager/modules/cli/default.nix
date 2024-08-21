@@ -48,7 +48,6 @@
     sd # bettter sed
     speedtest-cli # test network
     stable.diffoscope # diff for various format
-    stable.khal # better calendar
     stow # manage farms of symlinks
     tealdeer # short man, tldr replacement written in rust
     topgrade # upgrade all the stuff for all distros
