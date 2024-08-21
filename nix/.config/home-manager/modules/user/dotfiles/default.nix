@@ -110,10 +110,6 @@ with {
       recursive = true;
     };
     # █▓▒░ shell ──────────────────────────────────────────────────────────────────────────
-    "broot" = {
-      source = l "${dots}/shell/.config/broot";
-      recursive = true;
-    };
     "dircolors" = {
       source = l "${dots}/shell/.config/dircolors";
       recursive = true;
