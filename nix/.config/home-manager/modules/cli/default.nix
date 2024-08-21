@@ -9,6 +9,7 @@
     ./broot.nix # nested fuzzy finding
     ./btop.nix
     ./fastfetch.nix
+    ./fd.nix # better find
     ./fzf.nix
     ./ripgrep.nix
   ];
