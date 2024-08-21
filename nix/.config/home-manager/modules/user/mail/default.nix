@@ -11,6 +11,7 @@ with {
     ./accounts
     ./vdirsyncer
     ./imapnotify
+    ./khal # better calendar
   ];
   home.packages = with pkgs; [
     himalaya # modern cli for mail
