@@ -8,6 +8,7 @@ with {
   dots = "${config.home.homeDirectory}/.dotfiles";
 }; {
   imports = [
+      ./accounts
       ./vdirsyncer
       ./imapnotify
   ];
