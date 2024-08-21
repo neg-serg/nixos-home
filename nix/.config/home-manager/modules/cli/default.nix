@@ -5,6 +5,7 @@
 }: {
   imports = [
     ./archives
+    ./bat.nix # better cat
     ./broot.nix # nested fuzzy finding
     ./btop.nix
     ./fastfetch.nix
@@ -14,7 +15,6 @@
   home.packages = with pkgs; [
     as-tree # represent smth as tree
     babashka # native clojure for scripts
-    bat # better cat
     choose # yet another cut/awk alternative
     convmv # convert filename encodings
     stable.czkawka # find duplicate pictures and more

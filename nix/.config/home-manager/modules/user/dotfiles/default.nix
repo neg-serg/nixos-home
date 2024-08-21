@@ -58,10 +58,6 @@ with {
       source = l "${dots}/misc/.config/amfora";
       recursive = true;
     };
-    "bat" = {
-      source = l "${dots}/misc/.config/bat";
-      recursive = true;
-    };
     "dosbox" = {
       source = l "${dots}/misc/.config/dosbox";
       recursive = true;
