@@ -154,10 +154,6 @@ with {
       source = l "${dots}/bin";
       recursive = false;
     };
-    ".fdignore" = {
-      source = l "${dots}/shell/.fdignore";
-      recursive = true;
-    };
     ".ugrep" = {
       source = l "${dots}/shell/.ugrep";
       recursive = true;
