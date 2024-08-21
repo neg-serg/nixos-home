@@ -26,7 +26,6 @@
     INPUTRC = "${config.home.sessionVariables.XDG_CONFIG_HOME}/inputrc";
     LIBSEAT_BACKEND = "logind";
     MPV_HOME = "${config.home.sessionVariables.XDG_CONFIG_HOME}/mpv";
-    NOTMUCH_CONFIG = "${config.home.sessionVariables.XDG_CONFIG_HOME}/notmuch/notmuchrc";
     PARALLEL_HOME = "${config.home.sessionVariables.XDG_CONFIG_HOME}/parallel";
     PASSWORD_STORE_DIR = "${config.home.sessionVariables.XDG_DATA_HOME}/pass";
     PASSWORD_STORE_ENABLE_EXTENSIONS_DEFAULT = "true";
