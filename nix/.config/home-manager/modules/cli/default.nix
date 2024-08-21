@@ -5,6 +5,7 @@
 }: {
   imports = [
     ./archives
+    ./broot.nix # nested fuzzy finding
     ./btop.nix
     ./fastfetch.nix
     ./fzf.nix
@@ -14,7 +15,6 @@
     as-tree # represent smth as tree
     babashka # native clojure for scripts
     bat # better cat
-    broot # nested fuzzy finding
     choose # yet another cut/awk alternative
     convmv # convert filename encodings
     stable.czkawka # find duplicate pictures and more
