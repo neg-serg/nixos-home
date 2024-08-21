@@ -217,7 +217,10 @@ with {
     "${config.xdg.configHome}/nixpkgs/config.nix".text = ''
       {
           allowUnfree = true;
-          permittedInsecurePackages = [ "electron-25.9.0" ];
+          permittedInsecurePackages = [
+              "electron-25.9.0"
+              "electron-27.3.11"
+          ];
       }
     '';
   };
