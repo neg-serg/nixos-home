@@ -4,7 +4,7 @@
         General = {
             showStartupLaunchMessage = false;
             contrastUiColor = "#005fd7";
-            disabledTrayIcon = false;
+            disabledTrayIcon = true;
             drawColor = "#ff1ad4";
             drawThickness = 3;
             savePath = "/home/neg/dw";
