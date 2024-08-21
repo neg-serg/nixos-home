@@ -8,11 +8,6 @@ with {
   dots = "${config.home.homeDirectory}/.dotfiles";
 }; {
   xdg.configFile = {
-    # █▓▒░ environment.d ────────────────────────────────────────────────────────────────
-    "environment.d/envvars.conf" = {
-      source = l "${dots}/environment.d/.config/environment.d/envvars.conf";
-      recursive = false;
-    };
     # █▓▒░ gdb ──────────────────────────────────────────────────────────────────────────
     "gdb" = {
       source = l "${dots}/gdb/.config/gdb";
