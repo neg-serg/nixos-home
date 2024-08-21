@@ -1,4 +1,8 @@
-{pkgs, stable, ...}: {
+{
+  pkgs,
+  stable,
+  ...
+}: {
   home.packages = with pkgs; [
     ape # monkey audio codec
     audiowaveform # shows soundwaveform

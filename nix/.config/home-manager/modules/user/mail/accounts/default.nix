@@ -5,9 +5,9 @@
     userName = "serg.zorg@gmail.com";
     primary = true;
     imap = {
-        host = "imap.gmail.com";
-        port = 993;
-        tls.enable = true;
+      host = "imap.gmail.com";
+      port = 993;
+      tls.enable = true;
     };
   };
 }
