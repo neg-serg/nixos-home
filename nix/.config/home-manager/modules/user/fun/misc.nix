@@ -1,4 +1,5 @@
-{pkgs, ...}: with {
+{pkgs, ...}:
+with {
   cxxmatrix = pkgs.callPackage ../../../packages/cxxmatrix {};
 }; {
   home.packages = with pkgs; [

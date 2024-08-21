@@ -8,9 +8,9 @@ with {
   dots = "${config.home.homeDirectory}/.dotfiles";
 }; {
   imports = [
-      ./accounts
-      ./vdirsyncer
-      ./imapnotify
+    ./accounts
+    ./vdirsyncer
+    ./imapnotify
   ];
   home.packages = with pkgs; [
     himalaya # modern cli for mail

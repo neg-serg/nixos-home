@@ -1,4 +1,8 @@
-{stable, pkgs, ...}:
+{
+  stable,
+  pkgs,
+  ...
+}:
 with {
   nsxiv-neg = pkgs.callPackage ../../../packages/nsxiv {};
 }; {
