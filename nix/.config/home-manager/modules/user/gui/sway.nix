@@ -6,6 +6,7 @@
     sway # i3 for wayland
     swww # wallpaper daemon for wayland
     wdisplays # gui for configuring displays in Wayland compositors
+    wpaperd # wallpaper daemon for wayland
     wtype # xdotool for wayland
     ydotool # xdotool systemwide
   ];
