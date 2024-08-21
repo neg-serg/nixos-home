@@ -24,10 +24,6 @@ with {
       recursive = true;
     };
     # █▓▒░ mail ─────────────────────────────────────────────────────────────────────────
-    "imapnotify" = {
-      source = l "${dots}/mail/.config/imapnotify";
-      recursive = true;
-    };
     "isync" = {
       source = l "${dots}/mail/.config/isync";
       recursive = true;
