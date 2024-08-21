@@ -31,10 +31,6 @@ with {
       source = l "${dots}/mail/.config/mutt";
       recursive = true;
     };
-    "notmuch" = {
-      source = l "${dots}/mail/.config/notmuch";
-      recursive = true;
-    };
     "vdirsyncer" = {
       source = l "${dots}/mail/.config/vdirsyncer";
       recursive = true;
