@@ -68,3 +68,5 @@ Map('o', '<M-e>', '<End>', {noremap=true})
 Map('i', '<C-e>', "<C-o>$", {noremap=true})
 
 map('i', '<C-v>', 'paste#paste_cmd["i"]', {expr=true})
+-- Map('n', "<M-;>", function() vim.diagnostic.open_float({ border = "rounded", }) end, "display diagnostics")
+-- Map('i', "<M-;>", function() vim.diagnostic.open_float({ border = "rounded", }) end, "display diagnostics")
