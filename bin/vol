@@ -1,0 +1,15 @@
+#!/usr/bin/env zsh
+
+sign(){ echo "$1"|rev|cut -b1 }
+get_volume_(){ wpctl get-volume @DEFAULT_SINK@ }
+get_volume(){ get_volume_|cut -d: -f2|tr -d '[:space:]' }
+set_volume(){ wpctl set-volume @DEFAULT_SINK@ "$1" }
+set_volume_safe(){
+    set_volume "$(echo "$(get_volume)" "$1"|awk '{if (($1+$2) >= 1.0) print 1.00; else print ($1+$2)}')"
+}
+
+if [[ $(sign $1) == '-' ]]; then
+    set_volume "$1"
+elif [[ $(sign $1) == '+' ]]; then
+    set_volume_safe "$1"
+fi
