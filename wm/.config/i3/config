@@ -99,8 +99,8 @@ bindsym Mod4+m exec --no-startup-id ~/bin/music-rename current
 bindsym Mod4+p exec --no-startup-id rofi-pass
 bindsym Mod4+space exec --no-startup-id dunstctl close-all
 bindsym XF86Sleep exec --no-startup-id systemctl suspend
-bindsym XF86AudioLowerVolume exec --no-startup-id playerctl volume '0.05-'
-bindsym XF86AudioRaiseVolume exec --no-startup-id playerctl volume '0.05+'
+bindsym XF86AudioLowerVolume exec --no-startup-id ~/bin/vol '0.05-'
+bindsym XF86AudioRaiseVolume exec --no-startup-id ~/bin/vol '0.05+'
 
 bindsym Mod4+7 focus child
 bindsym Mod4+h focus left
