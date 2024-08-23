@@ -53,27 +53,6 @@ pl_rofi() {
     popd
 }
 
-vol(){ playerctl -p "$1" volume "$2" }
-vset(){
-    for p in mpv mpd; do
-        if [[ "$(playerctl -p $p status)" =~ 'Stopped|No players found' ]]; then
-            vol "$p" "$1"; break
-        else
-            playerctl volume "$1"
-        fi
-    done
-}
-
-vchange(){
-    for p in mpv mpd; do
-        if [[ "$(playerctl -p $p status)" =~ 'Stopped|No players found' ]]; then
-            vol "$p" "$1" || playerctl -p "$p" volume "$[$1/5]$2"; break
-        else
-            playerctl volume "$1" || playerctl volume "$[$1/5]$2"
-        fi
-    done
-}
-
 main() {
     set_maxdepth=false
     run=pl
@@ -103,8 +82,6 @@ case $1 in
         case $2 in
             mute) vset 0.0 || amixer -q set Master 0 mute ;;
             unmute) vset 1.0 || amixer -q set Master 65536 unmute ;;
-            up) vchange 0.05 + ;;
-            down) vchange 0.05 - ;;
         esac ;;
     *) main "$@" ;;
 esac
