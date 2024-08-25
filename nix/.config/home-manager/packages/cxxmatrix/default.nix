@@ -1,8 +1,8 @@
-{ lib
-, stdenv
-, fetchFromGitHub
+{
+  lib,
+  stdenv,
+  fetchFromGitHub,
 }:
-
 stdenv.mkDerivation rec {
   pname = "cxxmatrix";
   version = "unstable-2024-06-17";

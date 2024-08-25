@@ -21,11 +21,11 @@
   accounts = {
     contact.basePath = ".config/vdirsyncer/contacts";
     calendar.basePath = ".config/vdirsyncer/calendars";
-  
+
     calendar.accounts."calendar" = {
       khal.enable = true;
     };
-  
+
     calendar.accounts."contacts" = {
       khal.enable = true;
     };

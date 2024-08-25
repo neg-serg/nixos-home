@@ -6,7 +6,7 @@
       ignore = [];
     };
     search = {
-        excludeTags = ["deleted" "spam"];
+      excludeTags = ["deleted" "spam"];
     };
     maildir = {
       synchronizeFlags = true;
