@@ -15,7 +15,6 @@ with {
     gpick # alternative color picker
     graphviz # graphics
     jpegoptim # jpeg optimization
-    krita # digital painting
     lutgen # fast lut generator
     mediainfo # another tool to extract media info
     nsxiv-neg # my favorite image viewer
