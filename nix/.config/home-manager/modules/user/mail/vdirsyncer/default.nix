@@ -1,4 +1,7 @@
 {pkgs, ...}: {
+  home.packages = with pkgs; [
+    vdirsyncer # add vdirsyncer binary for sync and initialization
+  ];
   systemd.user.services.vdirsyncer = {
     Unit = {Description = "Vdirsyncer synchronization service";};
     Service = {

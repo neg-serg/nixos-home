@@ -6,10 +6,6 @@ type = "filesystem"
 path = "~/.config/vdirsyncer/contacts/"
 fileext = ".vcf"
 
-# [storage neg_contacts_remote]
-# type = "carddav"
-# url = "https://owncloud.example.com/remote.php/carddav/"
-
 [pair neg_calendar]
 a = "neg_calendar_local"
 b = "neg_calendar_remote"
