@@ -1,5 +1,4 @@
 {
-  stable,
   pkgs,
   ...
 }:
@@ -8,7 +7,7 @@ with {
 }; {
   home.packages = with pkgs; [
     advancecomp # AdvanceCOMP PNG Compression Utility
-    stable.darktable # photo editing
+    darktable # photo editing
     exiftool # extract media metadata
     exiv2 # metadata manipulation
     gcolor3 # color selector
