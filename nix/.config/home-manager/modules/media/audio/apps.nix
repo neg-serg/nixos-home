@@ -14,7 +14,6 @@
     sonic-visualiser # audio analyzer
     sox # audio processing
     streamlink # CLI for extracting streams from websites
-    tauon # fancy standalone music player
     unflac # split2flac alternative
   ];
 }
