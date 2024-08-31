@@ -1,7 +1,6 @@
 {pkgs, ...}: {
   home.packages = with pkgs; [
     ape # monkey audio codec
-    audiowaveform # shows soundwaveform
     cdparanoia # cdrip / cdrecord
     cider # apple music player
     dr14_tmeter # compute the DR14 of a given audio file according to the procedure from Pleasurize Music Foundation
