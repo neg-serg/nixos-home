@@ -133,26 +133,6 @@
       "_NET_WM_STATE@:32a *= '_NET_WM_STATE_HIDDEN'"
     ];
 
-    corner-radius = 15.0;
-    rounded-corners-exclude = [
-      "class_g *= ''"
-
-      "class_g != 'Dunst'"
-      "class_g != 'Polybar'"
-      "class_g *= 'Thunar'"
-      "class_g *= 'thunar'"
-      "class_g = 'Alacritty'"
-      "class_g = 'URxvt'"
-      "class_g = 'XTerm'"
-      "class_g = 'awesome'"
-      "class_g = 'firefox'"
-      "class_g = 'kitty'"
-
-      "window_type = 'menu'"
-      "window_type = 'normal'"
-      "window_type = 'popup'"
-    ];
-
     shadow = true;
     shadow-radius = 9.0;
     shadow-offset-x = -9.0;
