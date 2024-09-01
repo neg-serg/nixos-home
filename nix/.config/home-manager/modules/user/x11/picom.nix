@@ -90,7 +90,7 @@
     ];
 
     blur = {
-      method = "dual_kawase";
+      method = "gauss";
       blur-strengh = 7;
       blur-background-fixed = true;
     };
