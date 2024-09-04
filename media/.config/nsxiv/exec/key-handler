@@ -8,7 +8,7 @@ trash="$HOME/trash/1st-level/pic"
 rofi_cmd="rofi -dmenu -sort -matching fuzzy -no-plugins -no-only-match -theme sxiv -custom"
 
 rotate() {
-    while read file; do mogrify -rotate "$1" "$file"; done
+    while read -r file; do mogrify -rotate "$1" "$file"; done
 }
 
 proc() {
@@ -16,16 +16,16 @@ proc() {
     tee "$ff"
     if [ -z "$dest" ]; then
         dest=$(_FASD_DATA="$z" fasd -tlR \
-            | sed 's:^'$HOME':~:' \
+            | sed 's:^'"$HOME"':~:' \
             | $rofi_cmd -p "⟬$cmd⟭ ❯>"  \
-            | sed 's:^~:'$HOME':')
+            | sed 's:^~:'"$HOME"':')
     fi
     [ -z "$dest" ] && exit 0
     old_ifs=$IFS
     IFS="$(echo)"
     if [ -d "$dest" ]; then
-        while read line; do
-            $cmd "$(realpath $line)" $dest
+        while read -r line; do
+            $cmd "$(realpath "$line")" "$dest"
         done < "$(realpath "$ff")"
         _FASD_DATA="$z" fasd -RA "$dest"
         printf "%s\n" "$cmd \"$dest\"" > "$last"
@@ -40,11 +40,11 @@ repeat_action() {
     tee "$ff"
     old_ifs=$IFS
     IFS="$(echo)"
-    fname="$(realpath $(cat "$ff"))"
-    last="$(cat "$last" | xargs)"
-    cmd=$(echo $last | awk '{print $1}')
-    dest=$(echo $last | awk '{print $2}')
-    if [ $cmd = 'mv' ] || [ $cmd = 'cp' ]; then
+    fname="$(realpath "$(cat "$ff")")"
+    last="$(xargs < "$last")"
+    cmd=$(echo "$last" | awk '{print $1}')
+    dest=$(echo "$last" | awk '{print $2}')
+    if [ "$cmd" = 'mv' ] || [ "$cmd" = 'cp' ]; then
         $cmd "$fname" "$dest"
     fi
     IFS=$old_ifs
@@ -74,31 +74,31 @@ wall() {
     esac
     tee "$tmp_wall"
     if [ -z $specarg ]; then
-        while read wall; do
+        while read -r wall; do
             hsetroot $wallarg "$wall" &
             echo "$wall" >> ~/.local/share/wl/wallpaper.list 2> /dev/null
         done < "$tmp_wall"
     elif [ $specarg = 'mono' ]; then
-        while read wall; do make_mono "$wall"
+        while read -r wall; do make_mono "$wall"
         done < "$tmp_wall"
     elif [ $specarg = 'retro' ]; then
-        while read wall; do make_retro "$wall"
+        while read -r wall; do make_retro "$wall"
         done < "$tmp_wall"
     fi
 }
 
 make_mono(){
-    convert "$1" -colors 2 "$cache/mono__$(basename $1)"
-    hsetroot -cover "$cache/mono__$(basename $1)"
+    convert "$1" -colors 2 "$cache/mono__$(basename "$1")"
+    hsetroot -cover "$cache/mono__$(basename "$1")"
     echo "$1" >> ~/.local/share/wl/wallpaper.list 2> /dev/null
-    rm "$cache/mono__$(basename $1)"
+    rm "$cache/mono__$(basename "$1")"
 }
 
 make_retro(){
-    convert "$1" -colors 12 "$cache/retro__$(basename $1)"
-    hsetroot -cover "$cache/retro__$(basename $1)"
+    convert "$1" -colors 12 "$cache/retro__$(basename "$1")"
+    hsetroot -cover "$cache/retro__$(basename "$1")"
     echo "$1" >> ~/.local/share/wl/wallpaper.list 2> /dev/null
-    rm "$cache/retro__$(basename $1)"
+    rm "$cache/retro__$(basename "$1")"
 }
 
 finish() {
