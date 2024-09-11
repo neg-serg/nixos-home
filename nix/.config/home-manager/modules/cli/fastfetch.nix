@@ -69,10 +69,6 @@
         text = "(${lib.getExe' pkgs.nix "nix-store"} --query --requisites /run/current-system | wc -l | tr -d '\n') && echo ' (nix; /run/current-system)'";
       }
       {
-        type = "memory";
-        key = "󰍛";
-      }
-      {
         type = "host";
         key = "🖥";
       }
@@ -109,16 +105,20 @@
         key = "";
       }
       {
+        type = "memory";
+        key = "󰍛";
+      }
+      {
         type = "board";
         key = "";
       }
       {
-        type = "gpu";
-        driverSpecific = true;
+        type = "bios";
         key = "";
       }
       {
-        type = "bios";
+        type = "gpu";
+        driverSpecific = true;
         key = "";
       }
       {
