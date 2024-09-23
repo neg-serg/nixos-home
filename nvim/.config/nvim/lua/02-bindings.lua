@@ -33,6 +33,7 @@ map('n', '[Qleader]l', ':normal :<C-u>clist<CR>', {silent=true})
 map('n', '[Qleader]w', ':w!<cr>', {silent=true})
 map('n', '[Qleader]W', ':SudaWrite<cr>', {silent=true})
 map('n', '[Qleader]s', ':source %<CR>', {silent=true})
+map('n', '[Qleader]u', ':Lazy update<CR>', {silent=true})
 Map('n', '<C-c>', '<C-[>')
 Map('i', '<C-c>', '<C-[>')
 -- These create newlines like o and O but stay in normal mode
