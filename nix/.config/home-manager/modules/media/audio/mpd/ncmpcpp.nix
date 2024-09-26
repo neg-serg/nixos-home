@@ -24,7 +24,6 @@
       default_find_mode = "wrapped";
       block_search_constraints_change_if_items_found = "no";
       follow_now_playing_lyrics = "yes";
-      lyrics_fetchers = "musixmatch";
       #--=[ Playlist ]=---------------
       playlist_disable_highlight_delay = "1";
       playlist_show_remaining_time = "yes";
