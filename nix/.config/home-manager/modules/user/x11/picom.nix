@@ -85,13 +85,12 @@
       "name *= 'polybar-floating_wm'"
       "window_type = 'desktop'"
       "window_type = 'dnd'"
-
-      "_GTK_FRAME_EXTENTS@:c"
+      # "_GTK_FRAME_EXTENTS@:c"
     ];
 
     blur = {
-      method = "gauss";
-      blur-strengh = 7;
+      method = "dual_kawase";
+      blur-strengh = 5;
       blur-background-fixed = true;
     };
 
@@ -102,15 +101,13 @@
       "100:class_g = 'mpv'"
       "100:class_g = 'slop'"
       "100:fullscreen"
-
-      "0:_NET_WM_STATE@:32a *= '_NET_WM_STATE_HIDDEN'"
-      "100:_GTK_FRAME_EXTENTS@:c"
+      # "0:_NET_WM_STATE@:32 *= '_NET_WM_STATE_HIDDEN'"
+      # "100:_GTK_FRAME_EXTENTS@:c"
     ];
 
     shadow-exclude = [
       "! name~=''"
       "!focused"
-
       "class_g *= 'overlay'"
       "class_g = 'Conky'"
       "class_g = 'Dunst'"
@@ -118,19 +115,15 @@
       "class_g = 'Rofi'"
       "class_g = 'Synapse'"
       "class_g ?= 'Cairo-dock'"
-
       "name *= 'Chromium'"
       "name *= 'overlay'"
       "name *= 'picom'"
       "name *= 'polybar'"
-
-      # Zoom
-      "name = 'cpt_frame_window'"
-      "name = 'cpt_frame_xcb_window'"
-      "name = 'as_toolbar'"
-
-      "_GTK_FRAME_EXTENTS@:c"
-      "_NET_WM_STATE@:32a *= '_NET_WM_STATE_HIDDEN'"
+      "name = 'cpt_frame_window'" # Zoom
+      "name = 'cpt_frame_xcb_window'" # Zoom
+      "name = 'as_toolbar'" # Zoom
+      # "_GTK_FRAME_EXTENTS@:c"
+      # "_NET_WM_STATE@:32 *= '_NET_WM_STATE_HIDDEN'"
     ];
 
     shadow = true;
@@ -138,9 +131,9 @@
     shadow-offset-x = -9.0;
     shadow-offset-y = -9.0;
     shadow-opacity = 0.8;
-    shadow-exclude-reg = "x10+0+0";
     shadow-red = 0.0;
     shadow-green = 0.3;
     shadow-blue = 0.35;
+    # shadow-exclude-reg = "x10+0+0";
   };
 }
