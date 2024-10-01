@@ -67,8 +67,8 @@ with {
   stylix = {
     enable = true;
     image = pkgs.fetchurl {
-      url = "https://i.imgur.com/t3bTk2b.jpg";
-      sha256 = "sha256-WVDIxyy9ww39JNFkMOJA2N6KxLMh9cKjmeQwLY7kCjk=";
+      url = "https://i.imgur.com/HbYZDyA.jpeg";
+      sha256 = "sha256-Axp121bLA7vMXCmpB/K2jaFR3PldUxOHfbWJxKV5Z8w=";
     };
 
     targets = {
