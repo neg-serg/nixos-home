@@ -9,15 +9,13 @@
     detect-transient = true;
     frame-opacity = 1.0;
     glx-no-rebind-pixmap = false;
-    glx-no-stencil = false;
-    glx-swap-method = 1;
     inactive-dim = 0.0;
     inactive-opacity = 1.0;
     transparent-clipping = false;
     unredir-if-possible = true;
     use-damage = true;
     vsync = false;
-    xrender-sync-fence = true; # for nvidia only
+    xrender-sync-fence = false; # set true for nvidia only
 
     wintypes = {
       dock = {
@@ -64,25 +62,21 @@
     ];
 
     focus-exclude = [
-      "class_g *?= 'Steam'"
       "class_g = 'Polybar'"
       "class_g = 'mpv'"
       "class_g = 'rofi'"
       "class_g = 'slop'"
+      "class_g *?= 'Steam'"
       "name *?= 'Steam'"
     ];
 
     blur-background-exclude = [
-      "class_g *= 'Peek'"
-      "class_g *= 'overlay'"
       "class_g = 'nwim'"
       "class_g = 'slop'"
       "class_g = 'term'"
-      "class_g = 'xsnow'"
       "class_i = 'nwim'"
       "class_i = 'term'"
       "name *= 'overlay'"
-      "name *= 'polybar-floating_wm'"
       "window_type = 'desktop'"
       "window_type = 'dnd'"
       # "_GTK_FRAME_EXTENTS@:c"
@@ -96,7 +90,6 @@
 
     opacity-rule = [
       "80:class_g = 'i3-frame'"
-      "90:class_g = 'Joplin'"
       "95:class_g = 'Zathura'"
       "100:class_g = 'mpv'"
       "100:class_g = 'slop'"
@@ -106,18 +99,11 @@
     ];
 
     shadow-exclude = [
-      "! name~=''"
       "!focused"
-      "class_g *= 'overlay'"
       "class_g = 'Conky'"
       "class_g = 'Dunst'"
       "class_g = 'Firefox' && argb"
       "class_g = 'Rofi'"
-      "class_g = 'Synapse'"
-      "class_g ?= 'Cairo-dock'"
-      "name *= 'Chromium'"
-      "name *= 'overlay'"
-      "name *= 'picom'"
       "name *= 'polybar'"
       "name = 'cpt_frame_window'" # Zoom
       "name = 'cpt_frame_xcb_window'" # Zoom
