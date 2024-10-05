@@ -13,6 +13,7 @@ with {
   ];
   home.packages = with pkgs; [
     mpc-cli # mpd client
+    rmpc # alternative tui client with album cover
   ];
   services.mpd = {
     enable = true;
