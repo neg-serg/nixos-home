@@ -1,6 +1,6 @@
 ncmpcpp:
   classw: ncmpcpp
-  exec: ncmpcpp
+  exec: rmpc
   font: Iosevka Medium
   font_size: 17
   opacity: 0.95
