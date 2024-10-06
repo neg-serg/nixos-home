@@ -70,6 +70,10 @@ with {
       source = l "${dots}/music/.config/ncpamixer.conf";
       recursive = true;
     };
+    "rmpc" = {
+      source = l "${dots}/music/.config/rmpc";
+      recursive = true;
+    };
     # █▓▒░ nix ──────────────────────────────────────────────────────────────────────────
     "home-manager" = {
       source = l "${dots}/nix/.config/home-manager";
