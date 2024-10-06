@@ -39,7 +39,7 @@
             prop: (kind: Property(Artist),
                 default: (kind: Text("Unknown"))
             ),
-            width_percent: 20,
+            width_percent: 15,
         ),
         (
             prop: (kind: Property(Title),
@@ -48,20 +48,45 @@
             width_percent: 35,
         ),
         (
-            prop: (kind: Property(Album), style: (fg: "white"),
-                default: (kind: Text("Unknown Album"), style: (fg: "white"))
-            ),
-            width_percent: 30,
-        ),
-        (
             prop: (kind: Property(Duration),
                 default: (kind: Text("-"))
             ),
-            width_percent: 15,
+            width_percent: 10,
             alignment: Right,
         ),
+        (
+            prop: (kind: Property(Album), style: (fg: "white"),
+                default: (kind: Text("Unknown Album"), style: (fg: "white"))
+            ),
+            alignment: Right,
+            width_percent: 20,
+        ),
     ],
-    header: (rows: [],),
+    header: (
+        rows: [
+            (
+                left: [
+                    (kind: Text("["), style: (fg: "#b7bdf8", modifiers: "Bold")),
+                    (kind: Property(Status(State)), style: (fg: "#b7bdf8", modifiers: "Bold")),
+                    (kind: Text("]"), style: (fg: "#b7bdf8", modifiers: "Bold"))
+                ],
+                center: [
+                    (kind: Property(Song(Artist)), style: (fg: "#eed49f", modifiers: "Bold"),
+                     default: (kind: Text("Unknown"), style: (fg: "#eed49f", modifiers: "Bold"))
+                    ),
+                    (kind: Text(" - ")),
+                    (kind: Property(Song(Title)), style: (fg: "#7dc4e4", modifiers: "Bold"),
+                     default: (kind: Text("No Song"), style: (fg: "#7dc4e4", modifiers: "Bold"))
+                    )
+                ],
+                right: [
+                    (kind: Text("Vol: "), style: (fg: "#b7bdf8", modifiers: "Bold")),
+                    (kind: Property(Status(Volume)), style: (fg: "#b7bdf8", modifiers: "Bold")),
+                    (kind: Text("% "), style: (fg: "#b7bdf8", modifiers: "Bold"))
+                ]
+            )
+        ],
+    ),
     browser_song_format: [
         (
             kind: Group([
