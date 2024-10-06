@@ -24,20 +24,19 @@
         elapsed_style: (fg: "238"),
         thumb_style: (fg: "238"),
     ),
-    scrollbar: (
-        symbols: ["", "", "", ""],
-        track_style: (),
-        ends_style: (),
-        thumb_style: (fg: "white"),
-    ),
+    scrollbar: (symbols: ["", "", "", ""],),
     song_table_format: [
         (
-            prop: (kind: Property(Artist), default: (kind: Text("Unknown"))),
+            prop: (kind: Property(Track), style: (fg: "green"), default: (kind: Text("Unknown"))),
+            width_percent: 2,
+        ),
+        (
+            prop: (kind: Property(Artist), style: (fg: "31"), default: (kind: Text("Unknown"))),
             width_percent: 15,
         ),
         (
             prop: (kind: Property(Title), default: (kind: Text("Unknown"))),
-            width_percent: 55,
+            width_percent: 40,
         ),
         (
             prop: (kind: Property(Duration), default: (kind: Text("-"))),
