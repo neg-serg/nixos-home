@@ -2,14 +2,14 @@
 #![enable(unwrap_newtypes)]
 #![enable(unwrap_variant_newtypes)]
 (
-    album_art_position: Left,
-    album_art_width_percent: 40,
+    album_art_position: Right,
+    album_art_width_percent: 30,
     default_album_art_path: None,
     show_song_table_header: true,
-    draw_borders: true,
+    draw_borders: false,
     browser_column_widths: [20, 38, 42],
     background_color: None,
-    text_color: None,
+    text_color: "250",
     header_background_color: None,
     modal_background_color: None,
     tab_bar: (
