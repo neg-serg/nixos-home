@@ -22,7 +22,7 @@
             ".":       VolumeUp,
             "c":       ToggleSingle,
             "1":       QueueTab,
-            "6":       SearchTab,
+            "?":       SearchTab,
             "<Right>": NextTab,
             "<Tab>":   NextTab,
             "5":       PlaylistsTab,
