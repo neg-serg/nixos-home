@@ -31,7 +31,7 @@ with {
       #metadata_to_use "artist,album,title,track,name,genre,date"
       follow_inside_symlinks "yes"
       replaygain "off"
-      auto_update "yes"
+      auto_update "no"
       mixer_type "software"
 
       input_cache {
