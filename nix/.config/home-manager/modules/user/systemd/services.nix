@@ -215,7 +215,8 @@ with {
       };
 
       Service = {
-        ExecStart = "${stable.clipcat}/bin/clipcatd --no-daemon --replace";
+        ExecStartPre="${pkgs.coreutils}/bin/rm -f %t/clipcat/grpc.sock";
+        ExecStart = "${pkgs.clipcat}/bin/clipcatd --no-daemon --replace";
         Restart = "on-failure";
         Type = "simple";
       };
