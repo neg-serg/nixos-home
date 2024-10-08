@@ -31,10 +31,6 @@ with {
       source = l "${dots}/mail/.config/mutt";
       recursive = true;
     };
-    "vdirsyncer" = {
-      source = l "${dots}/mail/.config/vdirsyncer";
-      recursive = true;
-    };
     # █▓▒░ media ────────────────────────────────────────────────────────────────────────
     "nsxiv" = {
       source = l "${dots}/media/.config/nsxiv";
