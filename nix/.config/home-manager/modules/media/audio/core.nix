@@ -1,6 +1,5 @@
 {
   pkgs,
-  stable,
   ...
 }: {
   home.packages = with pkgs; [
@@ -9,7 +8,7 @@
     helvum # pipewire router
     open-music-kontrollers.patchmatrix # alternative patcher
     pw-volume # pipewire volume
+    pwvucontrol # pavucontrol for pipewire
     qpwgraph # yet another pipewire router
-    stable.pwvucontrol # pavucontrol for pipewire
   ];
 }
