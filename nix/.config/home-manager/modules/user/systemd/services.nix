@@ -2,7 +2,6 @@
   pkgs,
   negwmPkg,
   executorPkg,
-  stable,
   ...
 }:
 with {
@@ -203,22 +202,6 @@ with {
         ExecStart = "${pkgs.unclutter-xfixes}/bin/unclutter --timeout 3 --jitter 50 --ignore-scrolling --start-hidden";
         Restart = "on-failure";
         RestartSec = "3";
-      };
-
-      Install = {WantedBy = ["graphical-session.target"];};
-    };
-
-    clipcat = {
-      Unit = {
-        Description = "Clipcat daemon";
-        PartOf = ["graphical-session.target"];
-      };
-
-      Service = {
-        ExecStartPre="${pkgs.coreutils}/bin/rm -f %t/clipcat/grpc.sock";
-        ExecStart = "${pkgs.clipcat}/bin/clipcatd --no-daemon --replace";
-        Restart = "on-failure";
-        Type = "simple";
       };
 
       Install = {WantedBy = ["graphical-session.target"];};
