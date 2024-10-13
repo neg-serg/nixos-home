@@ -206,12 +206,12 @@ if [[ -e /etc/NIXOS ]]; then
     _exists nh && {
         alias swh="nh home switch $(readlink -f $HOME/.config/home-manager)"
         alias sws="nh os switch /etc/nixos"
-        alias S="nix shell"
-        q(){ nix shell 'nixpkgs#'$1 }
     }
     alias nixify='nix-shell -p nur.repos.kampka.nixify'
-    # thx to Mic92:
+    alias S="nix shell"
+    q(){ nix shell 'nixpkgs#'$1 }
     flakify() {
+        # thx to Mic92:
         if [ ! -e flake.nix ]; then
             nix flake new -t github:Mic92/flake-templates#nix-develop .
         elif [ ! -e .envrc ]; then
