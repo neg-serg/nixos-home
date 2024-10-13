@@ -49,7 +49,6 @@
     speedtest-cli # test network
     stow # manage farms of symlinks
     tealdeer # short man, tldr replacement written in rust
-    topgrade # upgrade all the stuff for all distros
     ugrep # better grep, rg alternative
     urlscan # extract urls from text
     viddy # modern watch command
