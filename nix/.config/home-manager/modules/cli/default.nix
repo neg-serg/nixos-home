@@ -1,6 +1,5 @@
 {
   pkgs,
-  stable,
   ...
 }: {
   imports = [
@@ -18,9 +17,10 @@
     babashka # native clojure for scripts
     choose # yet another cut/awk alternative
     convmv # convert filename encodings
-    stable.czkawka # find duplicate pictures and more
+    czkawka # find duplicate pictures and more
     dash # faster sh
     dcfldd # better dd with progress bar and inline hash verification
+    diffoscope # diff for various format
     diff-so-fancy # human-readable diff
     dos2unix # file convertation
     du-dust # better du
@@ -47,7 +47,6 @@
     sad # more simple sed alternative
     sd # bettter sed
     speedtest-cli # test network
-    stable.diffoscope # diff for various format
     stow # manage farms of symlinks
     tealdeer # short man, tldr replacement written in rust
     topgrade # upgrade all the stuff for all distros
