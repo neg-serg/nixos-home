@@ -206,7 +206,8 @@ if [[ -e /etc/NIXOS ]]; then
     _exists nh && {
         alias swh="nh home switch $(readlink -f $HOME/.config/home-manager)"
         alias sws="nh os switch /etc/nixos"
-        alias S="nix-shell"
+        S(){ nix shell 'nixpkgs#'$1 }
+        q(){ nix shell 'nixpkgs#'$1 }
     }
     alias nixify='nix-shell -p nur.repos.kampka.nixify'
     # thx to Mic92:
