@@ -15,9 +15,8 @@ with {
     ./mpv.nix
   ];
   home.packages = with pkgs; [
-    # stable.davinci-resolve # video editor
+    davinci-resolve # video editor
     ffmpeg-full # famous multimedia lib
-    sacd-extract
     ffmpegthumbnailer # thumbnail for video
     imagemagick # for convert
     mediainfo # tag information about video or audio
@@ -25,6 +24,7 @@ with {
     mkvcleaner # clean mkv files from useless data
     mpvc # CLI controller for mpv
     playerctl # media controller for everything
+    sacd-extract
     simplescreenrecorder # screen recorder
   ];
   xdg.configFile = {
