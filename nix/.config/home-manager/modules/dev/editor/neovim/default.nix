@@ -1,7 +1,6 @@
 {
   pkgs,
   config,
-  stable,
   ...
 }:
 with {
@@ -9,15 +8,15 @@ with {
   dots = "${config.home.homeDirectory}/.dotfiles";
 }; {
   home.packages = with pkgs; [
+    bash-language-server # bash lsp
     neovim # neovim from master
     neovim-remote # nvr for neovim
-    bash-language-server # bash lsp
-    pyright # python lsp
+    nil # nixos language server
     pylyzer # python type checker
+    pyright # python lsp
     ruff-lsp # python lsp
     ruff # python linter
     rust-analyzer # rust lsp
-    stable.nil # nixos language server
   ];
   programs.neovim.plugins = with pkgs.vimPlugins; [
     clangd_extensions-nvim # llvm-based engine
