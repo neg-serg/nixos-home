@@ -19,7 +19,7 @@
       hwdec-codecs = "all";
       vd-lavc-threads = "12";
       vo = "gpu-next";
-      hwdec = "vaapi";
+      hwdec = "vulkan";
       gpu-api = "vulkan";
       vulkan-async-compute = true;
       vulkan-async-transfer = true;
@@ -28,8 +28,6 @@
       vulkan-swap-mode = "fifo-relaxed";
       gpu-shader-cache-dir = "/home/neg/tmp/";
       icc-cache-dir = "/home/neg/tmp/";
-      # profile=gpu-hq # used for any other OS on modern hardware
-      # profile=gpu-next # for future use
       #--[ Debanding ]-------------------------------------------
       deband = true; # enabled by default
       deband-iterations = 4; # deband steps
