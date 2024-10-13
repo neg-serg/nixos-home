@@ -2,11 +2,11 @@
   home.packages = with pkgs; [
     autocutsel # tool to sync x11 buffers
     clipboard-jh # platform independent clipboard manager, test it more later
+    stable.clipcat # replacement for gpaste
     espanso # systemwide expander for keyboard
   ];
   systemd.user.services = {
     clipcat = {
-      # replacement for gpaste
       Unit = {
         Description = "Clipcat daemon";
         PartOf = ["graphical-session.target"];
