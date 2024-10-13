@@ -1,6 +1,6 @@
-{pkgs, ...}: {
+{pkgs, stable, ...}: {
   home.packages = with pkgs; [
     vesktop # alternative discord client
-    telegram-desktop # famous cloud-based im
+    stable.telegram-desktop # famous cloud-based im
   ];
 }
