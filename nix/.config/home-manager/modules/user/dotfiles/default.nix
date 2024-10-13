@@ -186,6 +186,8 @@ with {
           allowUnfree = true;
           permittedInsecurePackages = [
             "electron-27.3.11"
+            "yandex-browser-stable-24.7.1.1120-1"
+            "yandex-browser-beta-24.7.1.1124-1"
           ];
       }
     '';
