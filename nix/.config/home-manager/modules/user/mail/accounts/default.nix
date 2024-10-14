@@ -10,5 +10,10 @@
       port = 993;
       tls.enable = true;
     };
+    smtp = {
+      port = 587;
+      tls.enable = true;
+      host = "smtp.gmail.com";
+    };
   };
 }
