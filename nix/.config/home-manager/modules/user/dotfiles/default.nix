@@ -89,6 +89,10 @@ with {
       source = l "${dots}/shell/.config/inputrc";
       recursive = true;
     };
+    "tmux" = {
+      source = l "${dots}/shell/.config/tmux";
+      recursive = true;
+    };
     "zsh" = {
       source = l "${dots}/shell/.config/zsh";
       recursive = false;
