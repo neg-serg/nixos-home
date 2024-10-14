@@ -114,10 +114,6 @@ with {
       source = l "${dots}/wm/.config/i3";
       recursive = true;
     };
-    "keymaps" = {
-      source = l "${dots}/wm/.config/keymaps";
-      recursive = true;
-    };
     "kitty" = {
       source = l "${dots}/wm/.config/kitty";
       recursive = true;
