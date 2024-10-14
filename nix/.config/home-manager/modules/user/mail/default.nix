@@ -9,10 +9,11 @@ with {
 }; {
   imports = [
     ./accounts
-    ./vdirsyncer
     ./imapnotify
     ./khal # better calendar
+    ./msmtp
     ./notmuch
+    ./vdirsyncer
   ];
   home.packages = with pkgs; [
     himalaya # modern cli for mail

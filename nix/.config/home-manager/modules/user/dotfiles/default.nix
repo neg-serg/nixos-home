@@ -23,10 +23,6 @@ with {
       source = l "${dots}/mail/.config/isync";
       recursive = true;
     };
-    "msmtp" = {
-      source = l "${dots}/mail/.config/msmtp";
-      recursive = true;
-    };
     "mutt" = {
       source = l "${dots}/mail/.config/mutt";
       recursive = true;
