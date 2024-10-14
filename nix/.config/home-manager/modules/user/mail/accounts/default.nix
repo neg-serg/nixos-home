@@ -1,5 +1,4 @@
 {...}: {
-  services.imapnotify.enable = true;
   accounts.email.accounts."gmail" = {
     passwordCommand = "pass show google|wc -1";
     userName = "serg.zorg@gmail.com";
