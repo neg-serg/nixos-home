@@ -71,6 +71,7 @@ set $wine " 𐌻:wine"
 set $patchbay " 𐌼:patchbay"
 set $daw " 𐌽:daw"
 set $dw "💾𐌾:dw"
+set $bazecor " 𐌿:bazecor"
 
 # :>> Config section default
 
