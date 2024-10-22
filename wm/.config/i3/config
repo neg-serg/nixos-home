@@ -194,7 +194,9 @@ mode %{T4}%{T-} {
 
 # :>> Config section f1
 bindsym F1 mode "%{T1}Patchbay%{T-}"
-mode %{T1}Patchbay%{T-} {	bindsym Return, mode "default"
+mode %{T1}Patchbay%{T-} {	bindsym F1 $circle next patchbay, mode "default"
+	bindsym F2 $circle subtag patchbay qpwgraph , mode "default"
+	bindsym Return, mode "default"
 	bindsym Escape, mode "default"
 	bindsym space, mode "default"
 	bindsym Control+C, mode "default"
@@ -217,7 +219,7 @@ mode %{T4}%{T-} {
 	bindsym F9 exec picom-trans -c -5
 	bindsym d $circle next dw, mode "default"
 	bindsym f $circle subtag web floorp , mode "default"
-	bindsym f $circle subtag web firefox , mode "default"
+	bindsym f13 $circle subtag web firefox , mode "default"
 	bindsym 5 $circle subtag web tor , mode "default"
 	bindsym t $scratchpad subtag im tel , mode "default"
 	bindsym v $scratchpad subtag im vk , mode "default"
