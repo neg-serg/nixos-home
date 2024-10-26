@@ -48,7 +48,7 @@ set $scratchpad-torrment [instance="torrment"]
 set $scratchpad-transients [instance="Places" window_role="^(GtkFileChooserDialog|gimp-file-open)$"]
 for_window $scratchpad-vesktop floating enable, move absolute position 1549 389, resize set 1880 1000
 for_window $scratchpad-im floating enable, move absolute position 2359 1, resize set 1088 1390
-for_window $scratchpad-ncmpcpp floating enable, move absolute position 674 803, resize set 2016 552
+for_window $scratchpad-ncmpcpp floating enable, move absolute position 674 765, resize set 1932 590
 for_window $scratchpad-neomutt floating enable, move absolute position 0 0, resize set 3440 1397
 for_window $scratchpad-mixer floating enable, move absolute position 1828 804, resize set 1612 590
 for_window $scratchpad-teardrop floating enable, move absolute position 0 0, resize set 3440 866
