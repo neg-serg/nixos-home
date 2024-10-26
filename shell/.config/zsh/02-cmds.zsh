@@ -76,35 +76,35 @@ _exists sudo && {
     unset sudo_list noglob_list rlwrap_list nocorrect_list logind_sudo_list
     _exists reflector && alias mirrors='sudo /usr/bin/reflector --score 100 --fastest 10 --number 10 --verbose --save /etc/pacman.d/mirrorlist'
 }
-_exists nvidia-settings && alias nvidia-settings="nvidia-settings --config=$XDG_CONFIG_HOME/nvidia/settings"
-_exists plocate && alias locate='plocate'
-_exists dosbox && alias dosbox=dosbox -conf "$XDG_CONFIG_HOME"/dosbox/dosbox.conf
+_exists btm && alias htop='btm -b -T --mem_as_value'
 _exists dd && alias dd='dd status=progress'
-_exists hxd && alias hexdump='hxd'
+_exists dig && alias dig='dig +noall +answer'
+_exists dosbox && alias dosbox=dosbox -conf "$XDG_CONFIG_HOME"/dosbox/dosbox.conf
+_exists duf && alias df="duf -theme ansi -hide 'special' -hide-mp $HOME/'*',/nix/store" || alias df='df -hT'
+_exists dust && alias sp='dust -r' || alias sp='du -shc ./*|sort -h'
+_exists fd && {alias fd='fd -H --ignore-vcs' && alias fda='fd -Hu'}
+_exists gdb && alias gdb="gdb -nh -x ${XDG_CONFIG_HOME}/gdb/gdbinit"
 _existsg readelf && alias readelf='readelf -W'
 _existsg strace && alias strace="strace -yy"
-_exists ssh && alias ssh="TERM=xterm-256color ${aliases[ssh]:-ssh}"
-_exists prettyping && alias ping='prettyping'
-_exists khal && alias cal='khal calendar'
-_exists umimatrix && alias matrix='unimatrix -l Aang -s 95'
 _exists handlr && alias e='handlr open'
-_exists rsync && alias rsync='rsync -az --compress-choice=zstd --info=FLIST,COPY,DEL,REMOVE,SKIP,SYMSAFE,MISC,NAME,PROGRESS,STATS'
-_exists dig && alias dig='dig +noall +answer'
-_exists mtr && alias mtrr='mtr -wzbe'
-_exists dust && alias sp='dust -r' || alias sp='du -shc ./*|sort -h'
-_exists duf && alias df="duf -theme ansi -hide 'special' -hide-mp $HOME/'*',/nix/store" || alias df='df -hT'
-_exists btm && alias htop='btm -b -T --mem_as_value'
-_exists journalctl && journalctl() {command journalctl "${@:--b}";}
-_exists ip && alias ip='ip -c'
-_exists fd && {alias fd='fd -H --ignore-vcs' && alias fda='fd -Hu'}
-_exists objdump && alias objdump='objdump -M intel -d'
-_exists gdb && alias gdb="gdb -nh -x ${XDG_CONFIG_HOME}/gdb/gdbinit"
-_exists nvim && alias nvim='v'
+_exists hxd && alias hexdump='hxd'
 _exists iostat && alias iostat='iostat --compact -p -h -s'
+_exists ip && alias ip='ip -c'
+_exists journalctl && journalctl() {command journalctl "${@:--b}";}
+_exists khal && alias cal='khal calendar'
+_exists mtr && alias mtrr='mtr -wzbe'
+_exists nvidia-settings && alias nvidia-settings="nvidia-settings --config=$XDG_CONFIG_HOME/nvidia/settings"
+_exists nvim && alias nvim='v'
+_exists objdump && alias objdump='objdump -M intel -d'
 _exists patool && {alias se='patool extract'; alias pk='patool create';}
-_exists xz && alias xz='xz --threads=0'
-_exists pigz && alias gzip='pigz'
 _exists pbzip2 && alias bzip2='pbzip2'
+_exists pigz && alias gzip='pigz'
+_exists plocate && alias locate='plocate'
+_exists prettyping && alias ping='prettyping'
+_exists rsync && alias rsync='rsync -az --compress-choice=zstd --info=FLIST,COPY,DEL,REMOVE,SKIP,SYMSAFE,MISC,NAME,PROGRESS,STATS'
+_exists ssh && alias ssh="TERM=xterm-256color ${aliases[ssh]:-ssh}"
+_exists umimatrix && alias matrix='unimatrix -l Aang -s 95'
+_exists xz && alias xz='xz --threads=0'
 _exists zstd && alias zstd='zstd --threads=0'
 _exists mpv && {
     alias mpv="mpv --vo=gpu"
@@ -139,20 +139,17 @@ for c in ${nocorrect_list[@]}; {_exists "$c" && alias "$c=nocorrect $c"}
 for c in ${dev_null_list[@]}; {_exists "$c" && alias "$c=$c 2>/dev/null"}
 _exists svn && alias svn="svn --config-dir $XDG_CONFIG_HOME/subversion"
 _exists git && {
+    alias add="git add"
+    alias checkout='git checkout'
     alias gd='git diff -w -U0 --word-diff-regex=[^[:space:]]'
     alias gp='git push'
     alias gs='git status --short -b'
-    # http://neurotap.blogspot.com/2012/04/character-level-diff-in-git-gui.html
-    intra_line_diff='--word-diff-regex="[^[:space:]]|([[:alnum:]]|UTF_8_GUARD)+"'
-    intra_line_less='LESS="-R +/-\]|\{\+"' # jump directly to changes in diffs
-    alias add="git add"
-    alias checkout='git checkout'
     alias pull="git pull"
     alias push='git push'
+    alias resolve="git mergetool --tool=nwim"
     alias stash="git stash"
     alias status="git status"
     alias uncommit="git reset --soft 'HEAD^'"
-    alias resolve="git mergetool --tool=nwim"
     if _exists gum; then
         autoload -Uz commit
     else
