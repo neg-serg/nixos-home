@@ -12,6 +12,7 @@
     ./fzf.nix
     ./ripgrep.nix
   ];
+  programs.carapace.enable = true; # cross-shell completion
   home.packages = with pkgs; [
     as-tree # represent smth as tree
     babashka # native clojure for scripts
