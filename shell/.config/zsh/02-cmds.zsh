@@ -124,7 +124,6 @@ _exists mpc && {
 _exists yt-dlp && {
     alias yt='yt-dlp --downloader aria2c --embed-metadata --embed-thumbnail --embed-subs --sub-langs=all'
     alias yta='yt-dlp --downloader aria2c --embed-metadata --embed-thumbnail --embed-subs --sub-langs=all --write-info-json'
-    alias ytt='ytfzf --preview-side=left -t'
 }
 if _exists wget2; then
     alias wget="wget2 --hsts-file=$XDG_DATA_HOME/wget-hsts"
