@@ -39,7 +39,7 @@ for_window $circle-bazecor move to workspace $bazecor,focus
 for_window $circle-web move to workspace $web,focus
 
 set $scratchpad-vesktop [class="vesktop"]
-set $scratchpad-im [class="^(KotatogramDesktop|vkteams|Skype|Slack|TelegramDesktop|zoom)$"]
+set $scratchpad-im [class="^(KotatogramDesktop|Skype|Slack|TelegramDesktop|zoom)$"]
 set $scratchpad-ncmpcpp [class="ncmpcpp"]
 set $scratchpad-neomutt [class="mutterfox" instance="^(mutterfox|neomutt)$"]
 set $scratchpad-mixer [instance="ncpamixer"]
@@ -211,7 +211,6 @@ mode %{T4}%{T-} {
 	bindsym f $circle subtag web firefox , mode "default"
 	bindsym 5 $circle subtag web tor , mode "default"
 	bindsym t $scratchpad subtag im tel , mode "default"
-	bindsym v $scratchpad subtag im vk , mode "default"
 	bindsym a $scratchpad toggle transients, mode "default"
 	bindsym Return, mode "default"
 	bindsym Escape, mode "default"
