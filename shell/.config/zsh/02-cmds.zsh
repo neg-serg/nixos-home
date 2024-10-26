@@ -78,6 +78,7 @@ _exists sudo && {
 }
 _exists nvidia-settings && alias nvidia-settings="nvidia-settings --config=$XDG_CONFIG_HOME/nvidia/settings"
 _exists plocate && alias locate='plocate'
+_exists dosbox && alias dosbox=dosbox -conf "$XDG_CONFIG_HOME"/dosbox/dosbox.conf
 _exists dd && alias dd='dd status=progress'
 _exists hxd && alias hexdump='hxd'
 _existsg readelf && alias readelf='readelf -W'
