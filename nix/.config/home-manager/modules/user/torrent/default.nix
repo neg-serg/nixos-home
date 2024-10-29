@@ -8,6 +8,7 @@ with {
   transmission = pkgs.transmission_4;
 }; {
   home.packages = with pkgs; [
+    bitmagnet # dht crawler
     bt-migrate # torrent migrator
     oldstable.stig # transmission client
   ];
