@@ -49,6 +49,10 @@ with {
       source = l "${dots}/misc/.config/stig";
       recursive = true;
     };
+    "rustmission" = {
+      source = l "${dots}/misc/.config/rustmission";
+      recursive = true;
+    };
     "transmission-daemon" = {
       source = l "${dots}/misc/.config/transmission-daemon";
       recursive = true;
