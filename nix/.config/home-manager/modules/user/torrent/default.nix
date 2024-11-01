@@ -11,6 +11,7 @@ with {
     bitmagnet # dht crawler
     bt-migrate # torrent migrator
     oldstable.stig # transmission client
+    rustmission # new transmission client
   ];
 
   systemd.user.services.transmission-daemon = {
