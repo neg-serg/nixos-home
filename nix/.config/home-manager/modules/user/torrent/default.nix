@@ -1,6 +1,6 @@
 {
   pkgs,
-  oldstable,
+  stable,
   ...
 }:
 with {
@@ -10,7 +10,7 @@ with {
   home.packages = with pkgs; [
     bitmagnet # dht crawler
     bt-migrate # torrent migrator
-    oldstable.stig # transmission client
+    # stable.stig # transmission client
   ];
 
   systemd.user.services.transmission-daemon = {

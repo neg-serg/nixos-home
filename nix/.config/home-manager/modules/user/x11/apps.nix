@@ -11,6 +11,7 @@ with {
   i3-lock-fancy-rapid = pkgs.callPackage ../../../packages/i3lock-fancy-rapid {};
   i3-balance-workspace = pkgs.callPackage ../../../packages/i3-balance-workspace {};
   alluvium = pkgs.callPackage ../../../packages/alluvium {};
+  stig = pkgs.callPackage ../../../packages/stig {};
 }; {
   imports = [./dunst.nix];
   home.packages = with pkgs; [
@@ -26,6 +27,7 @@ with {
     negwmPkg.negwm # my own i3 helper
     polybar # my favorite panel so far
     xdragon # drag and drop from console
+    stig
   ];
   services.sxhkd = {
     enable = false;
