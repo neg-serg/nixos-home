@@ -42,7 +42,7 @@ term:
 
 torrment:
   classw: torrment
-  exec: rustmission
+  exec: stig || rustmission
   font: Iosevka
   font_size: 15.5
   instance_group: torrment
