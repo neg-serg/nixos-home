@@ -14,7 +14,6 @@
   ];
   programs.carapace.enable = true; # cross-shell completion
   home.packages = with pkgs; [
-    as-tree # represent smth as tree
     babashka # native clojure for scripts
     choose # yet another cut/awk alternative
     convmv # convert filename encodings
@@ -29,7 +28,6 @@
     fasd # my favorite mru autocompletion
     frawk # small text processing language
     grex # tool to generate regexes
-    has # better which (availability and version of executables)
     lnav # logfile navigator
     massren # massive rename
     miller # awk/cut/join alternative
