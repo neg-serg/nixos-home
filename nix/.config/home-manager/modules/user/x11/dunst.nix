@@ -74,11 +74,6 @@
         urgency = "normal";
       };
 
-      kotatogram = {
-        appname = "Kototogram Desktop";
-        word_wrap = true;
-      };
-
       telegram = {
         appname = "Telegram Desktop";
         word_wrap = true;
