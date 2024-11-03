@@ -40,7 +40,7 @@
     ncdu # interactive du
     nnn # cli filemanager
     nushell # alternative shell
-    oil # better bash
+    oils-for-unix # better bash
     par # better fmt
     patool # python archive unpack
     rhash # compute hashsums
