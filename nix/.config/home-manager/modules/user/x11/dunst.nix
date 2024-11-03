@@ -1,4 +1,5 @@
 {lib, ...}: {
+  systemd.user.services.dunst.Service.PassEnvironment = lib.mkForce "DISPLAY";
   services.dunst = {
     enable = true;
     settings = {
@@ -25,7 +26,6 @@
         line_height = 0;
         markup = "full";
         max_icon_size = 250;
-        minimum_height = 0;
         monitor = 0;
         notification_limit = 2;
         offset = "0x54";
