@@ -43,7 +43,6 @@
     par # better fmt
     patool # python archive unpack
     rhash # compute hashsums
-    rmlint # remove duplicates
     sad # more simple sed alternative
     sd # bettter sed
     speedtest-cli # test network
