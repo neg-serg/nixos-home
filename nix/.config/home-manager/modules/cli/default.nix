@@ -31,7 +31,6 @@
     expect # do tty stuff noninteractively
     fasd # my favorite mru autocompletion
     frawk # small text processing language
-    fzy # fuzzy finder that's faster/better than fzf
     grex # tool to generate regexes
     has # better which (availability and version of executables)
     lnav # logfile navigator
