@@ -3,7 +3,6 @@
   ...
 }: {
   imports = [
-    ./archives
     ./bat.nix # better cat
     ./broot.nix # nested fuzzy finding
     ./btop.nix
