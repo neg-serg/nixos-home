@@ -13,7 +13,7 @@
   ];
   wayland.windowManager.sway = {
     enable = true;
-    systemdIntegration = true;
+    systemd.enable = true;
     config = {
       terminal = "kitty";
       modifier = "Mod4";
