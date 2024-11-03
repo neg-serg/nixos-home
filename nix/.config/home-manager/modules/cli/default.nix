@@ -23,9 +23,6 @@
     dcfldd # better dd with progress bar and inline hash verification
     diffoscope # diff for various format
     diff-so-fancy # human-readable diff
-    dos2unix # file convertation
-    du-dust # better du
-    duf # better df
     enca # autoreencode
     entr # run commands when files change
     expect # do tty stuff noninteractively
@@ -36,8 +33,6 @@
     lnav # logfile navigator
     massren # massive rename
     miller # awk/cut/join alternative
-    ncdu # interactive du
-    nnn # cli filemanager
     nushell # alternative shell
     oils-for-unix # better bash
     par # better fmt
@@ -46,7 +41,6 @@
     sad # more simple sed alternative
     sd # bettter sed
     speedtest-cli # test network
-    stow # manage farms of symlinks
     tealdeer # short man, tldr replacement written in rust
     ugrep # better grep, rg alternative
     urlscan # extract urls from text
