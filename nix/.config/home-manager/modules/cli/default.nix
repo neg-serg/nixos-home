@@ -42,7 +42,6 @@
     sd # bettter sed
     speedtest-cli # test network
     tealdeer # short man, tldr replacement written in rust
-    ugrep # better grep, rg alternative
     urlscan # extract urls from text
     viddy # modern watch command
     zoxide # better fasd for some
