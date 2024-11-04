@@ -152,11 +152,11 @@ with {
         BindsTo = ["graphical-session.target"];
       };
       Service = {
-        PassEnvironment = lib.mkForce "DISPLAY";
+        PassEnvironment = "DISPLAY";
         ExecStart = [
-          "${pkgs.xorg.xset}/bin/xset dpms 0 0 0"
-          "${pkgs.xorg.xset}/bin/xset -b"
-          "${pkgs.xorg.xsetroot}/bin/xsetroot -cursor_name left_ptr"
+          "/bin/sh -lc ${pkgs.xorg.xset}/bin/xset dpms 0 0 0"
+          "/bin/sh -lc ${pkgs.xorg.xset}/bin/xset -b"
+          "/bin/sh -lc ${pkgs.xorg.xsetroot}/bin/xsetroot -cursor_name left_ptr"
         ];
         Type = "oneshot";
         RemainAfterExit = "false";
@@ -219,5 +219,6 @@ with {
         Restart = "on-failure";
       };
     };
+
   };
 }
