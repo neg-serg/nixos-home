@@ -10,14 +10,13 @@
     ./fd.nix # better find
     ./fzf.nix
     ./ripgrep.nix
+    ./shell.nix # shells which not in nixOs and their completions
   ];
-  programs.carapace.enable = true; # cross-shell completion
   home.packages = with pkgs; [
     babashka # native clojure for scripts
     choose # yet another cut/awk alternative
     convmv # convert filename encodings
     czkawka # find duplicate pictures and more
-    dash # faster sh
     dcfldd # better dd with progress bar and inline hash verification
     diffoscope # diff for various format
     diff-so-fancy # human-readable diff
@@ -30,8 +29,6 @@
     lnav # logfile navigator
     massren # massive rename
     miller # awk/cut/join alternative
-    nushell # alternative shell
-    oils-for-unix # better bash
     par # better fmt
     patool # python archive unpack
     rhash # compute hashsums
