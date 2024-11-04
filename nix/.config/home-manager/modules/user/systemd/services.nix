@@ -1,4 +1,5 @@
 {
+  lib,
   pkgs,
   negwmPkg,
   executorPkg,
@@ -151,6 +152,7 @@ with {
         BindsTo = ["graphical-session.target"];
       };
       Service = {
+        PassEnvironment = lib.mkForce "DISPLAY";
         ExecStart = [
           "${pkgs.xorg.xset}/bin/xset dpms 0 0 0"
           "${pkgs.xorg.xset}/bin/xset -b"
