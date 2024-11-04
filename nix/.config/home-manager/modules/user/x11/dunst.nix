@@ -1,5 +1,12 @@
-{lib, ...}: {
-  systemd.user.services.dunst.Service.PassEnvironment = lib.mkForce "DISPLAY";
+{
+  lib,
+  # pkgs,
+  ...
+}: {
+  systemd.user.services.dunst = {
+    Service.PassEnvironment = lib.mkForce "DISPLAY";
+    Service.ExecStart = lib.mkForce "";
+  };
   services.dunst = {
     enable = true;
     settings = {
