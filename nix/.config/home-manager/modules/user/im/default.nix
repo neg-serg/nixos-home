@@ -1,7 +1,8 @@
-{pkgs, ...}: {
+{pkgs, master, ...}: {
   home.packages = with pkgs; [
-    vesktop # alternative discord client
+    master.element-desktop # matrix client to test #3
+    skypeforlinux # skype for linux client
     telegram-desktop # famous cloud-based im
-    element-desktop # matrix client to test #3
+    vesktop # alternative discord client
   ];
 }
