@@ -30,8 +30,6 @@
       deband-range = 16; # deband range
       deband-grain = 48; # dynamic grain: set to "0" if using the static grain shader
       #--[ Interpolation ]---------------------------------------
-      # override-display-fps = 60;
-      display-fps-override = 60;
       video-sync = "display-resample";
       interpolation = true;
       tscale = "oversample"; # smoothmotion
