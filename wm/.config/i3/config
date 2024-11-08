@@ -16,6 +16,7 @@ set $circle-bitwig [class="Bitwig Studio"]
 set $circle-patchbay [class="Carla2"]
 set $circle-dev [class="nwim"]
 set $circle-doc [class="^(Zathura|cr3)$"]
+set $circle-notes [class="Obsidian"]
 set $circle-games [class="^(Steam|steam)$"]
 set $circle-nsxiv [class="Nsxiv"]
 set $circle-obs [class="^(obs|SimpleScreenRecorder)$"]
@@ -30,6 +31,7 @@ for_window $circle-bitwig move to workspace $daw,focus
 for_window $circle-patchbay move to workspace $patchbay,focus
 for_window $circle-dev move to workspace $dev,focus
 for_window $circle-doc move to workspace $doc,focus
+for_window $circle-notes move to workspace $notes,focus
 for_window $circle-games move to workspace $games,focus
 for_window $circle-obs move to workspace $record,focus
 for_window $circle-remote move to workspace $remote,focus
@@ -76,6 +78,7 @@ set $dw "💾𐌾:dw"
 set $keyboard " 𐌿:keyboard"
 set $im " 𐍀:im"
 set $remote " 𐍁:remote"
+set $notes " Ⲣ:notes"
 
 # :>> Config section default
 
@@ -152,6 +155,7 @@ bindsym Mod4+Shift+s exec props-menu
 bindsym Mod4+Control+b $circle next bitwig
 bindsym Mod4+1 $circle next dev
 bindsym Mod4+o $circle next doc
+bindsym Mod4+Control+n $circle next notes
 bindsym Mod4+Shift+e $circle next games
 bindsym Mod4+Control+c $circle next nsxiv
 bindsym Mod4+Shift+c $circle subtag nsxiv wallpaper
