@@ -18,8 +18,9 @@ set $circle-dev [class="nwim"]
 set $circle-doc [class="^(Zathura|cr3)$"]
 set $circle-games [class="^(Steam|steam)$"]
 set $circle-nsxiv [class="Nsxiv"]
-set $circle-obs [class="obs"]
-set $circle-remote [class="^(xfreerdp|reminna|org.remmina.Remmina)$"]
+set $circle-obs [class="^(obs|SimpleScreenRecorder)$"]
+set $circle-remote [class="^(Vmware-view|xfreerdp|reminna|org.remmina.Remmina)$"]
+set $circle-im [class="^(element|Element)$"]
 set $circle-dw [class="org.nicotine_plus.Nicotine"]
 set $circle-term [instance="term"]
 set $circle-vid [class="mpv"]
@@ -30,8 +31,9 @@ for_window $circle-patchbay move to workspace $patchbay,focus
 for_window $circle-dev move to workspace $dev,focus
 for_window $circle-doc move to workspace $doc,focus
 for_window $circle-games move to workspace $games,focus
-for_window $circle-obs move to workspace $obs,focus
+for_window $circle-obs move to workspace $record,focus
 for_window $circle-remote move to workspace $remote,focus
+for_window $circle-im move to workspace $im,focus
 for_window $circle-dw move to workspace $dw,focus
 for_window $circle-term move to workspace $term,focus
 for_window $circle-vid move to workspace $gfx,focus
@@ -155,6 +157,7 @@ bindsym Mod4+Control+c $circle next nsxiv
 bindsym Mod4+Shift+c $circle subtag nsxiv wallpaper
 bindsym Mod4+Shift+o $circle next obs
 bindsym Mod4+Control+5 $circle next remote
+bindsym Mod4+Insert $circle next im
 bindsym Mod4+x $circle next term
 bindsym Mod4+b $circle next vid
 bindsym Mod4+Control+v $circle next keyboard
