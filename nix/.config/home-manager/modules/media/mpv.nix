@@ -19,11 +19,6 @@
       hwdec-codecs = "all";
       vd-lavc-threads = "12";
       vo = "gpu-next";
-      hwdec = "vulkan";
-      gpu-api = "vulkan";
-      vulkan-async-compute = true;
-      vulkan-async-transfer = true;
-      vulkan-queue-count = 1;
       vd-lavc-dr = true;
       vulkan-swap-mode = "fifo-relaxed";
       gpu-shader-cache-dir = "/home/neg/tmp/";
