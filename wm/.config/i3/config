@@ -72,6 +72,8 @@ set $patchbay " 𐌼:patchbay"
 set $daw " 𐌽:daw"
 set $dw "💾𐌾:dw"
 set $keyboard " 𐌿:keyboard"
+set $im " 𐍀:im"
+set $remote " 𐍁:remote"
 
 # :>> Config section default
 
