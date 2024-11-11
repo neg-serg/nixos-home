@@ -3,6 +3,7 @@
   ...
 }: {
   home.packages = with pkgs; [
+    keepass # password manager with strong cryptography
     # password manager via gpg
     (pass.withExtensions (ext:
       with ext; [
