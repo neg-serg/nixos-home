@@ -1,6 +1,6 @@
 {...}: {
   accounts.email.accounts."gmail" = {
-    passwordCommand = "pass show google|wc -1";
+    passwordCommand = "pass show google";
     userName = "serg.zorg@gmail.com";
     realName = "Sergey Miroshnichenko";
     address = "serg.zorg@gmail.com";
