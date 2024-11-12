@@ -19,7 +19,7 @@ with rec {
     };
   };
 
-  # browser = "${defaultApplications.browser.desktop}.desktop";
+  browser = "${defaultApplications.browser.desktop}.desktop";
   pdfreader = "org.pwmt.zathura.desktop";
   telegram = "org.telegram.desktop.desktop";
   torrent = "transmission.desktop";
@@ -28,19 +28,19 @@ with rec {
   editor = "${defaultApplications.editor.desktop}.desktop";
 
   my_associations = {
-    # "text/html*" = browser;
-    # "x-scheme-handler/http" = browser;
-    # "x-scheme-handler/https" = browser;
-    # "x-scheme-handler/ftp" = browser;
-    # "x-scheme-handler/about" = browser;
-    # "x-scheme-handler/unknown" = browser;
-    # "x-scheme-handler/chrome" = browser;
-    # "application/x-extension-htm" = browser;
-    # "application/x-extension-html" = browser;
-    # "application/x-extension-shtml" = browser;
-    # "application/xhtml+xml" = browser;
-    # "application/x-extension-xhtml" = browser;
-    # "application/x-extension-xht" = browser;
+    "text/html*" = browser;
+    "x-scheme-handler/http" = browser;
+    "x-scheme-handler/https" = browser;
+    "x-scheme-handler/ftp" = browser;
+    "x-scheme-handler/about" = browser;
+    "x-scheme-handler/unknown" = browser;
+    "x-scheme-handler/chrome" = browser;
+    "application/x-extension-htm" = browser;
+    "application/x-extension-html" = browser;
+    "application/x-extension-shtml" = browser;
+    "application/xhtml+xml" = browser;
+    "application/x-extension-xhtml" = browser;
+    "application/x-extension-xht" = browser;
 
     "audio/*" = video;
     "video/*" = video;
