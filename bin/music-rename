@@ -10,6 +10,16 @@ trim() {
 }
 
 generate_convert_table() {
+    for i in {800..889}; do
+        q=${i:1:5}
+        conv_table[1$i]="18$q"
+    done
+
+    for i in {890..899}; do
+        q=${i:2:5}
+        conv_table[1$i]="18$q"
+    done
+
     for i in {900..989}; do
         q=${i:1:5}
         conv_table[1$i]="1x$q"
