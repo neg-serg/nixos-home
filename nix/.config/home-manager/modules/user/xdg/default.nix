@@ -9,10 +9,10 @@ with rec {
       cmd = "${pkgs.kitty}/bin/kitty";
       desktop = "kitty";
     };
-    # browser = {
-    #   cmd = "${master.floorp}/bin/floorp";
-    #   desktop = "floorp";
-    # };
+    browser = {
+      cmd = "${pkgs.floorp}/bin/floorp";
+      desktop = "floorp";
+    };
     editor = {
       cmd = "${pkgs.neovim}/bin/nvim";
       desktop = "nvim";
