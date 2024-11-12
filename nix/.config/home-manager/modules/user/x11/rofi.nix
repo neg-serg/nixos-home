@@ -5,6 +5,7 @@ with {
   home.packages = with pkgs; [
     (rofi.override {
       plugins = [
+        rofi-blezz
         rofi-file-browser
         rofi-games
       ];
