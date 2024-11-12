@@ -20,6 +20,7 @@
       vd-lavc-threads = "12";
       vo = "gpu-next";
       vd-lavc-dr = true;
+      gpu-api = "vulkan";
       vulkan-swap-mode = "fifo-relaxed";
       gpu-shader-cache-dir = "/home/neg/tmp/";
       icc-cache-dir = "/home/neg/tmp/";
