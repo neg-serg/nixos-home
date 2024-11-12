@@ -16,43 +16,43 @@
       #--[Decoding]----------------------------------------------
       cache = "no";
       correct-downscaling = true;
+      gpu-api = "vulkan";
+      gpu-shader-cache-dir = "/home/neg/tmp/";
       hwdec-codecs = "all";
+      icc-cache-dir = "/home/neg/tmp/";
+      vd-lavc-dr = true;
       vd-lavc-threads = "12";
       vo = "gpu-next";
-      vd-lavc-dr = true;
-      gpu-api = "vulkan";
       vulkan-swap-mode = "fifo-relaxed";
-      gpu-shader-cache-dir = "/home/neg/tmp/";
-      icc-cache-dir = "/home/neg/tmp/";
       #--[ Debanding ]-------------------------------------------
-      deband = true; # enabled by default
-      deband-iterations = 4; # deband steps
-      deband-threshold = 48; # deband strength
-      deband-range = 16; # deband range
       deband-grain = 48; # dynamic grain: set to "0" if using the static grain shader
+      deband-iterations = 4; # deband steps
+      deband-range = 16; # deband range
+      deband-threshold = 48; # deband strength
+      deband = true; # enabled by default
       #--[ Interpolation ]---------------------------------------
       video-sync = "display-resample";
-      interpolation = true;
       tscale = "oversample"; # smoothmotion
+      interpolation = true;
       #--[Color]-------------------------------------------------
       icc-profile-auto = true;
       # see https://github.com/mpv-player/mpv/wiki/Video-output---shader-stage-diagram
       target-prim = "adobe";
       # target-prim = "auto";
-      # target-prim=bt.709 # target Rec.709 for SDR TVs
       # target-prim=bt.2020 # target Rec.2020 (wide color gamut) for HDR TVs
+      # target-prim=bt.709 # target Rec.709 for SDR TVs
       target-trc = "auto";
       vf = "format=colorlevels=full:colormatrix=auto";
       video-output-levels = "full";
       #--[Scaling]-----------------------------------------------
-      scale = "ewa_lanczos";
       cscale = "ewa_lanczossharp";
       dither-depth = "auto";
       dither = "fruit";
-      temporal-dither = "yes";
       dscale = "mitchell";
       linear-downscaling = false;
+      scale = "ewa_lanczos";
       sigmoid-upscaling = "yes";
+      temporal-dither = "yes";
       # Chroma subsampling means that chroma information is encoded at lower resolution than luma
       # In MPV, chroma is upscaled to luma resolution (video size) and then the converted RGB is upscaled to target resolution (screen size)
       # For detailed analysis of upscaler/downscaler quality, see https://artoriuz.github.io/blog/mpv_upscaling.html
@@ -73,15 +73,15 @@
       scale-antiring = "0.7"; # luma upscale deringing
       #--[Volume]------------------------------------------------
       ao = "pipewire,alsa,jack";
-      volume-max = "100";
       volume = "100";
+      volume-max = "100";
       #--[Language]----------------------------------------------
       alang = "en";
       slang = "ru,rus";
       #--[Geometry]----------------------------------------------
+      border = "no";
       fullscreen = "yes";
       geometry = "100%:100%";
-      border = "no";
       #--[Subtitles]---------------------------------------------
       sub-auto = "fuzzy";
       sub-font = ["Helvetica Neue LT Std" "HelveticaNeue LT CYR 57 Cond"];
@@ -89,16 +89,16 @@
       sub-gray = "yes";
       sub-scale = "0.7";
       #--[OSD]---------------------------------------------------
-      osc = "no";
-      osd-bar = "no";
       cursor-autohide = "500";
+      osc = "no";
       osd-bar-align-y = "0";
       osd-bar-h = "3";
+      osd-bar = "no";
       osd-border-color = "#cc000000";
       osd-border-size = "1";
       osd-color = "#bb6d839e";
-      osd-font-size = "24";
       osd-font = "Iosevka";
+      osd-font-size = "24";
       osd-status-msg = "$\{time-pos\} / $\{duration\} ($\{percent-pos\}%)$\{?estimated-vf-fps: FPS: $\{estimated-vf-fps\}\}";
       #--[Youtube-DL]--------------------------------------------
       ytdl-format = "bestvideo+bestaudio/best";
@@ -110,39 +110,39 @@
     profiles = {
       #--[Audio]-------------------------------------------------
       "extension.ape" = {
+        term-osd = "auto";
         term-osd-bar-chars = "──╼ ·";
         term-osd-bar = true;
-        term-osd = "auto";
       };
       "extension.alac" = {
+        term-osd = "auto";
         term-osd-bar-chars = "──╼ ·";
         term-osd-bar = true;
-        term-osd = "auto";
       };
       "extension.flac" = {
+        term-osd = "auto";
         term-osd-bar-chars = "──╼ ·";
         term-osd-bar = true;
-        term-osd = "auto";
       };
       "extension.mp3" = {
+        term-osd = "auto";
         term-osd-bar-chars = "──╼ ·";
         term-osd-bar = true;
-        term-osd = "auto";
       };
       "extension.wav" = {
+        term-osd = "auto";
         term-osd-bar-chars = "──╼ ·";
         term-osd-bar = true;
-        term-osd = "auto";
       };
       "extension.gif" = {
-        osc = "no";
         loop-file = true;
+        osc = "no";
       };
       #--[Protocol Specific Configuration]-----------------------
       "protocol.http" = {
-        hls-bitrate = "max"; # use max quality for HLS streams
-        cache = true;
         cache-pause = false; # don't pause when the cache runs low
+        cache = true;
+        hls-bitrate = "max"; # use max quality for HLS streams
       };
       "protocol.https" = {profile = "protocol.http";};
       "protocol.ytdl" = {profile = "protocol.http";};
