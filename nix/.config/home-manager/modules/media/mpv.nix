@@ -16,7 +16,6 @@
       #--[Decoding]----------------------------------------------
       cache = "no";
       correct-downscaling = true;
-      gpu-api = "vulkan";
       gpu-shader-cache-dir = "/home/neg/tmp/";
       hwdec-codecs = "all";
       icc-cache-dir = "/home/neg/tmp/";
