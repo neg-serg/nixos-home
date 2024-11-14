@@ -13,6 +13,7 @@ bt_headphones
 󰊿translate
 󰟸touchpad
 󱃖termbin
+minevpn
 '
 
 generate_menu() {
@@ -103,6 +104,10 @@ termbin(){
     echo "$url" | xsel -ip
     notify-send "$url copied to clipboard"
     play-sound "direct.ogg"
+}
+
+minevpn(){
+    ~/bin/vpn_up
 }
 
 handler() {
