@@ -142,7 +142,7 @@ bindsym Mod4+comma exec --no-startup-id ~/bin/pl cmd previous
 bindsym Mod4+period exec --no-startup-id ~/bin/pl cmd next
 
 bindsym XF86AudioNext exec --no-startup-id ~/bin/pl cmd next
-bindsym XF86AudioPlay exec --no-startup-id ~/bin/pl cmd play
+bindsym XF86AudioPlay exec --no-startup-id ~/bin/pl cmd play-pause
 bindsym XF86AudioPrev exec --no-startup-id ~/bin/pl cmd previous
 bindsym XF86AudioStop exec --no-startup-id ~/bin/pl cmd stop
 
