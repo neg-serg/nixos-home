@@ -14,9 +14,10 @@
       };
     };
     nixpkgs-master.url = "github:nixos/nixpkgs/master";
-    nixpkgs-oldstable.url = "github:nixos/nixpkgs/nixos-23.05";
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-23.11";
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable-small";
+    nixpkgs-oldstable.url = "github:nixos/nixpkgs/nixos-23.11";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.05";
+    nixpkgs.url = "github:nixos/nixpkgs";
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable-small";
     sops-nix.url = "github:Mic92/sops-nix";
     stylix.url = "github:danth/stylix";
 
