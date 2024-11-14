@@ -10,7 +10,7 @@ with {
   home.packages = with pkgs; [
     bitmagnet # dht crawler
     bt-migrate # torrent migrator
-    oldstable.stig # transmission client
+    stig # transmission client
     rustmission # new transmission client
   ];
 
