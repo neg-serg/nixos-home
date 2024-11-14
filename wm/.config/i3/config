@@ -160,7 +160,7 @@ bindsym Mod4+Shift+e $circle next games
 bindsym Mod4+Control+c $circle next nsxiv
 bindsym Mod4+Shift+c $circle subtag nsxiv wallpaper
 bindsym Mod4+Shift+o $circle next obs
-bindsym Mod4+Control+5 $circle next remote
+bindsym Mod4+5 $circle next remote
 bindsym Mod4+Insert $circle next im
 bindsym Mod4+x $circle next term
 bindsym Mod4+b $circle next vid
