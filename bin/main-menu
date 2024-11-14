@@ -10,11 +10,16 @@ alsa_output
 game_start
 game_end
 bt_headphones
-󰊿translate
-󰟸touchpad
-󱃖termbin
-minevpn
+translate
+touchpad
+termbin
+minevpn
 '
+
+# 󰊿translate
+# 󰟸touchpad
+# 󱃖termbin
+# minevpn
 
 generate_menu() {
     blue="<span weight='bold' color='#395573'>"
