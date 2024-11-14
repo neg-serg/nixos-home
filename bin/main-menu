@@ -112,7 +112,11 @@ termbin(){
 }
 
 minevpn(){
-    ~/bin/vpn_up
+    if pgrep -f 'sudo openconnect --user' > /dev/null; then
+        pkill -f 'sudo openconnect --user'
+    else
+        ~/bin/vpn_up
+    fi
 }
 
 handler() {
