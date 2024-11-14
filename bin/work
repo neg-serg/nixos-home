@@ -6,8 +6,8 @@ case $1 in
         -p "$(pass show wrk/pass)" \
         -d "$(pass show wrk/domain)" -q ;;
     vpn) sudo openconnect --prot=fortinet \
-        $(pass show wrk/vpn_gate) \
-        -u "$(pass show wrk/domain)\$(pass show wrk/user)" \
-        --servercert $(pass show wrk/vpn_cert) \
+        "$(pass show wrk/vpn_gate)" \
+        -u "$(pass show wrk/domain)"\\"$(pass show wrk/user)" \
+        --servercert "$(pass show wrk/vpn_cert)" \
         --background ;;
 esac
