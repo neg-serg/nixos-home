@@ -14,7 +14,7 @@
       };
     };
     nixpkgs-master.url = "github:nixos/nixpkgs/master";
-    nixpkgs-oldstable.url = "github:nixos/nixpkgs/nixos-23.11";
+    # nixpkgs-oldstable.url = "github:nixos/nixpkgs/nixos-23.11";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.05";
     nixpkgs.url = "github:nixos/nixpkgs";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable-small";
@@ -50,7 +50,7 @@
     home-manager,
     negwm,
     nixpkgs-master,
-    nixpkgs-oldstable,
+    # nixpkgs-oldstable,
     nixpkgs-stable,
     sops-nix,
     stylix,
@@ -65,7 +65,7 @@
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
       stable = nixpkgs-stable.legacyPackages.${system};
-      oldstable = nixpkgs-oldstable.legacyPackages.${system};
+      # oldstable = nixpkgs-oldstable.legacyPackages.${system};
       master = nixpkgs-master.legacyPackages.${system};
       negwmPkg = negwm.packages.${system};
       executorPkg = executor.packages.${system};
