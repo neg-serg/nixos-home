@@ -5,7 +5,7 @@
   #   "python3.12-youtube-dl-2021.12.17"
   # ];
   home.packages = with pkgs; [
-    # obsidian # notes (use flatpak for this)
+    obsidian # notes
     zk # notes database
   ];
 }
