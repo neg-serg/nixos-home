@@ -37,6 +37,7 @@
     speedtest-cli # test network
     tealdeer # short man, tldr replacement written in rust
     urlscan # extract urls from text
+    urlwatch # watch for urls
     viddy # modern watch command
     zoxide # better fasd for some
   ];
