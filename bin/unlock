@@ -17,10 +17,3 @@ expect << EOF
     send "$pp0\r"
     expect eof
 EOF
-
-expect << EOF
-    spawn ssh-add $HOME/.ssh/id_work_ed25519
-    expect "Enter passphrase"
-    send "$pp2\r"
-    expect eof
-EOF
