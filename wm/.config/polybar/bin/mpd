@@ -30,7 +30,7 @@ import time
 
 
 class mpd():
-    addr, port = '::1', '6600'
+    addr, port = 'localhost', '6600'
     buf_size = 2048
     fg = '%{F#ffCFCFDB}'
     fg_dark = '%{F#aaCFCFDB}'
