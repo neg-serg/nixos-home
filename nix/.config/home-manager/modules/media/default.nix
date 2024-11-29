@@ -46,6 +46,7 @@ with {
       Service = {
         Type = "oneshot";
         ExecStart = "${pkgs.playerctl}/bin/playerctld daemon";
+        After = ["mpd.service"];
       };
       Install = {WantedBy = ["default.target"];};
     };
