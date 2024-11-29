@@ -44,7 +44,7 @@ with {
         #!/bin/sh
         killall -KILL polybar
         if [ "$(hostname)" != 'telfir' ]; then
-            POLYBAR_DPI="$(echo "$dpi/1.85" | bc)"
+            POLYBAR_DPI="$(echo "$1/1.85" | bc)"
         else
             POLYBAR_DPI=65
         fi
