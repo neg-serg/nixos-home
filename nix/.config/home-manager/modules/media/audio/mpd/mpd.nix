@@ -20,7 +20,7 @@ with {
     enable = true;
     dataDir = "${config.home.homeDirectory}/music";
     musicDirectory = "${config.home.homeDirectory}/music";
-    network.listenAddress = "127.0.0.1";
+    network.listenAddress = "::1";
     network.startWhenNeeded = true;
     extraConfig = ''
       log_file "/dev/null"
@@ -63,7 +63,9 @@ with {
   services.mpd-mpris = {
     enable = true;
     mpd.port = "6600";
-    mpd.host = "127.0.0.1";
+    mpd.host = "::1";
+    mpd.network = "tcp";
+    mpd.useLocal = true;
   };
 
   systemd.user.services = {
