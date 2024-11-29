@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  master,
   pkgs,
   ...
 }:
@@ -14,7 +13,7 @@ with {
   ];
   home.packages = with pkgs; [
     mpc-cli # mpd client
-    master.rmpc # alternative tui client with album cover
+    rmpc # alternative tui client with album cover
   ];
   services.mpd = {
     enable = true;
