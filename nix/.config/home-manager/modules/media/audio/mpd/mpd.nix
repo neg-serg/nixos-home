@@ -58,12 +58,10 @@ with {
     '';
   };
 
-  services.mpd-mpris = {
+  services.mpdris2 = {
     enable = true;
     mpd.host = "127.0.0.1";
-    mpd.network = "tcp";
-    mpd.port = "6600";
-    mpd.useLocal = true;
+    mpd.port = 6600;
   };
 
   systemd.user.services = {
