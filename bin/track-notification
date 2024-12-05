@@ -209,6 +209,5 @@ class TrackNotification():
             if self.get_name(player, player_names) == 'mpd':
                 self.player = players[index]
 
-subprocess.check_output("systemctl --user restart mpdris2.service".split()).decode().split('\n')
 log=logging.getLogger()
 t=TrackNotification()
