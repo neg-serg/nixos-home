@@ -42,7 +42,7 @@
     display = {
       separator = " ";
       size = {maxPrefix = "TB";};
-      percent = {type = 9;};
+      percent = {type = 1;};
     };
     modules = [
       {
