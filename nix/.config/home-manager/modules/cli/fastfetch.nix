@@ -41,7 +41,7 @@
     };
     display = {
       separator = " ";
-      size = {maxPrefix = "PB";};
+      size = {maxPrefix = "TB";};
       percent = {type = 9;};
     };
     modules = [
