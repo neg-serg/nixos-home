@@ -956,3 +956,5 @@ zshrc             03;38;5;103 # UNIX Shell
 *README.txt       38;5;243;04 # Documentation
 *TODO             01;38;5;91 # Todo list
 *VERSION          38;5;243;04 # Documentation
+
+# vim:filetype=dircolors
