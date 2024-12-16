@@ -15,7 +15,6 @@ with {
     ./mpv.nix
   ];
   home.packages = with pkgs; [
-    davinci-resolve # video editor
     ffmpeg-full # famous multimedia lib
     ffmpegthumbnailer # thumbnail for video
     imagemagick # for convert
