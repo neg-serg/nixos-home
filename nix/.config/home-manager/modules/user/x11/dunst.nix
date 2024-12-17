@@ -1,6 +1,6 @@
 {
   lib,
-  # pkgs,
+  pkgs,
   ...
 }: {
   systemd.user.services.dunst = {
@@ -12,7 +12,7 @@
     settings = {
       global = {
         alignment = "left";
-        browser = "/usr/bin/firefox -new-tab";
+        browser = "${pkgs}/bin/firefox -new-tab";
         corner_radius = 4;
         ellipsize = "end";
         follow = "mouse";
@@ -35,7 +35,7 @@
         max_icon_size = 250;
         monitor = 0;
         notification_limit = 2;
-        offset = "0x54";
+        offset = "(0,54)";
         origin = "bottom-right";
         padding = 0;
         progress_bar = true;
