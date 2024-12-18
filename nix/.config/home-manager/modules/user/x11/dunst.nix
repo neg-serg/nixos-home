@@ -9,6 +9,10 @@
   };
   services.dunst = {
     enable = true;
+    iconTheme = {
+      name = "kora";
+      package = pkgs.kora-icon-theme;
+    };
     settings = {
       global = {
         alignment = "left";
@@ -24,7 +28,6 @@
         height = 350;
         hide_duplicate_count = true;
         horizontal_padding = 6;
-        icon_path = "/usr/share/icons/kora";
         icon_position = "left";
         idle_threshold = 0;
         ignore_dbusclose = false;
