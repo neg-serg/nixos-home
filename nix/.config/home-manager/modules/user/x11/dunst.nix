@@ -25,7 +25,7 @@
         frame_color = "#000000";
         frame_width = 10;
         gap_size = 4;
-        height = 350;
+        height = 35;
         hide_duplicate_count = true;
         horizontal_padding = 6;
         icon_position = "left";
