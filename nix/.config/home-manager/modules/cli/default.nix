@@ -28,6 +28,7 @@
     grex # tool to generate regexes
     lnav # logfile navigator
     massren # massive rename
+    mergiraf # ast-aware git merge driver
     miller # awk/cut/join alternative
     par # better fmt
     patool # python archive unpack
