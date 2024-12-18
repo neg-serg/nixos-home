@@ -85,6 +85,7 @@
         appname = "Telegram Desktop";
         word_wrap = true;
       };
+
     };
   };
 }
