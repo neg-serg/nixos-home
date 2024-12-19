@@ -106,10 +106,6 @@ with {
       source = l "${dots}/wm/.config/executor";
       recursive = true;
     };
-    "clipcat" = {
-      source = l "${dots}/wm/.config/clipcat";
-      recursive = true;
-    };
     "handlr" = {
       source = l "${dots}/wm/.config/handlr";
       recursive = true;
