@@ -66,8 +66,10 @@ clip_main() {
             uuid="$(gpaste-client --oneline | awk -F ':' '{print $1}' | sed -n "$num""p")"
             gpaste-client select "$uuid"
         fi
-    else
+    elif [ "$USE_CLIPCAT" = true ]; then
         clipcat-menu -c ~/.config/clipcat/clipcat-menu.toml
+    else
+        rofi -modi "clipboard:greenclip print" -show clipboard -theme clip
     fi
 }
 
