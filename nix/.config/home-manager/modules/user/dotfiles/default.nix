@@ -106,6 +106,10 @@ with {
       source = l "${dots}/wm/.config/executor";
       recursive = true;
     };
+    "greenclip" = {
+      source = l "${dots}/wm/.config/greenclip.toml";
+      recursive = true;
+    };
     "handlr" = {
       source = l "${dots}/wm/.config/handlr";
       recursive = true;
