@@ -80,7 +80,7 @@ _exists btm && alias htop='btm -b -T --mem_as_value'
 _exists dd && alias dd='dd status=progress'
 _exists dig && alias dig='dig +noall +answer'
 _exists dosbox && alias dosbox=dosbox -conf "$XDG_CONFIG_HOME"/dosbox/dosbox.conf
-_exists duf && alias df="duf -theme ansi -hide 'special' -hide-mp $HOME/'*',/nix/store" || alias df='df -hT'
+_exists duf && alias df="duf -theme ansi -hide 'special' -hide-mp $HOME/'*',/nix/store,/var/lib/'*'" || alias df='df -hT'
 _exists dust && alias sp='dust -r' || alias sp='du -shc ./*|sort -h'
 _exists fd && {alias fd='fd -H --ignore-vcs' && alias fda='fd -Hu'}
 _exists gdb && alias gdb="gdb -nh -x ${XDG_CONFIG_HOME}/gdb/gdbinit"
