@@ -9,6 +9,7 @@ with {
 }; {
   home.packages = with pkgs; [
     bash-language-server # bash lsp
+    neovim # neovim from master
     neovim-remote # nvr for neovim
     nil # nixos language server
     pylyzer # python type checker
