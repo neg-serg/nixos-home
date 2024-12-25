@@ -1,5 +1,5 @@
 {
-  pkgs,
+  master,
   config,
   ...
 }:
@@ -7,7 +7,7 @@ with {
   l = config.lib.file.mkOutOfStoreSymlink;
   dots = "${config.home.homeDirectory}/.dotfiles";
 }; {
-  home.packages = with pkgs; [
+  home.packages = with master; [
     bash-language-server # bash lsp
     neovim # neovim from master
     neovim-remote # nvr for neovim
