@@ -13,21 +13,18 @@
         home-manager.follows = "home-manager";
       };
     };
-    nixpkgs-master.url = "github:nixos/nixpkgs/master";
-    # nixpkgs-oldstable.url = "github:nixos/nixpkgs/nixos-23.11";
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.05";
-    nixpkgs.url = "github:nixos/nixpkgs";
-    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable-small";
-    sops-nix.url = "github:Mic92/sops-nix";
-    stylix.url = "github:danth/stylix";
-
     executor.url = "github:neg-serg/executor";
     negwm.url = "github:neg-serg/negwm";
+    nixpkgs-master.url = "github:nixos/nixpkgs/master";
+    nixpkgs-oldstable.url = "github:nixos/nixpkgs/nixos-24.05";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.11";
+    nixpkgs.url = "github:nixos/nixpkgs";
+    sops-nix.url = "github:Mic92/sops-nix";
+    stylix.url = "github:danth/stylix";
     iosevka-neg = {
       url = "git+ssh://git@github.com/neg-serg/iosevka-neg";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     # nixos-generators = {
     #   url = "github:nix-community/nixos-generators";
     #   inputs.nixpkgs.follows = "nixpkgs";
@@ -64,12 +61,12 @@
     with rec {
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
-      stable = nixpkgs-stable.legacyPackages.${system};
-      # oldstable = nixpkgs-oldstable.legacyPackages.${system};
-      master = nixpkgs-master.legacyPackages.${system};
-      negwmPkg = negwm.packages.${system};
       executorPkg = executor.packages.${system};
       iosevkaneg = iosevka-neg.packages.${system};
+      master = nixpkgs-master.legacyPackages.${system};
+      negwmPkg = negwm.packages.${system};
+      # oldstable = nixpkgs-oldstable.legacyPackages.${system};
+      stable = nixpkgs-stable.legacyPackages.${system};
     }; {
       packages.${system}.default = nixpkgs.legacyPackages.${system}.zsh;
       homeConfigurations."neg" = home-manager.lib.homeManagerConfiguration {
