@@ -17,7 +17,7 @@
     choose # yet another cut/awk alternative
     convmv # convert filename encodings
     czkawka # find duplicate pictures and more
-    dcfldd # better dd with progress bar and inline hash verification
+    # dcfldd # better dd with progress bar and inline hash verification
     diffoscope # diff for various format
     diff-so-fancy # human-readable diff
     enca # autoreencode
