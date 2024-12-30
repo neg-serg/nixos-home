@@ -23,7 +23,7 @@ with {
     mkvcleaner # clean mkv files from useless data
     mpvc # CLI controller for mpv
     playerctl # media controller for everything
-    sacd-extract
+    # sacd-extract
     simplescreenrecorder # screen recorder
   ];
   xdg.configFile = {
