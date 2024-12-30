@@ -14,7 +14,7 @@
     nethack # roguelike
     openmw # Unofficial open source engine reimplementation of the game Morrowind
     shattered-pixel-dungeon # roguelike
-    unnethack # roguelike
+    # unnethack # roguelike
     xaos # smooth fractal explorer
   ];
 }
