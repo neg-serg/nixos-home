@@ -1,6 +1,10 @@
 {pkgs, ...}: {
-  programs.firefox.enable = true;
-  programs.floorp.nativeMessagingHosts = [ pkgs.tridactyl-native ];
+  programs.firefox = {
+    enable = true;
+    nativeMessagingHosts = [
+        pkgs.tridactyl-native 
+    ];
+  };
   home.sessionVariables = {
     DEFAULT_BROWSER = "${pkgs.firefox}/bin/firefox";
     MOZ_DBUS_REMOTE = "1";
