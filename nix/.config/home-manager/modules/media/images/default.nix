@@ -1,4 +1,4 @@
-{pkgs, ...}:
+{pkgs, stable, ...}:
 with {
   nsxiv-neg = pkgs.callPackage ../../../packages/nsxiv {};
 }; {
@@ -8,7 +8,7 @@ with {
     exiftool # extract media metadata
     exiv2 # metadata manipulation
     gcolor3 # color selector
-    gpick # alternative color picker
+    stable.gpick # alternative color picker
     graphviz # graphics
     jpegoptim # jpeg optimization
     lutgen # fast lut generator
