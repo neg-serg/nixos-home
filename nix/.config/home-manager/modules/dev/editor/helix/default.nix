@@ -2,7 +2,7 @@
   programs.helix = {
     enable = true;
     settings = {
-      theme = lib.mkForce "onedark";
+      theme = lib.mkForce "poimandres";
       keys.normal = {
         "{" = "goto_prev_paragraph";
         "}" = "goto_next_paragraph";
