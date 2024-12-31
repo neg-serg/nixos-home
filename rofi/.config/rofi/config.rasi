@@ -37,6 +37,7 @@ configuration {
     kb-row-first:                  "Home,KP_Home";
     kb-row-last:                   "End,KP_End";
     kb-row-select:                 "Control+space";
+    kb-secondary-copy:             "";
     kb-cancel:                     "Control-c,Escape";
 }
 
