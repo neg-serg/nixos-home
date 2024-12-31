@@ -1,5 +1,6 @@
 {pkgs, ...}: {
-  home.packages = [pkgs.floorp]; # Module installing  as default browser
+  programs.floorp.enable = true;
+  programs.floorp.nativeMessagingHosts = [ pkgs.tridactyl-native ];
   home.sessionVariables = {
     DEFAULT_BROWSER = "${pkgs.floorp}/bin/floorp";
     MOZ_DBUS_REMOTE = "1";
