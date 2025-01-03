@@ -1,4 +1,4 @@
-{pkgs, ...}:
+{pkgs, stable, ...}:
 with {
   cxxmatrix = pkgs.callPackage ../../../packages/cxxmatrix {};
 }; {
@@ -13,7 +13,7 @@ with {
     neo-cowsay # say something
     neo # yet another digital rain
     nms # No More Secrets, a recreation of the live decryption effect from the famous hacker movie "Sneakers"
-    solfege # ear training program
+    stable.solfege # ear training program
     taoup # The Tao of Unix Programming
     toilet # text banners
     xlife # cellular automata
