@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{pkgs, stable, ...}: {
   home.packages = with pkgs; [
     bitwig-studio # great DAW
     noisetorch # virtual microphone to suppress the noise
@@ -6,6 +6,6 @@
     # renoise # modern tracker
     rnnoise # neural network noise reduction
     tenacity # audio editor
-    zrythm # free audio workstation
+    stable.zrythm # free audio workstation
   ];
 }
