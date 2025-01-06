@@ -22,7 +22,7 @@ send_notify() {
 main() {
     shots_pikz="$HOME/tmp/shots"
     [ ! -d "$shots_pikz" ] && mkdir -p "$shots_pikz"
-    echo "$img"|sed -e "s/.bmp$/.png/" | xclip
+    echo "$img"|sed -e "s/.bmp$/.png/" | xsel
     send_notify
 }
 
