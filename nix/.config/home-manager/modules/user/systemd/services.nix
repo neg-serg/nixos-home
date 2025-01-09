@@ -1,5 +1,4 @@
 {
-  lib,
   pkgs,
   negwmPkg,
   executorPkg,
@@ -181,14 +180,12 @@ with {
         After = ["dbus.socket"];
         StartLimitIntervalSec = "0";
       };
-
       Service = {
         ExecStart = "${pkgs.warpd}/bin/warpd -f";
         Restart = "always";
         RestartSec = "2";
         StartLimitBurst = "8";
       };
-
       Install = {WantedBy = ["graphical-session.target"];};
     };
 
@@ -199,13 +196,11 @@ with {
         StartLimitIntervalSec = "60";
         BindsTo = ["graphical-session.target"];
       };
-
       Service = {
         ExecStart = "${pkgs.unclutter-xfixes}/bin/unclutter --timeout 3 --jitter 50 --ignore-scrolling --start-hidden";
         Restart = "on-failure";
         RestartSec = "3";
       };
-
       Install = {WantedBy = ["graphical-session.target"];};
     };
 
@@ -219,6 +214,5 @@ with {
         Restart = "on-failure";
       };
     };
-
   };
 }
