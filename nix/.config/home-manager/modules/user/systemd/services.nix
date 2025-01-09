@@ -7,6 +7,7 @@
 with {
   systemctl = "${pkgs.systemd}/bin/systemctl";
 }; {
+  systemd.user.startServices = false;
   systemd.user.services = {
     executor = {
       Unit = {
