@@ -11,6 +11,8 @@
     wtype # xdotool for wayland
     ydotool # xdotool systemwide
   ];
+  services.hyprpaper.enable = true;
+  services.hyprlock.enable = true;
   wayland.windowManager.sway = {
     enable = true;
     systemd.enable = true;
