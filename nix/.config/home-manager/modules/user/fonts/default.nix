@@ -1,9 +1,10 @@
 {
   pkgs,
+  stable,
   ...
 }: {
   home.packages = with pkgs; [
-    fontforge # font processing
+    stable.fontforge # font processing
     pango # for pango-list
   ];
 }
