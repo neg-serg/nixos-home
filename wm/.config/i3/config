@@ -12,7 +12,7 @@ set $fullscreen nop fullscreen
 set $lastgo nop lastgo
 set $reflection nop reflection
 set $scratchpad nop scratchpad
-set $circle-bitwig [class="Bitwig Studio"]
+set $circle-daw [class="REAPER"]
 set $circle-patchbay [class="Carla2"]
 set $circle-dev [class="nwim"]
 set $circle-doc [class="^(Zathura|cr3)$"]
@@ -27,7 +27,7 @@ set $circle-term [instance="term"]
 set $circle-vid [class="mpv"]
 set $circle-keyboard [class="^(Bazecor|wootility-lekker)$"]
 set $circle-web [class="^(firefox|floorpdeveloperedition|floorp|Tor Browser|Chromium|Chromium-browser|Thorium-browser|Palemoon|Pale moon)$"]
-for_window $circle-bitwig move to workspace $daw,focus
+for_window $circle-daw move to workspace $daw,focus
 for_window $circle-patchbay move to workspace $patchbay,focus
 for_window $circle-dev move to workspace $dev,focus
 for_window $circle-doc move to workspace $doc,focus
@@ -152,7 +152,7 @@ bindsym Mod4+Control+grave exec i3-menu
 bindsym Mod4+Shift+a exec winact-menu attach
 bindsym Mod4+Shift+d exec props-menu del
 bindsym Mod4+Shift+s exec props-menu
-bindsym Mod4+Control+b $circle next bitwig
+bindsym Mod4+Control+b $circle next daw
 bindsym Mod4+1 $circle next dev
 bindsym Mod4+o $circle next doc
 bindsym Mod4+Control+n $circle next notes
