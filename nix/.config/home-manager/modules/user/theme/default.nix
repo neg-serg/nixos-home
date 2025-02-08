@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  oldstable,
   iosevkaneg,
   ...
 }:
@@ -14,7 +15,7 @@ with {
   gtk = {
     iconTheme = {
       name = "kora";
-      package = pkgs.kora-icon-theme;
+      package = oldstable.kora-icon-theme;
     };
   };
 

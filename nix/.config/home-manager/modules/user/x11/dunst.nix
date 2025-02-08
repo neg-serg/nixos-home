@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  oldstable,
   ...
 }: {
   systemd.user.services.dunst = {
@@ -11,7 +12,7 @@
     enable = true;
     iconTheme = {
       name = "kora";
-      package = pkgs.kora-icon-theme;
+      package = oldstable.kora-icon-theme;
     };
     settings = {
       global = {
