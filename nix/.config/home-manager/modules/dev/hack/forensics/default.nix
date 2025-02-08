@@ -7,8 +7,8 @@
     ghidra-bin
     p0f
     pdf-parser
-    python39Packages.binwalk # Tool library for analyzing binary blobs and executable code
-    python39Packages.distorm3
+    # master.binwalk # Tool library for analyzing binary blobs and executable code
+    distorm3
     sleuthkit
     # volatility
   ];
