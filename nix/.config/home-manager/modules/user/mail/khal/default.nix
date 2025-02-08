@@ -1,20 +1,23 @@
 {...}: {
-  programs.khal.enable = true;
-  programs.khal.locale = {
-    local_timezone = "Europe/Moscow";
-    timeformat = "%H:%M";
-    dateformat = "%d/%m/%Y";
-    longdateformat = "%d/%m/%Y";
-    datetimeformat = "%d/%m/%Y %H:%M";
-    longdatetimeformat = "%d/%m/%Y %H:%M";
-    firstweekday = 0;
-  };
+  programs.khal = {
+    enable = false;
 
-  programs.khal.settings = {
-    default = {
-      default_calendar = "calendar";
-      highlight_event_days = true;
-      timedelta = "30d";
+    locale = {
+        local_timezone = "Europe/Moscow";
+        timeformat = "%H:%M";
+        dateformat = "%d/%m/%Y";
+        longdateformat = "%d/%m/%Y";
+        datetimeformat = "%d/%m/%Y %H:%M";
+        longdatetimeformat = "%d/%m/%Y %H:%M";
+        firstweekday = 0;
+    };
+
+    settings = {
+        default = {
+            default_calendar = "calendar";
+            highlight_event_days = true;
+            timedelta = "30d";
+        };
     };
   };
 
