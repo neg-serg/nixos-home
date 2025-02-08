@@ -1,5 +1,6 @@
 {
   pkgs,
+  stable,
   ...
 }: {
   imports = [
@@ -18,7 +19,7 @@
     convmv # convert filename encodings
     czkawka # find duplicate pictures and more
     # dcfldd # better dd with progress bar and inline hash verification
-    diffoscope # diff for various format
+    stable.diffoscope # diff for various format
     diff-so-fancy # human-readable diff
     enca # autoreencode
     entr # run commands when files change
