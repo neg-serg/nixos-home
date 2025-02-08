@@ -47,7 +47,7 @@
     home-manager,
     negwm,
     nixpkgs-master,
-    # nixpkgs-oldstable,
+    nixpkgs-oldstable,
     nixpkgs-stable,
     sops-nix,
     stylix,
@@ -65,7 +65,7 @@
       iosevkaneg = iosevka-neg.packages.${system};
       master = nixpkgs-master.legacyPackages.${system};
       negwmPkg = negwm.packages.${system};
-      # oldstable = nixpkgs-oldstable.legacyPackages.${system};
+      oldstable = nixpkgs-oldstable.legacyPackages.${system};
       stable = nixpkgs-stable.legacyPackages.${system};
     }; {
       packages.${system}.default = nixpkgs.legacyPackages.${system}.zsh;
