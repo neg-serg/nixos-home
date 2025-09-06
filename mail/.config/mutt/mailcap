@@ -1,7 +1,11 @@
-video/*; /usr/bin/mpv -really-quiet -msglevel all=0 %s 2>/dev/null; test=test -n "$DISPLAY";
-application/pdf; /usr/bin/zathura %s; test=test -n "$DISPLAY";
+video/*; /usr/bin/mpv -really-quiet -msglevel all=0 %s 2>/dev/null;
+application/pdf; pdftotext -layout %s - | ${PAGER:-less}; copiousoutput;
 application/gpg; /usr/bin/gpg --decrypt %s; copiousoutput;
 
-# sometimes you should use needsterminal instead of copiousoutput
-text/html; /usr/bin/firefox --new-window --class mutterfox -p mail 2>/dev/null %s; copiousoutput;
-image/*; /usr/local/bin/sxiv -b %s; test=test -n "$DISPLAY";
+# HTML: lightweight terminal browser (inline in pager)
+text/html; w3m -T text/html -dump %s; copiousoutput;
+# Optional: open HTML externally in your terminal if desired
+#text/html; $XDG_CONFIG_HOME/mutt/mutt_bgrun ${TERMINAL:-foot} -e w3m %s;
+
+# Images: render to ANSI for terminal preview
+image/*; chafa --fill=block --symbols=block --size=80x40 %s; copiousoutput;

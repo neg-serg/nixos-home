@@ -36,17 +36,20 @@ unset markers                          # No '+' for wrapped lines
 set wait_key=no                        # Less prompts
 unset print_command                    # Disable printing command
 set forward_format="Fwd: %s"           # Simple forward format
-set help                               # Show keybindings help
+# Default shows keybindings help
+# set help                               # Show keybindings help
 set implicit_autoview                  # Use mailcap for MIME types
 
 set mailcap_path="~/.config/mutt/mailcap" # Use local mailcap database
-set mailcap_sanitize=yes               # Sanitize mailcap
+# mailcap_sanitize defaults to yes in NeoMutt
+# set mailcap_sanitize=yes               # Sanitize mailcap
 
 set menu_scroll                        # Menu scrolling
 set narrow_tree                        # Compact thread tree
 set user_agent=no                      # Hide real User-Agent
 
-set pager=builtin
+# pager defaults to builtin
+# set pager=builtin
 set pager_stop                         # Don't auto-open next message
 set pager_index_lines=20               # Index lines to show above pager
 set pager_context=3                    # Context lines in pager
