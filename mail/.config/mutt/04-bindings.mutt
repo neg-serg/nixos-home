@@ -59,4 +59,8 @@ macro pager V ,@aoh= 'toggle alternative order'<enter>\
 <exit><display-message>"
 macro pager V ,@aot= "toggle alternative order"
 
+# Inline image preview in Kitty from the attachment browser
+# Usage: open attachments (v), navigate to an image, press 'i'
+macro attach i "<pipe-entry>kitty +kitten icat --transfer-mode=stream --stdin yes\n" "Preview image inline in Kitty"
+
 # vim: ft=muttrc syntax=neomuttrc
