@@ -1,4 +1,4 @@
-video/*; /usr/bin/mpv -really-quiet -msglevel all=0 %s 2>/dev/null;
+video/*; $XDG_CONFIG_HOME/mutt/mutt_bgrun mpv -really-quiet -msglevel all=0 %s 2>/dev/null;
 application/pdf; pdftotext -layout %s - | ${PAGER:-less}; copiousoutput;
 application/gpg; /usr/bin/gpg --decrypt %s; copiousoutput;
 
