@@ -7,5 +7,5 @@ text/html; w3m -T text/html -dump %s; copiousoutput;
 # Optional: open HTML externally in your terminal if desired
 #text/html; $XDG_CONFIG_HOME/mutt/mutt_bgrun ${TERMINAL:-foot} -e w3m %s;
 
-# Images: render to ANSI for terminal preview
-image/*; chafa --fill=block --symbols=block --size=80x40 %s; copiousoutput;
+# Images: render inline in Kitty terminal
+image/*; kitty-img %s; copiousoutput;
