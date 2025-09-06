@@ -15,7 +15,6 @@ set quit=yes                           # Confirm exit
 set recall=ask-yes                     # Confirm working with unsent messages
 unset confirmappend                    # Don't prompt when appending to mbox
 set allow_8bit                         # Allow 8-bit transfer-encoding
-set check_new                          # Check for new mail
 set abort_nosubject=no                 # Don't abort on empty subject
 set attach_split                       # Store attachments separately
 set fast_reply                         # Skip To/Cc/Subject when replying
@@ -26,7 +25,6 @@ unset reply_self                       # Don't reply to self
 unset read_only                        # Read/write access to mailboxes
 unset collapse_unread                  # Don't collapse threads with new mail
 unset mark_old                         # Unread old messages stay unread
-set suspend                            # Allow Ctrl-Z
 set beep=no                            # No beeps
 set sleep_time=0                       # Speed up folder switches
 set forward_decode                     # Decode when forwarding
