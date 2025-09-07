@@ -22,7 +22,6 @@ in {
     "mutt" = mkSymlink "mail/.config/mutt" true;
 
     # █▓▒░ media ────────────────────────────────────────────────────────────────────────
-    "nsxiv" = mkSymlink "media/.config/nsxiv" true;
     "swayimg" = mkSymlink "media/.config/swayimg" true;
 
     # █▓▒░ misc ─────────────────────────────────────────────────────────────────────────
