@@ -33,7 +33,6 @@ Singleton {
             id: settingAdapter
             property string weatherCity: "Moscow"
             property string userAgent: "NegPanel"
-            property string profileImage: Quickshell.env("HOME") + "/.face"
             // Unified logging toggle for low-importance debug logs
             property bool debugLogs: false
             property bool debugNetwork: false
@@ -42,7 +41,6 @@ Singleton {
             property bool showMediaInBar: false
             // Weather button in bar
             property bool showWeatherInBar: false
-            property string visualizerType: "radial"
             property bool reverseDayMonth: false
             property bool use12HourClock: false
             property bool dimPanels: true
@@ -86,28 +84,19 @@ Singleton {
 
             // Displays
             property var barMonitors: []
-            property var dockMonitors: []
             property var monitorScaleOverrides: {}
 
             property bool collapseSystemTray: true
             property string collapsedTrayIcon: "expand_more"
             property string trayFallbackIcon: "broken_image"
 
-
             // Global contrast
             property real contrastThreshold: 0.5
-            property bool enforceContrastWarnings: false
-            property bool debugContrast: false
             property real contrastWarnRatio: 4.5
 
             // Music player selection
             property var pinnedPlayers: []
             property var ignoredPlayers: []
-            property string trayAccentColor: "#3b7bb3" // Accent color for tray button/icon
-            // Tray popup background darkness blend (0 = surfaceVariant, 1 = background)
-            property real trayPopupDarkness: 0.65
-            // Tray button accent brightness relative to calendar accent (0..1)
-            property real trayAccentBrightness: 0.25
 
             // Media visualizer (CAVA/LinearSpectrum) toggle
             property bool showMediaVisualizer: false
