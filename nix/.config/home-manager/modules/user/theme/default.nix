@@ -17,7 +17,7 @@ with {
 
   home.pointerCursor = {
     gtk.enable = true;
-    x11.enable = true;
+    x11.enable = lib.mkForce false;
     package = lib.mkDefault alkano-aio;
     name = lib.mkDefault "Alkano-aio";
     size = lib.mkDefault 23;
@@ -118,7 +118,7 @@ with {
       flatpakSupport.enable = true;
     };
     targets.helix.enable = true;
-    targets.sxiv.enable = true;
+    targets.sxiv.enable = false;
 
     base16Scheme = {
       base00 = "#020202"; # Background
