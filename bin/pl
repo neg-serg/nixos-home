@@ -1,4 +1,12 @@
 #!/usr/bin/env zsh
+# pl: fuzzy-pick and play videos (fzf/rofi -> mpv + vid-info)
+# Usage:
+#   pl [rofi|video|1st_level] [DIR]
+#   pl cmd <playerctl-args>
+#   pl vol {mute|unmute}
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+  sed -n '2,6p' "$0" | sed 's/^# \{0,1\}//'; exit 0
+fi
 
 mp() {
     local args=""
@@ -77,6 +85,7 @@ main() {
 }
 
 case $1 in
+    -h|--help) sed -n '2,6p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
     cmd) shift; playerctl "$@" ;;
     vol)
         case $2 in

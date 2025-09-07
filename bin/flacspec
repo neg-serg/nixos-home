@@ -1,4 +1,12 @@
-# This script will generate spectrograms for all the flac files in the current in dirrectory
-# The spectrograms will be put in the Spectrograms folder in that dir
-mkdir Spectrograms
-for file in *.flac;do     outfile="${file%.*}.flac.png";     sox "$file" -n spectrogram -o "$outfile";     mv "$outfile" Spectrograms/; done
+#!/bin/sh
+# flacspec: generate spectrograms for all .flac in current directory
+# Usage: flacspec
+if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+  sed -n '2,2p' "$0" | sed 's/^# \{0,1\}//'; exit 0
+fi
+mkdir -p Spectrograms
+for file in *.flac; do
+  [ -f "$file" ] || continue
+  outfile="${file%.*}.flac.png"
+  sox "$file" -n spectrogram -o "$outfile" && mv "$outfile" Spectrograms/
+done

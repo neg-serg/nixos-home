@@ -1,4 +1,9 @@
 #!/usr/bin/env zsh
+# read_documents: pick and open a document from ~/dw (rofi -> zathura)
+# Usage: read_documents [extra rofi args]
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+  sed -n '2,3p' "$0" | sed 's/^# \{0,1\}//'; exit 0
+fi
 filelist="$(fd . ~/dw/ -d 1 -t f -0 -e pdf -e djvu -e epub | xargs -0n1)"
 if [ ! -z "$filelist" ]; then
     echo "$filelist" | rofi -auto-select -modi file-browser-extended -show file-browser-extended \

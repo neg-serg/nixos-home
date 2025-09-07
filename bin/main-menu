@@ -1,4 +1,6 @@
 #!/usr/bin/env sh
+# main-menu: rofi-driven helper actions for music/clipboard/network/etc
+# Usage: main-menu
 
 main_menu='
 title_copy
@@ -82,4 +84,7 @@ handler() {
 
 dac_name='RME ADI-2/4 PRO SE'
 rofi_options="-auto-select -markup-rows -b -lines 1 -theme neg -dmenu -p '❯>'"
+if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+  sed -n '2,2p' "$0" | sed 's/^# \{0,1\}//'; exit 0
+fi
 generate_menu | eval "rofi $rofi_options" | handler

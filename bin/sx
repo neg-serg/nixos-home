@@ -1,4 +1,9 @@
 #!/usr/bin/env zsh
+# sx: view images in swayimg sorted by ctime (newest first)
+# Usage: sx DIR...
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+  echo "Usage: sx DIR..." >&2; exit 0
+fi
 ~/.local/bin/swayimg -C "${XDG_CONFIG_HOME}/swayimg/config" -g -f -F <(
   find "$@" -type f -printf '%C@ %p\n' \
   | sort -rn \

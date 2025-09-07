@@ -1,4 +1,9 @@
 #!/bin/sh
+# unlock: unlock SSH keys (optionally Yubikey) via expect using pass(1) secrets
+# Usage: unlock
+if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+  sed -n '2,2p' "$0" | sed 's/^# \{0,1\}//'; exit 0
+fi
 . /etc/profile
 pp0="$(pass show ssh-key)"
 pp2="$(pass show wrk/ssh-key)"

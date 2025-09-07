@@ -1,4 +1,10 @@
 #!/usr/bin/env zsh
+# vol: adjust PipeWire default sink volume via wpctl
+# Usage: vol [+DELTA|-DELTA]
+#   Example: vol +0.05 (increase), vol -0.05 (decrease)
+if [[ "$1" == "-h" || "$1" == "--help" || -z "$1" ]]; then
+  sed -n '2,4p' "$0" | sed 's/^# \{0,1\}//'; exit 0
+fi
 
 sign(){ echo "$1"|rev|cut -b1 }
 get_volume_(){ wpctl get-volume @DEFAULT_SINK@ }
