@@ -100,30 +100,8 @@
   },
   "sidePanel": {
     "popup": {
-      "spacing": 0,
-      "slideMs": 220,
-      "autoHideMs": 4000,
-      "outerMargin": 4
-    },
-    "cornerRadius": 9,
-    "innerRadius": 0,
-    "buttonHoverRadiusFactor": 0.5,
-    "selector": {
-      "minWidth": 120
-    },
-    "spacing": 12,
-    "spacingTight": 6,
-    "spacingSmall": 4,
-    "albumArtSize": 200,
-    "weather": {
-      "width": 440,
-      "height": 180,
-      "leftColumnRatio": 0.32
-    },
-    "button": {
-      "activeVisibleMin": 0.18
-    },
-    "spacingMedium": 8
+      "radius": 10
+    }
   },
   "ui": {
     "iconSizeLarge": 28,
@@ -235,25 +213,18 @@
     }
   },
   "media": {
-    "hover": {
-      "openDelayMs": 320,
-      "stillThresholdMs": 180
-    },
-    "iconScaleEmphasis": 1.15,
-    "time": {
-      "alpha": {
-        "playing": 1,
-        "paused": 0.8
+    "accent": {
+      "samplerPx": 48,
+      "retryMs": 120,
+      "retryMax": 5,
+      "satMin": 10,
+      "lumMin": 20,
+      "lumMax": 235,
+      "relaxed": {
+        "satMin": 8,
+        "lumMin": 20,
+        "lumMax": 240
       }
-    },
-    "mpd": {
-      "flags": {
-        "fallbackMs": 2500,
-        "iconScale": 0.95
-      }
-    },
-    "albumArt": {
-      "fallbackOpacity": 0.4
     }
   },
   "spectrum": {

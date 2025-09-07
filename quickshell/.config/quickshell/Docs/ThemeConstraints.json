@@ -3,7 +3,7 @@
   "ui.anim.rotateMs": { "type": "integer", "min": 0, "max": 5000 },
   "ui.anim.rippleMs": { "type": "integer", "min": 0, "max": 10000 },
   "ui.spinner.durationMs": { "type": "integer", "min": 100, "max": 600000 },
-  
+
   "panel.height": { "type": "integer", "min": 16, "max": 64 },
   "panel.hotzone.width": { "type": "integer", "min": 4, "max": 64 },
   "panel.hotzone.height": { "type": "integer", "min": 2, "max": 64 },
@@ -39,9 +39,12 @@
 
   "media.hover.openDelayMs": { "type": "integer", "min": 0, "max": 5000 },
   "media.hover.stillThresholdMs": { "type": "integer", "min": 0, "max": 10000 },
+
   "spectrum.peakDecayIntervalMs": { "type": "integer", "min": 10, "max": 1000 },
   "spectrum.barAnimMs": { "type": "integer", "min": 0, "max": 5000 },
   "spectrum.peakThickness": { "type": "integer", "min": 1, "max": 12 },
+  "spectrum.fillOpacity": { "type": "number", "min": 0, "max": 1 },
+  "spectrum.peakOpacity": { "type": "number", "min": 0, "max": 1 },
 
   "media.accent.samplerPx": { "type": "integer", "min": 8, "max": 256 },
   "media.accent.retryMs": { "type": "integer", "min": 10, "max": 2000 },
@@ -91,50 +94,7 @@
   "ui.separator.diagonal.stripeBrightness": { "type": "number", "min": 0, "max": 1 },
   "ui.separator.diagonal.stripeRatio": { "type": "number", "min": 0, "max": 1 },
   "ui.ripple.opacity": { "type": "number", "min": 0, "max": 1 },
-  "ui.icon.emphasisOpacity": { "type": "number", "min": 0, "max": 1 }
-
-  "media.mpd.flags.iconScale": { "type": "number", "min": 0.1, "max": 2.0 },
-  "media.albumArt.fallbackOpacity": { "type": "number", "min": 0, "max": 1 },
-  "media.time.alpha.playing": { "type": "number", "min": 0, "max": 1 },
-  "media.time.alpha.paused": { "type": "number", "min": 0, "max": 1 },
-  "media.mpd.flags.fallbackMs": { "type": "integer", "min": 200, "max": 600000 },
-
-  "time.font.scale": { "type": "number", "min": 0.5, "max": 3.0 },
-
-  "keyboard.height": { "type": "integer", "min": 16, "max": 128 },
-  "keyboard.margin": { "type": "integer", "min": 0, "max": 64 },
-  "keyboard.minWidth": { "type": "integer", "min": 0, "max": 512 },
-  "keyboard.icon.scale": { "type": "number", "min": 0.2, "max": 3.0 },
-  "keyboard.icon.spacing": { "type": "integer", "min": 0, "max": 64 },
-  "keyboard.icon.padding": { "type": "integer", "min": 0, "max": 64 },
-  "keyboard.text.padding": { "type": "number", "min": 0, "max": 32 },
-  "keyboard.icon.baselineOffset": { "type": "integer", "min": -20, "max": 20 },
-  "keyboard.text.baselineOffset": { "type": "integer", "min": -20, "max": 20 },
-  "keyboard.font.scale": { "type": "number", "min": 0.5, "max": 2.0 },
-  "keyboard.radius": { "type": "integer", "min": 0, "max": 64 },
-  "keyboard.opacity.normal": { "type": "number", "min": 0, "max": 1 },
-  "keyboard.opacity.hover": { "type": "number", "min": 0, "max": 1 },
-
-  "calendar.size.width": { "type": "integer", "min": 200, "max": 800 },
-  "calendar.size.height": { "type": "integer", "min": 200, "max": 800 },
-  "calendar.popupMargin": { "type": "integer", "min": 0, "max": 32 },
-  "calendar.cellSize": { "type": "integer", "min": 16, "max": 64 },
-  "calendar.font.titlePx": { "type": "integer", "min": 8, "max": 64 },
-  "calendar.font.dowPx": { "type": "integer", "min": 6, "max": 48 },
-  "calendar.font.dayPx": { "type": "integer", "min": 8, "max": 64 },
-  "calendar.cell.radiusFactor": { "type": "number", "min": 0, "max": 1 },
-  "calendar.holidayDot.radiusFactor": { "type": "number", "min": 0, "max": 1 },
-  "calendar.opacity.title": { "type": "number", "min": 0, "max": 1 },
-  "calendar.opacity.dow": { "type": "number", "min": 0, "max": 1 },
-  "calendar.opacity.otherMonthDay": { "type": "number", "min": 0, "max": 1 },
-  "calendar.accentDarken": { "type": "number", "min": 0, "max": 1 },
-
-  "spectrum.fillOpacity": { "type": "number", "min": 0, "max": 1 },
-  "spectrum.peakOpacity": { "type": "number", "min": 0, "max": 1 },
-
-  "ui.separator.stripe.opacity": { "type": "number", "min": 0, "max": 1 },
-  "ui.separator.stripe.brightness": { "type": "number", "min": 0, "max": 1 },
-  "ui.separator.stripe.ratio": { "type": "number", "min": 0, "max": 1 },
+  "ui.icon.emphasisOpacity": { "type": "number", "min": 0, "max": 1 },
 
   "network.icon.scale": { "type": "number", "min": 0.2, "max": 3.0 },
   "network.icon.vAdjust": { "type": "integer", "min": -100, "max": 100 },
@@ -152,5 +112,19 @@
   "vpn.text.padding": { "type": "integer", "min": 0, "max": 64 },
   "vpn.accent.saturateBoost": { "type": "number", "min": 0, "max": 1 },
   "vpn.accent.lightenTowardWhite": { "type": "number", "min": 0, "max": 1 },
-  "vpn.desaturateAmount": { "type": "number", "min": 0, "max": 1 }
+  "vpn.desaturateAmount": { "type": "number", "min": 0, "max": 1 },
+
+  "calendar.size.width": { "type": "integer", "min": 200, "max": 800 },
+  "calendar.size.height": { "type": "integer", "min": 200, "max": 800 },
+  "calendar.popupMargin": { "type": "integer", "min": 0, "max": 32 },
+  "calendar.cellSize": { "type": "integer", "min": 16, "max": 64 },
+  "calendar.font.titlePx": { "type": "integer", "min": 8, "max": 64 },
+  "calendar.font.dowPx": { "type": "integer", "min": 6, "max": 48 },
+  "calendar.font.dayPx": { "type": "integer", "min": 8, "max": 64 },
+  "calendar.cell.radiusFactor": { "type": "number", "min": 0, "max": 1 },
+  "calendar.holidayDot.radiusFactor": { "type": "number", "min": 0, "max": 1 },
+  "calendar.opacity.title": { "type": "number", "min": 0, "max": 1 },
+  "calendar.opacity.dow": { "type": "number", "min": 0, "max": 1 },
+  "calendar.opacity.otherMonthDay": { "type": "number", "min": 0, "max": 1 },
+  "calendar.accentDarken": { "type": "number", "min": 0, "max": 1 }
 }
