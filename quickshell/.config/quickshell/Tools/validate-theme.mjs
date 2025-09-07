@@ -3,7 +3,7 @@
  * validate-theme.mjs — Dev script to validate Theme.json against a hierarchical schema
  *
  * Usage:
- *   node Tools/validate-theme.mjs [--theme Theme.json] [--schema Docs/ThemeHierarchical.json] [--constraints Docs/ThemeConstraints.json] [--strict]
+ *   node Tools/validate-theme.mjs [--theme Theme.json] [--schema Docs/ThemeHierarchical.json] [--constraints Docs/ThemeConstraints.json] [--strict] [--verbose]
  *
  * Checks:
  * - Unknown (extra) tokens not present in the schema
@@ -58,13 +58,14 @@ function flatten(obj, base = '') {
 }
 
 function parseArgs(argv) {
-  const args = { theme: 'Theme.json', schema: 'Docs/ThemeHierarchical.json', constraints: 'Docs/ThemeConstraints.json', strict: false };
+  const args = { theme: 'Theme.json', schema: 'Docs/ThemeHierarchical.json', constraints: 'Docs/ThemeConstraints.json', strict: false, verbose: false };
   for (let i = 2; i < argv.length; i++) {
     const a = argv[i];
     if (a === '--theme') { args.theme = argv[++i]; continue; }
     if (a === '--schema') { args.schema = argv[++i]; continue; }
     if (a === '--constraints') { args.constraints = argv[++i]; continue; }
     if (a === '--strict') { args.strict = true; continue; }
+    if (a === '--verbose') { args.verbose = true; continue; }
   }
   return args;
 }
@@ -103,15 +104,8 @@ function main() {
   }
 
   function hdr(s) { console.log(`\n=== ${s} ===`); }
-  console.log(`Validate: ${path.relative(cwd, themePath)} vs schema ${path.relative(cwd, schemaPath)}`);
-
-  hdr('Unknown tokens');
-  if (unknown.length) unknown.sort().forEach(p => console.log('  +', p)); else console.log('  (none)');
 
   // (flat tokens check removed)
-
-  hdr('Missing tokens (informational)');
-  if (missing.length) missing.sort().forEach(p => console.log('  -', p)); else console.log('  (none)');
 
   // Range/type checks from constraints
   function get(o, p) { try { return p.split('.').reduce((a,k)=> (a ? a[k] : undefined), o); } catch { return undefined; } }
@@ -133,8 +127,29 @@ function main() {
     }
   }
 
-  hdr('Constraint violations');
-  if (bad.length) bad.sort().forEach(x => console.log('  !', x)); else console.log('  (none)');
+  const hasFindings = unknown.length || missing.length || bad.length;
+  if (args.verbose) {
+    const relTheme = path.relative(cwd, themePath);
+    const relSchema = path.relative(cwd, schemaPath);
+    console.log(`Validate: ${relTheme} vs schema ${relSchema}${hasFindings ? '' : ' — OK'}`);
+  } else if (hasFindings) {
+    console.log(`Validate: ${path.relative(cwd, themePath)} vs schema ${path.relative(cwd, schemaPath)}`);
+  }
+
+  if (unknown.length) {
+    hdr('Unknown tokens');
+    unknown.sort().forEach(p => console.log('  +', p));
+  }
+
+  if (missing.length) {
+    hdr('Missing tokens (informational)');
+    missing.sort().forEach(p => console.log('  -', p));
+  }
+
+  if (bad.length) {
+    hdr('Constraint violations');
+    bad.sort().forEach(x => console.log('  !', x));
+  }
 
   if (args.strict && (unknown.length || bad.length)) {
     console.error('\nStrict mode: validation errors present.');
