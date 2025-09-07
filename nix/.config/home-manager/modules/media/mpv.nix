@@ -2,7 +2,6 @@
   config,
   lib,
   pkgs,
-  inputs,
   ...
 }: {
   programs.mpv = {
@@ -319,17 +318,5 @@
         ## vim: set cc= tw=0 ft=input.conf:
       }
     ];
-  };
-
-  # Deploy auxiliary mpv files from this repo to avoid nix-store symlinks
-  xdg.configFile."mpv/input.conf".source = inputs.self + "/media/.config/mpv/input.conf";
-  xdg.configFile."mpv/styles.ass".source = inputs.self + "/media/.config/mpv/styles.ass";
-  xdg.configFile."mpv/script-opts" = {
-    source = inputs.self + "/media/.config/mpv/script-opts";
-    recursive = true;
-  };
-  xdg.configFile."mpv/shaders" = {
-    source = inputs.self + "/media/.config/mpv/shaders";
-    recursive = true;
   };
 }
