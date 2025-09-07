@@ -1,2 +1,11 @@
 #!/usr/bin/env sh
-[ -n "$1" ] && ps uwwwp $(pgrep -f "$@")
+# any: show processes matching a pattern (pgrep -f -> ps uwwwp)
+# Usage: any PATTERN [PGREP_ARGS...]
+# Example: any firefox
+
+if [ "$1" = "-h" ] || [ "$1" = "--help" ] || [ -z "$1" ]; then
+  printf "Usage: any PATTERN\n" >&2
+  exit 1
+fi
+
+ps uwwwp $(pgrep -f "$@")
