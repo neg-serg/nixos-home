@@ -21,7 +21,6 @@
             kitty
             rustc
             wl-clipboard
-            xclip
           ];
 
           RUST_BACKTRACE = "1";
