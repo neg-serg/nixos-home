@@ -1,4 +1,15 @@
 #!/usr/bin/env sh
+# clip: clipboard helper (greenclip/gpaste/clipcat + extras)
+# Usage:
+#   clip                       # open clipboard menu (greenclip/gpaste/clipcat)
+#   clip pipe [-p|--paste] [-c|--command CMD] [--]
+#   clip youtube-dw-list       # pick video URL from history and download
+#   clip youtube-dw            # download URL currently in clipboard
+#   clip youtube-view          # open yt scratchpad and paste selection
+#   clip -h|--help|help        # this help
+# Env:
+#   USE_GPASTE=true            # use gpaste instead of greenclip
+#   USE_CLIPCAT=true           # use clipcat instead of greenclip
 [ -z "$USE_GPASTE" ] && USE_GPASTE=false
 alias yt='yt-dlp --downloader aria2c -f "(bestvideo+bestaudio/best)"'
 
@@ -95,6 +106,8 @@ youtube_url() {
 }
 
 case "$1" in
+    -h|--help|help)
+        sed -n '2,20p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
     pipe) shift; clipboard_pipe "$@" ;;
     youtube-dw-list) shift; cd "$XDG_VIDEOS_DIR/new" && yt "$(youtube_url)" ;;
     youtube-dw) shift; cd "$XDG_VIDEOS_DIR/new" && yt "$(xclip -o)" ;;

@@ -1,4 +1,17 @@
 #!/usr/bin/env sh
+show_help() {
+  cat <<'EOF'
+Usage: screenshot [-r|-c|-d|-m|-o]
+  (no args)  Full screen capture to ~/pic/shots
+  -r         Rectangular selection (interactive)
+  -c         Current window
+  -d         Delayed shot (5s)
+  -m         Show menu (rofi)
+  -o         OCR region to clipboard (tesseract)
+  -h, --help Show this help
+EOF
+}
+
 scr_dir=$HOME/pic/shots
 [ ! -d "$scr_dir" ] && mkdir "$scr_dir"
 filename="screenshot-$(date +%Y-%m-%d_%H-%M-%S).bmp"

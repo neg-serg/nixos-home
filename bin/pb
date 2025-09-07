@@ -41,6 +41,7 @@ EOF
 ARG="${2:-/dev/stdin}"
 UA=${UA:="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36"}
 case $1 in
+    -h|--help|help) usage ;;
     temp | tmp | temp.sh) curl -A "$UA" -sF 'file=@-' https://temp.sh/upload <"$ARG" ;;
     iotek | iopaste | p.iotek.org | iop*) curl -A "$UA" -sT- https://p.iotek.org <"$ARG" ;;
     uguu | uguu.se | u*) curl -A "$UA" -sF 'files[]=@-' https://uguu.se/upload?output=text <"$ARG" ;;
