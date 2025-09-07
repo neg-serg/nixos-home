@@ -133,6 +133,9 @@
       iosevkaneg = iosevka-neg.packages.${system};
       yandex-browser = yandex-browser.packages.${system};
       bzmenu = bzmenu.packages.${system};
+      # Nilla raw-loader compatibility: add a synthetic type to each input
+      # Safe no-op for regular flake usage; enables Nilla to accept raw inputs.
+      nillaInputs = builtins.mapAttrs (_: input: input // {type = "derivation";}) inputs;
     }; {
       devShells = {
         ${system} = {
@@ -161,8 +164,8 @@
       homeConfigurations."neg" = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
         extraSpecialArgs = {
-          # Pass the entire inputs set to modules that reference it
-          inputs = inputs;
+          # Pass inputs mapped for Nilla raw-loader (issue #14 workaround)
+          inputs = nillaInputs;
           inherit hy3;
           inherit iosevkaneg;
           inherit yandex-browser;
