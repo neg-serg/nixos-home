@@ -1,7 +1,16 @@
 #!/usr/bin/env zsh
-# http://devel.japh.se/mpd_del_album/
+# abstract: remove current album from disk (moves to ~/trash/music/) after confirmation
+# Usage: mpd_del_album [ARTIST]
+#   If ARTIST not provided, uses current artist from mpc. Asks confirmation and
+#   moves the album directory under $base to ~/trash/music/.
+# Source: http://devel.japh.se/mpd_del_album/
 # 2012-05-10 18:11:36
-# abstract: remove album from mpd playlist
+
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+  print "Usage: $(basename "$0") [ARTIST]"
+  print "Remove current album (as detected by mpc) by moving its directory to ~/trash/music/."
+  exit 0
+fi
 
 IFS="$(printf '\n\t')"
 mpd_del_album_artist="$@"

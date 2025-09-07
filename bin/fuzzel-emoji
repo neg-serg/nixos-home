@@ -1,4 +1,11 @@
 #!/usr/bin/env bash
+# fuzzel-emoji: fuzzy-pick emoji and copy to clipboard (wayland)
+# Usage: fuzzel-emoji [-h|--help]
+#   Shows a fuzzel menu from built-in emoji list and copies the codepoint.
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+  sed -n '2,4p' "$0" | sed 's/^# \{0,1\}//'
+  exit 0
+fi
 if [ $? -eq 0 ]
 then
     sed '1,/^### DATA ###$/d' $0 | fuzzel --match-mode fzf --dmenu | cut -d ' ' -f 1 | tr -d '\n' | wl-copy

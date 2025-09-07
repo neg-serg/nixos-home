@@ -2,6 +2,18 @@
 # MPD Playlist Manager with Artist-Album pairing and Year
 # Requirements: fzf, mpc, awk
 
+# Help
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+  print "Usage: $(basename "$0") [-c] [-a|-d|-b|-n] [--no-cache]"
+  print "  -c, --clear        Clear playlist before adding"
+  print "  -a, --artist       Select by artists"
+  print "  -d, --directory    Select by directories"
+  print "  -b, --artist-album Select by artist-album pairs"
+  print "  -n, --new          Select from 'new' directory"
+  print "  --no-cache         Disable caching"
+  exit 0
+fi
+
 CLEAR_PLAYLIST=0
 MODE=""
 CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/mpd_manager"

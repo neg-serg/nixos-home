@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
+# hypr-win-list: fuzzy window switcher for Hyprland via fuzzel
+# Usage: hypr-win-list [-h|--help]
+#   Lists visible windows with icons; focuses selection, handling fullscreen.
 # shellcheck shell=bash
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+  sed -n '2,3p' "$0" | sed 's/^# \{0,1\}//'
+  exit 0
+fi
 set -e
 set -o pipefail
 
