@@ -24,7 +24,7 @@ with rec {
   telegram = "org.telegram.desktop.desktop";
   torrent = "transmission.desktop";
   video = "mpv.desktop";
-  image = "nsxiv.desktop";
+  image = "swayimg.desktop";
   editor = "${defaultApplications.editor.desktop}.desktop";
 
   my_associations = {
