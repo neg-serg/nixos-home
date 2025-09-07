@@ -2,7 +2,7 @@ pragma Singleton
 import QtQuick
 import qs.Settings
 import qs.Components
-import "../Helpers/Utils.js" as Utils
+// No runtime clamping: Settings.json is validated by schema
 
 // Connectivity: shared networking signals/state
 // - hasLink: any non-loopback interface up (or UNKNOWN with address)
@@ -75,7 +75,7 @@ Item {
     // --- Internet reachability via ping
     Timer {
         id: inetPoll
-        interval: (function(){ var v = Utils.coerceInt(Settings.settings.networkPingIntervalMs, 30000); return Utils.clamp(v, 1000, 600000); })()
+        interval: Settings.settings.networkPingIntervalMs
         repeat: true
         running: !root.fastMode
         onTriggered: {

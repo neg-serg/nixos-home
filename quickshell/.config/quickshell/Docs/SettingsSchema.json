@@ -22,7 +22,7 @@
     "dimPanels": { "type": "boolean", "default": true, "description": "Dim panel appearance" },
     "fontSizeMultiplier": { "type": "number", "default": 1.0, "minimum": 0.5, "maximum": 2.5, "description": "Global font size multiplier" },
 
-    "cavaBars": { "type": "integer", "default": 86, "minimum": 2, "description": "CAVA bars count" },
+    "cavaBars": { "type": "integer", "default": 86, "minimum": 8, "maximum": 512, "description": "CAVA bars count" },
     "cavaFramerate": { "type": "integer", "default": 24, "minimum": 1, "description": "CAVA framerate (FPS)" },
     "cavaMonstercat": { "type": "boolean", "default": false },
     "cavaGravity": { "type": "integer", "default": 150000, "description": "CAVA decay/gravity constant" },
@@ -106,7 +106,7 @@
     "musicPopupHeight": { "type": "integer", "default": 250, "minimum": 120, "description": "Media popup height (logical px)" },
     "musicPopupPadding": { "type": "integer", "default": 12, "minimum": 0, "description": "Media popup inner padding" },
 
-    "networkPingIntervalMs": { "type": "integer", "default": 30000, "minimum": 500, "description": "Network ping interval (ms)" },
+    "networkPingIntervalMs": { "type": "integer", "default": 30000, "minimum": 1000, "maximum": 600000, "description": "Network ping interval (ms)" },
     "networkNoInternetColor": { "type": "string", "default": "#FF6E00", "description": "No-internet status color" },
     "networkNoLinkColor": { "type": "string", "default": "#D81B60", "description": "No-link status color" }
   }

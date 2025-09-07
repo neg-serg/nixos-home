@@ -4,7 +4,7 @@ import Quickshell.Services.Mpris
 import qs.Services
 import qs.Settings
 import qs.Components
-import "../Helpers/Utils.js" as Utils
+// Settings are schema-validated; avoid runtime clamps
 
 Item {
     id: manager
@@ -90,9 +90,9 @@ Item {
         count: (
             Settings.settings.visualizerProfiles
             && Settings.settings.visualizerProfiles[Settings.settings.activeVisualizerProfile]
-            && Settings.settings.visualizerProfiles[Settings.settings.activeVisualizerProfile].cavaBars
-        ) ? Utils.clamp(Utils.coerceInt(Settings.settings.visualizerProfiles[Settings.settings.activeVisualizerProfile].cavaBars, 86), 8, 512)
-          : Utils.clamp(Utils.coerceInt(Settings.settings.cavaBars, 86), 8, 512)
+            && Settings.settings.visualizerProfiles[Settings.settings.activeVisualizerProfile].cavaBars !== undefined
+        ) ? Settings.settings.visualizerProfiles[Settings.settings.activeVisualizerProfile].cavaBars
+          : Settings.settings.cavaBars
     }
     property alias cavaValues: cava.values
 }

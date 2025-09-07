@@ -39,6 +39,11 @@ Item {
     Connections { target: MusicManager; function onCoverUrlChanged() { mediaControl.accentReady = false; colorSampler.requestPaint(); accentRetry.restart() } function onTrackAlbumChanged() { mediaControl.accentReady = false; colorSampler.requestPaint(); accentRetry.restart() } }
     // Retry sampler a few times while UI/cover settles
     property int _accentRetryCount: 0
+    // Active visualizer profile (if any). Settings are schema-validated, so no clamps here.
+    property var _vizProfile: (Settings.settings.visualizerProfiles
+                               && Settings.settings.visualizerProfiles[Settings.settings.activeVisualizerProfile])
+                              ? Settings.settings.visualizerProfiles[Settings.settings.activeVisualizerProfile]
+                              : null
     Timer { id: accentRetry; interval: Theme.mediaAccentRetryMs; repeat: false; onTriggered: { colorSampler.requestPaint(); if (!mediaControl.accentReady && mediaControl._accentRetryCount < Theme.mediaAccentRetryMax) { mediaControl._accentRetryCount++; start() } else { mediaControl._accentRetryCount = 0 } } }
 
     RowLayout {
@@ -197,39 +202,33 @@ Item {
                 anchors.left: parent.left
                 anchors.top: textFrame.bottom
                 anchors.topMargin: -Math.round(trackText.font.pixelSize * (
-                    (Settings.settings.visualizerProfiles
-                     && Settings.settings.visualizerProfiles[Settings.settings.activeVisualizerProfile]
-                     && Settings.settings.visualizerProfiles[Settings.settings.activeVisualizerProfile].spectrumOverlapFactor !== undefined)
-                        ? Utils.clamp(Settings.settings.visualizerProfiles[Settings.settings.activeVisualizerProfile].spectrumOverlapFactor, 0, 1)
-                        : Utils.clamp(Settings.settings.spectrumOverlapFactor, 0, 1)
-                    
-                    +
-                    (Settings.settings.visualizerProfiles
-                     && Settings.settings.visualizerProfiles[Settings.settings.activeVisualizerProfile]
-                     && Settings.settings.visualizerProfiles[Settings.settings.activeVisualizerProfile].spectrumVerticalRaise !== undefined)
-                        ? Settings.settings.visualizerProfiles[Settings.settings.activeVisualizerProfile].spectrumVerticalRaise
-                        : Settings.settings.spectrumVerticalRaise
+                    ((_vizProfile && _vizProfile.spectrumOverlapFactor !== undefined)
+                        ? _vizProfile.spectrumOverlapFactor
+                        : Settings.settings.spectrumOverlapFactor)
+                    + ((_vizProfile && _vizProfile.spectrumVerticalRaise !== undefined)
+                        ? _vizProfile.spectrumVerticalRaise
+                        : Settings.settings.spectrumVerticalRaise)
                 ))
-                height: Math.round(trackText.font.pixelSize * Settings.settings.spectrumHeightFactor)
+                height: Math.round(trackText.font.pixelSize * (
+                    (_vizProfile && _vizProfile.spectrumHeightFactor !== undefined)
+                        ? _vizProfile.spectrumHeightFactor
+                        : Settings.settings.spectrumHeightFactor))
                 // Limit spectrum width to the measured title text width
                 width: Math.ceil(titleMeasure.width)
                 values: MusicManager.cavaValues
                 amplitudeScale: 1.0
-                barGap: (function(){ var raw = (Settings.settings.visualizerProfiles && Settings.settings.visualizerProfiles[Settings.settings.activeVisualizerProfile] && Settings.settings.visualizerProfiles[Settings.settings.activeVisualizerProfile].spectrumBarGap !== undefined) ? Settings.settings.visualizerProfiles[Settings.settings.activeVisualizerProfile].spectrumBarGap : Settings.settings.spectrumBarGap; return Utils.clamp(Utils.coerceReal(raw, 1.0), 0, 10); })() * Theme.scale(Screen)
+                barGap: (((_vizProfile && _vizProfile.spectrumBarGap !== undefined)
+                           ? _vizProfile.spectrumBarGap
+                           : Settings.settings.spectrumBarGap)) * Theme.scale(Screen)
                 minBarWidth: 2 * Theme.scale(Screen)
-                mirror: (Settings.settings.visualizerProfiles && Settings.settings.visualizerProfiles[Settings.settings.activeVisualizerProfile] && Settings.settings.visualizerProfiles[Settings.settings.activeVisualizerProfile].spectrumMirror !== undefined) ? Settings.settings.visualizerProfiles[Settings.settings.activeVisualizerProfile].spectrumMirror : Settings.settings.spectrumMirror
-                drawTop: (Settings.settings.visualizerProfiles && Settings.settings.visualizerProfiles[Settings.settings.activeVisualizerProfile] && Settings.settings.visualizerProfiles[Settings.settings.activeVisualizerProfile].showSpectrumTopHalf !== undefined) ? Settings.settings.visualizerProfiles[Settings.settings.activeVisualizerProfile].showSpectrumTopHalf : Settings.settings.showSpectrumTopHalf
+                mirror: ((_vizProfile && _vizProfile.spectrumMirror !== undefined) ? _vizProfile.spectrumMirror : Settings.settings.spectrumMirror)
+                drawTop: ((_vizProfile && _vizProfile.showSpectrumTopHalf !== undefined) ? _vizProfile.showSpectrumTopHalf : Settings.settings.showSpectrumTopHalf)
                 drawBottom: true
-                fillOpacity: (function(){
-                    var raw = (Settings.settings.visualizerProfiles
-                               && Settings.settings.visualizerProfiles[Settings.settings.activeVisualizerProfile]
-                               && Settings.settings.visualizerProfiles[Settings.settings.activeVisualizerProfile].spectrumFillOpacity !== undefined)
-                        ? Settings.settings.visualizerProfiles[Settings.settings.activeVisualizerProfile].spectrumFillOpacity
-                        : (Settings.settings.spectrumFillOpacity !== undefined
-                           ? Settings.settings.spectrumFillOpacity
-                           : Theme.spectrumFillOpacity);
-                    return Utils.clamp(Utils.coerceReal(raw, Theme.spectrumFillOpacity), 0, 1);
-                })()
+                fillOpacity: ((_vizProfile && _vizProfile.spectrumFillOpacity !== undefined)
+                                  ? _vizProfile.spectrumFillOpacity
+                                  : (Settings.settings.spectrumFillOpacity !== undefined
+                                      ? Settings.settings.spectrumFillOpacity
+                                      : Theme.spectrumFillOpacity))
                 peakOpacity: Theme.spectrumPeakOpacity
                 useGradient: (Settings.settings.visualizerProfiles && Settings.settings.visualizerProfiles[Settings.settings.activeVisualizerProfile] && Settings.settings.visualizerProfiles[Settings.settings.activeVisualizerProfile].spectrumUseGradient !== undefined) ? Settings.settings.visualizerProfiles[Settings.settings.activeVisualizerProfile].spectrumUseGradient : Settings.settings.spectrumUseGradient
                 barColor: mediaControl.accentReady ? mediaControl.mediaAccent : Theme.borderSubtle
