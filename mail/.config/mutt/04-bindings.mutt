@@ -73,5 +73,7 @@ macro attach I "<pipe-entry>sh -c 'f=$(mktemp /tmp/mutt-img.XXXXXX); cat >\"$f\"
 
 # Show attach-mode hints when opening attachments
 macro pager v "<enter-command> set my_status=\"Attach: i=icat  p=PDF  I=anim\"; set ?my_status<enter><view-attachments>" "Open attachments with hints"
+macro index v "<enter-command> set my_status=\"Attach: i=icat  p=PDF  I=anim\"; set ?my_status<enter><view-attachments>" "Open attachments with hints (from index)"
+macro attach q "<enter-command> set my_status=\"\"; set ?my_status<enter><exit>" "Close attachments and clear hint"
 
 # vim: ft=muttrc syntax=neomuttrc
