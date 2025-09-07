@@ -1,9 +1,17 @@
 #!/usr/bin/env sh
+# qr: quick QR and screenshot helper
+# Usage:
+#   qr gen          # generate QR from current selection to ~/tmp/qrcode.png
+#   qr select       # select region → clipboard (PNG) + notify
+#   qr qr           # select region → scan QR → copy result + notify
+#   qr              # screenshot entire desktop → clipboard (PNG) + notify
+#   qr -h|--help    # this help
 
 alias maimselect='maim --noopengl --capturebackground --select --hidecursor --color=0.1,0.1,0.1,0.6 --highlight'
 alias clip='xclip -selection c -filter'
 
 case "$1" in
+    -h|--help) sed -n '2,12p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
     gen) qrencode -l H -d 75 -s 10 -o - "$(xsel)">~/tmp/qrcode.png ;;
     # select a region to screenshot (or click to screenshot window)
     select) maimselect | clip -t image/png; dunstify "Maim" "Screenshot taken" ;;

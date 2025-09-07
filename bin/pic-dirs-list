@@ -1,4 +1,6 @@
 #!/usr/bin/env sh
+# pic-dirs-list: index picture directories with fasd on changes
+# Usage: pic-dirs-list
 if [ -n "$XDG_PICTURES_DIR" ]; then
     inotifywait -q -m -e DELETE,ISDIR -e CREATE,ISDIR "$XDG_PICTURES_DIR"/ | while read -r _; do
     find "$XDG_PICTURES_DIR" -maxdepth 3 \

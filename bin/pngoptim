@@ -1,2 +1,10 @@
 #!/usr/bin/env sh
+# pngoptim: optimize a PNG file with optipng/advpng/advdef
+# Usage: pngoptim FILE.png
+
+if [ -z "$1" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+  printf "Usage: pngoptim FILE.png\n" >&2
+  exit 1
+fi
+
 optipng -o7 "$1" && advpng -z4 "$1" && advdef -z4 "$1"
