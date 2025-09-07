@@ -16,5 +16,7 @@ node quickshell/.config/quickshell/Tools/validate-theme.mjs \
   --constraints quickshell/.config/quickshell/Docs/ThemeConstraints.json \
   --strict
 
-echo "pre-commit: config validation passed."
+echo "Running Settings linter (unknown keys will fail):"
+node quickshell/.config/quickshell/Tools/lint-settings.mjs
 
+echo "pre-commit: config validation passed."

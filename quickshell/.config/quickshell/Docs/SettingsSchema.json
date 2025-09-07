@@ -85,6 +85,7 @@
 
     "pinnedPlayers": { "type": "array", "items": { "type": "string" }, "default": [] },
     "ignoredPlayers": { "type": "array", "items": { "type": "string" }, "default": [] },
+    "lastActivePlayers": { "type": "array", "items": { "type": "string" }, "default": [] },
     
 
     "showMediaVisualizer": { "type": "boolean", "default": false },

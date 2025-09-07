@@ -30,3 +30,11 @@ jobs:
             --constraints quickshell/.config/quickshell/Docs/ThemeConstraints.json \
             --strict
 
+      - name: Lint Settings keys (unknown fails)
+        run: |
+          node quickshell/.config/quickshell/Tools/lint-settings.mjs
+
+      - name: Lint Theme tokens (informational)
+        continue-on-error: true
+        run: |
+          node quickshell/.config/quickshell/Tools/lint-theme-tokens.mjs || true

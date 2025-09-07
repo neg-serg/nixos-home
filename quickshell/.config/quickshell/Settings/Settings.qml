@@ -97,6 +97,7 @@ Singleton {
             // Music player selection
             property var pinnedPlayers: []
             property var ignoredPlayers: []
+            property var lastActivePlayers: []
 
             // Media visualizer (CAVA/LinearSpectrum) toggle
             property bool showMediaVisualizer: false

@@ -62,6 +62,7 @@ CAVA / Spectrum (global defaults; each may be overridden per profile in visualiz
 Music Players
 - pinnedPlayers: string array, default []. Pinned players (priority).
 - ignoredPlayers: string array, default []. Players to ignore.
+- lastActivePlayers: string array, persisted. Internal list of last active players (managed by app).
 - playerSelectionPriority: string array, default ["mpdPlaying","anyPlaying","mpdRecent","recent","manual","first"]. Selection algorithm priority.
 - playerSelectionPreset: string, default "default". Preset name for priority ordering.
 
