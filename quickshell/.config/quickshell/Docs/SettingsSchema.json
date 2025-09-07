@@ -33,7 +33,7 @@
     "spectrumFillOpacity": { "type": "number", "default": 0.35, "minimum": 0, "maximum": 1, "description": "Fill opacity" },
     "spectrumHeightFactor": { "type": "number", "default": 1.2, "minimum": 0.1, "maximum": 5, "description": "Height relative to text size" },
     "spectrumOverlapFactor": { "type": "number", "default": 0.2, "minimum": 0, "maximum": 1, "description": "Overlap with text area" },
-    "spectrumBarGap": { "type": "number", "default": 1.0, "minimum": 0, "description": "Gap between bars (logical px)" },
+    "spectrumBarGap": { "type": "number", "default": 1.0, "minimum": 0, "maximum": 10, "description": "Gap between bars (logical px)" },
     "spectrumVerticalRaise": { "type": "number", "default": 0.75, "description": "Vertical offset" },
 
     "activeVisualizerProfile": { "type": "string", "default": "classic" },

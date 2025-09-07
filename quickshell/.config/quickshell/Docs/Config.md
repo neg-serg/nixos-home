@@ -109,6 +109,7 @@ Theme.json (short)
 Tools
 - Validate theme: `node Tools/validate-theme.mjs [--theme Theme.json] [--schema Docs/ThemeHierarchical.json] [--strict]`.
 - Generate theme schema: `node Tools/generate-theme-schema.mjs` (updates `Docs/ThemeHierarchical.json`).
+- Validate settings: `node Tools/validate-settings.mjs [--settings ~/.config/quickshell/Settings.json] [--schema Docs/SettingsSchema.json]`.
 
 Settings.json schema and samples
 - JSON Schema: `Docs/SettingsSchema.json` (Draft‑07) — types, defaults, and allowed values.
