@@ -353,3 +353,10 @@ fzf
 notification_history.json
 github_data.json
 home.gmail
+
+# Transmission daemon state (ignore runtime data under repo-managed path)
+misc/.config/transmission-daemon/resume/
+misc/.config/transmission-daemon/dht.dat
+misc/.config/transmission-daemon/settings.json
+misc/.config/transmission-daemon/stats.json
+misc/.config/transmission-daemon/bandwidth-groups.json
