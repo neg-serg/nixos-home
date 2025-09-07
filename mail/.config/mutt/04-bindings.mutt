@@ -63,4 +63,12 @@ macro pager V ,@aot= "toggle alternative order"
 # Usage: open attachments (v), navigate to an image, press 'i'
 macro attach i "<pipe-entry>kitty +kitten icat --transfer-mode=stream --stdin yes\n" "Preview image inline in Kitty"
 
+# Preview first page of a PDF inline in Kitty
+# Usage: in attachment list, select a PDF and press 'p'
+macro attach p "<pipe-entry>sh -c 'pdftoppm -png -singlefile -f 1 -l 1 - - 2>/dev/null | kitty +kitten icat --transfer-mode=stream --stdin yes'\n" "Preview first page of PDF in Kitty"
+
+# Preview (animated) images via a temp file to enable animation
+# Usage: in attachment list, press 'I' (capital i)
+macro attach I "<pipe-entry>sh -c 'f=$(mktemp /tmp/mutt-img.XXXXXX); cat >\"$f\"; kitty +kitten icat --transfer-mode=file \"$f\"; rm -f \"$f\"'\n" "Preview image/animation in Kitty using a temp file"
+
 # vim: ft=muttrc syntax=neomuttrc
