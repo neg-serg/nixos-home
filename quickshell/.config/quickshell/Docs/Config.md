@@ -13,7 +13,6 @@ Settings.json (all options)
 General
 - weatherCity: string, default "Moscow". City used by the weather widget.
 - userAgent: string, default "NegPanel". HTTP User‑Agent; include app name and contact if possible.
-- profileImage: string path, default `$HOME/.face`. User avatar.
 - debugLogs: boolean, default false. Enables low‑importance debug logs.
 - debugNetwork: boolean, default false. Extra logging for network layer.
 - strictThemeTokens: boolean, default false. Strict warnings for missing/deprecated Theme tokens (see ThemeTokens.md).
@@ -33,18 +32,13 @@ Bar/Widgets
 - collapseSystemTray: boolean, default true. Collapse tray icons.
 - collapsedTrayIcon: string, default "expand_more". Icon when tray is collapsed (Material icon name).
 - trayFallbackIcon: string, default "broken_image". Fallback tray icon name.
-- trayAccentColor: color string, default "#3b7bb3". Tray button/icon accent color.
-- trayPopupDarkness: number 0..1, default 0.65. Darkness blend for tray popups.
-- trayAccentBrightness: number 0..1, default 0.25. Accent brightness relative to calendar accent.
 
 Monitors & Scaling
 - barMonitors: string array, default []. Which monitors show the bar (optional; otherwise automatic).
-- dockMonitors: string array, default []. Monitors for dock (if used).
 - monitorScaleOverrides: object { "ScreenName": number }, default {}. Per‑monitor UI scale keyed by `Screen.name`.
 
 Media & Visualizer
 - showMediaVisualizer: boolean, default false. Enable visualizer (spectrum) next to track.
-- visualizerType: string, default "radial". Visualizer type identifier (reserved; current UI uses linear spectrum).
 - activeVisualizerProfile: string, default "classic". Active visualizer profile name.
 - visualizerProfiles: object of profiles keyed by name. Each profile can override CAVA/spectrum parameters below.
 - timeBracketStyle: string, default "round". Brackets for RichText: round|square|lenticular|lenticular_black|angle|tortoise.
@@ -78,8 +72,6 @@ Media side panel popup
 
 Contrast & Accessibility
 - contrastThreshold: number, default 0.5. Threshold for light/dark text selection against backgrounds.
-- enforceContrastWarnings: boolean, default false. Stronger warnings for low contrast.
-- debugContrast: boolean, default false. Contrast calculation debug.
 - contrastWarnRatio: number, default 4.5. Target contrast ratio for warnings.
 
 Network
@@ -117,7 +109,7 @@ Settings.json schema and samples
   - `Docs/SettingsMinimal.json` — minimal typical overrides.
   - `Docs/SettingsVisualizerSoft.json` — a soft visualizer profile and activation.
 
-Подсказки
-- Значения цветов — строка в формате `#RRGGBB` или `#AARRGGBB`.
-- Целые величины — логические пиксели до масштабирования экрана; в рантайме масштабируются функцией `Theme.scale(Screen)` и пер‑мониторными настройками.
-- Если не уверены в конкретном токене темы — ищите его использование в `Settings/Theme.qml` и документации `Docs/ThemeTokens.md`.
+Tips
+- Color values: `#RRGGBB` or `#AARRGGBB`.
+- Integers are logical px before per-screen scaling; runtime scales via `Theme.scale(Screen)` and per-monitor overrides.
+- Unsure about a token? Search for it in `Settings/Theme.qml` and `Docs/ThemeTokens.md`.

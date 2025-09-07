@@ -7,7 +7,6 @@
   "properties": {
     "weatherCity": { "type": "string", "default": "Moscow", "description": "City for weather widget" },
     "userAgent": { "type": "string", "default": "NegPanel", "description": "HTTP User-Agent string" },
-    "profileImage": { "type": "string", "description": "Path to user avatar image" },
 
     "debugLogs": { "type": "boolean", "default": false, "description": "Enable low-importance debug logs" },
     "debugNetwork": { "type": "boolean", "default": false, "description": "Enable extra network debug logs" },
@@ -16,7 +15,7 @@
     "useFahrenheit": { "type": "boolean", "default": false, "description": "Use Fahrenheit temperatures" },
     "showMediaInBar": { "type": "boolean", "default": false, "description": "Show media block in bar" },
     "showWeatherInBar": { "type": "boolean", "default": false, "description": "Show weather button in bar" },
-    "visualizerType": { "type": "string", "default": "radial", "description": "Visualizer type identifier" },
+    
     "reverseDayMonth": { "type": "boolean", "default": false, "description": "Flip day and month order" },
     "use12HourClock": { "type": "boolean", "default": false, "description": "12-hour time format" },
     "dimPanels": { "type": "boolean", "default": true, "description": "Dim panel appearance" },
@@ -69,7 +68,7 @@
     "mediaTitleSeparator": { "type": "string", "default": "—", "description": "Artist/title separator" },
 
     "barMonitors": { "type": "array", "items": { "type": "string" }, "default": [] },
-    "dockMonitors": { "type": "array", "items": { "type": "string" }, "default": [] },
+    
     "monitorScaleOverrides": {
       "type": "object",
       "default": {},
@@ -82,15 +81,11 @@
     "trayFallbackIcon": { "type": "string", "default": "broken_image" },
 
     "contrastThreshold": { "type": "number", "default": 0.5, "minimum": 0, "maximum": 1, "description": "Threshold for light/dark text selection" },
-    "enforceContrastWarnings": { "type": "boolean", "default": false, "description": "Stronger low-contrast warnings" },
-    "debugContrast": { "type": "boolean", "default": false, "description": "Contrast calculations debug" },
     "contrastWarnRatio": { "type": "number", "default": 4.5, "minimum": 1, "description": "Target contrast ratio for warnings" },
 
     "pinnedPlayers": { "type": "array", "items": { "type": "string" }, "default": [] },
     "ignoredPlayers": { "type": "array", "items": { "type": "string" }, "default": [] },
-    "trayAccentColor": { "type": "string", "default": "#3b7bb3", "description": "Tray accent color" },
-    "trayPopupDarkness": { "type": "number", "default": 0.65, "minimum": 0, "maximum": 1, "description": "Tray popup darkness blend" },
-    "trayAccentBrightness": { "type": "number", "default": 0.25, "minimum": 0, "maximum": 1, "description": "Tray accent brightness vs calendar" },
+    
 
     "showMediaVisualizer": { "type": "boolean", "default": false },
 
