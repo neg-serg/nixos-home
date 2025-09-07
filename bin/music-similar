@@ -1,4 +1,13 @@
 #!/usr/bin/env python3
+"""Query similar tracks from a prebuilt Annoy index.
+
+Usage:
+  music-similar [--index DIR] [-k N] [AUDIO]
+
+Description:
+  If AUDIO is omitted, the current track is read via playerctl. Prints
+  distance and path per line for the top-N neighbors.
+"""
 import argparse
 import json
 import os
@@ -112,4 +121,3 @@ def main():
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

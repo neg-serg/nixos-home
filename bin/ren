@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 
-""" Script to rename files to my own pretty naming format.
+""" Pretty file renamer (normalize to personal naming scheme).
+
 Usage:
-    ./ren FILES ...
-    ./ren -i FILES ...
+    ren [-i] FILES ...
 
 Options:
+    -i      apply changes in-place (otherwise only print the mapping)
     FILES   input file list
-    -i      change file name, not print only.
 
 Created by :: Neg
 email :: <serg.zorg@gmail.com>
