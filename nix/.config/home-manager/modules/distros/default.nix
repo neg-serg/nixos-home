@@ -1,10 +1,6 @@
 {pkgs, ...}: {
   nixpkgs.config.allowUnfree = true;
   programs.distrobox = {
-    # tool try various distros in cli
-    enable = true;
+    enable = true; # tool try various distros in cli
   };
-  home.packages = with pkgs; [
-    ventoy-full # create bootable usb
-  ];
 }
