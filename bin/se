@@ -1,4 +1,13 @@
 #!/usr/bin/env zsh
+# se: simple extractor for common archive formats
+# Usage:
+#   se [here] FILE
+#   Extracts FILE based on extension. If 'here' is specified, extracts into
+#   the current directory (behavior may vary per format). Without 'here',
+#   attempts to extract into a subdirectory named after FILE.
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+  sed -n '2,6p' "$0" | sed 's/^# \{0,1\}//'; exit 0
+fi
 
 main() {
     if [[ -f $1 ]]; then

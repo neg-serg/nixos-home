@@ -1,4 +1,13 @@
 #!/usr/bin/env zsh
+# swayimg-actions: actions for images (rotate/move/copy/wallpaper) used by swayimg
+# Usage:
+#   swayimg-actions.sh <action> <file> [dest]
+# Actions:
+#   rotate-{left,right,180,ccw} | copyname | repeat | mv | cp |
+#   wall-{mono,fill,full,tile,center,cover}
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+  sed -n '2,7p' "$0" | sed 's/^# \{0,1\}//'; exit 0
+fi
 
 set -eu
 cache="${HOME}/tmp"

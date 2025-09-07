@@ -1,4 +1,11 @@
 #!/usr/bin/env zsh
+# iommu-info: list or reset IOMMU groups
+# Usage: iommu-info [r|reset]
+#   Without args: list IOMMU groups and devices. With 'r' or 'reset':
+#   show groups highlighting devices supporting reset.
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+  sed -n '2,5p' "$0" | sed 's/^# \{0,1\}//'; exit 0
+fi
 
 valid_groups(){
     for d in /sys/kernel/iommu_groups/*/devices/*; do

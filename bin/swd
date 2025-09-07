@@ -1,4 +1,21 @@
 #!/usr/bin/env bash
+# swd: download a random wallpaper from wallhaven.cc with filters
+# Usage:
+#   swd [options]
+# Options:
+#   -C, --colors HEX[,HEX...]   dominant colors (e.g. 424153)
+#   -a, --atleast WxH           minimum resolution (default: 3840x2160)
+#   -p, --purity STR            purity flags (SFW=100, Sketchy=010, Both=110)
+#   -c, --categories STR        categories (General=100, Anime=010, People=001)
+#   -r, --ratios LIST           aspect ratios (e.g. 16x9,21x9)
+#   -s, --sorting MODE          latest|views|toplist|favorites|random
+#   -o, --order ORDER           asc|desc (default: desc)
+#   -l, --location DIR          download directory (default: ~/pic/wl)
+#   -h, --help                  show this help
+
+if [[ "$1" == "-h" || "$1" == "--help" || "$1" == "help" ]]; then
+  sed -n '2,14p' "$0" | sed 's/^# \{0,1\}//'; exit 0
+fi
 # TODO: create swd for unsplash
 location="/home/neg/pic/wl"
 atleast="3840x2160"
