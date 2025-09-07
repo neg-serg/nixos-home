@@ -9,7 +9,13 @@
     "outline": "#3B4C5C",
     "text": {
       "primary": "#CBD6E5",
-      "secondary": "#AEB9C8"
+      "secondary": "#AEB9C8",
+      "disabled": "#6B718A"
+    },
+    "shadow": "#000000",
+    "status": {
+      "error": "#FF6B81",
+      "warning": "#FFBB66"
     },
     "highlight": "#94E1F9",
     "onAccent": "#FFFFFF"
@@ -103,7 +109,8 @@
       "spacing": 0,
       "slideMs": 220,
       "autoHideMs": 4000,
-      "outerMargin": 4
+      "outerMargin": 4,
+      "radius": 10
     },
     "cornerRadius": 9,
     "innerRadius": 0,
@@ -147,6 +154,7 @@
         "thickness": 7,
         "angleDeg": 30,
         "inset": 4,
+        "stripeOpacity": 0.9,
         "stripeBrightness": 0.4,
         "stripeRatio": 0.35
       }
@@ -156,6 +164,12 @@
     },
     "icon": {
       "emphasisOpacity": 0.9
+    },
+    "shadow": {
+      "opacity": 0.6,
+      "blur": 0.8,
+      "offsetX": 0,
+      "offsetY": 1
     },
     "anim": {
       "quickMs": 120,
@@ -207,7 +221,8 @@
     "submap": {
       "icon": {
         "baselineOffset": 0,
-        "color": "#006FCC"
+        "color": "#006FCC",
+        "overrides": {}
       }
     },
     "label": {
@@ -254,6 +269,15 @@
     },
     "albumArt": {
       "fallbackOpacity": 0.4
+    },
+    "accent": {
+      "samplerPx": 48,
+      "retryMs": 120,
+      "retryMax": 5,
+      "satMin": 10,
+      "lumMin": 20,
+      "lumMax": 235,
+      "relaxed": { "satMin": 8, "lumMin": 20, "lumMax": 240 }
     }
   },
   "spectrum": {
@@ -269,6 +293,10 @@
     "rowSpacing": 2,
     "cellSpacing": 2,
     "sideMargin": 2,
+    "popupMargin": 2,
+    "borderWidth": 1,
+    "cellSize": 28,
+    "holidayDotSize": 3,
     "font": {
       "titlePx": 18,
       "dowPx": 15,
@@ -281,11 +309,20 @@
     },
     "dow": {
       "spacing": 0,
-      "sideMargin": 0
+      "sideMargin": 0,
+      "italic": true,
+      "underline": true
     },
+    "cell": { "radiusFactor": 0.33 },
+    "holidayDot": { "radiusFactor": 0.5 },
     "grid": {
       "spacing": 0
-    }
+    },
+    "size": {
+      "width": 280,
+      "height": 320
+    },
+    "accentDarken": 0.8
   },
   "weather": {
     "headerScale": 0.75,
@@ -350,22 +387,7 @@
       "icon": "#AEB9C8"
     }
   },
-  "sidePanel": {
-    "popup": {
-      "radius": 10
-    }
-  },
-  "media": {
-    "accent": {
-      "samplerPx": 48,
-      "retryMs": 120,
-      "retryMax": 5,
-      "satMin": 10,
-      "lumMin": 20,
-      "lumMax": 235,
-      "relaxed": { "satMin": 8, "lumMin": 20, "lumMax": 240 }
-    }
-  },
+  
   "volume": {
     "icon": {
       "offThreshold": 0,
