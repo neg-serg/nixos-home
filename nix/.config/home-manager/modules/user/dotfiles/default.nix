@@ -43,6 +43,7 @@ in {
     # █▓▒░ launcher ─────────────────────────────────────────────────────────────────────
     "rofi" = mkSymlink "rofi/.config/rofi" true;
     "fuzzel" = mkSymlink "fuzzel/.config/fuzzel" true;
+    "walker" = mkSymlink "walker/.config/walker" true;
 
     # █▓▒░ shell ────────────────────────────────────────────────────────────────────────
     "dircolors" = mkSymlink "shell/.config/dircolors" true;

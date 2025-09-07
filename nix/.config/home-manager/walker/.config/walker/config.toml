@@ -1,0 +1,11 @@
+theme = "neg"
+hotreload_theme = false
+
+[search]
+placeholder = "Search..."
+
+[list]
+max_entries = 50
+single_click = true
+visibility_threshold = 20
+
