@@ -1,2 +1,4 @@
 #!/usr/bin/env nu
+# wl: set a random wallpaper from ~/pic/wl or ~/pic/black using swww
+# Usage: wl
 swww img --transition-fps 240 (ls -f ...(glob ~/pic/{wl,black}/**/*) | shuffle | first | get name)

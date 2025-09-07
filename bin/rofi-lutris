@@ -1,4 +1,13 @@
 #!/usr/bin/env python3
+"""Rofi launcher for Lutris games.
+
+Usage:
+  rofi-lutris
+
+Description:
+  Lists installed Lutris games (lutris -ojl), lets you pick via rofi, then
+  starts the selected game (lutris:rungameid/<id>).
+"""
 
 # Original source taken from: https://github.com/Marco98/rofi-lutris
 import json
