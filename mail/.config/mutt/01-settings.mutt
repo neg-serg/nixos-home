@@ -1,6 +1,4 @@
-set shell="/bin/zsh"
 set charset=utf-8                      # Local charset
-set send_charset="utf-8"
 set use_from=yes
 set attribution="On %d, %n wrote:"
 set editor="nvim +':set textwidth=0' +':set wrapmargin=0' +':set wrap'"
@@ -14,7 +12,6 @@ set include=yes                        # Include message in replies (quoting)
 set quit=yes                           # Confirm exit
 set recall=ask-yes                     # Confirm working with unsent messages
 unset confirmappend                    # Don't prompt when appending to mbox
-set allow_8bit                         # Allow 8-bit transfer-encoding
 set abort_nosubject=no                 # Don't abort on empty subject
 set attach_split                       # Store attachments separately
 set fast_reply                         # Skip To/Cc/Subject when replying
@@ -80,11 +77,15 @@ unsubscribe *
 timeout-hook 'exec sync-mailbox'
 
 # notmuch defaults and virtual mailboxes (shared across profiles)
-set nm_default_uri = "notmuch:///home/neg/.local/mail/"
+set nm_default_uri = "notmuch://$HOME/.local/mail"
 virtual-mailboxes \
   "gmail"   "notmuch://?query=tag:gmail-inbox" \
   "Archive" "notmuch://?query=tag:archive" \
   "Spam"    "notmuch://?query=tag:spam" \
-  "Trash"   "notmuch://?query=tag:trash"
+  "Trash"   "notmuch://?query=tag:trash" \
+  "Unread"  "notmuch://?query=tag:gmail-inbox and tag:unread and not tag:spam" \
+  "Today"   "notmuch://?query=date:today and tag:gmail-inbox and not tag:spam" \
+  "ToMe"    "notmuch://?query=(to:serg.zorg@gmail.com or cc:serg.zorg@gmail.com) and not tag:spam" \
+  "Flagged" "notmuch://?query=tag:flagged and not tag:spam"
 
 # vim: ft=muttrc syntax=neomuttrc
