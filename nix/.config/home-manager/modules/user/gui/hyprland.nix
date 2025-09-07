@@ -20,11 +20,6 @@ in {
         "${pkgs.grim}/bin/grim, screencopy, allow"
         "${pkgs.hyprlock}/bin/hyprlock, screencopy, allow"
       ];
-      # Make the Clipse window taller and narrower
-      windowrulev2 = [
-        "float,class:(clipse)"
-        "size 560 900,class:(clipse)"
-      ];
     };
     plugins = [
       hy3Plugin
