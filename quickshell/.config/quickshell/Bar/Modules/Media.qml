@@ -28,6 +28,8 @@ Item {
     // Accent derived from current cover art (dominant color)
     property color mediaAccent: Theme.accentPrimary
     property string mediaAccentCss: Format.colorCss(mediaAccent, 1)
+    // Cache of computed accents keyed by cover URL to avoid flicker on track changes
+    property var _accentCache: ({})
     // Use the same accent for minus and brackets (simplified)
     // Version bump to force RichText recompute on accent changes
     property int accentVersion: 0
@@ -36,7 +38,32 @@ Item {
     onMediaAccentChanged: { accentVersion++; }
     Component.onCompleted: { colorSampler.requestPaint(); accentRetry.restart() }
     onVisibleChanged: { if (visible) { colorSampler.requestPaint(); accentRetry.restart() } }
-    Connections { target: MusicManager; function onCoverUrlChanged() { mediaControl.accentReady = false; colorSampler.requestPaint(); accentRetry.restart() } function onTrackAlbumChanged() { mediaControl.accentReady = false; colorSampler.requestPaint(); accentRetry.restart() } }
+    // When cover/album changes, reuse cached accent (if any) to avoid UI flicker while sampling
+    Connections {
+        target: MusicManager
+        function onCoverUrlChanged() {
+            try {
+                const url = MusicManager.coverUrl || "";
+                if (mediaControl._accentCache && mediaControl._accentCache[url]) {
+                    mediaControl.mediaAccent = mediaControl._accentCache[url];
+                    mediaControl.accentReady = true;
+                } // else keep previous accent/color and readiness until sampler updates
+            } catch (e) { /* ignore */ }
+            colorSampler.requestPaint();
+            accentRetry.restart();
+        }
+        function onTrackAlbumChanged() {
+            try {
+                const url = MusicManager.coverUrl || "";
+                if (mediaControl._accentCache && mediaControl._accentCache[url]) {
+                    mediaControl.mediaAccent = mediaControl._accentCache[url];
+                    mediaControl.accentReady = true;
+                } // else keep previous accent/color and readiness until sampler updates
+            } catch (e) { /* ignore */ }
+            colorSampler.requestPaint();
+            accentRetry.restart();
+        }
+    }
     // Retry sampler a few times while UI/cover settles
     property int _accentRetryCount: 0
     // Active visualizer profile (if any). Settings are schema-validated, so no clamps here.
@@ -87,7 +114,63 @@ Item {
                 Canvas {
                     id: colorSampler
                     width: Theme.mediaAccentSamplerPx; height: Theme.mediaAccentSamplerPx; visible: false
-                    onPaint: { try { var ctx = getContext('2d'); ctx.clearRect(0, 0, width, height); if (!cover.visible) { mediaControl.mediaAccent = Theme.accentPrimary; mediaControl.accentReady = false; return; } ctx.drawImage(cover, 0, 0, width, height); var img = ctx.getImageData(0, 0, width, height); var data = img.data; var len = data.length; var rs=0, gs=0, bs=0, n=0; for (var i=0; i<len; i+=4) { var a = data[i+3]; if (a < 128) continue; var r = data[i], g = data[i+1], b = data[i+2]; var maxv = Math.max(r,g,b), minv = Math.min(r,g,b); var sat = maxv - minv; if (sat < 10) continue; var lum = (r+g+b)/3; if (lum < 20 || lum > 235) continue; rs += r; gs += g; bs += b; ++n; } if (n === 0) { rs=0; gs=0; bs=0; n=0; for (var j=0; j<len; j+=4) { var a2 = data[j+3]; if (a2 < 128) continue; var r2 = data[j], g2 = data[j+1], b2 = data[j+2]; var max2 = Math.max(r2,g2,b2), min2 = Math.min(r2,g2,b2); var sat2 = max2 - min2; if (sat2 < 8) continue; var lum2 = (r2+g2+b2)/3; if (lum2 < 20 || lum2 > 240) continue; rs += r2; gs += g2; bs += b2; ++n; } } if (n > 0) { var rr = Math.min(255, Math.round(rs/n)); var gg = Math.min(255, Math.round(gs/n)); var bb = Math.min(255, Math.round(bs/n)); mediaControl.mediaAccent = Qt.rgba(rr/255.0, gg/255.0, bb/255.0, 1); mediaControl.accentReady = true; } else { mediaControl.mediaAccent = Theme.accentPrimary; mediaControl.accentReady = false; } } catch (e) { /* ignore */ } }
+                    onPaint: {
+                        try {
+                            var ctx = getContext('2d');
+                            ctx.clearRect(0, 0, width, height);
+                            var url = MusicManager.coverUrl || "";
+                            if (!cover.visible) {
+                                // If cover isn't ready yet, prefer cached accent (if available) and keep UI steady
+                                if (mediaControl._accentCache && mediaControl._accentCache[url]) {
+                                    mediaControl.mediaAccent = mediaControl._accentCache[url];
+                                    mediaControl.accentReady = true;
+                                }
+                                return;
+                            }
+                            ctx.drawImage(cover, 0, 0, width, height);
+                            var img = ctx.getImageData(0, 0, width, height);
+                            var data = img.data; var len = data.length;
+                            var rs=0, gs=0, bs=0, n=0;
+                            for (var i=0; i<len; i+=4) {
+                                var a = data[i+3]; if (a < 128) continue;
+                                var r = data[i], g = data[i+1], b = data[i+2];
+                                var maxv = Math.max(r,g,b), minv = Math.min(r,g,b);
+                                var sat = maxv - minv; if (sat < 10) continue;
+                                var lum = (r+g+b)/3; if (lum < 20 || lum > 235) continue;
+                                rs += r; gs += g; bs += b; ++n;
+                            }
+                            if (n === 0) {
+                                rs=0; gs=0; bs=0; n=0;
+                                for (var j=0; j<len; j+=4) {
+                                    var a2 = data[j+3]; if (a2 < 128) continue;
+                                    var r2 = data[j], g2 = data[j+1], b2 = data[j+2];
+                                    var max2 = Math.max(r2,g2,b2), min2 = Math.min(r2,g2,b2);
+                                    var sat2 = max2 - min2; if (sat2 < 8) continue;
+                                    var lum2 = (r2+g2+b2)/3; if (lum2 < 20 || lum2 > 240) continue;
+                                    rs += r2; gs += g2; bs += b2; ++n;
+                                }
+                            }
+                            if (n > 0) {
+                                var rr = Math.min(255, Math.round(rs/n));
+                                var gg = Math.min(255, Math.round(gs/n));
+                                var bb = Math.min(255, Math.round(bs/n));
+                                var col = Qt.rgba(rr/255.0, gg/255.0, bb/255.0, 1);
+                                mediaControl.mediaAccent = col;
+                                mediaControl.accentReady = true;
+                                // Update cache for this cover
+                                if (mediaControl._accentCache) mediaControl._accentCache[url] = col;
+                            } else {
+                                // Sampling failed; try cached accent for this cover before falling back
+                                if (mediaControl._accentCache && mediaControl._accentCache[url]) {
+                                    mediaControl.mediaAccent = mediaControl._accentCache[url];
+                                    mediaControl.accentReady = true;
+                                } else {
+                                    mediaControl.mediaAccent = Theme.accentPrimary;
+                                    mediaControl.accentReady = false;
+                                }
+                            }
+                        } catch (e) { /* ignore */ }
+                    }
                 }
 
                 MaterialIcon {
