@@ -9,14 +9,14 @@
     defaultOptions = [
       # Key bindings & quick actions
       "--bind=alt-p:toggle-preview,alt-a:select-all,alt-s:toggle-sort"
-      "--bind 'alt-d:change-prompt(Directories> )+reload(fd . -t d)'"
-      "--bind 'alt-f:change-prompt(Files> )+reload(fd . -t f)'"
-      "--bind 'ctrl-j:execute(~/bin/v '{+}')+abort'"
-      "--bind 'ctrl-space:select-all'"
-      "--bind 'ctrl-t:accept'"
-      "--bind 'ctrl-v:execute(~/bin/v '{+}')'"
-      "--bind 'ctrl-y:execute-silent(echo '{+}' | xclip -i)'"
-      "--bind 'tab:execute(handlr open '{+}')+abort'"
+      "--bind=alt-d:change-prompt(Directories> )+reload(fd . -t d)"
+      "--bind=alt-f:change-prompt(Files> )+reload(fd . -t f)"
+      "--bind=ctrl-j:execute(~/bin/v {+})+abort"
+      "--bind=ctrl-space:select-all"
+      "--bind=ctrl-t:accept"
+      "--bind=ctrl-v:execute(~/bin/v {+})"
+      "--bind=ctrl-y:execute-silent(echo {+} | xclip -i)"
+      "--bind=tab:execute(handlr open {+})+abort"
 
       # UI/UX polish
       "--ansi"
@@ -26,7 +26,7 @@
       "--margin=1,2"
       "--padding=1"
       "--header-first"
-      "--header='[Alt-f] Files  [Alt-d] Dirs  [Alt-p] Preview  [Alt-s] Sort  [Tab] Open'"
+      "--header=[Alt-f] Files  [Alt-d] Dirs  [Alt-p] Preview  [Alt-s] Sort  [Tab] Open"
 
       # Search behavior: exact by default; quote for subsequence
       "--exact"
@@ -39,7 +39,9 @@
       "--no-mouse"
 
       # Prompt & symbols (Nerd Font friendly)
-      "--prompt='  ' --pointer='▶' --marker='✓'"
+      "--prompt=  "
+      "--pointer=▶"
+      "--marker=✓"
       "--with-nth=1.."
 
       # Preview (hidden by default; toggle with Alt-p). Rich preview for files/dirs.
@@ -59,9 +61,7 @@
 
     # FZF_CTRL_T_OPTS
     fileWidgetOptions = [
-      "--border=rounded --margin=1,2 --padding=1"
-      "--preview 'if [ -d "{}" ]; then (eza --tree --icons=auto -L 2 --color=always "{}" 2>/dev/null || tree -C -L 2 "{}" 2>/dev/null); else (bat --style=plain --color=always --line-range :200 "{}" 2>/dev/null || highlight -O ansi -l "{}" 2>/dev/null || head -200 "{}" 2>/dev/null || file -b "{}" 2>/dev/null); fi'"
-      "--preview-window right,60%,border-left,wrap"
+      "--border=rounded --margin=1,2 --padding=1 --preview 'if [ -d \"{}\" ]; then (eza --tree --icons=auto -L 2 --color=always \"{}\" 2>/dev/null || tree -C -L 2 \"{}\" 2>/dev/null); else (bat --style=plain --color=always --line-range :200 \"{}\" 2>/dev/null || highlight -O ansi -l \"{}\" 2>/dev/null || head -200 \"{}\" 2>/dev/null || file -b \"{}\" 2>/dev/null); fi' --preview-window=right,60%,border-left,wrap"
     ];
 
     # Catppuccin-like dark theme (works well with Nerd Fonts)
