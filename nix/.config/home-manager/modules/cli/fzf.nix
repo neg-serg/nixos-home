@@ -9,8 +9,8 @@
     defaultOptions = builtins.filter (x: builtins.typeOf x == "string") [
       # Key bindings & quick actions
       "--bind='alt-p:toggle-preview,alt-a:select-all,alt-s:toggle-sort'"
-      "--bind='alt-d:change-prompt(Directories> )+reload(fd . -t d)'"
-      "--bind='alt-f:change-prompt(Files> )+reload(fd . -t f)'"
+      "--bind='alt-d:change-prompt(Directories ❯ )+reload(fd . -t d)'"
+      "--bind='alt-f:change-prompt(Files ❯ )+reload(fd . -t f)'"
       "--bind='ctrl-j:execute(~/bin/v {+})+abort'"
       "--bind='ctrl-space:select-all'"
       "--bind='ctrl-t:accept'"
@@ -40,7 +40,7 @@
       "--no-mouse"
 
       # Prompt & symbols (Nerd Font friendly)
-      "--prompt=  "
+      "--prompt=❯  "
       "--pointer=▶"
       "--marker=✓"
       "--with-nth=1.."
