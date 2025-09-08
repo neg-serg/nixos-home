@@ -80,21 +80,23 @@ in {
     ./shell.nix # shells which not in nixOs and their completions
     ./yazi.nix
   ];
-  programs = {
-    hwatch = {enable = true;}; # better watch with history
-    kubecolor = {enable = true;}; # kubectl colorizer
-    nix-search-tv = {enable = true;}; # fast search for nix packages
-    numbat = {enable = true;}; # fancy scientific calculator
-    television = {enable = true;}; # yet another fuzzy finder
-    tray-tui = {enable = true;}; # system tray in your terminal
-    visidata = {enable = true;}; # interactive multitool for tabular data
+  config = {
+    programs = {
+      hwatch = {enable = true;}; # better watch with history
+      kubecolor = {enable = true;}; # kubectl colorizer
+      nix-search-tv = {enable = true;}; # fast search for nix packages
+      numbat = {enable = true;}; # fancy scientific calculator
+      television = {enable = true;}; # yet another fuzzy finder
+      tray-tui = {enable = true;}; # system tray in your terminal
+      visidata = {enable = true;}; # interactive multitool for tabular data
+    };
+    home.packages =
+      (optionals config.features.cli.text groups.text)
+      ++ (optionals config.features.cli.fs groups.fs)
+      ++ (optionals config.features.cli.net groups.net)
+      ++ (optionals config.features.cli.obs groups.obs)
+      ++ (optionals config.features.cli.sys groups.sys)
+      ++ (optionals config.features.cli.dev groups.dev)
+      ++ [ pkgs.tealdeer ]; # tldr replacement written in Rust
   };
-  home.packages =
-    (optionals config.features.cli.text groups.text)
-    ++ (optionals config.features.cli.fs groups.fs)
-    ++ (optionals config.features.cli.net groups.net)
-    ++ (optionals config.features.cli.obs groups.obs)
-    ++ (optionals config.features.cli.sys groups.sys)
-    ++ (optionals config.features.cli.dev groups.dev)
-    ++ [ pkgs.tealdeer ]; # tldr replacement written in Rust
 }
