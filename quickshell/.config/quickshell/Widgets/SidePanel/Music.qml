@@ -256,7 +256,16 @@ Rectangle {
                             visible: source && source.toString() !== ""
                             onStatusChanged: {
                                 if (status === Image.Ready) {
-                                    detailsCol.musicAccentReady = false;
+                                    // Reuse cached accent (if any) to avoid flicker while sampling new cover
+                                    try {
+                                        const url = MusicManager.coverUrl || "";
+                                        if (detailsCol._accentCache && detailsCol._accentCache[url]) {
+                                            detailsCol.musicAccent = detailsCol._accentCache[url];
+                                            detailsCol.musicAccentReady = true;
+                                        } else {
+                                            detailsCol.musicAccentReady = false;
+                                        }
+                                    } catch (e) { /* ignore */ }
                                     detailsCol._accentRetryCount = 0;
                                     accentSampler.requestPaint();
                                     musicAccentRetry.restart();
@@ -275,7 +284,14 @@ Rectangle {
                             try {
                                 var ctx = getContext('2d');
                                 ctx.clearRect(0, 0, width, height);
-                                if (!albumArt.visible) { detailsCol.musicAccent = Theme.accentPrimary; detailsCol.musicAccentReady = false; return; }
+                                var url = MusicManager.coverUrl || "";
+                                if (!albumArt.visible) {
+                                    if (detailsCol._accentCache && detailsCol._accentCache[url]) {
+                                        detailsCol.musicAccent = detailsCol._accentCache[url];
+                                        detailsCol.musicAccentReady = true;
+                                    }
+                                    return;
+                                }
                                 ctx.drawImage(albumArt, 0, 0, width, height);
                                 var img = ctx.getImageData(0, 0, width, height);
                                 var data = img.data; var len = data.length;
@@ -304,11 +320,18 @@ Rectangle {
                                     var rr = Math.min(255, Math.round(rs/n));
                                     var gg = Math.min(255, Math.round(gs/n));
                                     var bb = Math.min(255, Math.round(bs/n));
-                                    detailsCol.musicAccent = Qt.rgba(rr/255.0, gg/255.0, bb/255.0, 1);
+                                    var col = Qt.rgba(rr/255.0, gg/255.0, bb/255.0, 1);
+                                    detailsCol.musicAccent = col;
                                     detailsCol.musicAccentReady = true;
+                                    if (detailsCol._accentCache) detailsCol._accentCache[url] = col;
                                 } else {
-                                    detailsCol.musicAccent = Theme.accentPrimary;
-                                    detailsCol.musicAccentReady = false;
+                                    if (detailsCol._accentCache && detailsCol._accentCache[url]) {
+                                        detailsCol.musicAccent = detailsCol._accentCache[url];
+                                        detailsCol.musicAccentReady = true;
+                                    } else {
+                                        detailsCol.musicAccent = Theme.accentPrimary;
+                                        detailsCol.musicAccentReady = false;
+                                    }
                                 }
                                 } catch (e) { /* ignore */ }
                             } }
@@ -365,6 +388,8 @@ Rectangle {
                             property color musicAccent: Theme.accentPrimary
                             property string musicAccentCss: Format.colorCss(musicAccent, 1)
                             property bool musicAccentReady: false
+                            // Cache accent per cover URL to avoid flicker on track changes
+                            property var _accentCache: ({})
                             // Retry sampler a few times until cover is fully ready
                             property int _accentRetryCount: 0
                             Timer { id: musicAccentRetry; interval: Theme.mediaAccentRetryMs; repeat: false; onTriggered: { accentSampler.requestPaint(); if (!detailsCol.musicAccentReady && detailsCol._accentRetryCount < Theme.mediaAccentRetryMax) { detailsCol._accentRetryCount++; start(); } else { detailsCol._accentRetryCount = 0 } } }
