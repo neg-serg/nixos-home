@@ -31,8 +31,8 @@
       "--exact"
 
       # Sizing: compact by default but more breathable
-      "--height=12"
-      "--min-height=10"
+      "--height=16"
+      "--min-height=14"
       "--info=inline"
       "--multi"
       "--no-mouse"
