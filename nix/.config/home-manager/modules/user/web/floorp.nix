@@ -63,7 +63,7 @@ in {
         "privacy.resistFingerprinting.block_mozAddonManager" = true;
 
         # PDF viewer
-        "pdfjs.disabled" = false;
+        "pdfjs.disabled" = true;
         "pdfjs.enableScripting" = false;
         "pdfjs.enableXFA" = false;
 
