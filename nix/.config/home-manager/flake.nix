@@ -101,12 +101,7 @@
       url = "github:miuirussia/yandex-browser.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    treefmt-nix = {
-      # Use git+https to avoid GitHub API rate limits for `github:` scheme
-      url = "git+https://github.com/numtide/treefmt-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    };
+  };
 
   outputs = inputs @ {
     self,
@@ -124,7 +119,6 @@
     sops-nix,
     stylix,
     yandex-browser,
-    treefmt-nix,
     ...
   }:
     let
@@ -152,22 +146,6 @@
             iosevkaneg = iosevka-neg.packages.${system};
             yandexBrowser = yandex-browser.packages.${system};
             _bzmenu = bzmenu.packages.${system};
-          in let
-            treefmtEval = treefmt-nix.lib.evalModule pkgs {
-              projectRootFile = "flake.nix";
-              # Formatters/checkers
-              programs.alejandra.enable = true;
-              programs.deadnix.enable = true;
-              programs.statix.enable = true;
-              # Optional: reduce noise
-              settings.global = {
-                excludes = [
-                  "flake.lock"
-                  ".git/*"
-                  "secrets/crypted/*"
-                ];
-              };
-            };
           in {
             inherit pkgs iosevkaneg yandexBrowser;
 
@@ -210,10 +188,25 @@
               hy3Plugin = hy3.packages.${system}.hy3;
             };
 
-            formatter = treefmtEval.config.build.wrapper;
+            # Formatter: treefmt wrapper pinned to repo config
+            formatter = pkgs.writeShellApplication {
+              name = "fmt";
+              runtimeInputs = [pkgs.treefmt pkgs.alejandra pkgs.statix pkgs.deadnix];
+              text = ''
+                set -euo pipefail
+                exec treefmt -c ${./treefmt.toml} "$@"
+              '';
+            };
 
+            # Checks: fail if formatting or linters would change files
             checks = {
-              treefmt = treefmtEval.config.build.check { };
+              treefmt = pkgs.runCommand "treefmt-check" {
+                nativeBuildInputs = [pkgs.treefmt pkgs.alejandra pkgs.statix pkgs.deadnix];
+              } ''
+                set -euo pipefail
+                treefmt -c ${./treefmt.toml} --fail-on-change .
+                touch "$out"
+              '';
             };
           }
       );

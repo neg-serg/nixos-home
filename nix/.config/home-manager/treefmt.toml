@@ -1,0 +1,28 @@
+# Unified formatter config for this flake
+
+[global]
+# Keep noise down and avoid rewriting encrypted or VCS-managed files
+excludes = [
+  "flake.lock",
+  ".git/*",
+  "secrets/crypted/*",
+]
+
+# Nix files: format with alejandra
+[formatter.nix]
+command = "alejandra"
+options = ["-q"]
+includes = ["*.nix"]
+
+# Remove unused attributes from Nix files in-place
+[formatter.deadnix]
+command = "deadnix"
+options = ["--edit"]
+includes = ["*.nix"]
+
+# Static analysis and auto-fixes where possible
+[formatter.statix]
+command = "statix"
+options = ["fix"]
+includes = ["*.nix"]
+
