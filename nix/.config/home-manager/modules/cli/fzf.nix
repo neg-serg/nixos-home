@@ -26,6 +26,8 @@
       "--margin=0"
       "--padding=0"
       "--footer='[Alt-f] Files  [Alt-d] Dirs  [Alt-p] Preview  [Alt-s] Sort  [Tab] Open'"
+      # Neutral lighter header with underline
+      "--color=header:#848DA0,underline"
 
       # Search behavior: exact by default; quote for subsequence
       "--exact"
@@ -80,7 +82,7 @@
       "header-border" = lib.mkForce "#0b2536";
       "footer-border" = lib.mkForce "#0b2536";
       "separator" = lib.mkForce "#0b2536";
-      "header" = lib.mkForce "#4779B3";
+      # header color set via defaultOptions to include underline
       "info" = lib.mkForce "#3f5876";
       "pointer" = lib.mkForce "#005faf";
       "marker" = lib.mkForce "#04141C";
