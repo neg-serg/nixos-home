@@ -188,4 +188,4 @@ in {
       "x-scheme-handler/unknown" = "floorp.desktop";
     };
   };
-}
+})
