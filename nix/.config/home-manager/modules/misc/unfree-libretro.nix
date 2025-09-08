@@ -5,7 +5,7 @@ in
 {
   # When retroarchFull is enabled, allow required unfree libretro cores
   config = lib.mkIf (cfg.full or false) {
-    features.allowUnfree.allowed = [
+    features.allowUnfree.extra = [
       "libretro-fbalpha2012" # libretro arcade core (FBA 2012)
       "libretro-fbneo" # libretro arcade core (FBNeo)
       "libretro-fmsx" # libretro core (MSX)
@@ -25,4 +25,3 @@ in
     ];
   };
 }
-
