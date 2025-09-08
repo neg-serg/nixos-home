@@ -27,7 +27,7 @@
       "--padding=0"
       "--footer='[Alt-f] Files  [Alt-d] Dirs  [Alt-p] Preview  [Alt-s] Sort  [Tab] Open'"
       # Neutral lighter header with underline
-      "--color=header:#848DA0,bold"
+      "--color=header:#848DA0"
 
       # Search behavior: exact by default; quote for subsequence
       "--exact"
