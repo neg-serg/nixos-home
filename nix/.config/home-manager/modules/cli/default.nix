@@ -48,6 +48,7 @@
     ranger # need for termfilechooser
     rhash # compute hashsums
     sad # more simple sed alternative
+    scaleway-cli # interact with Scaleway API from the command line
     sd # bettter sed
     speedtest-cli # test network
     taplo # fancy toml toolkit
