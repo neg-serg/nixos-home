@@ -1,10 +1,12 @@
 {pkgs, ...}: let
-  # Wrapper that starts swayimg and jumps to the first image via IPC.
+  # Wrapper: start swayimg, export SWAYIMG_IPC, jump to first image via IPC.
   swayimg-first = pkgs.writeShellScriptBin "swayimg-first" ''
     set -euo pipefail
     uid="$(id -u)" # Unique socket path for this instance
     rt="$XDG_RUNTIME_DIR"; [ -n "$rt" ] || rt="/run/user/$uid"
     sock="$rt/swayimg-$PPID-$$-$RANDOM.sock"
+    # Export socket path for child exec actions to use
+    export SWAYIMG_IPC="$sock"
     # Start swayimg with IPC enabled
     "${pkgs.swayimg}/bin/swayimg" --ipc="$sock" "$@" &
     pid=$!
