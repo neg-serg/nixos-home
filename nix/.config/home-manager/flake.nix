@@ -70,6 +70,8 @@
       url = "git+ssh://git@github.com/neg-serg/iosevka-neg";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # CamelCase alias for convenience in code
+    iosevkaNegInput.follows = "iosevka-neg";
     iwmenu = {
       url = "github:e-tho/iwmenu";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -103,6 +105,8 @@
       url = "github:miuirussia/yandex-browser.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # CamelCase alias for convenience in code
+    yandexBrowserInput.follows = "yandex-browser";
   };
 
   outputs = inputs @ {
@@ -112,7 +116,7 @@
     home-manager,
     hy3,
     hyprland,
-    iosevka-neg,
+    iosevkaNegInput,
     nixpkgs,
     nur,
     nvfetcher,
@@ -120,7 +124,7 @@
     rsmetrx,
     sops-nix,
     stylix,
-    yandex-browser,
+    yandexBrowserInput,
     ...
   }:
     let
@@ -145,8 +149,8 @@
                 (import ./packages/overlay.nix)
               ]; # inject NUR and local packages overlay under pkgs.neg.*
             };
-            iosevkaNeg = iosevka-neg.packages.${system};
-            yandexBrowser = yandex-browser.packages.${system};
+            iosevkaNeg = iosevkaNegInput.packages.${system};
+            yandexBrowser = yandexBrowserInput.packages.${system};
             nurPkgs = nur.packages.${system};
             _bzmenu = bzmenu.packages.${system};
           in {

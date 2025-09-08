@@ -1006,6 +1006,9 @@
         "hy3": "hy3",
         "hyprland": "hyprland",
         "iosevka-neg": "iosevka-neg",
+        "iosevkaNegInput": [
+          "iosevka-neg"
+        ],
         "iwmenu": "iwmenu",
         "nixpkgs": "nixpkgs_3",
         "nur": "nur",
@@ -1014,7 +1017,10 @@
         "rsmetrx": "rsmetrx",
         "sops-nix": "sops-nix",
         "stylix": "stylix",
-        "yandex-browser": "yandex-browser"
+        "yandex-browser": "yandex-browser",
+        "yandexBrowserInput": [
+          "yandex-browser"
+        ]
       }
     },
     "rsmetrx": {
