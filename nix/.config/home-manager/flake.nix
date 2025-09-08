@@ -101,7 +101,11 @@
       url = "github:miuirussia/yandex-browser.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    
+    treefmt-nix = {
+      # Use git+https to avoid GitHub API rate limits for `github:` scheme
+      url = "git+https://github.com/numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     };
 
   outputs = inputs @ {
@@ -120,6 +124,7 @@
     sops-nix,
     stylix,
     yandex-browser,
+    treefmt-nix,
     ...
   }:
     let
@@ -147,6 +152,22 @@
             iosevkaneg = iosevka-neg.packages.${system};
             yandexBrowser = yandex-browser.packages.${system};
             _bzmenu = bzmenu.packages.${system};
+          in let
+            treefmtEval = treefmt-nix.lib.evalModule pkgs {
+              projectRootFile = "flake.nix";
+              # Formatters/checkers
+              programs.alejandra.enable = true;
+              programs.deadnix.enable = true;
+              programs.statix.enable = true;
+              # Optional: reduce noise
+              settings.global = {
+                excludes = [
+                  "flake.lock"
+                  ".git/*"
+                  "secrets/crypted/*"
+                ];
+              };
+            };
           in {
             inherit pkgs iosevkaneg yandexBrowser;
 
@@ -189,28 +210,10 @@
               hy3Plugin = hy3.packages.${system}.hy3;
             };
 
-            formatter = pkgs.writeShellApplication {
-              name = "fmt";
-              runtimeInputs = [pkgs.alejandra];
-              text = ''
-                set -euo pipefail
-                alejandra -q .
-              '';
-            };
+            formatter = treefmtEval.config.build.wrapper;
 
             checks = {
-              fmt-alejandra = pkgs.runCommand "fmt-alejandra" {nativeBuildInputs = [pkgs.alejandra];} ''
-                alejandra -q --check .
-                touch $out
-              '';
-              lint-deadnix = pkgs.runCommand "lint-deadnix" {nativeBuildInputs = [pkgs.deadnix];} ''
-                deadnix --fail .
-                touch $out
-              '';
-              lint-statix = pkgs.runCommand "lint-statix" {nativeBuildInputs = [pkgs.statix];} ''
-                statix check .
-                touch $out
-              '';
+              treefmt = treefmtEval.config.build.check { };
             };
           }
       );

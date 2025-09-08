@@ -1014,6 +1014,7 @@
         "rsmetrx": "rsmetrx",
         "sops-nix": "sops-nix",
         "stylix": "stylix",
+        "treefmt-nix": "treefmt-nix",
         "yandex-browser": "yandex-browser"
       }
     },
@@ -1333,6 +1334,26 @@
         "owner": "tinted-theming",
         "repo": "base16-zed",
         "type": "github"
+      }
+    },
+    "treefmt-nix": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1756662192,
+        "narHash": "sha256-F1oFfV51AE259I85av+MAia221XwMHCOtZCMcZLK2Jk=",
+        "ref": "refs/heads/main",
+        "rev": "1aabc6c05ccbcbf4a635fb7a90400e44282f61c4",
+        "revCount": 470,
+        "type": "git",
+        "url": "https://github.com/numtide/treefmt-nix"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://github.com/numtide/treefmt-nix"
       }
     },
     "xdph": {
