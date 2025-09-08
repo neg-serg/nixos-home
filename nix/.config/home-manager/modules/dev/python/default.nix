@@ -16,25 +16,25 @@ let
   home.packages = with pkgs;
     let
       core = ps: with ps; [
-        colored
-        docopt
-        numpy
-        annoy
-        orjson
-        psutil
-        requests
-        tabulate
+        colored # terminal colors utilities
+        docopt # simple CLI argument parser
+        numpy # numerical computing
+        annoy # approximate nearest neighbors
+        orjson # fast JSON parser/serializer
+        psutil # process and system utilities
+        requests # HTTP client
+        tabulate # pretty tables for text/CLI
       ];
       tools = ps: with ps; [
-        dbus-python # need for some scripts
-        fontforge # for font monospacifier
-        pynvim
+        dbus-python # DBus bindings (needed for some scripts)
+        fontforge # font tools (for monospacifier)
+        pynvim # Python client for Neovim
       ];
       pyPackages = ps:
         (optionals config.features.dev.python.core (core ps))
         ++ (optionals config.features.dev.python.tools (tools ps));
     in [
-      pipx
-      (python3-lto.withPackages pyPackages)
+      pipx # isolated Python apps installer
+      (python3-lto.withPackages pyPackages) # optimized Python with selected libs
     ];
 }
