@@ -3,6 +3,8 @@
   # Global Nix configuration for this flake (affects local and CI when respected)
   nixConfig = {
     experimental-features = ["nix-command" "flakes"];
+    # Note: nixConfig cannot import files here (requires literal lists)
+    # Keep in sync with caches/substituters.nix and caches/trusted-public-keys.nix
     extra-substituters = [
       "https://nix-community.cachix.org"
       "https://hyprland.cachix.org"
@@ -221,6 +223,7 @@
         s:
           perSystem.${s}.checks
           // lib.optionalAttrs (s == defaultSystem) {
+            # Run treefmt in check mode to ensure no changes would be made
             hm = self.homeConfigurations."neg".activationPackage;
           }
       );
