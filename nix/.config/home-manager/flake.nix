@@ -225,6 +225,7 @@
           // lib.optionalAttrs (s == defaultSystem) {
             # Run treefmt in check mode to ensure no changes would be made
             hm = self.homeConfigurations."neg".activationPackage;
+            hm-lite = self.homeConfigurations."neg-lite".activationPackage;
           }
       );
 
@@ -235,9 +236,26 @@
           inputs = nillaInputs;
           inherit hy3;
           iosevkaneg = perSystem.${defaultSystem}.iosevkaneg;
-          yandex-browser = perSystem.${defaultSystem}.yandexBrowser;
+          yandexBrowser = perSystem.${defaultSystem}.yandexBrowser;
         };
         modules = [
+          ./home.nix
+          stylix.homeModules.stylix
+          chaotic.homeManagerModules.default
+          sops-nix.homeManagerModules.sops
+        ];
+      };
+
+      homeConfigurations."neg-lite" = home-manager.lib.homeManagerConfiguration {
+        pkgs = perSystem.${defaultSystem}.pkgs;
+        extraSpecialArgs = {
+          inputs = nillaInputs;
+          inherit hy3;
+          iosevkaneg = perSystem.${defaultSystem}.iosevkaneg;
+          yandexBrowser = perSystem.${defaultSystem}.yandexBrowser;
+        };
+        modules = [
+          ({ ... }: { features.profile = "lite"; })
           ./home.nix
           stylix.homeModules.stylix
           chaotic.homeManagerModules.default
