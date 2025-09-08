@@ -153,6 +153,23 @@
               treefmt
             ];
           };
+          # Consolidated from shell/flake.nix
+          rust = pkgs.mkShell {
+            packages = with pkgs; [
+              cargo
+              rustc
+              hyperfine
+              kitty
+              wl-clipboard
+            ];
+            RUST_BACKTRACE = "1";
+          };
+          # Consolidated from fhs/flake.nix
+          fhs = (pkgs.buildFHSEnv {
+            name = "fhs-env";
+            targetPkgs = pkgs: with pkgs; [zsh];
+          })
+          .env;
         };
       };
       packages = {
