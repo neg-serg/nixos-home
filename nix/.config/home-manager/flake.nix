@@ -101,7 +101,8 @@
       url = "github:miuirussia/yandex-browser.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-  };
+    
+    };
 
   outputs = inputs @ {
     self,
@@ -121,71 +122,121 @@
     yandex-browser,
     ...
   }:
-    with rec {
-      system = "x86_64-linux";
-      pkgs = import nixpkgs {
-        inherit system;
-        overlays = [
-          nur.overlays.default
-          (import ./packages/overlay.nix)
-        ]; # inject NUR and local packages overlay under pkgs.neg.*
-      };
-      iosevkaneg = iosevka-neg.packages.${system};
-      yandex-browser = yandex-browser.packages.${system};
-      bzmenu = bzmenu.packages.${system};
+    let
+      lib = nixpkgs.lib;
+      systems = [
+        "x86_64-linux"
+        "aarch64-linux"
+      ];
+
       # Nilla raw-loader compatibility: add a synthetic type to each input
       # Safe no-op for regular flake usage; enables Nilla to accept raw inputs.
       nillaInputs = builtins.mapAttrs (_: input: input // {type = "derivation";}) inputs;
-    }; {
-      devShells = {
-        ${system} = {
-          default = pkgs.mkShell {
-            packages = with pkgs; [
-              alejandra
-              age
-              deadnix
-              git-absorb
-              gitoxide
-              just
-              nil
-              sops
-              statix
-              treefmt
-            ];
-          };
-          # Consolidated from shell/flake.nix
-          rust = pkgs.mkShell {
-            packages = with pkgs; [
-              cargo
-              rustc
-              hyperfine
-              kitty
-              wl-clipboard
-            ];
-            RUST_BACKTRACE = "1";
-          };
-          # Consolidated from fhs/flake.nix
-          fhs = (pkgs.buildFHSEnv {
-            name = "fhs-env";
-            targetPkgs = pkgs: with pkgs; [zsh];
-          })
-          .env;
-        };
-      };
-      packages = {
-        ${system} = {
-          default = nixpkgs.legacyPackages.${system}.zsh;
-          hy3Plugin = hy3.packages.${system}.hy3;
-        };
-      };
+
+      # Build per-system attributes in one place
+      perSystem = lib.genAttrs systems (
+        system:
+          let
+            pkgs = import nixpkgs {
+              inherit system;
+              overlays = [
+                nur.overlays.default
+                (import ./packages/overlay.nix)
+              ]; # inject NUR and local packages overlay under pkgs.neg.*
+            };
+            iosevkaneg = iosevka-neg.packages.${system};
+            yandexBrowser = yandex-browser.packages.${system};
+            _bzmenu = bzmenu.packages.${system};
+          in {
+            inherit pkgs iosevkaneg yandexBrowser;
+
+            devShells = {
+              default = pkgs.mkShell {
+                packages = with pkgs; [
+                  alejandra
+                  age
+                  deadnix
+                  git-absorb
+                  gitoxide
+                  just
+                  nil
+                  sops
+                  statix
+                  treefmt
+                ];
+              };
+              # Consolidated from shell/flake.nix
+              rust = pkgs.mkShell {
+                packages = with pkgs; [
+                  cargo
+                  rustc
+                  hyperfine
+                  kitty
+                  wl-clipboard
+                ];
+                RUST_BACKTRACE = "1";
+              };
+              # Consolidated from fhs/flake.nix
+              fhs = (pkgs.buildFHSEnv {
+                name = "fhs-env";
+                targetPkgs = pkgs: with pkgs; [zsh];
+              })
+              .env;
+            };
+
+            packages = {
+              default = pkgs.zsh;
+              hy3Plugin = hy3.packages.${system}.hy3;
+            };
+
+            formatter = pkgs.writeShellApplication {
+              name = "fmt";
+              runtimeInputs = [pkgs.alejandra];
+              text = ''
+                set -euo pipefail
+                alejandra -q .
+              '';
+            };
+
+            checks = {
+              fmt-alejandra = pkgs.runCommand "fmt-alejandra" {nativeBuildInputs = [pkgs.alejandra];} ''
+                alejandra -q --check .
+                touch $out
+              '';
+              lint-deadnix = pkgs.runCommand "lint-deadnix" {nativeBuildInputs = [pkgs.deadnix];} ''
+                deadnix --fail .
+                touch $out
+              '';
+              lint-statix = pkgs.runCommand "lint-statix" {nativeBuildInputs = [pkgs.statix];} ''
+                statix check .
+                touch $out
+              '';
+            };
+          }
+      );
+
+      # Choose default system for user HM config
+      defaultSystem = "x86_64-linux";
+    in {
+      devShells = lib.genAttrs systems (s: perSystem.${s}.devShells);
+      packages = lib.genAttrs systems (s: perSystem.${s}.packages);
+      formatter = lib.genAttrs systems (s: perSystem.${s}.formatter);
+      checks = lib.genAttrs systems (
+        s:
+          perSystem.${s}.checks
+          // lib.optionalAttrs (s == defaultSystem) {
+            hm = self.homeConfigurations."neg".activationPackage;
+          }
+      );
+
       homeConfigurations."neg" = home-manager.lib.homeManagerConfiguration {
-        inherit pkgs;
+        pkgs = perSystem.${defaultSystem}.pkgs;
         extraSpecialArgs = {
           # Pass inputs mapped for Nilla raw-loader (issue #14 workaround)
           inputs = nillaInputs;
           inherit hy3;
-          inherit iosevkaneg;
-          inherit yandex-browser;
+          iosevkaneg = perSystem.${defaultSystem}.iosevkaneg;
+          yandex-browser = perSystem.${defaultSystem}.yandexBrowser;
         };
         modules = [
           ./home.nix
@@ -193,33 +244,6 @@
           chaotic.homeManagerModules.default
           sops-nix.homeManagerModules.sops
         ];
-      };
-      formatter = {
-        ${system} = pkgs.writeShellApplication {
-          name = "fmt";
-          runtimeInputs = [pkgs.alejandra];
-          text = ''
-            set -euo pipefail
-            alejandra -q .
-          '';
-        };
-      };
-      checks = {
-        ${system} = {
-          fmt-alejandra = pkgs.runCommand "fmt-alejandra" {nativeBuildInputs = [pkgs.alejandra];} ''
-            alejandra -q --check .
-            touch $out
-          '';
-          lint-deadnix = pkgs.runCommand "lint-deadnix" {nativeBuildInputs = [pkgs.deadnix];} ''
-            deadnix --fail .
-            touch $out
-          '';
-          lint-statix = pkgs.runCommand "lint-statix" {nativeBuildInputs = [pkgs.statix];} ''
-            statix check .
-            touch $out
-          '';
-          hm = self.homeConfigurations."neg".activationPackage;
-        };
       };
     };
 }
