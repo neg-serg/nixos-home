@@ -145,11 +145,11 @@
                 (import ./packages/overlay.nix)
               ]; # inject NUR and local packages overlay under pkgs.neg.*
             };
-            iosevkaneg = iosevka-neg.packages.${system};
+            iosevkaNeg = iosevka-neg.packages.${system};
             yandexBrowser = yandex-browser.packages.${system};
             _bzmenu = bzmenu.packages.${system};
           in {
-            inherit pkgs iosevkaneg yandexBrowser;
+            inherit pkgs iosevkaNeg yandexBrowser;
 
             devShells = {
               default = pkgs.mkShell {
@@ -235,7 +235,7 @@
           # Pass inputs mapped for Nilla raw-loader (issue #14 workaround)
           inputs = nillaInputs;
           inherit hy3;
-          iosevkaneg = perSystem.${defaultSystem}.iosevkaneg;
+          iosevkaNeg = perSystem.${defaultSystem}.iosevkaNeg;
           yandexBrowser = perSystem.${defaultSystem}.yandexBrowser;
         };
         modules = [
@@ -251,7 +251,7 @@
         extraSpecialArgs = {
           inputs = nillaInputs;
           inherit hy3;
-          iosevkaneg = perSystem.${defaultSystem}.iosevkaneg;
+          iosevkaNeg = perSystem.${defaultSystem}.iosevkaNeg;
           yandexBrowser = perSystem.${defaultSystem}.yandexBrowser;
         };
         modules = [
