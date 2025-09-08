@@ -8,15 +8,15 @@
     defaultCommand = "${lib.getBin pkgs.fd}/bin/fd --type=f --hidden --exclude=.git";
     defaultOptions = builtins.filter (x: builtins.typeOf x == "string") [
       # Key bindings & quick actions
-      "--bind=alt-p:toggle-preview,alt-a:select-all,alt-s:toggle-sort"
-      "--bind=alt-d:change-prompt(Directories> )+reload(fd . -t d)"
-      "--bind=alt-f:change-prompt(Files> )+reload(fd . -t f)"
-      "--bind=ctrl-j:execute(~/bin/v {+})+abort"
-      "--bind=ctrl-space:select-all"
-      "--bind=ctrl-t:accept"
-      "--bind=ctrl-v:execute(~/bin/v {+})"
-      "--bind=ctrl-y:execute-silent(echo {+} | xclip -i)"
-      "--bind=tab:execute(handlr open {+})+abort"
+      "--bind='alt-p:toggle-preview,alt-a:select-all,alt-s:toggle-sort'"
+      "--bind='alt-d:change-prompt(Directories> )+reload(fd . -t d)'"
+      "--bind='alt-f:change-prompt(Files> )+reload(fd . -t f)'"
+      "--bind='ctrl-j:execute(~/bin/v {+})+abort'"
+      "--bind='ctrl-space:select-all'"
+      "--bind='ctrl-t:accept'"
+      "--bind='ctrl-v:execute(~/bin/v {+})'"
+      "--bind='ctrl-y:execute-silent(echo {+} | xclip -i)'"
+      "--bind='tab:execute(handlr open {+})+abort'"
 
       # UI/UX polish
       "--ansi"
@@ -26,7 +26,7 @@
       "--margin=1,2"
       "--padding=1"
       "--header-first"
-      "--header=[Alt-f] Files  [Alt-d] Dirs  [Alt-p] Preview  [Alt-s] Sort  [Tab] Open"
+      "--header='[Alt-f] Files  [Alt-d] Dirs  [Alt-p] Preview  [Alt-s] Sort  [Tab] Open'"
 
       # Search behavior: exact by default; quote for subsequence
       "--exact"
