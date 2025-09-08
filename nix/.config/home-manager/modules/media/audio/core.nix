@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, lib, config, ... }:
+lib.mkIf config.features.media.audio.core.enable {
   home.packages = with pkgs; [
     alsa-utils # aplay -l and friends
     coppwr # low level control for pipewire

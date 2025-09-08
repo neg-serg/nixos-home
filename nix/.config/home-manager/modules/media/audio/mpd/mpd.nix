@@ -7,7 +7,7 @@
 with {
   l = config.lib.file.mkOutOfStoreSymlink;
   dots = "${config.home.homeDirectory}/.dotfiles";
-}; {
+}; lib.mkIf config.features.media.audio.mpd.enable {
   home.packages = with pkgs; [
     rmpc # alternative tui client with album cover
   ];
