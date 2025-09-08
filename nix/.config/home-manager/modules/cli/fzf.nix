@@ -20,14 +20,15 @@
 
       # UI/UX polish
       "--ansi"
+      # Keep prompt on top
       "--layout=reverse"
       "--cycle"
       "--border=rounded"
       "--margin=0"
       "--padding=0"
       "--footer='[Alt-f] Files  [Alt-d] Dirs  [Alt-p] Preview  [Alt-s] Sort  [Tab] Open'"
-      # Neutral lighter header with underline
-      "--color=header:#848DA0"
+      # Header color: use terminal's white (kitty theme)
+      "--color=header:white"
 
       # Search behavior: exact by default; quote for subsequence
       "--exact"
@@ -35,7 +36,8 @@
       # Sizing: compact by default but more breathable
       "--height=16"
       "--min-height=14"
-      "--info=inline"
+      # Show match info on the bottom status line
+      "--info=default"
       "--multi"
       "--no-mouse"
 
