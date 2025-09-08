@@ -147,9 +147,10 @@
             };
             iosevkaNeg = iosevka-neg.packages.${system};
             yandexBrowser = yandex-browser.packages.${system};
+            nurPkgs = nur.packages.${system};
             _bzmenu = bzmenu.packages.${system};
           in {
-            inherit pkgs iosevkaNeg yandexBrowser;
+            inherit pkgs iosevkaNeg yandexBrowser nurPkgs;
 
             devShells = {
               default = pkgs.mkShell {
