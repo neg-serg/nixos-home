@@ -30,7 +30,5 @@ done
 command -v zoxide >/dev/null && eval "$(zoxide init zsh)"
 command -v direnv >/dev/null && eval "$(direnv hook zsh)"
 [[ $NEOVIM_TERMINAL ]] && source "${ZDOTDIR}/08-neovim-cd.zsh"
-export ATUIN_NOBIND=true
-zsh-defer eval "$(atuin init zsh)"
 setopt rematchpcre
 # vim: ft=zsh:nowrap
