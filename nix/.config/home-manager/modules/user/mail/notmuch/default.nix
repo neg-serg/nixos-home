@@ -1,4 +1,5 @@
-{config, ...}: {
+{ lib, config, ... }:
+with lib; mkIf config.features.mail {
   programs.notmuch = {
     enable = true;
     new = {

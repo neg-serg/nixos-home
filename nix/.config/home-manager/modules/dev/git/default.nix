@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ lib, pkgs, config, ... }:
+with lib; mkIf config.features.dev.enable {
   home.packages = with pkgs; [
     act # local github actions
     difftastic # syntax-aware diff

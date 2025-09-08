@@ -1,5 +1,5 @@
-{ pkgs, lib, config, ... }:
-{
+{ lib, pkgs, config, ... }:
+with lib; mkIf config.features.mail {
   home.packages = with pkgs; [
     vdirsyncer # add vdirsyncer binary for sync and initialization
   ];

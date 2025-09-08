@@ -1,8 +1,5 @@
-{
-  pkgs,
-  inputs,
-  ...
-}: let
+{ lib, pkgs, config, inputs, ... }:
+with lib; let
   quickshellWrapped = pkgs.stdenv.mkDerivation {
     name = "quickshell-wrapped";
     buildInputs = [pkgs.makeWrapper];
@@ -22,7 +19,7 @@
         --prefix PATH : ${pkgs.lib.makeBinPath [pkgs.fd pkgs.coreutils]}
     '';
   };
-in {
+in mkIf config.features.gui {
   home.packages = with pkgs; [
     cantarell-fonts
     cava

@@ -1,4 +1,5 @@
-{pkgs, inputs, ...}: {
+{ lib, pkgs, config, inputs, ... }:
+with lib; mkIf config.features.gui {
   home.packages = with pkgs; [
     rofi-pass-wayland # pass interface for rofi-wayland
     (rofi-wayland.override {

@@ -1,12 +1,7 @@
-{
-  config,
-  pkgs,
-  hy3,
-  inputs,
-  ...
-}: let
+{ lib, config, pkgs, hy3, inputs, ... }:
+with lib; let
   hy3Plugin = hy3.packages.${pkgs.system}.hy3;
-in {
+in mkIf config.features.gui {
   wayland.windowManager.hyprland = {
     enable = true;
     package = null;

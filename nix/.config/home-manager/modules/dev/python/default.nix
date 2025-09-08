@@ -1,4 +1,4 @@
-{ pkgs, lib, config, ... }:
+{ lib, pkgs, config, ... }:
 let
   inherit (lib) optionals;
   core = ps: with ps; [
@@ -19,7 +19,7 @@ let
   pyPackages = ps:
     (optionals config.features.dev.python.core (core ps))
     ++ (optionals config.features.dev.python.tools (tools ps));
-in {
+in lib.mkIf config.features.dev.enable {
   nixpkgs = {
     config.allowUnfree = true;
     config.packageOverrides = super: {

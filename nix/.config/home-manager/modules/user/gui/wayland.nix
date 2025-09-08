@@ -1,8 +1,5 @@
-{
-  pkgs,
-  inputs,
-  ...
-}: {
+{ lib, pkgs, config, inputs, ... }:
+with lib; mkIf config.features.gui {
   home.sessionVariables = {};
   home.packages = with pkgs; [
     dragon-drop # drag-n-drop from console

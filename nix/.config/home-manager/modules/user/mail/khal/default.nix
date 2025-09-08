@@ -1,4 +1,5 @@
-{...}: {
+{ lib, config, ... }:
+with lib; mkIf config.features.mail {
   programs.khal = {
     enable = true;
 

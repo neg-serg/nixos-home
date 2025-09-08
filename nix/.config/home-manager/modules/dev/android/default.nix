@@ -1,9 +1,10 @@
-{pkgs, ...}: {
+{ lib, pkgs, config, ... }:
+with lib; mkIf config.features.dev.enable {
   nixpkgs.config.allowUnfree = true;
   home.packages = with pkgs; [
-    adbtuifm # TUI-based file manager for the Android Debug Bridge,
-    android-tools # android debug stuff
-    jmtpfs # mount mtp devices
-    scrcpy # rule android device via pc
+    adbtuifm # TUI-based file manager for ADB
+    android-tools # Android platform tools (adb, fastboot)
+    jmtpfs # mount MTP devices
+    scrcpy # control Android device from PC
   ];
 }

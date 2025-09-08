@@ -1,4 +1,5 @@
-{config, ...}: {
+{ lib, config, ... }:
+with lib; mkIf config.features.gui {
   services.flameshot.enable = true;
   services.flameshot.settings = {
     General = {

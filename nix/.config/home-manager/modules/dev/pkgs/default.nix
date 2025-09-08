@@ -1,4 +1,4 @@
-{ pkgs, lib, config, ... }:
+{ lib, pkgs, config, ... }:
 let
   inherit (lib) optionals;
   groups = with pkgs; rec {
@@ -26,7 +26,7 @@ let
       deheader # remove unneeded C/C++ includes
     ];
   };
-in {
+in lib.mkIf config.features.dev.enable {
   home.packages =
     (optionals config.features.dev.pkgs.formatters groups.formatters)
     ++ (optionals config.features.dev.pkgs.analyzers groups.analyzers)

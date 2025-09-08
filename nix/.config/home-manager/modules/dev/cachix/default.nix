@@ -67,7 +67,7 @@ in {
     };
   };
 
-  config = {
+  config = lib.mkIf config.features.dev.enable {
     home.packages = lib.mkIf (cfg.enable || cfg.ownCache.enable) [pkgs.cachix];
 
     nix.settings = lib.mkIf cfg.ownCache.enable {

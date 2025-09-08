@@ -1,4 +1,5 @@
-{...}: {
+{ lib, config, ... }:
+with lib; mkIf config.features.mail {
   services.imapnotify.enable = true;
   accounts.email.accounts."gmail" = {
     imapnotify = {

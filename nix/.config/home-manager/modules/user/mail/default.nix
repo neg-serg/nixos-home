@@ -1,12 +1,5 @@
+{ pkgs, config, ... }:
 {
-  pkgs,
-  config,
-  ...
-}:
-with {
-  l = config.lib.file.mkOutOfStoreSymlink;
-  dots = "${config.home.homeDirectory}/.dotfiles";
-}; {
   imports = [
     ./accounts
     ./isync
@@ -16,7 +9,7 @@ with {
     ./notmuch
     ./vdirsyncer
   ];
-  home.packages = with pkgs; [
+  home.packages = with pkgs; lib.optionals config.features.mail [
     himalaya # modern cli for mail
     kyotocabinet # mail client helper library
     neomutt # mail client

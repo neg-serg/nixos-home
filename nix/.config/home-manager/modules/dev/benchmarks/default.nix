@@ -1,10 +1,11 @@
-{pkgs, ...}: {
+{ lib, pkgs, config, ... }:
+with lib; mkIf config.features.dev.enable {
   nixpkgs.config.allowUnfree = true;
   home.packages = with pkgs; [
     memtester # memory test
-    rewrk # http benchmark
+    rewrk # HTTP benchmark
     stress-ng # stress testing
-    vrrtest # freesync/gsync working test
-    wrk2 # yet another http benchmark
+    vrrtest # FreeSync/G-Sync test
+    wrk2 # HTTP benchmark
   ];
 }
