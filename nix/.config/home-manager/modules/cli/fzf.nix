@@ -72,6 +72,14 @@
       "fg+" = lib.mkForce "#8DA6B2";
       "hl" = lib.mkForce "#546c8a";
       "hl+" = lib.mkForce "#005faf";
+      # Extra-dark bluish border & separator
+      "border" = lib.mkForce "#000a12";
+      "list-border" = lib.mkForce "#000a12";
+      "input-border" = lib.mkForce "#000a12";
+      "preview-border" = lib.mkForce "#000a12";
+      "header-border" = lib.mkForce "#000a12";
+      "footer-border" = lib.mkForce "#000a12";
+      "separator" = lib.mkForce "#000a12";
       "header" = lib.mkForce "#4779B3";
       "info" = lib.mkForce "#3f5876";
       "pointer" = lib.mkForce "#005faf";
