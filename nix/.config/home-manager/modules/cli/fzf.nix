@@ -63,24 +63,23 @@
       "--border=rounded --margin=1,2 --padding=1 --preview 'if [ -d \"{}\" ]; then (eza --tree --icons=auto -L 2 --color=always \"{}\" 2>/dev/null || tree -C -L 2 \"{}\" 2>/dev/null); else (bat --style=plain --color=always --line-range :200 \"{}\" 2>/dev/null || highlight -O ansi -l \"{}\" 2>/dev/null || head -200 \"{}\" 2>/dev/null || file -b \"{}\" 2>/dev/null); fi' --preview-window=right,60%,border-left,wrap"
     ];
 
-    # Catppuccin-like dark theme (works well with Nerd Fonts)
+    # Restore previous custom theme colors
     colors = {
       "preview-bg" = "-1";
       "gutter" = "-1";
-      "bg" = lib.mkForce "#11111b";   # crust
-      "bg+" = lib.mkForce "#181825";  # mantle
-      "fg" = lib.mkForce "#cdd6f4";   # text
-      "fg+" = lib.mkForce "#cdd6f4";
-      "hl" = lib.mkForce "#89b4fa";   # blue
-      "hl+" = lib.mkForce "#b4befe";  # lavender
-      "header" = lib.mkForce "#94e2d5"; # teal
-      "info" = lib.mkForce "#a6adc8"; # subtext0
-      "pointer" = lib.mkForce "#f38ba8"; # red
-      "marker" = lib.mkForce "#a6e3a1";  # green
-      "prompt" = lib.mkForce "#cba6f7";  # mauve
-      "spinner" = lib.mkForce "#f9e2af"; # yellow
-      "border" = lib.mkForce "#181825";
-      "preview-fg" = lib.mkForce "#cdd6f4";
+      "bg" = lib.mkForce "#000000";
+      "bg+" = lib.mkForce "#000000";
+      "fg" = lib.mkForce "#4f5d78";
+      "fg+" = lib.mkForce "#8DA6B2";
+      "hl" = lib.mkForce "#546c8a";
+      "hl+" = lib.mkForce "#005faf";
+      "header" = lib.mkForce "#4779B3";
+      "info" = lib.mkForce "#3f5876";
+      "pointer" = lib.mkForce "#005faf";
+      "marker" = lib.mkForce "#04141C";
+      "prompt" = lib.mkForce "#005faf";
+      "spinner" = lib.mkForce "#3f5876";
+      "preview-fg" = lib.mkForce "#4f5d78";
     };
 
     enableZshIntegration = true;
