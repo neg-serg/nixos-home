@@ -1,11 +1,10 @@
 #!/usr/bin/env sh
-# pic-dirs-list: index picture directories with fasd on changes
-# Usage: pic-dirs-list
+# pic-dirs-list: index $XDG_PICTURES_DIR dirs with fasd on changes (writes to swayimg DB)
 if [ -n "$XDG_PICTURES_DIR" ]; then
     inotifywait -q -m -e DELETE,ISDIR -e CREATE,ISDIR "$XDG_PICTURES_DIR"/ | while read -r _; do
     find "$XDG_PICTURES_DIR" -maxdepth 3 \
         -not -path "$XDG_PICTURES_DIR/.git/*" \
         -not -path "$XDG_PICTURES_DIR/.git" -type d -print0 \
-        | _FASD_DATA="$XDG_DATA_HOME/sxiv/data" xargs -0 fasd -A
+        | _FASD_DATA="${XDG_DATA_HOME:-$HOME/.local/share}/swayimg/data" xargs -0 fasd -A
     done
 fi
