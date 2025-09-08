@@ -44,9 +44,8 @@
       "--marker=✓"
       "--with-nth=1.."
 
-      # Preview (hidden by default; toggle with Alt-p). Rich preview for files/dirs.
-      "--preview-window=border-left,wrap,hidden,60%"
-      "--preview 'if [ -d "{}" ]; then (eza --tree --icons=auto -L 2 --color=always "{}" 2>/dev/null || tree -C -L 2 "{}" 2>/dev/null); else (bat --style=plain --color=always --line-range :200 "{}" 2>/dev/null || highlight -O ansi -l "{}" 2>/dev/null || head -200 "{}" 2>/dev/null || file -b "{}" 2>/dev/null); fi'"
+      # Note: Preview config moved to widget-specific opts (history/file)
+      # to avoid heavy quoting in FZF_DEFAULT_OPTS.
     ];
 
     # FZF_CTRL_R_OPTS
