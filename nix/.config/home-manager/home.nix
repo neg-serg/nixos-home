@@ -1,4 +1,5 @@
 {
+  lib,
   config,
   pkgs,
   inputs,
@@ -7,6 +8,9 @@
   cachixSubstituters = import ./caches/substituters.nix;
   cachixTrustedKeys = import ./caches/trusted-public-keys.nix;
 in {
+  # Profile presets (full | lite). Full is default; set to "lite" for headless/minimal.
+  features.profile = lib.mkDefault "full";
+
   nix = {
     package = pkgs.nix;
     # Per-user Nix settings
