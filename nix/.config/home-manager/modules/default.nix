@@ -38,5 +38,14 @@ in {
     features.mail = mkDefault false;
     features.hack = mkDefault false;
     features.dev.enable = mkDefault false;
+    # Slim down audio and web stacks in lite profile
+    features.media.audio.core.enable = mkDefault false;
+    features.media.audio.apps.enable = mkDefault false;
+    features.media.audio.creation.enable = mkDefault false;
+    features.media.audio.mpd.enable = mkDefault false;
+    features.web.enable = mkDefault false;
+    features.web.tools.enable = mkDefault false;
+    features.web.floorp.enable = mkDefault false;
+    features.web.yandex.enable = mkDefault false;
   };
 }
