@@ -1,8 +1,5 @@
-{
-  config,
-  pkgs,
-  ...
-}: let
+{ config, pkgs, lib, ... }:
+lib.mkIf (config.features.web.enable && config.features.web.floorp.enable) (let
   dlDir = "${config.home.homeDirectory}/dw";
   fa = pkgs.nur.repos.rycee.firefox-addons; # requires NUR
 in {

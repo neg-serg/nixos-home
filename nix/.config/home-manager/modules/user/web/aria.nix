@@ -10,7 +10,7 @@
   aria2-bin = "${pkgs.aria2}/bin/aria2c";
   coreutils-bin = "${pkgs.coreutils}/bin";
   sessionFile = "${dataHome}/aria2/session";
-in {
+in lib.mkIf (config.features.web.enable && config.features.web.tools.enable) {
   programs.aria2 = {
     enable = true;
     settings = {

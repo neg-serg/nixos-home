@@ -1,15 +1,15 @@
-{
-  pkgs,
-  yandex-browser,
-  ...
-}: {
-  imports = [
-    ./floorp.nix
-  ];
-  home.packages = with pkgs; [
-    nyxt # common lisp browser
-    passff-host # host app for the WebExtension PassFF
-    # Provided via extraSpecialArgs as packages for the current system
-    yandex-browser.yandex-browser-stable # google chrome-based yandex fork
-  ];
+{ pkgs, lib, config, yandexBrowser ? null, ... }:
+with lib; {
+  imports = [ ./floorp.nix ];
+
+  config = mkIf config.features.web.enable {
+    home.packages = with pkgs;
+      [
+        nyxt # common lisp browser
+        passff-host # host app for the WebExtension PassFF
+      ]
+      ++ (optionals (yandexBrowser != null && config.features.web.yandex.enable) [
+        yandexBrowser.yandex-browser-stable # google chrome-based yandex fork
+      ]);
+  };
 }

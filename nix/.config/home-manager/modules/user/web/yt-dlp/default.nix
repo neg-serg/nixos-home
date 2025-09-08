@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, lib, config, ... }:
+lib.mkIf (config.features.web.enable && config.features.web.tools.enable) {
   programs.yt-dlp = {
     enable = true;
     package = pkgs.yt-dlp; # download from youtube and another sources
