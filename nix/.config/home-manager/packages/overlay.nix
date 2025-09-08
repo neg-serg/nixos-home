@@ -8,7 +8,6 @@ in {
     "bt-migrate" = bt_migrate;
     cxxmatrix = call ./cxxmatrix {};
     comma = call ./comma {};
-    himalaya = call ./himalaya {};
     mkvcleaner = call ./mkvcleaner {};
     rmpc = call ./rmpc {};
 
