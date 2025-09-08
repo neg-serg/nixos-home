@@ -62,15 +62,11 @@ function main() {
   if (unknown.length) {
     console.error('\nUnknown Settings keys (used but not defined in JsonAdapter):');
     for (const k of unknown) console.error(' -', k);
-  } else {
-    console.log('No unknown Settings keys.');
   }
 
   if (unused.length) {
     console.log('\nUnused Settings keys (defined but never used):');
     for (const k of unused) console.log(' -', k);
-  } else {
-    console.log('No unused Settings keys.');
   }
 
   if (unknown.length) process.exit(1);
