@@ -1,4 +1,63 @@
-{pkgs, ...}: {
+{pkgs, ...}: let
+  groups = with pkgs; rec {
+    # Text/formatting/regex/CSV/TOML tools
+    text = [
+      choose
+      enca
+      grex
+      miller
+      par
+      sad
+      sd
+      taplo
+    ];
+
+    # Filesystems, archives, hashing, mass rename, duplication
+    fs = [
+      convmv
+      czkawka
+      dcfldd
+      massren
+      ouch
+      patool
+      ranger
+      rhash
+    ];
+
+    # Networking, cloud CLIs, URL tooling
+    net = [
+      kubectx
+      scaleway-cli
+      speedtest-cli
+      urlscan
+      urlwatch
+      zfxtop
+    ];
+
+    # System info and observability
+    obs = [
+      below
+      lnav
+      viddy
+    ];
+    sys = [
+      cpufetch
+      ramfetch
+    ];
+
+    # Dev helpers, diffs, automation, navigation
+    dev = [
+      babashka
+      diffoscope
+      diff-so-fancy
+      entr
+      expect
+      fasd
+      mergiraf
+      zoxide
+    ];
+  };
+in {
   imports = [
     ./direnv.nix # auto-load per-dir env with nix integration
     ./bat.nix # better cat
@@ -20,43 +79,12 @@
     tray-tui = {enable = true;}; # system tray in your terminal
     visidata = {enable = true;}; # interactive multitool for tabular data
   };
-  home.packages = with pkgs; [
-    babashka # native clojure for scripts
-    below # interactive tool to view and record historical system data
-    choose # yet another cut/awk alternative
-    convmv # convert filename encodings
-    cpufetch # fetch for cpu
-    czkawka # find duplicate pictures and more
-    dcfldd # better dd with progress bar and inline hash verification
-    diffoscope # diff for various format
-    diff-so-fancy # human-readable diff
-    enca # autoreencode
-    entr # run commands when files change
-    expect # do tty stuff noninteractively
-    fasd # my favorite mru autocompletion
-    # frawk # small text processing language
-    grex # tool to generate regexes
-    kubectx # switch k8s contexts faster
-    lnav # logfile navigator
-    massren # massive rename
-    mergiraf # ast-aware git merge driver
-    miller # awk/cut/join alternative
-    ouch # cli archive extractor
-    par # better fmt
-    patool # python archive unpack
-    ramfetch # fetch for ram
-    ranger # need for termfilechooser
-    rhash # compute hashsums
-    sad # more simple sed alternative
-    scaleway-cli # interact with Scaleway API from the command line
-    sd # bettter sed
-    speedtest-cli # test network
-    taplo # fancy toml toolkit
-    tealdeer # short man, tldr replacement written in rust
-    urlscan # extract urls from text
-    urlwatch # watch for urls
-    viddy # modern watch command
-    zfxtop # fancy top in commandline
-    zoxide # better fasd for some
-  ];
+  home.packages =
+    groups.text
+    ++ groups.fs
+    ++ groups.net
+    ++ groups.obs
+    ++ groups.sys
+    ++ groups.dev
+    ++ [ pkgs.tealdeer ]; # keep tldr handy
 }
