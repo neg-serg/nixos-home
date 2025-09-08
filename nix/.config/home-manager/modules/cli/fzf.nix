@@ -25,8 +25,7 @@
       "--border=rounded"
       "--margin=1,2"
       "--padding=1"
-      "--header-first"
-      "--header='[Alt-f] Files  [Alt-d] Dirs  [Alt-p] Preview  [Alt-s] Sort  [Tab] Open'"
+      "--footer='[Alt-f] Files  [Alt-d] Dirs  [Alt-p] Preview  [Alt-s] Sort  [Tab] Open'"
 
       # Search behavior: exact by default; quote for subsequence
       "--exact"
@@ -53,7 +52,7 @@
       "--sort"
       "--exact"
       "--border=rounded --margin=1,2 --padding=1"
-      "--header-first --header='[Enter] Paste  [Ctrl-y] Yank  [?] Preview'"
+      "--footer='[Enter] Paste  [Ctrl-y] Yank  [?] Preview'"
       "--preview 'echo {}'"
       "--preview-window down:5:hidden,wrap --bind '?:toggle-preview'"
     ];
