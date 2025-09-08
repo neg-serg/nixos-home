@@ -189,6 +189,8 @@
             packages = {
               default = pkgs.zsh;
               hy3Plugin = hy3.packages.${system}.hy3;
+              # Publish options docs as a package for convenience
+              options-md = pkgs.writeText "OPTIONS.md" (builtins.readFile ./OPTIONS.md);
             };
 
             # Formatter: treefmt wrapper pinned to repo config
@@ -209,6 +211,10 @@
                 set -euo pipefail
                 treefmt -c ${./treefmt.toml} --fail-on-change .
                 touch "$out"
+              '';
+              # Build the options documentation as part of checks
+              options-md = pkgs.runCommand "options-md" {} ''
+                cp ${./OPTIONS.md} "$out"
               '';
             };
           }
