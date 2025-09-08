@@ -112,15 +112,12 @@ function main() {
   const errors = [];
   validate(settings, schema, 'root', errors);
 
-  console.log(`Validate: ${path.relative(process.cwd(), settingsPath)} against ${path.relative(process.cwd(), schemaPath)}`);
   if (errors.length) {
+    console.log(`Validate: ${path.relative(process.cwd(), settingsPath)} against ${path.relative(process.cwd(), schemaPath)}`);
     for (const e of errors) console.error(' -', e);
     console.error(`\nValidation failed: ${errors.length} error(s).`);
     process.exitCode = 1;
-  } else {
-    console.log('OK: no validation errors.');
   }
 }
 
 main();
-
