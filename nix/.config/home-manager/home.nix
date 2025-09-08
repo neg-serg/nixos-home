@@ -11,6 +11,16 @@ in {
   # Profile presets (full | lite). Full is default; set to "lite" for headless/minimal.
   features.profile = lib.mkDefault "full";
 
+  # Unfree policy: allow only specific packages needed in this setup
+  nixpkgs.config.allowUnfreePredicate = pkg: let
+    name = (pkg.pname or (builtins.parseDrvName (pkg.name or "")).name);
+    allowed = [
+      "yandex-browser-stable"
+      "lmstudio"
+      "code-cursor-fhs"
+    ];
+  in builtins.elem name allowed;
+
   nix = {
     package = pkgs.nix;
     # Per-user Nix settings

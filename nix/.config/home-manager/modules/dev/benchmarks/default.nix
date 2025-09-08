@@ -1,6 +1,5 @@
 { lib, pkgs, config, ... }:
 with lib; mkIf config.features.dev.enable {
-  nixpkgs.config.allowUnfree = true;
   home.packages = with pkgs; [
     memtester # memory test
     rewrk # HTTP benchmark

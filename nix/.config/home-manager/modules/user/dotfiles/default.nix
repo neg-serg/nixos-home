@@ -75,6 +75,18 @@ in {
     "bin" = mkSymlink "bin" false;
     ".ugrep" = mkSymlink "shell/.ugrep" true;
     ".zshenv" = mkSymlink "shell/.zshenv" true;
-    "${config.xdg.configHome}/nixpkgs/config.nix".text = ''{ allowUnfree = true; }'';
+    "${config.xdg.configHome}/nixpkgs/config.nix".text = ''
+      {
+        # Only allow specific unfree packages by name
+        allowUnfreePredicate = pkg: let
+          name = (pkg.pname or (builtins.parseDrvName (pkg.name or "")).name);
+          allowed = [
+            "yandex-browser-stable"
+            "lmstudio"
+            "code-cursor-fhs"
+          ];
+        in builtins.elem name allowed;
+      }
+    '';
   };
 }

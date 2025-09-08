@@ -21,7 +21,6 @@ let
     ++ (optionals config.features.dev.python.tools (tools ps));
 in lib.mkIf config.features.dev.enable {
   nixpkgs = {
-    config.allowUnfree = true;
     config.packageOverrides = super: {
       python3-lto = super.python3.override {
         packageOverrides = _: _: {

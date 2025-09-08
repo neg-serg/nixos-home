@@ -1,6 +1,5 @@
 { lib, pkgs, config, ... }:
 with lib; mkIf config.features.dev.enable {
-  nixpkgs.config.allowUnfree = true;
   home.packages = with pkgs; [
     adbtuifm # TUI-based file manager for ADB
     android-tools # Android platform tools (adb, fastboot)

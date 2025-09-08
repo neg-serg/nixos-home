@@ -6,7 +6,6 @@
   dlDir = "${config.home.homeDirectory}/dw";
   fa = pkgs.nur.repos.rycee.firefox-addons; # requires NUR
 in {
-  nixpkgs.config.allowUnfree = true;
   programs.floorp = {
     enable = true;
     nativeMessagingHosts = [
