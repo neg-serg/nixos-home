@@ -1,0 +1,76 @@
+{ lib, config, ... }:
+with lib;
+let
+  cfg = config.features;
+in {
+  options.features = {
+    profile = mkOption {
+      type = types.enum [ "full" "lite" ];
+      default = "full";
+      description = "Profile preset that adjusts feature defaults: full or lite.";
+    };
+
+    gui = mkEnableOption "enable GUI stack (wayland/hyprland, quickshell, etc.)" // { default = true; };
+    mail = mkEnableOption "enable Mail stack (notmuch, isync, vdirsyncer, etc.)" // { default = true; };
+    hack = mkEnableOption "enable Hack/security tooling stack" // { default = true; };
+    dev = {
+      enable = mkEnableOption "enable Dev stack (toolchains, editors, hack tooling)" // { default = true; };
+    };
+
+    web = {
+      enable = mkEnableOption "enable Web stack (browsers + tools)" // { default = true; };
+      tools.enable = mkEnableOption "enable web tools (aria2, yt-dlp, misc)" // { default = true; };
+      floorp.enable = mkEnableOption "enable Floorp browser" // { default = true; };
+      yandex.enable = mkEnableOption "enable Yandex browser" // { default = true; };
+    };
+
+    media = {
+      audio = {
+        core.enable = mkEnableOption "enable audio core (PipeWire routing tools)" // { default = true; };
+        apps.enable = mkEnableOption "enable audio apps (players, tools)" // { default = true; };
+        creation.enable = mkEnableOption "enable audio creation stack (DAW, synths)" // { default = true; };
+        mpd.enable = mkEnableOption "enable MPD stack (mpd, clients, mpdris2)" // { default = true; };
+      };
+    };
+
+    emulators = {
+      retroarch.full = mkEnableOption "use retroarchFull with extended (unfree) cores" // { default = false; };
+    };
+  };
+
+  # Apply profile defaults. Users can still override flags after this.
+  config = mkMerge [
+    (mkIf (cfg.profile == "lite") {
+      features.gui = mkDefault false;
+      features.mail = mkDefault false;
+      features.hack = mkDefault false;
+      features.dev.enable = mkDefault false;
+
+      # Slim down audio and web stacks in lite profile
+      features.media.audio.core.enable = mkDefault false;
+      features.media.audio.apps.enable = mkDefault false;
+      features.media.audio.creation.enable = mkDefault false;
+      features.media.audio.mpd.enable = mkDefault false;
+      features.web.enable = mkDefault false;
+      features.web.tools.enable = mkDefault false;
+      features.web.floorp.enable = mkDefault false;
+      features.web.yandex.enable = mkDefault false;
+      # Emulators
+      features.emulators.retroarch.full = mkDefault false;
+    })
+    (mkIf (cfg.profile == "full") {
+      # Ensure rich stack in full profile
+      features.web.enable = mkDefault true;
+      features.web.tools.enable = mkDefault true;
+      features.web.floorp.enable = mkDefault true;
+      features.web.yandex.enable = mkDefault true;
+      features.media.audio.core.enable = mkDefault true;
+      features.media.audio.apps.enable = mkDefault true;
+      features.media.audio.creation.enable = mkDefault true;
+      features.media.audio.mpd.enable = mkDefault true;
+      # Enable retroarchFull by default in full profile
+      features.emulators.retroarch.full = mkDefault true;
+    })
+  ];
+}
+

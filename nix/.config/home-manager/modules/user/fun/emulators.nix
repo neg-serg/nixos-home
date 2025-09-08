@@ -1,7 +1,5 @@
 { pkgs, lib, config, ... }:
 with lib; {
-  options.features.emulators.retroarch.full = mkEnableOption "use retroarchFull with extended (unfree) cores" // { default = false; };
-
   config = {
     home.packages = with pkgs;
       [
