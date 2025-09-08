@@ -23,8 +23,8 @@
       "--layout=reverse"
       "--cycle"
       "--border=rounded"
-      "--margin=1,2"
-      "--padding=1"
+      "--margin=0"
+      "--padding=0"
       "--footer='[Alt-f] Files  [Alt-d] Dirs  [Alt-p] Preview  [Alt-s] Sort  [Tab] Open'"
 
       # Search behavior: exact by default; quote for subsequence
@@ -51,7 +51,7 @@
     historyWidgetOptions = [
       "--sort"
       "--exact"
-      "--border=rounded --margin=1,2 --padding=1"
+      "--border=rounded --margin=0 --padding=0"
       "--footer='[Enter] Paste  [Ctrl-y] Yank  [?] Preview'"
       "--preview 'echo {}'"
       "--preview-window down:5:hidden,wrap --bind '?:toggle-preview'"
@@ -59,7 +59,7 @@
 
     # FZF_CTRL_T_OPTS
     fileWidgetOptions = [
-      "--border=rounded --margin=1,2 --padding=1 --preview 'if [ -d \"{}\" ]; then (eza --tree --icons=auto -L 2 --color=always \"{}\" 2>/dev/null || tree -C -L 2 \"{}\" 2>/dev/null); else (bat --style=plain --color=always --line-range :200 \"{}\" 2>/dev/null || highlight -O ansi -l \"{}\" 2>/dev/null || head -200 \"{}\" 2>/dev/null || file -b \"{}\" 2>/dev/null); fi' --preview-window=right,60%,border-left,wrap"
+      "--border=rounded --margin=0 --padding=0 --preview 'if [ -d \"{}\" ]; then (eza --tree --icons=auto -L 2 --color=always \"{}\" 2>/dev/null || tree -C -L 2 \"{}\" 2>/dev/null); else (bat --style=plain --color=always --line-range :200 \"{}\" 2>/dev/null || highlight -O ansi -l \"{}\" 2>/dev/null || head -200 \"{}\" 2>/dev/null || file -b \"{}\" 2>/dev/null); fi' --preview-window=right,60%,border-left,wrap"
     ];
 
     # Restore previous custom theme colors
