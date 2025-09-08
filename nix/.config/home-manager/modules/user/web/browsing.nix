@@ -9,6 +9,7 @@
   home.packages = with pkgs; [
     nyxt # common lisp browser
     passff-host # host app for the WebExtension PassFF
-    yandex-browser.packages.${pkgs.system}.yandex-browser-stable # google chrome-based yandex fork
+    # Provided via extraSpecialArgs as packages for the current system
+    yandex-browser.yandex-browser-stable # google chrome-based yandex fork
   ];
 }
