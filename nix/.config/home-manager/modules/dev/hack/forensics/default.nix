@@ -1,19 +1,16 @@
-{pkgs, ...}: {
-  home.packages = with pkgs; [
-    binwalk # tool library for analyzing binary blobs and executable code
-    capstone
-    ddrescue
-    ext4magic
-    extundelete
-    ghidra-bin
-    outguess # universal steganographic tool that allows the insertion of hidden information into the redundant bits of data sources
-    p0f
-    pdf-parser
-    sleuthkit
-    steghide # open source steganography program
-    stegseek # tool to crack steganography
-    stegsolve # steganographic image analyzer, solver and data extractor for challanges
-    volatility3 # memory extraction framework
-    zsteg # detect stegano-hidden data in PNG & BMP
-  ];
+{ pkgs, lib, config, ... }:
+let
+  inherit (lib) optionals;
+  groups = with pkgs; rec {
+    fs = [ ddrescue ext4magic extundelete sleuthkit ];
+    stego = [ outguess steghide stegseek stegsolve zsteg ];
+    analysis = [ ghidra-bin binwalk capstone volatility3 pdf-parser ];
+    network = [ p0f ];
+  };
+in {
+  home.packages =
+    (optionals config.features.dev.hack.forensics.fs groups.fs)
+    ++ (optionals config.features.dev.hack.forensics.stego groups.stego)
+    ++ (optionals config.features.dev.hack.forensics.analysis groups.analysis)
+    ++ (optionals config.features.dev.hack.forensics.network groups.network);
 }

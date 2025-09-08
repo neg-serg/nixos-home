@@ -1,4 +1,6 @@
-{pkgs, ...}: {
+{ pkgs, lib, config, ... }:
+let
+  inherit (lib) optionals;
   nixpkgs = {
     config.allowUnfree = true;
     config.packageOverrides = super: {
@@ -11,21 +13,28 @@
       };
     };
   };
-  home.packages = with pkgs; [
-    pipx
-    (python3-lto.withPackages (ps:
-      with ps; [
+  home.packages = with pkgs;
+    let
+      core = ps: with ps; [
         colored
-        dbus-python # need for some scripts
         docopt
-        fontforge # for font monospacifier
         numpy
         annoy
         orjson
         psutil
-        pynvim
         requests
         tabulate
-      ]))
-  ];
+      ];
+      tools = ps: with ps; [
+        dbus-python # need for some scripts
+        fontforge # for font monospacifier
+        pynvim
+      ];
+      pyPackages = ps:
+        (optionals config.features.dev.python.core (core ps))
+        ++ (optionals config.features.dev.python.tools (tools ps));
+    in [
+      pipx
+      (python3-lto.withPackages pyPackages)
+    ];
 }
