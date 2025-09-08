@@ -1,10 +1,5 @@
 #!/usr/bin/env zsh
-# swayimg-actions: actions for images (rotate/move/copy/wallpaper) used by swayimg
-# Usage:
-#   swayimg-actions.sh <action> <file> [dest]
-# Actions:
-#   rotate-{left,right,180,ccw} | copyname | repeat | mv | cp |
-#   wall-{mono,fill,full,tile,center,cover}
+# swayimg-actions: move/copy/rotate/wallpaper for swayimg; dests limited to $XDG_PICTURES_DIR; before mv send prev_file via IPC to avoid end-of-list crash
 if [[ "$1" == "-h" || "$1" == "--help" ]]; then
   sed -n '2,7p' "$0" | sed 's/^# \{0,1\}//'; exit 0
 fi
@@ -19,6 +14,40 @@ z="${XDG_DATA_HOME:-$HOME/.local/share}/swayimg/data"
 last_file="${XDG_DATA_HOME:-$HOME/.local/share}/swayimg/last"
 trash="${HOME}/trash/1st-level/pic"
 rofi_cmd='rofi -dmenu -sort -matching fuzzy -no-plugins -no-only-match -theme sxiv -custom'
+pics_dir_default="$HOME/Pictures"
+pics_dir="${XDG_PICTURES_DIR:-$pics_dir_default}"
+
+# ---- IPC helpers -----------------------------------------------------------
+# Find swayimg IPC socket from env or runtime dir (best-effort)
+_find_ipc_socket() {
+  if [ -n "${SWAYIMG_IPC:-}" ] && [ -S "$SWAYIMG_IPC" ]; then
+    printf '%s' "$SWAYIMG_IPC"
+    return 0
+  fi
+  # Fallback: pick the newest socket that looks like swayimg-*.sock
+  local rt="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+  if [ -d "$rt" ]; then
+    # shellcheck disable=SC2012
+    local s
+    s="$(ls -t "$rt"/swayimg-*.sock 2>/dev/null | head -n1 || true)"
+    [ -n "$s" ] && [ -S "$s" ] && { printf '%s' "$s"; return 0; }
+  fi
+  return 1
+}
+
+_ipc_send() { # _ipc_send <command>
+  local sock cmd
+  cmd="$1"
+  sock="$(_find_ipc_socket || true)"
+  [ -n "$sock" ] || return 0
+  if command -v socat >/dev/null 2>&1; then
+    printf '%s\n' "$cmd" | socat - "UNIX-CONNECT:$sock" >/dev/null 2>&1 || true
+  elif command -v ncat >/dev/null 2>&1; then
+    printf '%s\n' "$cmd" | ncat -U "$sock" >/dev/null 2>&1 || true
+  else
+    return 0
+  fi
+}
 
 # ---- swww helpers -----------------------------------------------------------
 ensure_swww() {
@@ -76,21 +105,32 @@ rotate() {  # modifies file in-place
 }
 
 choose_dest() {
-  # Fuzzy-pick a destination dir using fasd history
+  # Fuzzy-pick a destination dir using fasd history, limited to XDG_PICTURES_DIR
   local prompt="$1"
-  local entries
+  local entries sxiv_db
+  sxiv_db="${XDG_DATA_HOME:-$HOME/.local/share}/sxiv/data"
 
   entries="$(
-    _FASD_DATA="$z" fasd -Rdl 2>/dev/null \
-      | awk '{ $1=""; sub(/^ +/, ""); print }' \
-      | sed "s:^$HOME:~:"
+    {
+      _FASD_DATA="$z" fasd -Rdl 2>/dev/null || true
+      _FASD_DATA="$sxiv_db" fasd -Rdl 2>/dev/null || true
+    } \
+    | awk '{ $1=""; sub(/^ +/, ""); print }' \
+    | awk -v pic="$pics_dir" 'index($0, pic) == 1' \
+    | sed "s:^$HOME:~:" \
+    | awk 'NF' \
+    | sort -u
   )"
 
   if [ -z "$entries" ]; then
     entries="$(
       {
-        printf '%s\n' "$HOME/Pictures" "$HOME/Downloads" "$trash"
-        command -v fd >/dev/null 2>&1 && fd -td -d 3 . "$HOME" 2>/dev/null
+        printf '%s\n' "$pics_dir"
+        if command -v fd >/dev/null 2>&1; then
+          fd -td -d 3 . "$pics_dir" 2>/dev/null
+        else
+          find "$pics_dir" -maxdepth 3 -type d -print 2>/dev/null
+        fi
       } \
       | sed "s:^$HOME:~:" \
       | awk 'NF' \
@@ -112,6 +152,10 @@ proc() { # mv/cp with remembered last dest
   fi
   [ -z "${dest}" ] && exit 0
   if [ -d "$dest" ]; then
+    # Avoid swayimg crash when current list ends after move: switch away first
+    if [ "$cmd" = "mv" ]; then
+      _ipc_send "prev_file"
+    fi
     while read -r line; do
       "$cmd" "$(realpath "$line")" "$dest"
     done <"$ff"
