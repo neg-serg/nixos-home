@@ -1,6 +1,12 @@
 { pkgs, lib, config, ... }:
 with lib; {
   config = {
+    assertions = [
+      {
+        assertion = (! config.features.emulators.retroarch.full) || (pkgs ? retroarchFull);
+        message = "RetroArch full mode enabled but pkgs.retroarchFull is not available on this system.";
+      }
+    ];
     home.packages = with pkgs;
       [
         pcem # emulator for ibm pc and clones
