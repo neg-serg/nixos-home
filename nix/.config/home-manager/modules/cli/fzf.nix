@@ -29,6 +29,8 @@
       "--footer='[Alt-f] Files  [Alt-d] Dirs  [Alt-p] Preview  [Alt-s] Sort  [Tab] Open'"
       # Header color: use terminal's white (kitty theme)
       "--color=header:white"
+      # Make footer color match header (underline + white)
+      "--color=footer:underline,white"
 
       # Search behavior: exact by default; quote for subsequence
       "--exact"
