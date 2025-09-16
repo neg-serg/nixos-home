@@ -1,88 +1,102 @@
-# Home Manager Configuration
+# Home Manager (Flakes) — User Environment
 
-This repository contains the Home Manager setup (flakes) for the user environment. It includes modular configuration for GUI (Hyprland), CLI tools, media, mail, secrets, and more.
+Comprehensive, modular Home Manager setup (flake) for a Wayland desktop (Hyprland) and CLI tooling. It uses a few small helpers to keep modules consistent, activation quiet, and user services tidy.
 
-- Agent guide (how to work in this repo): see AGENTS.md
-- Coding/style rules for Nix modules: see STYLE.md
-- Feature flags and options: modules/features.nix (with hy3/Hyprland compatibility assert)
+- How to work in this repo: see `AGENTS.md`
+- Coding/style rules for modules: `STYLE.md`
+- Feature flags (profiles, web/audio/dev, etc.): `modules/features.nix` and `OPTIONS.md`
 
-Quick tasks (requires `just`):
-- Format: `just fmt`
-- Checks: `just check`
-- Lint only: `just lint`
-- Switch HM: `just hm-neg` or `just hm-lite`
+## Quickstart
 
-Notes:
-- Hyprland auto-reload is disabled; reload manually via hotkey.
-- Quickshell Settings.json is ignored and must not be committed.
- - Hyprland config is split under modules/user/gui/hypr/conf:
-   - bindings/*.conf: apps, media, notify, resize, tiling, tiling-helpers, wallpaper, misc
-   - init.conf, rules.conf, workspaces.conf, autostart.conf (with concise section headers)
-   - Files are symlinked into ~/.config/hypr via Home Manager.
-- Rofi: wrapper ~/.local/bin/rofi ensures theme lookup works (config-relative and XDG data themes).
-  - Themes live in ~/.config/rofi and ~/.local/share/rofi/themes; Mod4+c uses the clip theme.
-  - Theme links are generated from a compact list (no manual duplication in the module).
+Prerequisites
+- Nix with flakes enabled: `experimental-features = nix-command flakes`
+- Home Manager available via flakes
+- Optional: `just` for the commands below (install with `nix profile install nixpkgs#just`)
 
-## Getting Started
+Clone and switch
+- Clone anywhere (example uses `~/.dotfiles`):
+  - `git clone --recursive git@github.com:neg-serg/nixos-home.git ~/.dotfiles`
+  - `cd ~/.dotfiles`
+- Switch profiles:
+  - Full: `just hm-neg` (alias for `home-manager switch --flake .#neg`)
+  - Lite: `just hm-lite` (alias for `home-manager switch --flake .#neg-lite`)
 
-- Prerequisites
-  - Nix with flakes enabled (`nix --version` should work; set `experimental-features = nix-command flakes`).
-  - Home Manager available (via flakes).
-  - Optional: `just` for the convenience commands below.
+Bootstrap (new machine)
+- If Home Manager isn’t installed as a flake yet:
+  - `nix run home-manager/master -- init --switch`
+- Then run the Quickstart commands above.
 
-- Clone and switch
-  - Clone to your dotfiles path (assumed `~/.dotfiles`):
-    - `git clone git@github.com:neg-serg/nixos-home.git ~/.dotfiles`
-  - Switch to the main profile:
-    - `home-manager switch --flake ~/.dotfiles/nix/.config/home-manager#neg`
-  - Minimal “lite” profile:
-    - `home-manager switch --flake ~/.dotfiles/nix/.config/home-manager#neg-lite`
+## Everyday Tasks
 
-- Profiles and features
-  - Profiles are defined via `features.profile` (`full` by default, `lite` for headless/minimal).
-  - Toggle stacks in `home.nix` under `features.*` (e.g., `features.gui.enable`, `features.mail.vdirsyncer.enable`).
-  - GPG stack is controlled by `features.gpg.enable`.
-  - Mozilla prefs: `features.web.prefs.fastfox.enable` gates FastFox-like tweaks (enabled in full, disabled in lite).
-  - Default browser: set `features.web.default` to one of `floorp | firefox | librewolf | nyxt | yandex`.
-    - Selected browser record is exposed as `config.lib.neg.web.defaultBrowser`.
-    - The full map is available at `config.lib.neg.web.browsers` for reuse.
+Formatting, linting, checks
+- `just fmt` — treefmt (Nix, shell, Python, etc.)
+- `just lint` — statix + deadnix (+ shellcheck/ruff if present)
+- `just check` — `nix flake check -L` (evaluations + docs)
 
-- Secrets (sops-nix)
-  - Secrets are managed under `secrets/` with sops-nix, referenced from `home.nix` and modules.
-  - Ensure your `age` key is available, then decrypt on activation. See `secrets/` and `.sops.yaml`.
+Build and status
+- `just hm-build` — build activation package only
+- `just hm-status` — show failed user units + last 120 journal lines
 
-## Common Commands
+Feature matrix (fast eval; no build)
+- `just show-features` — builds 4 HM eval checks and prints flattened `features.*`
+- Filter: `just show-features hm-eval-neg-retro-on hm-eval-lite-retro-off`
+- Only true flags: `ONLY_TRUE=1 just show-features`
+- Other system: `SYSTEM=aarch64-linux just show-features`
 
-- Format: `just fmt`
-- Checks: `just check`
-- Lint only: `just lint`
-- Switch HM: `just hm-neg` or `just hm-lite`
+Git hooks (optional)
+- `just hooks-enable` — sets `core.hooksPath` to `.githooks` (enforces `[scope] subject` messages)
 
-## Tips
+## Profiles & Features
 
-- Hyprland reload is manual only (hotkey in `modules/user/gui/hypr/conf/bindings.conf`).
-- Systemd user services use presets via `lib.neg.systemdUser.mkUnitFromPresets`.
-- See AGENTS.md for helper APIs and conventions; STYLE.md for code style and commit messages.
+- Profiles: `features.profile = "full" | "lite"` (default: full)
+  - Lite disables most stacks by default (GUI, web, media, dev extras)
+- Toggle stacks in `home.nix` under `features.*`, e.g.:
+  - `features.gui.enable`, `features.gui.qt.enable`
+  - `features.web.enable`, `features.web.default = "floorp" | "firefox" | "librewolf" | "nyxt" | "yandex"`
+  - `features.media.audio.core/apps/creation/mpd.enable`
+  - `features.emulators.retroarch.full`
+  - `features.gpg.enable`
+  - `features.excludePkgs = [ "pkgName" ... ]` to drop packages from curated lists
 
-## Viewers & Launchers
+The selected default browser is exposed as `config.lib.neg.web.defaultBrowser` and the full browser table as `config.lib.neg.web.browsers`.
 
-- Image viewers
-  - `swayimg-first` wrapper is installed as `~/.local/bin/swayimg` and `~/.local/bin/sx`.
-    - `sx` calls `swayimg-first` directly for convenience.
-    - Hypr rules cover `swayimg` (float/size/position), and workspace routing includes it.
-  - Legacy `sxivnc` wrapper tries `nsxiv → sxiv → swayimg` and is kept for older scripts.
+## Secrets (sops‑nix)
 
-- Rofi launcher
-  - `~/.local/bin/rofi` wrapper ensures theme lookup works (relative to config or via XDG data).
-  - `clip.rasi`, `sxiv.rasi` and required `win/*.rasi` are linked into `$XDG_DATA_HOME/rofi/themes` for `-theme` use.
-  - If you want an emoji picker, provide your own `~/bin/rofi-emoji` script.
+- Secrets live under `secrets/` and are referenced from `home.nix` and modules.
+- Ensure your `age` key is available; decryption happens on activation. See `.sops.yaml` and `secrets/` for paths.
 
-- Mozilla browsers
-  - Firefox, LibreWolf and Floorp are configured via a single constructor `mkBrowser` in `modules/user/web/mozilla-common-lib.nix`.
-  - Each browser module calls `common.mkBrowser { name, package, profileId ? "default"; }` and may extend with extras.
-  - Use `settingsExtra`, `addonsExtra`, `policiesExtra`, `nativeMessagingExtra`, `profileExtra` for per-browser overrides.
+## Systemd User Services
+
+- Services/timers use presets from `lib.neg.systemdUser.mkUnitFromPresets`:
+  - `graphical`, `netOnline`, `defaultWanted`, `timers`, `dbusSocket`, etc.
+  - Add extra `after`/`wants`/`partOf`/`wantedBy` only when truly needed.
+- For shell snippets, prefer `pkgs.writeShellApplication` with `runtimeInputs`.
+
+## Hyprland & GUI Notes
+
+- Autoreload is intentionally disabled; do not add activation‑time `hyprctl reload`.
+- Config is split under `modules/user/gui/hypr/conf` (bindings, rules, workspaces, etc.) and linked to `~/.config/hypr`.
+- Rofi wrapper `~/.local/bin/rofi` makes theme lookup robust (relative to config and XDG data).
+
+## Repo Layout
+
+- `flake.nix`, `flake.lock` — flake entry and inputs
+- `home.nix` — top‑level HM configuration
+- `modules/` — HM modules grouped by domain
+- `packages/` — overlays and local packages (`pkgs.neg.*`)
+- `secrets/` — sops‑nix data (see `.sops.yaml`)
+- `AGENTS.md` — helper API, activation fixups, presets, commit format
+- `STYLE.md` — coding conventions for modules
+- `OPTIONS.md` — overview of feature flags
+
+## Viewers & Launchers (Examples)
+
+- Images: `swayimg-first` is installed to `~/.local/bin/swayimg` and `~/.local/bin/sx` (Hypr rules route/focus it).
+- Rofi: themes are linked into `$XDG_DATA_HOME/rofi/themes`; wrapper enforces `-no-config` unless requested.
+- Mozilla: Firefox/LibreWolf/Floorp reuse a common constructor; use `*Extra` fields per‑browser.
 
 ## Developer Notes
 
-- Commit subjects must start with `[scope]` (enforced via `.githooks/commit-msg`).
+- Commit subjects must start with `[scope]` (enforced by `.githooks/commit-msg`).
   - Enable hooks: `just hooks-enable` or `git config core.hooksPath .githooks`
+- See `AGENTS.md` for activation fixups (XDG parents/targets), `writeShellApplication` usage, and presets.
