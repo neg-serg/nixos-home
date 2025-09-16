@@ -37,25 +37,29 @@ with rec {
   editor = "${defaultApplications.editor.desktop}.desktop";
 
   # Minimal associations to keep noise low; handlr covers the rest
-  my_associations = {
-    # Browsing
-    "text/html" = browser;
-    "application/xhtml+xml" = browser;
-    "x-scheme-handler/http" = browser;
-    "x-scheme-handler/https" = browser;
-    # Media
-    "audio/*" = video;
-    "video/*" = video;
-    "image/*" = image;
-    "application/pdf" = pdfreader;
-    # Misc handlers
-    "x-scheme-handler/magnet" = torrent;
-    "x-scheme-handler/tg" = telegram;
-    # Editing
-    "text/plain" = editor;
-    "application/json" = editor;
-    "application/x-shellscript" = editor;
-  };
+  my_associations = (
+    {
+      # Browsing
+      "text/html" = browser;
+      "application/xhtml+xml" = browser;
+      "x-scheme-handler/http" = browser;
+      "x-scheme-handler/https" = browser;
+      # Media
+      "audio/*" = video;
+      "video/*" = video;
+      "image/*" = image;
+      "application/pdf" = pdfreader;
+      # Misc handlers
+      "x-scheme-handler/tg" = telegram;
+      # Editing
+      "text/plain" = editor;
+      "application/json" = editor;
+      "application/x-shellscript" = editor;
+    }
+    // lib.optionalAttrs config.features.torrent.enable {
+      "x-scheme-handler/magnet" = torrent;
+    }
+  );
 }; {
   home.packages = with pkgs; config.lib.neg.pkgsList [
     handlr # xdg-open replacement with per-handler rules
@@ -112,12 +116,6 @@ with rec {
       "${config.xdg.stateHome}/zsh"
       "${config.home.homeDirectory}/.local/bin"
     ];
-
-  # Preserve user symlinks for Transmission config (history/resume). Do not
-  # force the directory to be a real dir here — only clean up if it's a broken
-  # symlink to avoid nuking external setups.
-  home.activation.keepTransmissionConfigSymlink =
-    config.lib.neg.mkRemoveIfBrokenSymlink "${config.xdg.configHome}/transmission-daemon";
 
   # Ensure swayimg wrapper target is absent before linking the wrapper
   home.activation.cleanSwayimgWrapper =

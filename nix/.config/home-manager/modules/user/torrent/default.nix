@@ -8,7 +8,7 @@ let
   transmissionPkg = pkgs.transmission_4;
   confDirNew = "${config.xdg.configHome}/transmission-daemon";
   confDirOld = "${config.xdg.configHome}/transmission";
-in {
+in lib.mkIf config.features.torrent.enable {
   # Link selected Transmission config files from repo; runtime subdirs remain local
   xdg.configFile."transmission-daemon/settings.json" =
     config.lib.neg.mkDotfilesSymlink "nix/.config/home-manager/modules/misc/transmission-daemon/conf/settings.json" false;
@@ -36,6 +36,12 @@ in {
     pkgs.neg.bt_migrate
     pkgs.rustmission
   ];
+
+  # Preserve user symlinks for Transmission config (history/resume). Do not
+  # force the directory to be a real dir here — only clean up if it's a broken
+  # symlink to avoid nuking external setups.
+  home.activation.keepTransmissionConfigSymlink =
+    config.lib.neg.mkRemoveIfBrokenSymlink "${config.xdg.configHome}/transmission-daemon";
 
   # Wrapper selects existing config dir that contains resume files, preferring the new path
   home.file.".local/bin/transmission-daemon-wrapper" = {

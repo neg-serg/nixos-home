@@ -64,6 +64,11 @@ in {
       retroarch.full = mkBool "use retroarchFull with extended (unfree) cores" false;
     };
 
+    # Torrent stack (Transmission and related tools/services)
+    torrent = {
+      enable = mkBool "enable Torrent stack (Transmission, tools, services)" true;
+    };
+
     # Fun/extras (e.g., curated art assets) that are nice-to-have
     fun = {
       enable = mkBool "enable fun extras (art collections, etc.)" true;
@@ -78,6 +83,7 @@ in {
     (mkIf (cfg.profile == "lite") {
       # Slim defaults for lite profile
       features = {
+        torrent.enable = mkDefault false;
         gui.enable = mkDefault false;
         mail.enable = mkDefault false;
         hack.enable = mkDefault false;
@@ -105,6 +111,7 @@ in {
     (mkIf (cfg.profile == "full") {
       # Rich defaults for full profile
       features = {
+        torrent.enable = mkDefault true;
         web = {
           enable = mkDefault true;
           tools.enable = mkDefault true;
