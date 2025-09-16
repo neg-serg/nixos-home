@@ -23,6 +23,25 @@ Notes:
   - Themes live in ~/.config/rofi and ~/.local/share/rofi/themes; Mod4+c uses the clip theme.
   - Theme links are generated from a compact list (no manual duplication in the module).
 
+### ydotoold (input emulation)
+
+- The user service `ydotoold` runs in the graphical session and requires access to `/dev/uinput`.
+- Requirements (any distro):
+  - Ensure the device exists and is writable by group `input`:
+    - udev rule: `KERNEL=="uinput", GROUP="input", MODE="0660"` (e.g., `/etc/udev/rules.d/99-uinput.rules`).
+    - Add your user to `input`: `sudo usermod -aG input $USER` and re-login.
+    - Load the kernel module: `sudo modprobe uinput` (if needed).
+  - Verify:
+    - `ls -l /dev/uinput` → group `input`, mode `crw-rw----`.
+    - `id -nG` contains `input`.
+- NixOS variant:
+  - `hardware.uinput.enable = true;`
+  - `users.users.neg.extraGroups = [ "input" ];`
+  - Optional rule for stricter perms: `services.udev.extraRules = ''KERNEL=="uinput", GROUP="input", MODE="0660"'';`
+- Manage the service:
+  - Start/stop: `systemctl --user start ydotoold` / `systemctl --user stop ydotoold`.
+  - Status/logs: `systemctl --user status ydotoold`, `journalctl --user -u ydotoold -n 100`.
+
 ## Getting Started
 
 - Prerequisites
