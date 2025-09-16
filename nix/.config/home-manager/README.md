@@ -1,102 +1,208 @@
-# Home Manager (Flakes) — User Environment
+# Home Manager (Flakes) — Comprehensive Guide
 
-Comprehensive, modular Home Manager setup (flake) for a Wayland desktop (Hyprland) and CLI tooling. It uses a few small helpers to keep modules consistent, activation quiet, and user services tidy.
+This repository provides a modular Home Manager configuration for a Wayland desktop (Hyprland) and a curated CLI toolset. It is a self‑contained flake with helpers to keep activation quiet, services consistent, and configuration safe under XDG.
 
-- How to work in this repo: see `AGENTS.md`
-- Coding/style rules for modules: `STYLE.md`
-- Feature flags (profiles, web/audio/dev, etc.): `modules/features.nix` and `OPTIONS.md`
+Useful references:
+- How to work in this repo (helpers, presets): `AGENTS.md`
+- Coding style for modules: `STYLE.md`
+- Feature flags and defaults: `modules/features.nix`, overview in `OPTIONS.md`
 
-## Quickstart
+--------------------------------------------------------------------------------
 
-Prerequisites
-- Nix with flakes enabled: `experimental-features = nix-command flakes`
-- Home Manager available via flakes
-- Optional: `just` for the commands below (install with `nix profile install nixpkgs#just`)
+## 1) Prerequisites
 
-Clone and switch
-- Clone anywhere (example uses `~/.dotfiles`):
+1. Install Nix and enable flakes
+   - Add to `/etc/nix/nix.conf` (system‑wide) or set per‑command:
+     - `experimental-features = nix-command flakes`
+   - Verify: `nix --version` and `nix flake --help`
+
+2. Install (or run) Home Manager via flakes
+   - One‑shot init (if HM isn’t set up yet):
+     - `nix run home-manager/master -- init --switch`
+
+3. Optional but recommended: Just
+   - `nix profile install nixpkgs#just`
+
+--------------------------------------------------------------------------------
+
+## 2) Clone & Switch Profiles
+
+Clone
+- GitHub via SSH (recommended):
   - `git clone --recursive git@github.com:neg-serg/nixos-home.git ~/.dotfiles`
-  - `cd ~/.dotfiles`
-- Switch profiles:
-  - Full: `just hm-neg` (alias for `home-manager switch --flake .#neg`)
-  - Lite: `just hm-lite` (alias for `home-manager switch --flake .#neg-lite`)
+- GitHub via HTTPS:
+  - `git clone --recursive https://github.com/neg-serg/nixos-home ~/.dotfiles`
+- Enter the repo: `cd ~/.dotfiles`
 
-Bootstrap (new machine)
-- If Home Manager isn’t installed as a flake yet:
-  - `nix run home-manager/master -- init --switch`
-- Then run the Quickstart commands above.
+Switch (Home Manager)
+- Full profile: `just hm-neg` (same as `home-manager switch --flake .#neg`)
+- Lite profile: `just hm-lite` (same as `home-manager switch --flake .#neg-lite`)
 
-## Everyday Tasks
+Build without switching
+- `just hm-build` — useful for CI or sanity checks
+
+--------------------------------------------------------------------------------
+
+## 3) Caches & Flake Config
+
+The flake declares `nixConfig` (caches + keys) and Home Manager is set to accept it:
+- In `home.nix`: `nix.settings.accept-flake-config = true;`
+- Caches include `nix-community`, `hyprland`, `garnix`, and more (see `flake.nix`).
+
+If your system ignores flake‑embedded configs, add them to `/etc/nix/nix.conf`.
+Check effective config: `nix show-config`.
+
+--------------------------------------------------------------------------------
+
+## 4) Profiles & Feature Flags
+
+Profiles
+- `features.profile = "full" | "lite"` (default: full)
+  - Lite disables most stacks (GUI, web, media, extra dev) by default.
+
+Common flags (set in `home.nix` or via module overlays)
+- GUI: `features.gui.enable`, `features.gui.qt.enable`
+- Web: `features.web.enable`, `features.web.default = "floorp" | "firefox" | "librewolf" | "nyxt" | "yandex"`
+- Audio: `features.media.audio.core/apps/creation/mpd.enable`
+- Emulators: `features.emulators.retroarch.full`
+- GPG: `features.gpg.enable`
+- Exclude packages (by pname) from curated lists: `features.excludePkgs = [ "name" ... ]`
+- Torrents: `features.torrent.enable` (Transmission/tools/service)
+
+Inspect flags without building
+- `just show-features` — prints flattened `features.*` for both profiles and RetroArch toggles
+- Only enabled keys: `ONLY_TRUE=1 just show-features`
+- Filter checks: `just show-features hm-eval-neg-retro-on`
+
+--------------------------------------------------------------------------------
+
+## 5) Everyday Commands
 
 Formatting, linting, checks
-- `just fmt` — treefmt (Nix, shell, Python, etc.)
+- `just fmt` — run treefmt across the repo
 - `just lint` — statix + deadnix (+ shellcheck/ruff if present)
-- `just check` — `nix flake check -L` (evaluations + docs)
+- `just check` — `nix flake check -L` (validates HM evals and docs)
 
-Build and status
-- `just hm-build` — build activation package only
-- `just hm-status` — show failed user units + last 120 journal lines
-
-Feature matrix (fast eval; no build)
-- `just show-features` — builds 4 HM eval checks and prints flattened `features.*`
-- Filter: `just show-features hm-eval-neg-retro-on hm-eval-lite-retro-off`
-- Only true flags: `ONLY_TRUE=1 just show-features`
-- Other system: `SYSTEM=aarch64-linux just show-features`
+Status & logs
+- `just hm-status` —
+  - `systemctl --user --failed`
+  - `journalctl --user -b -n 120 --no-pager`
 
 Git hooks (optional)
-- `just hooks-enable` — sets `core.hooksPath` to `.githooks` (enforces `[scope] subject` messages)
+- `just hooks-enable` — setup `.githooks` (enforces `[scope] subject` commit messages)
 
-## Profiles & Features
+--------------------------------------------------------------------------------
 
-- Profiles: `features.profile = "full" | "lite"` (default: full)
-  - Lite disables most stacks by default (GUI, web, media, dev extras)
-- Toggle stacks in `home.nix` under `features.*`, e.g.:
-  - `features.gui.enable`, `features.gui.qt.enable`
-  - `features.web.enable`, `features.web.default = "floorp" | "firefox" | "librewolf" | "nyxt" | "yandex"`
-  - `features.media.audio.core/apps/creation/mpd.enable`
-  - `features.emulators.retroarch.full`
-  - `features.gpg.enable`
-  - `features.excludePkgs = [ "pkgName" ... ]` to drop packages from curated lists
+## 6) Secrets (sops‑nix)
 
-The selected default browser is exposed as `config.lib.neg.web.defaultBrowser` and the full browser table as `config.lib.neg.web.browsers`.
+Layout
+- Secrets live in `secrets/`, referenced from `home.nix` and modules.
+- `.sops.yaml` defines keys and file rules.
 
-## Secrets (sops‑nix)
+Age keys
+- Ensure your age key is present (e.g., `~/.config/sops/age/keys.txt`).
+- On activation, sops‑nix decrypts secrets and symlinks them into HM’s build output.
 
-- Secrets live under `secrets/` and are referenced from `home.nix` and modules.
-- Ensure your `age` key is available; decryption happens on activation. See `.sops.yaml` and `secrets/` for paths.
+Typical uses
+- Nix settings `netrc-file` for GitHub access
+- Cachix token via a sops file
 
-## Systemd User Services
+--------------------------------------------------------------------------------
 
-- Services/timers use presets from `lib.neg.systemdUser.mkUnitFromPresets`:
-  - `graphical`, `netOnline`, `defaultWanted`, `timers`, `dbusSocket`, etc.
-  - Add extra `after`/`wants`/`partOf`/`wantedBy` only when truly needed.
-- For shell snippets, prefer `pkgs.writeShellApplication` with `runtimeInputs`.
+## 7) Systemd (User) Services
 
-## Hyprland & GUI Notes
+Presets
+- Use `config.lib.neg.systemdUser.mkUnitFromPresets` to attach the right targets:
+  - `graphical`, `netOnline`, `defaultWanted`, `timers`, `dbusSocket`, `socketsTarget`
+- Extend with `after` / `wants` / `partOf` / `wantedBy` only if needed.
 
-- Autoreload is intentionally disabled; do not add activation‑time `hyprctl reload`.
-- Config is split under `modules/user/gui/hypr/conf` (bindings, rules, workspaces, etc.) and linked to `~/.config/hypr`.
-- Rofi wrapper `~/.local/bin/rofi` makes theme lookup robust (relative to config and XDG data).
+Managing services
+- Start/stop/status: `systemctl --user start|stop|status <name>`
+- Logs: `journalctl --user -u <name> -n 100 -f`
 
-## Repo Layout
+Implementation tips
+- Use `pkgs.writeShellApplication` for ExecStartPre/ExecStart wrappers.
+- Prefer `lib.getExe` / `lib.getExe'` over hard‑coding `${pkgs.foo}/bin/foo`.
+
+--------------------------------------------------------------------------------
+
+## 8) Hyprland & GUI
+
+Hyprland
+- Autoreload is disabled; don’t trigger `hyprctl reload` during activation.
+- Config split under `modules/user/gui/hypr/conf` (bindings, rules, workspaces, autostart, etc.).
+- `hy3` plugin and Hyprland are pinned; compatibility is asserted in `modules/features.nix`.
+
+Rofi
+- Wrapper `~/.local/bin/rofi` ensures theme discovery and safe defaults (`-no-config` unless requested).
+- Themes are linked into `$XDG_DATA_HOME/rofi/themes`.
+
+Images
+- `swayimg-first` wrapper is installed to `~/.local/bin/swayimg` and `~/.local/bin/sx` for convenience.
+
+--------------------------------------------------------------------------------
+
+## 9) XDG & Activation Safety
+
+XDG helpers
+- Use `modules/lib/xdg-helpers.nix` (`mkXdgText`, `mkXdgSource`, `mkXdgData*`, `mkXdgCache*`).
+- Aggregated fixups ensure parent dirs are real and targets are conflict‑free:
+  - `lib.neg.mkXdgFixParents { configs = attrNames config.xdg.configFile; ... }`
+  - `lib.neg.mkXdgFixTargets { configs = attrNames config.xdg.configFile; ... }`
+- Optional: `preserveConfigPatterns` to keep specific symlinked parents.
+
+Activation helpers
+- `mkEnsureRealDir[s]`, `mkEnsureAbsent[Many]`, `mkEnsureDirsAfterWrite`, `mkEnsureMaildirs`.
+
+--------------------------------------------------------------------------------
+
+## 10) Updating Inputs
+
+General
+- Update all inputs: `nix flake update`
+- Or a single input: `nix flake lock --update-input <name>`
+
+Hyprland/hy3 compatibility
+- If you bump pins, also extend the compatibility matrix in `modules/features.nix`.
+- The assert will fail early with a helpful message if pins are incompatible.
+
+--------------------------------------------------------------------------------
+
+## 11) Troubleshooting
+
+Activation/eval errors
+- `just hm-status` to check failed units and recent logs
+- Rebuild without switching: `just hm-build`
+
+Common issues
+- Services failing on non‑NixOS (missing system paths) — units include guards like `ConditionPathExists`; report if you hit any gaps.
+- Stale symlinks or unexpected files under XDG paths — aggregated fixups remove conflicts before linking.
+- Editor/terminal not launching — defaults come from `features.web.default` and XDG choices; verify via `show-features` and `xdg-mime query`.
+
+Cleanup helpers
+- `just clean-caches` — removes local caches (zsh/nu caches, pycache, etc.) within the repo tree and some common XDG paths.
+
+--------------------------------------------------------------------------------
+
+## 12) Repo Layout
 
 - `flake.nix`, `flake.lock` — flake entry and inputs
-- `home.nix` — top‑level HM configuration
-- `modules/` — HM modules grouped by domain
-- `packages/` — overlays and local packages (`pkgs.neg.*`)
-- `secrets/` — sops‑nix data (see `.sops.yaml`)
-- `AGENTS.md` — helper API, activation fixups, presets, commit format
-- `STYLE.md` — coding conventions for modules
-- `OPTIONS.md` — overview of feature flags
+- `home.nix` — top‑level Home Manager configuration
+- `modules/` — HM modules (CLI, dev, media, user, etc.)
+- `packages/` — overlays and local packages (`pkgs.neg.*` namespace)
+- `secrets/` — sops‑nix secrets (see `.sops.yaml`)
+- Docs:
+  - `AGENTS.md` — helper APIs, activation fixups, presets, commit conventions
+  - `STYLE.md` — coding style and patterns used in modules
+  - `OPTIONS.md` — feature flags overview and profile deltas
 
-## Viewers & Launchers (Examples)
+--------------------------------------------------------------------------------
 
-- Images: `swayimg-first` is installed to `~/.local/bin/swayimg` and `~/.local/bin/sx` (Hypr rules route/focus it).
-- Rofi: themes are linked into `$XDG_DATA_HOME/rofi/themes`; wrapper enforces `-no-config` unless requested.
-- Mozilla: Firefox/LibreWolf/Floorp reuse a common constructor; use `*Extra` fields per‑browser.
+## 13) Contribution Notes
 
-## Developer Notes
-
-- Commit subjects must start with `[scope]` (enforced by `.githooks/commit-msg`).
-  - Enable hooks: `just hooks-enable` or `git config core.hooksPath .githooks`
-- See `AGENTS.md` for activation fixups (XDG parents/targets), `writeShellApplication` usage, and presets.
+- Commit messages: `[scope] subject` (English, imperative). Examples:
+  - `[activation] reduce noise`
+  - `[features] add torrent flag`
+  - `[paths] use lib.getExe for binaries`
+- Enable hooks: `just hooks-enable` or `git config core.hooksPath .githooks`
+- Keep changes focused; prefer small, reviewable patches.
