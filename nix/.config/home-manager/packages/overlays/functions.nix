@@ -36,6 +36,22 @@ _final: prev: {
       # Go (buildGoModule): override vendor hash
       overrideGoModule = drv: hash:
         drv.overrideAttrs (_: { vendorHash = hash; });
+
+      # Autoreconf helper: ensure autoreconf and required autotools are available
+      # Adds autoreconfHook and common tools to nativeBuildInputs.
+      withAutoreconf = drv:
+        drv.overrideAttrs (old: {
+          nativeBuildInputs =
+            (old.nativeBuildInputs or [])
+            ++ [
+              prev.autoreconfHook
+              prev.autoconf
+              prev.automake
+              prev.libtool
+              prev.pkg-config
+              prev.gettext
+            ];
+        });
     };
   };
 }

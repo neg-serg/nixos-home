@@ -1,18 +1,6 @@
 _final: prev: {
-  # Targeted fix: tigervnc build needs autoreconf during embedded xserver patching.
-  tigervnc = _final.neg.functions.withOverrideAttrs prev.tigervnc (old: {
-    nativeBuildInputs =
-      (old.nativeBuildInputs or [])
-      ++ [
-        # Hook and required tools to ensure `autoreconf` exists in PATH
-        prev.autoreconfHook
-        prev.autoconf
-        prev.automake
-        prev.libtool
-        prev.pkg-config
-        prev.gettext
-      ];
-  });
+  # Targeted fix via reusable helper: tigervnc needs autoreconf.
+  tigervnc = _final.neg.functions.withAutoreconf prev.tigervnc;
 
   # Reserved for development/toolchain overlays
   neg = {};
