@@ -30,21 +30,33 @@ hm-build:
 hooks-enable:
     git config core.hooksPath .githooks
 
-show-features:
-    # Print flattened features for neg/lite with RetroArch on/off
+show-features names*:
+    # Print flattened features for given check names (or default matrix)
+    # Usage:
+    #   just show-features                        # all default items
+    #   just show-features hm-eval-neg-retro-on   # specific item(s)
+    #   ONLY_TRUE=1 just show-features            # show only feature keys with value=true
     set -eu
     sys=${SYSTEM:-x86_64-linux}
-    items=(
-      hm-eval-neg-retro-on
-      hm-eval-neg-retro-off
-      hm-eval-lite-retro-on
-      hm-eval-lite-retro-off
-    )
+    if [ "$#" -gt 0 ]; then \
+      items=("$@"); \
+    else \
+      items=( \
+        hm-eval-neg-retro-on \
+        hm-eval-neg-retro-off \
+        hm-eval-lite-retro-on \
+        hm-eval-lite-retro-off \
+      ); \
+    fi
     for name in "${items[@]}"; do \
       echo "== ${name} (system=${sys}) =="; \
       out=$(nix build --no-link --print-out-paths ".#checks.${sys}.${name}"); \
       if command -v jq >/dev/null 2>&1; then \
-        jq . <"$out"; \
+        if [ "${ONLY_TRUE:-}" = "1" ]; then \
+          jq -r 'to_entries|map(select(.value==true).key)|.[]' <"$out"; \
+        else \
+          jq . <"$out"; \
+        fi; \
       else \
         cat "$out"; \
       fi; \
