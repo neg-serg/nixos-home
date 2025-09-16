@@ -26,6 +26,27 @@ hm-lite:
 hooks-enable:
     git config core.hooksPath .githooks
 
+show-features:
+    # Print flattened features for neg/lite with RetroArch on/off
+    set -eu
+    sys=${SYSTEM:-x86_64-linux}
+    items=(
+      hm-eval-neg-retro-on
+      hm-eval-neg-retro-off
+      hm-eval-lite-retro-on
+      hm-eval-lite-retro-off
+    )
+    for name in "${items[@]}"; do \
+      echo "== ${name} (system=${sys}) =="; \
+      out=$(nix build --no-link --print-out-paths ".#checks.${sys}.${name}"); \
+      if command -v jq >/dev/null 2>&1; then \
+        jq . <"$out"; \
+      else \
+        cat "$out"; \
+      fi; \
+      echo; \
+    done
+
 clean-caches:
     set -eu
     repo=$(git rev-parse --show-toplevel)
