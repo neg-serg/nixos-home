@@ -13,10 +13,12 @@ with lib;
       text = ''
         #!/usr/bin/env bash
         set -euo pipefail
+        # Repo root configured in HM (dotfilesRoot)
+        repo="${config.lib.neg.dotfilesRoot}/nix/.config/home-manager"
         # Run flake checks for HM (format docs, evals, etc.)
-        (cd "$HOME/.dotfiles/nix/.config/home-manager" && nix flake check -L)
+        (cd "$repo" && nix flake check -L)
         # Format the repo via treefmt (Nix, shell, Python, etc.)
-        (cd "$HOME/.dotfiles/nix/.config/home-manager" && nix fmt)
+        (cd "$repo" && nix fmt)
         # Sanity: reject whitespace errors in staged diff
         git diff --check
         # Stage any formatter changes
