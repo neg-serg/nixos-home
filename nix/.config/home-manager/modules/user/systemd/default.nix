@@ -1,4 +1,13 @@
 { pkgs, lib, config, ... }:
+let
+  picDirsRunner = pkgs.writeShellApplication {
+    name = "pic-dirs-runner";
+    text = ''
+      set -euo pipefail
+      exec "$HOME/bin/pic-dirs-list"
+    '';
+  };
+in
 with lib; {
   systemd.user.startServices = true;
 
@@ -33,7 +42,7 @@ with lib; {
       StartLimitIntervalSec = "0";
     };
     Service = {
-      ExecStart = "/bin/sh -lc '%h/bin/pic-dirs-list'";
+      ExecStart = "${picDirsRunner}/bin/pic-dirs-runner";
       PassEnvironment = ["XDG_PICTURES_DIR" "XDG_DATA_HOME"];
       Restart = "on-failure";
       RestartSec = "1";
@@ -55,7 +64,7 @@ with lib; {
 
   # ydotoold (input emulation daemon)
   # Requires access to /dev/uinput (system-level udev rules and group membership).
-  systemd.user.services.ydotoold = lib.mkIf (config.features.gui.enable && (config.features.cli.sys or true)) (
+  systemd.user.services.ydotoold = lib.mkIf config.features.cli.sys (
     lib.recursiveUpdate {
       Unit = {
         Description = "ydotool daemon";

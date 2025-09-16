@@ -5,10 +5,8 @@
   ...
 }: let
   inherit (lib) concatStringsSep;
-  inherit (pkgs) runtimeShell writeScript;
   inherit (config.xdg) configHome dataHome;
   aria2-bin = "${pkgs.aria2}/bin/aria2c";
-  coreutils-bin = "${pkgs.coreutils}/bin";
   sessionFile = "${dataHome}/aria2/session";
 in
   lib.mkIf (config.features.web.enable && config.features.web.tools.enable) {
@@ -36,14 +34,18 @@ in
       Unit.Description = "aria2 download manager";
       Service = {
         ExecStartPre = let
-          prestart = writeScript "aria2-prestart" ''
-            #!${runtimeShell}
-            ${coreutils-bin}/mkdir -p ${dataHome}/aria2
-            if [ ! -e "${sessionFile}" ]; then
-                ${coreutils-bin}/touch ${sessionFile}
-            fi
-          '';
-        in "${prestart}";
+          prestart = pkgs.writeShellApplication {
+            name = "aria2-prestart";
+            runtimeInputs = [ pkgs.coreutils ];
+            text = ''
+              set -euo pipefail
+              mkdir -p ${dataHome}/aria2
+              if [ ! -e "${sessionFile}" ]; then
+                touch ${sessionFile}
+              fi
+            '';
+          };
+        in "${prestart}/bin/aria2-prestart";
         ExecStart = concatStringsSep " " [
           "${aria2-bin}"
           "--enable-rpc"
@@ -52,7 +54,7 @@ in
           "--save-session-interval=1800"
           "--input-file=${sessionFile}"
         ];
-        ExecReload = "${coreutils-bin}/kill -HUP $MAINPID";
+        ExecReload = "${pkgs.coreutils}/bin/kill -HUP $MAINPID";
         # We don't want to class an exit before downloads finish as a
         # failure if we stop aria2c, since the entire point of it is
         # that it will resume the downloads.
