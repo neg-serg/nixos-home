@@ -23,6 +23,10 @@ hm-neg:
 hm-lite:
     home-manager switch --flake .#neg-lite
 
+hm-build:
+    # Build activation package without switching
+    home-manager build --flake .#neg
+
 hooks-enable:
     git config core.hooksPath .githooks
 
@@ -46,6 +50,14 @@ show-features:
       fi; \
       echo; \
     done
+
+hm-status:
+    set -eu
+    echo "== systemd --user failed units =="
+    systemctl --user --failed || true
+    echo
+    echo "== recent user journal =="
+    journalctl --user -b --no-pager -n 200 || true
 
 clean-caches:
     set -eu
