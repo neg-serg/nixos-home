@@ -62,22 +62,5 @@ with lib; {
     partOf = ["graphical-session.target"];
   });
 
-  # ydotoold (input emulation daemon)
-  # Requires access to /dev/uinput (system-level udev rules and group membership).
-  systemd.user.services.ydotoold = lib.mkIf config.features.cli.sys (
-    lib.recursiveUpdate {
-      Unit = {
-        Description = "ydotool daemon";
-        ConditionPathExists = "/dev/uinput";
-        StartLimitIntervalSec = "0";
-      };
-      Service = {
-        Type = "simple";
-        ExecStart = "${pkgs.ydotool}/bin/ydotoold";
-        Restart = "on-failure";
-        RestartSec = "2";
-        Slice = "background-graphical.slice";
-      };
-    } (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["graphical"]; })
-  );
+  # (ydotoold service removed by request)
 }
