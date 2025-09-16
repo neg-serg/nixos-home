@@ -49,6 +49,7 @@ with lib; let
     sys = [
       cpufetch # CPU info fetch
       ramfetch # RAM info fetch
+      ydotool # input emulation tool (Wayland/X11-agnostic)
     ];
 
     # Dev helpers, diffs, automation, navigation
