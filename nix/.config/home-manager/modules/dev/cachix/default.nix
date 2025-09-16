@@ -68,7 +68,11 @@ in {
     };
 
     systemd.user.services."cachix-watch-store" = lib.mkIf cfg.enable (lib.recursiveUpdate {
-      Unit.Description = "Cachix watch-store for ${cfg.cacheName}";
+      Unit = {
+        Description = "Cachix watch-store for ${cfg.cacheName}";
+        # On non-NixOS systems /run/current-system is absent; avoid spurious errors
+        ConditionPathExists = "/run/current-system";
+      };
       Service = {
         Type = "simple";
         EnvironmentFile =
