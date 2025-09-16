@@ -19,9 +19,10 @@ This repo is configured for Home Manager + flakes with a small set of helpers to
   - `mkEnsureDirsAfterWrite [..]` — create runtime dirs after writeBoundary
   - `mkEnsureMaildirs base [boxes..]` — create Maildir trees after writeBoundary
   - Aggregated XDG fixups (new helpers):
-    - `mkXdgFixParents { configs = attrNames config.xdg.configFile; datas = attrNames config.xdg.dataFile; caches = attrNames config.xdg.cacheFile; preserveConfigPatterns = [ "transmission-daemon/*" ]; }`
+    - `mkXdgFixParents { configs = attrNames config.xdg.configFile; datas = attrNames config.xdg.dataFile; caches = attrNames config.xdg.cacheFile; /* optional */ preserveConfigPatterns = [ "some-app/*" ]; }`
+      - По умолчанию `preserveConfigPatterns = []`. Передавайте паттерны из конкретного модуля, если нужно сохранить родителя‑симлинк для части дерева (например, внешний менеджмент конфигов конкретного приложения).
     - `mkXdgFixTargets { configs = …; datas = …; caches = …; }`
-    - These are wired in `modules/user/xdg/default.nix` as `home.activation.xdgFixParents` and `home.activation.xdgFixTargets`.
+    - Эти фиксы подключены в `modules/user/xdg/default.nix` как `home.activation.xdgFixParents` и `home.activation.xdgFixTargets`.
   - Common user paths prepared via:
     - `ensureCommonDirs`, `cleanSwayimgWrapper`, `ensureGmailMaildirs`
 - systemd (user) presets
