@@ -6,7 +6,7 @@
 }: let
   # Be robust if defaultBrowser is not set yet
   db = config.lib.neg.web.defaultBrowser or {};
-  browserBin = db.bin or "${pkgs.xdg-utils}/bin/xdg-open";
+  browserBin = db.bin or "${lib.getExe' pkgs.xdg-utils "xdg-open"}";
   browserArg = db.newTabArg or "";
 in {
   services.dunst = {

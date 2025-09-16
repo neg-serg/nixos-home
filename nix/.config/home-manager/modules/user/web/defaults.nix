@@ -27,8 +27,8 @@ in {
   # Provide common env defaults (can be overridden elsewhere if needed)
   config.home.sessionVariables = mkIf cfg.enable (
     let db = browser; in {
-      BROWSER = db.bin or "${pkgs.xdg-utils}/bin/xdg-open";
-      DEFAULT_BROWSER = db.bin or "${pkgs.xdg-utils}/bin/xdg-open";
+      BROWSER = db.bin or (lib.getExe' pkgs.xdg-utils "xdg-open");
+      DEFAULT_BROWSER = db.bin or (lib.getExe' pkgs.xdg-utils "xdg-open");
     }
   );
 

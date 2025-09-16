@@ -8,7 +8,7 @@
     Unit.Description = "Keep track of media player activity";
     Service = {
       Type = "oneshot";
-      ExecStart = "${pkgs.playerctl}/bin/playerctld daemon";
+      ExecStart = "${lib.getExe' pkgs.playerctl "playerctld"} daemon";
     };
   } (config.lib.neg.systemdUser.mkUnitFromPresets {presets = ["defaultWanted"];});
 }

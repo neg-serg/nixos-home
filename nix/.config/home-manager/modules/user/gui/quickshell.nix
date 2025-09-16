@@ -11,6 +11,7 @@ with lib; let
     pkgs.fd # fast file finder used by QS scripts
     pkgs.coreutils # basic CLI utilities
   ];
+  qsBin = lib.getExe' inputs.quickshell.packages.${pkgs.system}.default "qs";
   quickshellWrapped = pkgs.stdenv.mkDerivation {
     name = "quickshell-wrapped";
     buildInputs = [
@@ -20,7 +21,7 @@ with lib; let
 
     installPhase = ''
       mkdir -p $out/bin
-      makeWrapper ${inputs.quickshell.packages.${pkgs.system}.default}/bin/qs $out/bin/qs \
+      makeWrapper ${qsBin} $out/bin/qs \
         --prefix QT_PLUGIN_PATH : "${pkgs.qt6.qtbase}/${pkgs.qt6.qtbase.qtPluginPrefix}" \
         --prefix QT_PLUGIN_PATH : "${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtPluginPrefix}" \
         --prefix QML2_IMPORT_PATH : "${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtQmlPrefix}" \

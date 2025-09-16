@@ -5,7 +5,7 @@
 }: {
   programs.fzf = {
     enable = true;
-    defaultCommand = "${lib.getBin pkgs.fd}/bin/fd --type=f --hidden --exclude=.git";
+    defaultCommand = "${lib.getExe pkgs.fd} --type=f --hidden --exclude=.git";
     defaultOptions = builtins.filter (x: builtins.typeOf x == "string") [
       # Key bindings & quick actions
       "--bind='alt-p:toggle-preview,alt-a:select-all,alt-s:toggle-sort'"

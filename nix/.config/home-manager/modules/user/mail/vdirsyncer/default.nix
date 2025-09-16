@@ -30,8 +30,8 @@ in with lib;
         Unit.Description = "Vdirsyncer synchronization service";
         Service = {
           Type = "oneshot";
-          ExecStartPre = "${pkgs.vdirsyncer}/bin/vdirsyncer metasync";
-          ExecStart = "${pkgs.vdirsyncer}/bin/vdirsyncer sync";
+          ExecStartPre = "${lib.getExe pkgs.vdirsyncer} metasync";
+          ExecStart = "${lib.getExe pkgs.vdirsyncer} sync";
         };
       } (config.lib.neg.systemdUser.mkUnitFromPresets {presets = ["netOnline"];});
 

@@ -4,7 +4,7 @@ with {
     name = "pinentry-rofi-with-env";
     text = ''
       PATH="$PATH:${pkgs.coreutils}/bin:${pkgs.rofi}/bin"
-      "${pkgs.pinentry-rofi}/bin/pinentry-rofi" "$@"
+      "${lib.getExe pkgs.pinentry-rofi}" "$@"
     '';
   };
 };

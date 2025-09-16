@@ -66,7 +66,7 @@ in lib.mkIf config.features.torrent.enable {
   systemd.user.services.transmission-daemon = lib.recursiveUpdate {
     Unit = {
       Description = "transmission service";
-      ConditionPathExists = "${transmissionPkg}/bin/transmission-daemon";
+      ConditionPathExists = "${lib.getExe' transmissionPkg "transmission-daemon"}";
     };
     Service = {
       Type = "simple";

@@ -14,7 +14,7 @@
     # Export socket path for child exec actions to use
     export SWAYIMG_IPC="$sock"
     # Start swayimg with IPC enabled
-    "${pkgs.swayimg}/bin/swayimg" --ipc="$sock" "$@" &
+    "${lib.getExe pkgs.swayimg}" --ipc="$sock" "$@" &
     pid=$!
     i=0
     while :; do
@@ -32,7 +32,7 @@
       printf '%s' "$action" \
           | tr ';' '\n' \
           | sed '/^[[:space:]]*$/d' \
-          | "${pkgs.socat}/bin/socat" - "UNIX-CONNECT:$sock" >/dev/null 2>&1 || true
+          | "${lib.getExe pkgs.socat}" - "UNIX-CONNECT:$sock" >/dev/null 2>&1 || true
     fi
     wait "$pid" # Forward exit code
     rc=$?

@@ -7,12 +7,12 @@
 with rec {
   db = config.lib.neg.web.defaultBrowser or {};
   browserRec = {
-    bin = db.bin or "${pkgs.xdg-utils}/bin/xdg-open";
+    bin = db.bin or "${lib.getExe' pkgs.xdg-utils "xdg-open"}";
     desktop = db.desktop or "floorp.desktop";
   };
   defaultApplications = {
     terminal = {
-      cmd = "${pkgs.kitty}/bin/kitty";
+      cmd = "${lib.getExe' pkgs.kitty "kitty"}";
       desktop = "kitty";
     };
     browser = {
@@ -22,7 +22,7 @@ with rec {
       desktop = lib.removeSuffix ".desktop" browserRec.desktop;
     };
     editor = {
-      cmd = "${pkgs.neovim}/bin/nvim";
+      cmd = "${lib.getExe' pkgs.neovim "nvim"}";
       desktop = "nvim";
     };
   };

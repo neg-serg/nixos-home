@@ -12,28 +12,28 @@ in {
   firefox = {
     name = "firefox";
     pkg = pkgs.firefox;
-    bin = "${pkgs.firefox}/bin/firefox";
+    bin = lib.getExe' pkgs.firefox "firefox";
     desktop = "firefox.desktop";
     newTabArg = "-new-tab";
   };
   librewolf = {
     name = "librewolf";
     pkg = pkgs.librewolf;
-    bin = "${pkgs.librewolf}/bin/librewolf";
+    bin = lib.getExe' pkgs.librewolf "librewolf";
     desktop = "librewolf.desktop";
     newTabArg = "-new-tab";
   };
   nyxt = {
     name = "nyxt";
     pkg = nyxtPkg;
-    bin = "${nyxtPkg}/bin/nyxt";
+    bin = lib.getExe' nyxtPkg "nyxt";
     desktop = "nyxt.desktop";
     newTabArg = "";
   };
   floorp = {
     name = "floorp";
     pkg = floorpPkg;
-    bin = "${floorpPkg}/bin/floorp";
+    bin = lib.getExe' floorpPkg "floorp";
     desktop = "floorp.desktop";
     newTabArg = "-new-tab";
   };
@@ -41,9 +41,8 @@ in {
   yandex = {
     name = "yandex";
     pkg = yandexBrowser.yandex-browser-stable;
-    bin = "${yandexBrowser.yandex-browser-stable}/bin/yandex-browser-stable";
+    bin = lib.getExe' yandexBrowser.yandex-browser-stable "yandex-browser-stable";
     desktop = "yandex-browser.desktop";
     newTabArg = "--new-tab";
   };
 })
-
