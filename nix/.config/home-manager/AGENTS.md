@@ -25,6 +25,22 @@ This repo is configured for Home Manager + flakes with a small set of helpers to
     - These fixups are wired in `modules/user/xdg/default.nix` as `home.activation.xdgFixParents` and `home.activation.xdgFixTargets`.
   - Common user paths prepared via:
     - `ensureCommonDirs`, `cleanSwayimgWrapper`, `ensureGmailMaildirs`
+
+## App Notes
+
+- aria2 (download manager)
+  - Keep configuration minimal and XDG-compliant:
+    - Use `programs.aria2.settings` with only the essentials:
+      - `dir = "${config.xdg.userDirs.download}/aria"` — downloads under XDG Downloads.
+      - `enable-rpc = true` — enable RPC for UIs/integrations.
+      - `save-session`/`input-file = "$XDG_DATA_HOME/aria2/session"` — persist resume state.
+      - `save-session-interval = 1800`.
+    - Ensure the session file exists via XDG helper (no ad‑hoc prestart scripts):
+      - `(xdg.mkXdgDataText "aria2/session" "")`.
+    - Systemd (user) service should be simple:
+      - `Service.ExecStart = "${pkgs.aria2}/bin/aria2c --conf-path=$XDG_CONFIG_HOME/aria2/aria2.conf"`.
+      - Attach preset: `(config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["graphical"]; })`.
+  - Avoid `ExecStartPre` mkdir/touch logic — aggregated XDG fixups and the data helper make it unnecessary and reduce activation noise.
 - systemd (user) presets
   - Always use `config.lib.neg.systemdUser.mkUnitFromPresets { presets = [..]; }`
   - Typical presets:
@@ -48,6 +64,16 @@ This repo is configured for Home Manager + flakes with a small set of helpers to
   - Multi‑scope allowed: `[xdg][activation] ...`
   - Allowed exceptions: `Merge ...`, `Revert ...`, `fixup!`, `squash!`, `WIP`.
 - Keep changes focused and minimal; avoid drive‑by fixes unless requested.
+
+## Language & Comments
+
+- English‑only for code comments, commit messages, and new docs by default.
+  - Russian content belongs in dedicated translations only (e.g., `README.ru.md`).
+  - Do not add Russian comments inside Nix modules or shell snippets.
+- Comment style:
+  - Keep comments concise; move long notes above the line they describe.
+  - Target ~100 chars width (see STYLE.md) for readability in diffs.
+  - Prefer actionable wording over narration.
 
 ## Quick Tasks
 
