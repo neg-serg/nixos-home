@@ -239,11 +239,25 @@
       datas ? [],
       caches ? [],
       # Patterns (shell case) under config to preserve parent handling (skip mkdir/unlink of parent)
-      preserveConfigPatterns ? [ "transmission-daemon/*" ],
+      preserveConfigPatterns ? [],
     }:
       let
         q = s: "\"" + s + "\"";
         join = xs: lib.concatStringsSep " " (map q xs);
+        patterns = preserveConfigPatterns;
+        patJoined = lib.concatMapStringsSep "|" (p: p) patterns;
+        cfgParentSnippet = if patterns == [] then ''
+          if [ -L "$parent" ]; then rm -f "$parent"; fi
+          mkdir -p "$parent"
+        '' else ''
+          case "$rel" in
+            ${patJoined})
+              : ;;
+            *)
+              if [ -L "$parent" ]; then rm -f "$parent"; fi
+              mkdir -p "$parent" ;;
+          esac
+        '';
       in lib.hm.dag.entryBefore ["linkGeneration"] ''
         set -eu
         config_home="$XDG_CONFIG_HOME"; [ -n "$config_home" ] || config_home="$HOME/.config"
@@ -252,13 +266,7 @@
 
         for rel in ${join configs}; do
           tgt="$config_home/$rel"; parent="$(dirname "$tgt")"
-          case "$rel" in
-            ${lib.concatMapStringsSep "|" (p: p) preserveConfigPatterns})
-              : ;;
-            *)
-              if [ -L "$parent" ]; then rm -f "$parent"; fi
-              mkdir -p "$parent" ;;
-          esac
+          ${cfgParentSnippet}
         done
         for rel in ${join datas}; do
           tgt="$data_home/$rel"; parent="$(dirname "$tgt")"
