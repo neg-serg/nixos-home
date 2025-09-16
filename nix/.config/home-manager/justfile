@@ -57,7 +57,7 @@ hm-status:
     systemctl --user --failed || true
     echo
     echo "== recent user journal =="
-    journalctl --user -b --no-pager -n 200 || true
+    journalctl --user -b -n 120 --no-pager || true
 
 clean-caches:
     set -eu
