@@ -42,9 +42,9 @@ with lib;
         text = ''
           #!/usr/bin/env bash
           set -euo pipefail
-          rofi_bin="${rofiPkg}/bin/rofi"
-          jq_bin="${pkgs.jq}/bin/jq"
-          hyprctl_bin="${pkgs.hyprland}/bin/hyprctl"
+          rofi_bin="${lib.getExe rofiPkg}"
+          jq_bin="${lib.getExe pkgs.jq}"
+          hyprctl_bin="${lib.getExe' pkgs.hyprland "hyprctl"}"
           xdg_data="${xdgDataHome}"
           xdg_conf="${config.xdg.configHome}"
           themes_dir="$xdg_data/rofi/themes"

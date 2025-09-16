@@ -38,7 +38,7 @@ with lib;
             exit 0 ;;
         esac
         # Require one or more [scope] blocks followed by a space
-        if echo "$first_line" | ${pkgs.gnugrep}/bin/grep -qE '^\[[^][]+\]( \[[^][]+\])*\s'; then
+        if echo "$first_line" | ${lib.getExe' pkgs.gnugrep "grep"} -qE '^\[[^][]+\]( \[[^][]+\])*\s'; then
           exit 0
         fi
         echo "Commit message must start with [scope] subject" >&2

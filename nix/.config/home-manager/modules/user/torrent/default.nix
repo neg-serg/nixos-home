@@ -59,7 +59,7 @@ in lib.mkIf config.features.torrent.enable {
         echo "$c1"
       }
       gdir=$(choose_dir)
-      exec "${transmissionPkg}/bin/transmission-daemon" -g "$gdir" -f --log-level=error
+      exec "${lib.getExe' transmissionPkg "transmission-daemon"}" -g "$gdir" -f --log-level=error
     '';
   };
 
@@ -74,7 +74,7 @@ in lib.mkIf config.features.torrent.enable {
       Restart = "on-failure";
       RestartSec = "30";
       StartLimitBurst = "8";
-      ExecReload = "${pkgs.util-linux}/bin/kill -s HUP $MAINPID";
+      ExecReload = "${lib.getExe' pkgs.util-linux "kill"} -s HUP $MAINPID";
     };
   } (config.lib.neg.systemdUser.mkUnitFromPresets {presets = ["net" "defaultWanted"];});
 }

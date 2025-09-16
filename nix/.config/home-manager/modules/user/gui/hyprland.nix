@@ -203,8 +203,8 @@ in
         enforce_permissions = 1
       }
       permission = ${hy3Plugin}/lib/libhy3.so, plugin, allow
-      permission = ${pkgs.grim}/bin/grim, screencopy, allow
-      permission = ${pkgs.hyprlock}/bin/hyprlock, screencopy, allow
+      permission = ${lib.getExe pkgs.grim}, screencopy, allow
+      permission = ${lib.getExe pkgs.hyprlock}, screencopy, allow
       plugin = ${hy3Plugin}/lib/libhy3.so
     '')
     # Core configs

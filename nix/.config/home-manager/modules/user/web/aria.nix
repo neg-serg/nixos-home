@@ -4,9 +4,9 @@
   pkgs,
   ...
 }: let
-  inherit (lib) concatStringsSep;
+  inherit (lib) concatStringsSep getExe getExe';
   inherit (config.xdg) configHome dataHome;
-  aria2-bin = "${pkgs.aria2}/bin/aria2c";
+  aria2-bin = getExe' pkgs.aria2 "aria2c";
   sessionFile = "${dataHome}/aria2/session";
 in
   lib.mkIf (config.features.web.enable && config.features.web.tools.enable) {
@@ -54,7 +54,7 @@ in
           "--save-session-interval=1800"
           "--input-file=${sessionFile}"
         ];
-        ExecReload = "${pkgs.coreutils}/bin/kill -HUP $MAINPID";
+        ExecReload = "${getExe' pkgs.coreutils "kill"} -HUP $MAINPID";
         # We don't want to class an exit before downloads finish as a
         # failure if we stop aria2c, since the entire point of it is
         # that it will resume the downloads.

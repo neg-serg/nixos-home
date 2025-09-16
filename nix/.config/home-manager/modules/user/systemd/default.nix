@@ -15,7 +15,7 @@ with lib; {
   systemd.user.services.quickshell = lib.recursiveUpdate {
     Unit.Description = "Quickshell Wayland shell";
     Service = {
-      ExecStart = "${pkgs.quickshell}/bin/qs";
+      ExecStart = "${lib.getExe' pkgs.quickshell "qs"}";
       Environment = ["RUST_LOG=info,quickshell.dbus.properties=error"];
       Restart = "on-failure";
       RestartSec = "1";
@@ -28,7 +28,7 @@ with lib; {
     Unit.Description = "Pyprland daemon for Hyprland";
     Service = {
       Type = "simple";
-      ExecStart = "${pkgs.pyprland}/bin/pypr";
+      ExecStart = "${lib.getExe' pkgs.pyprland "pypr"}";
       Restart = "on-failure";
       RestartSec = "1";
       Slice = "background-graphical.slice";
@@ -53,7 +53,7 @@ with lib; {
   systemd.user.services.openrgb = lib.recursiveUpdate {
     Unit.Description = "OpenRGB daemon with profile";
     Service = {
-      ExecStart = "${pkgs.openrgb}/bin/openrgb --server -p neg.orp";
+      ExecStart = "${lib.getExe pkgs.openrgb} --server -p neg.orp";
       RestartSec = "30";
       StartLimitBurst = "8";
     };
