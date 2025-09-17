@@ -43,6 +43,10 @@ This repo is configured for Home Manager + flakes with a small set of helpers to
         execStart = "${pkgs.aria2}/bin/aria2c --conf-path=$XDG_CONFIG_HOME/aria2/aria2.conf";
         presets = ["graphical"];
       })`
+  - Soft migrations (warnings):
+    - Use `config.lib.neg.mkWarnIf cond "message"` to emit non-fatal guidance.
+    - Example (MPD path change):
+      `config.lib.neg.mkWarnIf (config.services.mpd.enable or false) "MPD dataDir moved to $XDG_STATE_HOME/mpd; consider migrating from ~/.config/mpd."`
 
 ## App Notes
 

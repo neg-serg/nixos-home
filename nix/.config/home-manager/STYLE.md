@@ -25,6 +25,8 @@ See also: AGENTS.md for a short guide on helpers, activation aggregators, system
   - Gate per-area configuration via `mkIf` using `features.*` flags.
 - Assertions
   - Provide actionable messages when extra inputs or packages are required by a flag.
+  - Prefer non-blocking `warnings` via `config.lib.neg.mkWarnIf` for soft migrations and deprecations.
+    - Example: `config.lib.neg.mkWarnIf cond "<what to change and how>"`
 - Naming
   - Use camelCase for extraSpecialArgs and internal aliases (e.g., `yandexBrowser`, `iosevkaNeg`).
 - Structure
