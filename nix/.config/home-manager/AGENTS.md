@@ -15,6 +15,9 @@ This repo is configured for Home Manager + flakes with a small set of helpers to
   - Use these instead of ad‑hoc shell to avoid symlink/dir conflicts at activation.
   - JSON convenience: `xdg.mkXdgConfigJson`, `xdg.mkXdgDataJson`
     - Example: `(xdg.mkXdgConfigJson "fastfetch/config.jsonc" { logo = { source = "$XDG_CONFIG_HOME/fastfetch/skull"; }; })`
+- Conditional sugar (from `lib.neg`)
+  - `mkWhen cond attrs` / `mkUnless cond attrs` — thin wrappers over `lib.mkIf`.
+    - Example: `lib.mkMerge [ (config.lib.neg.mkWhen config.features.web.enable { programs.aria2.enable = true; }) ]`
 - Activation helpers (from `lib.neg`)
   - `mkEnsureRealDir path` / `mkEnsureRealDirsMany [..]` — ensure real dirs before linkGeneration
   - `mkEnsureAbsent path` / `mkEnsureAbsentMany [..]` — remove conflicting files/dirs pre‑link

@@ -43,6 +43,12 @@
     mkBool = desc: default:
       (lib.mkEnableOption desc) // {inherit default;};
 
+    # Conditional sugar for readability in mkMerge blocks
+    # Usage:
+    #   lib.mkMerge [ (config.lib.neg.mkWhen cond { ... }) (config.lib.neg.mkUnless cond { ... }) ]
+    mkWhen = cond: attrs: lib.mkIf cond attrs;
+    mkUnless = cond: attrs: lib.mkIf (! cond) attrs;
+
     # Create a Home Manager home.file symlink from dotfilesRoot
     # Usage: config.lib.neg.mkDotfilesSymlink "path/in/repo" false
     mkDotfilesSymlink = path: recursive: {

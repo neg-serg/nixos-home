@@ -74,6 +74,12 @@ See also: AGENTS.md for a short guide on helpers, activation aggregators, system
 - Merging attrsets
   - Prefer `lib.mkMerge [ a b ... ]` over top-level `//` for combining module fragments.
   - Keep each logical piece in its own attrset within `mkMerge` (e.g., package set, xdg helpers, systemd units).
+  - Conditional sugar: use `config.lib.neg.mkWhen` / `config.lib.neg.mkUnless` instead of bare `lib.mkIf` to improve scanability.
+    - Example:
+      `lib.mkMerge [
+         (config.lib.neg.mkWhen config.features.web.enable { programs.aria2.enable = true; })
+         (config.lib.neg.mkUnless config.features.gui.enable { xdg.mime.enable = false; })
+       ]`
 
 - Runtime directories (first-run safety)
   - Ensure required runtime/state directories exist before services start or files are written.
