@@ -1,4 +1,4 @@
-with import <nixpkgs> {}; # Подключаем nixpkgs
+with import <nixpkgs> {}; # Import nixpkgs
 
   stdenv.mkDerivation rec {
     pname = "hellcard";
@@ -11,21 +11,21 @@ with import <nixpkgs> {}; # Подключаем nixpkgs
       hash = "sha256-LZfz2NZ8ibf1Pdut7vP+Lgj+8HpugvctxIuSI76LHcc=";
     };
 
-    # Убедитесь, что все необходимые зависимости указаны здесь
+    # Ensure all required build dependencies are listed here
     buildInputs = [
-      # Пример: добавить зависимости, если они есть
+      # Example: add dependencies if needed
       # cmake
       # pkg-config
     ];
 
-    # Опционально: фазы сборки, если нужны кастомные команды
+    # Optional: custom build phases if the project requires them
     buildPhase = ''
-      make  # или другие команды сборки
+      make  # or other build commands
     '';
 
     installPhase = ''
       mkdir -p $out/bin
-      cp hellcard $out/bin/  # убедитесь, что бинарник имеет правильное имя
+      cp hellcard $out/bin/  # ensure the binary name/path is correct
     '';
 
     meta = {
