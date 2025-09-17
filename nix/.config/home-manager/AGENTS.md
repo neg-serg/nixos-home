@@ -13,6 +13,8 @@ This repo is configured for Home Manager + flakes with a small set of helpers to
   - Data text/link: `xdg.mkXdgDataText`, `xdg.mkXdgDataSource`
   - Cache text/link: `xdg.mkXdgCacheText`, `xdg.mkXdgCacheSource`
   - Use these instead of ad‑hoc shell to avoid symlink/dir conflicts at activation.
+  - JSON convenience: `xdg.mkXdgConfigJson`, `xdg.mkXdgDataJson`
+    - Example: `(xdg.mkXdgConfigJson "fastfetch/config.jsonc" { logo = { source = "$XDG_CONFIG_HOME/fastfetch/skull"; }; })`
 - Activation helpers (from `lib.neg`)
   - `mkEnsureRealDir path` / `mkEnsureRealDirsMany [..]` — ensure real dirs before linkGeneration
   - `mkEnsureAbsent path` / `mkEnsureAbsentMany [..]` — remove conflicting files/dirs pre‑link
@@ -25,6 +27,19 @@ This repo is configured for Home Manager + flakes with a small set of helpers to
     - These fixups are wired in `modules/user/xdg/default.nix` as `home.activation.xdgFixParents` and `home.activation.xdgFixTargets`.
   - Common user paths prepared via:
     - `ensureCommonDirs`, `cleanSwayimgWrapper`, `ensureGmailMaildirs`
+  - Local bin wrappers (safe ~/.local/bin scripts):
+    - `config.lib.neg.mkLocalBin name text` — removes any conflicting path before linking and marks executable.
+    - Example: `config.lib.neg.mkLocalBin "rofi" ''#!/usr/bin/env bash
+        set -euo pipefail
+        exec ${pkgs.rofi-wayland}/bin/rofi "$@"''`
+  - Systemd (user) sugar:
+    - `config.lib.neg.systemdUser.mkSimpleService { name; description; execStart; presets = [..]; }`
+    - Example: `(config.lib.neg.systemdUser.mkSimpleService {
+        name = "aria2";
+        description = "aria2 download manager";
+        execStart = "${pkgs.aria2}/bin/aria2c --conf-path=$XDG_CONFIG_HOME/aria2/aria2.conf";
+        presets = ["graphical"];
+      })`
 
 ## App Notes
 

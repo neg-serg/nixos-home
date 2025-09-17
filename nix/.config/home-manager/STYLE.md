@@ -65,6 +65,8 @@ See also: AGENTS.md for a short guide on helpers, activation aggregators, system
     - Config source: `(xdg.mkXdgSource "swayimg" (config.lib.neg.mkDotfilesSymlink "nix/.config/home-manager/modules/media/images/swayimg/conf" true))`
     - Data keep: `(xdg.mkXdgDataText "ansible/roles/.keep" "")`
     - Cache keep: `(xdg.mkXdgCacheText "ansible/facts/.keep" "")`
+    - Config JSON: `(xdg.mkXdgConfigJson "fastfetch/config.jsonc" { logo = { source = "$XDG_CONFIG_HOME/fastfetch/skull"; }; })`
+    - Data JSON: `(xdg.mkXdgDataJson "aria2/state.json" { version = 1; })`
   - Import tip (robust for docs eval): 
     - From `modules/dev/...` or `modules/media/...`: `let xdg = import ../../lib/xdg-helpers.nix { inherit lib; };`
     - From `modules/user/mail/...`: `let xdg = import ../../../lib/xdg-helpers.nix { inherit lib; };`
@@ -79,6 +81,25 @@ See also: AGENTS.md for a short guide on helpers, activation aggregators, system
     - Real config dir: `home.activation.fixFoo = config.lib.neg.mkEnsureRealDir "${config.xdg.configHome}/foo";`
     - Maildir trees: `config.lib.neg.mkEnsureMaildirs "$HOME/.local/mail/gmail" ["INBOX" ...]`
   - Use these in addition to xdg helpers when apps require extra runtime dirs (sockets, logs, caches) outside XDG config files.
+
+- Local bin wrappers
+  - Prefer `config.lib.neg.mkLocalBin` for `~/.local/bin/<name>` scripts to avoid path conflicts during activation.
+    - Example:
+      `config.lib.neg.mkLocalBin "rofi" ''#!/usr/bin/env bash
+        set -euo pipefail
+        exec ${pkgs.rofi-wayland}/bin/rofi "$@"''`
+  - This removes any existing path (file/dir/symlink) before linking and marks the target executable.
+
+- Systemd (user) sugar
+  - For simple services use `config.lib.neg.systemdUser.mkSimpleService` instead of repeating the same boilerplate.
+    - Example:
+      `(config.lib.neg.systemdUser.mkSimpleService {
+        name = "aria2";
+        description = "aria2 download manager";
+        execStart = "${pkgs.aria2}/bin/aria2c --conf-path=$XDG_CONFIG_HOME/aria2/aria2.conf";
+        presets = ["graphical"];
+      })`
+  - Under the hood it composes `Unit/Service` and applies `mkUnitFromPresets` for `After/Wants/WantedBy/PartOf`.
 
 - Out-of-store dotfile links
   - For live-editable configs stored in this repo, prefer: `config.lib.neg.mkDotfilesSymlink "path/in/repo" <recursive?>`.

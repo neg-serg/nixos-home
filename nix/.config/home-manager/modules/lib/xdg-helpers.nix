@@ -32,4 +32,18 @@
   mkXdgCacheSource = relPath: attrs: {
     xdg.cacheFile."${relPath}" = attrs;
   };
+
+  # Convenience: write JSON to an XDG config file
+  # Usage:
+  #   (xdg.mkXdgConfigJson "myapp/config.json" { enable = true; paths = ["a" "b"]; })
+  mkXdgConfigJson = relPath: attrs: {
+    xdg.configFile."${relPath}".text = builtins.toJSON attrs;
+  };
+
+  # Convenience: write JSON to an XDG data file
+  # Usage:
+  #   (xdg.mkXdgDataJson "myapp/state.json" { version = 1; })
+  mkXdgDataJson = relPath: attrs: {
+    xdg.dataFile."${relPath}".text = builtins.toJSON attrs;
+  };
 }

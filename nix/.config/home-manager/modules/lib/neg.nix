@@ -154,6 +154,39 @@
       };
     in {
       inherit presets mkUnitFromPresets;
+
+      # Minimal sugar to declare a simple user service with presets.
+      # Usage:
+      #   (config.lib.neg.systemdUser.mkSimpleService {
+      #     name = "aria2";
+      #     description = "aria2 download manager";
+      #     execStart = "${pkgs.aria2}/bin/aria2c --conf-path=$XDG_CONFIG_HOME/aria2/aria2.conf";
+      #     presets = ["graphical"];
+      #   })
+      mkSimpleService = {
+        name,
+        execStart,
+        presets ? [],
+        description ? null,
+        serviceExtra ? {},
+        unitExtra ? {},
+        after ? [],
+        wants ? [],
+        partOf ? [],
+        wantedBy ? [],
+      }: {
+        systemd.user.services."${name}" =
+          lib.recursiveUpdate
+            {
+              Unit =
+                (lib.optionalAttrs (description != null) {Description = description;})
+                // unitExtra;
+              Service = ({ExecStart = execStart;} // serviceExtra);
+            }
+            (config.lib.neg.systemdUser.mkUnitFromPresets {
+              inherit presets after wants partOf wantedBy;
+            });
+      };
     };
 
     # Web helpers defaults
