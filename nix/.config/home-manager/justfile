@@ -30,23 +30,25 @@ hm-build:
 hooks-enable:
     git config core.hooksPath .githooks
 
-show-features names*:
+show-features:
     # Print flattened features for given check names (or default matrix)
-    # Usage:
-    #   just show-features                        # all default items
-    #   just show-features hm-eval-neg-retro-on   # specific item(s)
-    #   ONLY_TRUE=1 just show-features            # show only feature keys with value=true
+    # Compatible with older `just` (no recipe args). Pass items via env var:
+    #   NAMES="hm-eval-neg-retro-on hm-eval-neg-retro-off" just show-features
+    # Or rely on defaults:
+    #   just show-features
+    # Filter only true values:
+    #   ONLY_TRUE=1 just show-features
     set -eu
     sys=${SYSTEM:-x86_64-linux}
-    if [ "$#" -gt 0 ]; then \
-      items=("$@"); \
+    if [ -n "${NAMES:-}" ]; then \
+    items=(${NAMES}); \
     else \
-      items=( \
-        hm-eval-neg-retro-on \
-        hm-eval-neg-retro-off \
-        hm-eval-lite-retro-on \
-        hm-eval-lite-retro-off \
-      ); \
+    items=( \
+    hm-eval-neg-retro-on \
+    hm-eval-neg-retro-off \
+    hm-eval-lite-retro-on \
+    hm-eval-lite-retro-off \
+    ); \
     fi
     for name in "${items[@]}"; do \
       echo "== ${name} (system=${sys}) =="; \
