@@ -8,7 +8,7 @@
 with {
   alkano-aio = pkgs.callPackage ./alkano-aio.nix {};
 }; {
-  home = {
+  home = lib.mkIf (config.features.gui.enable or false) {
     packages = with pkgs;
       [
         adw-gtk3 # adwaita port to gtk3
@@ -46,7 +46,7 @@ with {
     platformTheme = "qt6ct";
   };
 
-  gtk = {
+  gtk = lib.mkIf (config.features.gui.enable or false) {
     enable = true;
 
     font = {
@@ -76,7 +76,7 @@ with {
     };
   };
 
-  dconf = {
+  dconf = lib.mkIf (config.features.gui.enable or false) {
     enable = true;
     settings = {
       "org/gnome/desktop/interface" = {
