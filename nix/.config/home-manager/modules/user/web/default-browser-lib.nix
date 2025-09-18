@@ -9,7 +9,8 @@
 with lib; let
   cfg = config.features.web;
   key = cfg.default or "floorp";
-  yandexBrowser = if yandexBrowserProvider != null then yandexBrowserProvider pkgs else null;
+  needYandex = (cfg.enable or false) && (cfg.yandex.enable or false);
+  yandexBrowser = if needYandex && yandexBrowserProvider != null then yandexBrowserProvider pkgs else null;
   browsers = import ./browsers-table.nix { inherit lib pkgs yandexBrowser nyxt4; };
 in
   lib.attrByPath [key] browsers browsers.floorp

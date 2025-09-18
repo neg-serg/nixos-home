@@ -6,7 +6,8 @@
   ...
 }:
 with lib; let
-  yandexBrowser = if yandexBrowserProvider != null then yandexBrowserProvider pkgs else null;
+  needYandex = (config.features.web.enable or false) && (config.features.web.yandex.enable or false);
+  yandexBrowser = if needYandex && yandexBrowserProvider != null then yandexBrowserProvider pkgs else null;
 in {
   imports = [
     ./defaults.nix
@@ -20,7 +21,7 @@ in {
     {
       assertions = [
         {
-          assertion = (! (config.features.web.enable && config.features.web.yandex.enable)) || (yandexBrowser != null);
+          assertion = (! needYandex) || (yandexBrowser != null);
           message = "Yandex Browser requested but 'yandexBrowser' extraSpecialArg not provided in flake.nix.";
         }
       ];
