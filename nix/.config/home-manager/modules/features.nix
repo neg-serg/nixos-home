@@ -193,20 +193,26 @@ in {
         # Hypr/hy3 compatibility check only matters when GUI is enabled
         (lib.optionals cfg.gui.enable [
           (let
-            hyprlandVersion = lib.attrByPath ["packages" pkgs.system "hyprland" "version"] null inputs.hyprland;
+            # Avoid evaluating inputs.hyprland.packages; read version from pinned ref if available.
+            hyprlandRef = lib.attrByPath ["original" "ref"] null inputs.hyprland;
+            hyprlandVersion = let
+              # Fallback: strip leading 'v' from ref like "v0.50.1"
+              refNorm =
+                if hyprlandRef == null then null else
+                (let s = toString hyprlandRef; in if lib.hasPrefix "v" s then builtins.substring 1 (builtins.stringLength s - 1) s else s);
+            in refNorm;
             hy3Rev = lib.attrByPath ["rev"] null hy3;
             compatible = [
               { hv = "0.50.1"; rev = "1fdc0a291f8c23b22d27d6dabb466d018757243c"; }
             ];
-            hvNorm = if hyprlandVersion == null then null else let s = toString hyprlandVersion; in (builtins.head (lib.splitString "+" s));
-            matches = c: (hvNorm == null || hvNorm == c.hv) && (hy3Rev == null || hy3Rev == c.rev);
+            matches = c: (hyprlandVersion == null || hyprlandVersion == c.hv) && (hy3Rev == null || hy3Rev == c.rev);
             ok = lib.any matches compatible;
           in {
             assertion = ok;
             message = ''
               Incompatible Hyprland/hy3 pins detected.
               Expected one of: ${builtins.concatStringsSep ", " (map (c: "Hyprland " + c.hv + " + hy3 " + builtins.substring 0 7 c.rev) compatible)}
-              Got: Hyprland ${toString (if hvNorm == null then "<unknown>" else hvNorm)} + hy3 ${toString (if hy3Rev == null then "<unknown>" else builtins.substring 0 7 hy3Rev)}
+              Got: Hyprland ${toString (if hyprlandVersion == null then "<unknown>" else hyprlandVersion)} + hy3 ${toString (if hy3Rev == null then "<unknown>" else builtins.substring 0 7 hy3Rev)}
               Update flake.nix pins or extend the compatibility matrix in modules/features.nix.
             '';
           })
