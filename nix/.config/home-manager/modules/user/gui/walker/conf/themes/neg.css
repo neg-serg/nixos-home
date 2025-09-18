@@ -1,5 +1,5 @@
 @define-color foreground rgba(184, 197, 217, 0.95); /* rofi fgwhite */
-@define-color background rgba(3, 6, 6, 0.60);       /* darkened by ~33% */
+@define-color background rgba(3, 6, 6, 0.95);       /* near-opaque background */
 @define-color color1 #005f87;                       /* rofi maincolor */
 @define-color select rgba(0, 45, 89, 0.85);         /* rofi selectcolor */
 
@@ -38,7 +38,7 @@ slider,
 }
 
 #search {
-  background: alpha(@background, 0.9);
+  background: alpha(@background, 0.98);
   padding: 6px;                /* compact */
   border-radius: 3px;
 }
