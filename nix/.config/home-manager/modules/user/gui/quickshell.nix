@@ -62,5 +62,8 @@ in
       ];
     }
     # Live-editable config via helper (guards parent dir and target)
-    (xdg.mkXdgSource "quickshell" (config.lib.neg.mkDotfilesSymlink "quickshell/.config/quickshell" true))
+  (xdg.mkXdgSource "quickshell" {
+    source = config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/quickshell/.config/quickshell";
+    recursive = true;
+  })
   ])

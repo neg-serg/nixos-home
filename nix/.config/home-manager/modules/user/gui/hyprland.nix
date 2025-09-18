@@ -142,7 +142,10 @@ in
       "misc.conf"
       "_resets.conf"
     ];
-    mkHyprSource = rel: xdg.mkXdgSource ("hypr/" + rel) (config.lib.neg.mkDotfilesSymlink ("nix/.config/home-manager/modules/user/gui/hypr/conf/" + rel) false);
+    mkHyprSource = rel: xdg.mkXdgSource ("hypr/" + rel) {
+      source = config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/nix/.config/home-manager/modules/user/gui/hypr/conf/${rel}";
+      recursive = false;
+    };
   in lib.mkMerge [
     {
       wayland.windowManager.hyprland = {
