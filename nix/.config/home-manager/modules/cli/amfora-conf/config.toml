@@ -193,7 +193,6 @@ underline = true
 #
 # The best way to define a command is using a string array.
 # Examples:
-# magnet = ['transmission']
 # foo = ['custom-browser', '--flag', '--option=2']
 # tel = ['/path/with spaces/in it/telephone']
 #
