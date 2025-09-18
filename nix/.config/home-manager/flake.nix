@@ -225,10 +225,15 @@
           inherit pkgs rustBaseTools rustExtraTools devNixTools;
         };
 
-        packages = {
-          default = pkgs.zsh;
-          hy3Plugin = hy3.packages.${system}.hy3;
-        };
+        packages =
+          let
+            extrasEnv = builtins.getEnv "HM_EXTRAS";
+            extras = extrasEnv == "1" || extrasEnv == "true" || extrasEnv == "yes";
+          in {
+            default = pkgs.zsh;
+          } // lib.optionalAttrs extras {
+            hy3Plugin = hy3.packages.${system}.hy3;
+          };
 
         # Formatter: treefmt wrapper pinned to repo config
         formatter = pkgs.writeShellApplication {
