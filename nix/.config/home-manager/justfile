@@ -64,6 +64,10 @@ show-features:
       hm-eval-neg-nogui-retro-off \
       hm-eval-lite-nogui-retro-on \
       hm-eval-lite-nogui-retro-off \
+      hm-eval-neg-noweb-retro-on \
+      hm-eval-neg-noweb-retro-off \
+      hm-eval-lite-noweb-retro-on \
+      hm-eval-lite-noweb-retro-off \
     ); \
     fi
     for name in "${items[@]}"; do \
