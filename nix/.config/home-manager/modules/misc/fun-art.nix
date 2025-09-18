@@ -787,7 +787,8 @@ with lib;
           executable = true;
         };
         "hack-art/skull" = {
-          text = ''
+          text = (builtins.readFile ./fun-art/skull.sh);
+          /*
             #!/bin/bash
 
             f=3 b=4
