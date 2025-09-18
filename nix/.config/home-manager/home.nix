@@ -44,6 +44,9 @@ in {
     settings = {
       # Trust flake-provided nixConfig (substituters, keys, features)
       accept-flake-config = true;
+      # Speed + safety: keep eval cache on and forbid IFD during eval
+      eval-cache = true;
+      allow-import-from-derivation = false;
       # Use the sops-managed GitHub netrc for authenticated fetches
       netrc-file = config.sops.secrets."github-netrc".path;
       # Ensure features are available; caches and keys come from imports below

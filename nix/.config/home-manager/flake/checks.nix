@@ -91,12 +91,12 @@ in {
 
   # Build the options documentation as part of checks
   options-md = pkgs.runCommand "options-md" {} ''
-    cp ${self.packages.${system}.options-md} "$out"
+    cp ${self.docs.${system}.options-md} "$out"
   '';
   features-options-md = pkgs.runCommand "features-options-md" {} ''
-    cp ${self.packages.${system}.features-options-md} "$out"
+    cp ${self.docs.${system}.features-options-md} "$out"
   '';
   features-options-json = pkgs.runCommand "features-options-json" {} ''
-    cp ${self.packages.${system}.features-options-json} "$out"
+    cp ${self.docs.${system}.features-options-json} "$out"
   '';
 }

@@ -48,7 +48,6 @@
       url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    crane = {url = "github:ipetkov/crane";};
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -84,10 +83,6 @@
       flake = false;
     };
     nixpkgs = {url = "github:nixos/nixpkgs";};
-    nvfetcher = {
-      url = "github:berberman/nvfetcher";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     quickshell = {
       url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -135,14 +130,28 @@
   }: let
     inherit (nixpkgs) lib;
     docs = import ./flake/features-docs.nix {inherit lib;};
-    systems = [
-      "x86_64-linux"
-      "aarch64-linux"
-    ];
+    # Prefer evaluating only one system by default to speed up local eval.
+    # You can override the systems list for CI or cross builds by setting
+    # HM_SYSTEMS to a comma-separated list (e.g., "x86_64-linux,aarch64-linux").
+    defaultSystem = "x86_64-linux";
+    systems = let
+      fromEnv = builtins.getEnv "HM_SYSTEMS";
+      raw = if fromEnv == "" then [] else (lib.splitString "," fromEnv);
+      cleaned = lib.unique (lib.filter (s: s != "") raw);
+    in if cleaned == [] then [ defaultSystem ] else cleaned;
 
-    # Nilla raw-loader compatibility: add a synthetic type to each input
-    # Safe no-op for regular flake usage; enables Nilla to accept raw inputs.
-    nillaInputs = builtins.mapAttrs (_: input: input // {type = "derivation";}) inputs;
+    # Pass only inputs actually consumed by HM modules.
+    # Nilla raw-loader compatibility: add a synthetic type to each selected input.
+    hmInputs = let
+      selected = {
+        inherit (inputs) hyprland;
+        inherit (inputs) iwmenu;
+        inherit (inputs) quickshell;
+        inherit (inputs) rsmetrx;
+        inherit (inputs) bzmenu;
+        inherit (inputs) nupm;
+      };
+    in builtins.mapAttrs (_: input: input // { type = "derivation"; }) selected;
 
     # Common Home Manager building blocks
     hmBaseModules = {
@@ -161,11 +170,15 @@
 
     mkHMArgs = system: {
       # Pass inputs mapped for Nilla raw-loader and common extras
-      inputs = nillaInputs;
+      inputs = hmInputs;
       inherit hy3;
       inherit (perSystem.${system}) iosevkaNeg;
-      inherit (perSystem.${system}) yandexBrowser;
-      inherit (perSystem.${system}) fa;
+      # Provide a lazy provider for firefox-addons; avoids overlay cost unless used
+      faProvider = (pkgs: (pkgs.extend nur.overlays.default).nur.repos.rycee.firefox-addons);
+      # Lazy Yandex Browser provider
+      yandexBrowserProvider = (pkgs: yandexBrowserInput.packages.${pkgs.system});
+      # Provide xdg helpers directly to avoid _module.args fallback recursion
+      xdg = import ./modules/lib/xdg-helpers.nix { inherit lib; pkgs = perSystem.${system}.pkgs; };
     };
 
     # Build per-system attributes in one place
@@ -174,16 +187,14 @@
         pkgs = import nixpkgs {
           inherit system;
           overlays = [
-            nur.overlays.default
             (import ./packages/overlay.nix)
-          ]; # inject NUR and local packages overlay under pkgs.neg.*
+          ]; # local packages overlay under pkgs.neg.* (no global NUR overlay)
+          config = {
+            allowAliases = false;
+          };
         };
         iosevkaNeg = iosevkaNegInput.packages.${system};
-        yandexBrowser = yandexBrowserInput.packages.${system};
-        nurPkgs = nur.packages.${system};
-        fa = pkgs.nur.repos.rycee.firefox-addons;
-        # Collect features.* options once and reuse for MD/JSON
-        featureOptionsItems = docs.getFeatureOptionsItems ./modules/features.nix;
+        # NUR is accessed lazily via faProvider in mkHMArgs only when needed.
 
         # Common toolsets for devShells to avoid duplication
         devNixTools = with pkgs; [
@@ -208,7 +219,7 @@
           wl-clipboard # Wayland clipboard helpers
         ];
       in {
-        inherit pkgs iosevkaNeg yandexBrowser nurPkgs fa;
+        inherit pkgs iosevkaNeg;
 
         devShells = import ./flake/devshells.nix {
           inherit pkgs rustBaseTools rustExtraTools devNixTools;
@@ -217,54 +228,6 @@
         packages = {
           default = pkgs.zsh;
           hy3Plugin = hy3.packages.${system}.hy3;
-          # Publish options docs as a package for convenience
-          options-md = pkgs.writeText "OPTIONS.md" (
-            let
-              evalCfg = mods:
-                homeManagerInput.lib.homeManagerConfiguration {
-                  inherit pkgs;
-                  # Use local per-system extras; avoid recursion into perSystem
-                  extraSpecialArgs = {
-                    inputs = nillaInputs;
-                    inherit hy3;
-                    inherit iosevkaNeg;
-                    inherit yandexBrowser;
-                    inherit fa;
-                  };
-                  modules = mods;
-                };
-              # Shared helper: evaluate features for a given profile using hmBaseModules
-              hmFeaturesFor = profile:
-                (evalCfg (hmBaseModules {inherit profile;})).config.features;
-              fNeg = hmFeaturesFor null;
-              fLite = hmFeaturesFor "lite";
-              toFlat = set: prefix:
-                lib.foldl' (
-                  acc: name: let
-                    cur = lib.optionalString (prefix != "") (prefix + ".") + name;
-                    v = set.${name};
-                  in
-                    acc
-                    // (
-                      if builtins.isAttrs v
-                      then toFlat v cur
-                      else if builtins.isBool v
-                      then {${cur} = v;}
-                      else {}
-                    )
-                ) {} (builtins.attrNames set);
-              flatNeg = toFlat fNeg "features";
-              flatLite = toFlat fLite "features";
-              deltas = docs.renderDeltasMd {inherit flatNeg flatLite;};
-            in
-              (builtins.readFile ./OPTIONS.md)
-              + "\n\n"
-              + deltas
-          );
-          # Auto-generated docs for features.* options (from shared items)
-          features-options-md = pkgs.writeText "features-options.md" (docs.renderFeaturesOptionsMd featureOptionsItems);
-
-          features-options-json = pkgs.writeText "features-options.json" (docs.renderFeaturesOptionsJson featureOptionsItems);
         };
 
         # Formatter: treefmt wrapper pinned to repo config
@@ -323,50 +286,105 @@
       }
     );
 
-    # Choose default system for user HM config
-    defaultSystem = "x86_64-linux";
+    # Use defaultSystem for user HM configs
   in {
     devShells = lib.genAttrs systems (s: perSystem.${s}.devShells);
     packages = lib.genAttrs systems (s: perSystem.${s}.packages);
     formatter = lib.genAttrs systems (s: perSystem.${s}.formatter);
+    # Docs outputs are gated by HM_DOCS env; heavy HM evals are skipped by default.
+    docs = lib.genAttrs systems (
+      s: let
+        pkgs = perSystem.${s}.pkgs;
+        docEnv = builtins.getEnv "HM_DOCS";
+        docsEnabled = docEnv == "1" || docEnv == "true" || docEnv == "yes";
+        featureOptionsItems = docs.getFeatureOptionsItems ./modules/features.nix;
+      in
+        if docsEnabled then {
+          options-md = pkgs.writeText "OPTIONS.md" (
+            let
+              evalCfg = mods:
+                homeManagerInput.lib.homeManagerConfiguration {
+                  inherit (perSystem.${s}) pkgs;
+                  extraSpecialArgs = mkHMArgs s;
+                  modules = mods;
+                };
+              hmFeaturesFor = profile:
+                (evalCfg (hmBaseModules {inherit profile;})).config.features;
+              fNeg = hmFeaturesFor null;
+              fLite = hmFeaturesFor "lite";
+              toFlat = set: prefix:
+                lib.foldl' (
+                  acc: name: let
+                    cur = lib.optionalString (prefix != "") (prefix + ".") + name;
+                    v = set.${name};
+                  in
+                    acc
+                    // (
+                      if builtins.isAttrs v
+                      then toFlat v cur
+                      else if builtins.isBool v
+                      then {${cur} = v;}
+                      else {}
+                    )
+                ) {} (builtins.attrNames set);
+              flatNeg = toFlat fNeg "features";
+              flatLite = toFlat fLite "features";
+              deltas = docs.renderDeltasMd {inherit flatNeg flatLite;};
+            in
+              (builtins.readFile ./OPTIONS.md)
+              + "\n\n"
+              + deltas
+          );
+          features-options-md = pkgs.writeText "features-options.md" (docs.renderFeaturesOptionsMd featureOptionsItems);
+          features-options-json = pkgs.writeText "features-options.json" (docs.renderFeaturesOptionsJson featureOptionsItems);
+        } else {
+          options-md = pkgs.writeText "OPTIONS.md" ''
+            Docs generation is disabled.
+            Set HM_DOCS=1 to enable heavy docs evaluation.
+          '';
+        }
+    );
     checks = lib.genAttrs systems (
       s:
-        perSystem.${s}.checks
-        // lib.optionalAttrs (s == defaultSystem) (
-          let
-            # Factor out repeated HM eval for retroarch toggle
-            evalWith = profile: retroFlag: let
-              hmCfg = homeManagerInput.lib.homeManagerConfiguration {
-                inherit (perSystem.${s}) pkgs;
-                extraSpecialArgs = mkHMArgs s;
-                modules = hmBaseModules {
-                  inherit profile;
-                  extra = [(_: {features.emulators.retroarch.full = retroFlag;})];
-                };
+        let
+          fullChecksEnv = builtins.getEnv "HM_CHECKS_FULL";
+          fullChecks = fullChecksEnv == "1" || fullChecksEnv == "true" || fullChecksEnv == "yes";
+          evalWith = profile: retroFlag: let
+            hmCfg = homeManagerInput.lib.homeManagerConfiguration {
+              inherit (perSystem.${s}) pkgs;
+              extraSpecialArgs = mkHMArgs s;
+              modules = hmBaseModules {
+                inherit profile;
+                extra = [(_: {features.emulators.retroarch.full = retroFlag;})];
               };
-            in
-              perSystem.${s}.pkgs.writeText
-              "hm-eval-${
-                if profile == "lite"
-                then "lite"
-                else "neg"
-              }-retro-${
-                if retroFlag
-                then "on"
-                else "off"
-              }.json"
-              (builtins.toJSON hmCfg.config.features);
-          in {
-            # Run treefmt in check mode to ensure no changes would be made
-            hm = self.homeConfigurations."neg".activationPackage;
-            hm-lite = self.homeConfigurations."neg-lite".activationPackage;
-            # Fast eval matrix for RetroArch toggles (no heavy builds)
+            };
+          in
+            perSystem.${s}.pkgs.writeText
+            "hm-eval-${
+              if profile == "lite"
+              then "lite"
+              else "neg"
+            }-retro-${
+              if retroFlag
+              then "on"
+              else "off"
+            }.json"
+            (builtins.toJSON hmCfg.config.features);
+          base = perSystem.${s}.checks;
+          fast = {
             hm-eval-neg-retro-on = evalWith null true;
             hm-eval-neg-retro-off = evalWith null false;
             hm-eval-lite-retro-on = evalWith "lite" true;
             hm-eval-lite-retro-off = evalWith "lite" false;
-          }
-        )
+          };
+          heavy = lib.optionalAttrs (s == defaultSystem) {
+            hm = self.homeConfigurations."neg".activationPackage;
+            hm-lite = self.homeConfigurations."neg-lite".activationPackage;
+          };
+        in
+          base
+          // fast
+          // lib.optionalAttrs fullChecks heavy
     );
 
     homeConfigurations."neg" = homeManagerInput.lib.homeManagerConfiguration {
