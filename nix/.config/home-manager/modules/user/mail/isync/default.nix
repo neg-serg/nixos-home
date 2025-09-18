@@ -5,7 +5,8 @@
   ...
 }:
 with lib;
-  mkIf config.features.mail.enable {
+  mkIf config.features.mail.enable (lib.mkMerge [
+    {
     # Install isync/mbsync and keep using the XDG config at ~/.config/isync/mbsyncrc
     programs.mbsync.enable = true;
 
@@ -58,23 +59,26 @@ with lib;
     # Create base maildir on activation (mbsync can also create, but this avoids first-run hiccups)
     # Maildir creation handled by global prepareUserPaths action
 
+    }
     # Periodic sync in addition to imapnotify (fallback / catch-up)
-    systemd.user.services."mbsync-gmail" = lib.recursiveUpdate {
-      Unit.Description = "Sync mail via mbsync (gmail)";
-      Service = {
-        # Use simple so `systemctl start` doesn't block the caller
+    (config.lib.neg.systemdUser.mkSimpleService {
+      name = "mbsync-gmail";
+      description = "Sync mail via mbsync (gmail)";
+      execStart = ''${pkgs.isync}/bin/mbsync -Va -c %h/.config/isync/mbsyncrc'';
+      presets = ["netOnline"];
+      serviceExtra = {
         Type = "simple";
-        # First full sync can take a long time; keep generous timeout
         TimeoutStartSec = "30min";
-        ExecStart = ''${pkgs.isync}/bin/mbsync -Va -c %h/.config/isync/mbsyncrc'';
       };
-    } (config.lib.neg.systemdUser.mkUnitFromPresets {presets = ["netOnline"];});
-    systemd.user.timers."mbsync-gmail" = lib.recursiveUpdate {
-      Unit.Description = "Timer: mbsync gmail";
-      Timer = {
+    })
+    (config.lib.neg.systemdUser.mkSimpleTimer {
+      name = "mbsync-gmail";
+      description = "Timer: mbsync gmail";
+      presets = ["timers"];
+      persistent = true;
+      timerExtra = {
         OnBootSec = "2m";
         OnUnitActiveSec = "10m";
-        Persistent = true;
       };
-    } (config.lib.neg.systemdUser.mkUnitFromPresets {presets = ["timers"];});
-  }
+    })
+  ])

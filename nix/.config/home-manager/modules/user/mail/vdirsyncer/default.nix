@@ -25,25 +25,27 @@ in with lib;
         config.lib.neg.mkEnsureDirsAfterWrite [
           "${config.xdg.stateHome or "$HOME/.local/state"}/vdirsyncer"
         ];
-
-      systemd.user.services.vdirsyncer = lib.recursiveUpdate {
-        Unit.Description = "Vdirsyncer synchronization service";
-        Service = {
-          Type = "oneshot";
-          ExecStartPre = "${lib.getExe pkgs.vdirsyncer} metasync";
-          ExecStart = "${lib.getExe pkgs.vdirsyncer} sync";
-        };
-      } (config.lib.neg.systemdUser.mkUnitFromPresets {presets = ["netOnline"];});
-
-      systemd.user.timers.vdirsyncer = lib.recursiveUpdate {
-        Unit.Description = "Vdirsyncer synchronization timer";
-        Timer = {
-          OnBootSec = "2m";
-          OnUnitActiveSec = "5m";
-          Unit = "vdirsyncer.service";
-        };
-      } (config.lib.neg.systemdUser.mkUnitFromPresets {presets = ["timers"];});
     }
+    (config.lib.neg.systemdUser.mkSimpleService {
+      name = "vdirsyncer";
+      description = "Vdirsyncer synchronization service";
+      execStart = "${lib.getExe pkgs.vdirsyncer} sync";
+      presets = ["netOnline"];
+      serviceExtra = {
+        Type = "oneshot";
+        ExecStartPre = "${lib.getExe pkgs.vdirsyncer} metasync";
+      };
+    })
+    (config.lib.neg.systemdUser.mkSimpleTimer {
+      name = "vdirsyncer";
+      presets = ["timers"];
+      description = "Vdirsyncer synchronization timer";
+      timerExtra = {
+        OnBootSec = "2m";
+        OnUnitActiveSec = "5m";
+        Unit = "vdirsyncer.service";
+      };
+    })
     (xdg.mkXdgText "vdirsyncer/config" ''
       [general]
       status_path = "${config.xdg.stateHome or "$HOME/.local/state"}/vdirsyncer"

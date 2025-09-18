@@ -43,28 +43,24 @@ in lib.mkIf config.features.torrent.enable (lib.mkMerge [
   # symlink to avoid nuking external setups.
   home.activation.keepTransmissionConfigSymlink =
     config.lib.neg.mkRemoveIfBrokenSymlink "${config.xdg.configHome}/transmission-daemon";
-
-  # Wrapper selects existing config dir that contains resume files, preferring the new path
-  home.file.".local/bin/transmission-daemon-wrapper" = {
-    executable = true;
-    text = ''
-      #!/usr/bin/env bash
-      set -euo pipefail
-      c1="${confDirNew}"
-      c2="${confDirOld}"
-      choose_dir() {
-        if [ -d "$c1/resume" ] && compgen -G "$c1/resume/*.resume" >/dev/null 2>&1; then echo "$c1"; return; fi
-        if [ -d "$c2/resume" ] && compgen -G "$c2/resume/*.resume" >/dev/null 2>&1; then echo "$c2"; return; fi
-        if [ -d "$c1" ]; then echo "$c1"; return; fi
-        if [ -d "$c2" ]; then echo "$c2"; return; fi
-        echo "$c1"
-      }
-      gdir=$(choose_dir)
-      exec "${lib.getExe' transmissionPkg "transmission-daemon"}" -g "$gdir" -f --log-level=error
-    '';
-  };
-
 }
+
+# Wrapper selects existing config dir that contains resume files, preferring the new path
+(config.lib.neg.mkLocalBin "transmission-daemon-wrapper" ''
+    #!/usr/bin/env bash
+    set -euo pipefail
+    c1="${confDirNew}"
+    c2="${confDirOld}"
+    choose_dir() {
+      if [ -d "$c1/resume" ] && compgen -G "$c1/resume/*.resume" >/dev/null 2>&1; then echo "$c1"; return; fi
+      if [ -d "$c2/resume" ] && compgen -G "$c2/resume/*.resume" >/dev/null 2>&1; then echo "$c2"; return; fi
+      if [ -d "$c1" ]; then echo "$c1"; return; fi
+      if [ -d "$c2" ]; then echo "$c2"; return; fi
+      echo "$c1"
+    }
+    gdir=$(choose_dir)
+    exec "${lib.getExe' transmissionPkg "transmission-daemon"}" -g "$gdir" -f --log-level=error
+  '')
 # Transmission daemon service (systemd user)
 (config.lib.neg.systemdUser.mkSimpleService {
   name = "transmission-daemon";
