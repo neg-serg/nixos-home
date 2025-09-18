@@ -159,55 +159,46 @@ in {
     })
     # Consistency assertions for nested flags
     {
-      assertions = [
-        # Guard: hy3 plugin <-> Hyprland version compatibility.
-        # We pin Hyprland to v0.50.1 and hy3 to commit 1fdc0a2 (pre-CHyprColor API).
-        # If either pin changes, fail early with a helpful message.
-        (let
-          # Best-effort extraction of versions from flake inputs without forcing builds
-          hyprlandVersion = lib.attrByPath ["packages" pkgs.system "hyprland" "version"] null inputs.hyprland;
-          hy3Rev = lib.attrByPath ["rev"] null hy3;
-          # Known compatible matrix (extend as you update pins)
-          compatible = [
-            {
-              hv = "0.50.1";
-              rev = "1fdc0a291f8c23b22d27d6dabb466d018757243c";
-            }
-          ];
-          # Normalize Hyprland version like "0.50.1+date=..." -> "0.50.1"
-          hvNorm =
-            if hyprlandVersion == null then null
-            else let s = toString hyprlandVersion; in (builtins.head (lib.splitString "+" s));
-          matches = c:
-            (hvNorm == null || hvNorm == c.hv)
-            && (hy3Rev == null || hy3Rev == c.rev);
-          ok = lib.any matches compatible;
-        in {
-          assertion = ok;
-          message = ''
-            Incompatible Hyprland/hy3 pins detected.
-            Expected one of: ${builtins.concatStringsSep ", " (map (c: "Hyprland " + c.hv + " + hy3 " + builtins.substring 0 7 c.rev) compatible)}
-            Got: Hyprland ${toString (if hvNorm == null then "<unknown>" else hvNorm)} + hy3 ${toString (if hy3Rev == null then "<unknown>" else builtins.substring 0 7 hy3Rev)}
-            Update flake.nix pins or extend the compatibility matrix in modules/features.nix.
-          '';
-        })
-        {
-          assertion = cfg.gui.enable || (! cfg.gui.qt.enable);
-          message = "features.gui.qt.enable requires features.gui.enable = true";
-        }
-        {
-          assertion = cfg.web.enable || (! cfg.web.tools.enable && ! cfg.web.floorp.enable && ! cfg.web.yandex.enable && ! cfg.web.firefox.enable && ! cfg.web.librewolf.enable && ! cfg.web.nyxt.enable);
-          message = "features.web.* flags require features.web.enable = true (disable sub-flags or enable web)";
-        }
-        {
-          assertion = ! (cfg.web.firefox.enable && cfg.web.librewolf.enable);
-          message = "Only one of features.web.firefox.enable or features.web.librewolf.enable can be true";
-        }
-        {
-          assertion = cfg.dev.enable || (! cfg.dev.ai.enable);
-          message = "features.dev.ai.enable requires features.dev.enable = true";
-        }
-      ];
+      assertions =
+        # Hypr/hy3 compatibility check only matters when GUI is enabled
+        (lib.optionals cfg.gui.enable [
+          (let
+            hyprlandVersion = lib.attrByPath ["packages" pkgs.system "hyprland" "version"] null inputs.hyprland;
+            hy3Rev = lib.attrByPath ["rev"] null hy3;
+            compatible = [
+              { hv = "0.50.1"; rev = "1fdc0a291f8c23b22d27d6dabb466d018757243c"; }
+            ];
+            hvNorm = if hyprlandVersion == null then null else let s = toString hyprlandVersion; in (builtins.head (lib.splitString "+" s));
+            matches = c: (hvNorm == null || hvNorm == c.hv) && (hy3Rev == null || hy3Rev == c.rev);
+            ok = lib.any matches compatible;
+          in {
+            assertion = ok;
+            message = ''
+              Incompatible Hyprland/hy3 pins detected.
+              Expected one of: ${builtins.concatStringsSep ", " (map (c: "Hyprland " + c.hv + " + hy3 " + builtins.substring 0 7 c.rev) compatible)}
+              Got: Hyprland ${toString (if hvNorm == null then "<unknown>" else hvNorm)} + hy3 ${toString (if hy3Rev == null then "<unknown>" else builtins.substring 0 7 hy3Rev)}
+              Update flake.nix pins or extend the compatibility matrix in modules/features.nix.
+            '';
+          })
+        ])
+        ++ [
+          {
+            assertion = cfg.gui.enable || (! cfg.gui.qt.enable);
+            message = "features.gui.qt.enable requires features.gui.enable = true";
+          }
+          {
+            assertion = cfg.web.enable || (! cfg.web.tools.enable && ! cfg.web.floorp.enable && ! cfg.web.yandex.enable && ! cfg.web.firefox.enable && ! cfg.web.librewolf.enable && ! cfg.web.nyxt.enable);
+            message = "features.web.* flags require features.web.enable = true (disable sub-flags or enable web)";
+          }
+          {
+            assertion = ! (cfg.web.firefox.enable && cfg.web.librewolf.enable);
+            message = "Only one of features.web.firefox.enable or features.web.librewolf.enable can be true";
+          }
+          {
+            assertion = cfg.dev.enable || (! cfg.dev.ai.enable);
+            message = "features.dev.ai.enable requires features.dev.enable = true";
+          }
+        ];
     }
   ];
 }
