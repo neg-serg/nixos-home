@@ -59,26 +59,28 @@ with lib;
     # Create base maildir on activation (mbsync can also create, but this avoids first-run hiccups)
     # Maildir creation handled by global prepareUserPaths action
 
+      # Periodic sync in addition to imapnotify (fallback / catch-up)
+      systemd.user.services."mbsync-gmail" = {
+        Unit = {
+          Description = "Sync mail via mbsync (gmail)";
+          After = ["network-online.target"];
+          Wants = ["network-online.target"];
+        };
+        Install.WantedBy = [];
+        Service = {
+          Type = "simple";
+          TimeoutStartSec = "30min";
+          ExecStart = ''${pkgs.isync}/bin/mbsync -Va -c %h/.config/isync/mbsyncrc'';
+        };
+      };
+      systemd.user.timers."mbsync-gmail" = {
+        Unit = { Description = "Timer: mbsync gmail"; };
+        Install.WantedBy = ["timers.target"];
+        Timer = {
+          OnBootSec = "2m";
+          OnUnitActiveSec = "10m";
+          Persistent = true;
+        };
+      };
     }
-    # Periodic sync in addition to imapnotify (fallback / catch-up)
-    (config.lib.neg.systemdUser.mkSimpleService {
-      name = "mbsync-gmail";
-      description = "Sync mail via mbsync (gmail)";
-      execStart = ''${pkgs.isync}/bin/mbsync -Va -c %h/.config/isync/mbsyncrc'';
-      presets = ["netOnline"];
-      serviceExtra = {
-        Type = "simple";
-        TimeoutStartSec = "30min";
-      };
-    })
-    (config.lib.neg.systemdUser.mkSimpleTimer {
-      name = "mbsync-gmail";
-      description = "Timer: mbsync gmail";
-      presets = ["timers"];
-      persistent = true;
-      timerExtra = {
-        OnBootSec = "2m";
-        OnUnitActiveSec = "10m";
-      };
-    })
   ])

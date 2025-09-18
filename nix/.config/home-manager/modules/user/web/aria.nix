@@ -28,12 +28,17 @@ in
       };
     }
     # Simple user service: read only from the generated config
-    (config.lib.neg.systemdUser.mkSimpleService {
-      name = "aria2";
-      description = "aria2 download manager";
-      execStart = "${aria2Bin} --conf-path=${configHome}/aria2/aria2.conf";
-      presets = ["graphical"];
-    })
+    {
+      systemd.user.services.aria2 = {
+        Unit = {
+          Description = "aria2 download manager";
+          After = ["graphical-session.target"];
+          Wants = ["graphical-session.target"];
+        };
+        Install.WantedBy = ["graphical-session.target"];
+        Service.ExecStart = "${aria2Bin} --conf-path=${configHome}/aria2/aria2.conf";
+      };
+    }
     # Ensure the session file exists so input-file does not fail on first run
     (xdg.mkXdgDataText "aria2/session" "")
     # Soft migration warning: ensure session paths are under XDG data
@@ -42,5 +47,8 @@ in
       i = toString ((config.programs.aria2.settings or {})."input-file" or "");
       dh = toString config.xdg.dataHome;
       ok = (lib.hasPrefix (dh + "/") s) && (lib.hasPrefix (dh + "/") i);
-    in config.lib.neg.mkWarnIf (! ok) "aria2 session paths should be under $XDG_DATA_HOME/aria2 (save-session/input-file).")
+    in {
+      warnings = lib.optional (! ok)
+        "aria2 session paths should be under $XDG_DATA_HOME/aria2 (save-session/input-file).";
+    })
   ])

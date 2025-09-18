@@ -1,9 +1,13 @@
 { pkgs, lib, config, ... }:
-  (config.lib.neg.systemdUser.mkSimpleService {
-    name = "playerctld";
-    description = "Keep track of media player activity";
-    execStart = "${lib.getExe' pkgs.playerctl "playerctld"} daemon";
-    presets = ["defaultWanted"];
-    serviceExtra = { Type = "oneshot"; };
-  })
-
+with lib; {
+  systemd.user.services.playerctld = {
+    Unit = {
+      Description = "Keep track of media player activity";
+    };
+    Install.WantedBy = ["default.target"];
+    Service = {
+      Type = "oneshot";
+      ExecStart = "${lib.getExe' pkgs.playerctl "playerctld"} daemon";
+    };
+  };
+}

@@ -7,7 +7,7 @@
   lib.mkIf config.features.media.audio.mpd.enable (lib.mkMerge [
     {
       home.packages = with pkgs; config.lib.neg.pkgsList [
-      rmpc # alternative tui client with album cover
+        rmpc # alternative tui client with album cover
       ];
 
       services.mpd = {
@@ -21,23 +21,28 @@
         mpd.host = "localhost";
         mpd.port = 6600;
       };
-    }
-    (config.lib.neg.systemdUser.mkSimpleService {
-      name = "mpdas";
-      description = "mpdas last.fm scrobbler";
-      execStart = "${pkgs.mpdas}/bin/mpdas -c ${config.sops.secrets.mpdas_negrc.path}";
-      presets = ["net" "defaultWanted"];
-      after = ["sound.target"]; # keep explicit sound dependency
-      serviceExtra = {
-        Restart = "on-failure";
-        RestartSec = "10";
+
+      systemd.user.services = {
+        mpdas = {
+          Unit = {
+            Description = "mpdas last.fm scrobbler";
+            After = ["network.target" "sound.target"];
+          };
+          Install.WantedBy = ["default.target"];
+          Service = {
+            ExecStart = "${pkgs.mpdas}/bin/mpdas -c ${config.sops.secrets.mpdas_negrc.path}";
+            Restart = "on-failure";
+            RestartSec = "10";
+          };
+        };
       };
-    })
+    }
     # Soft migration notice: move MPD dataDir to XDG state
     (let
       oldPath = "${config.home.homeDirectory}/.config/mpd";
       current = (config.services.mpd.dataDir or oldPath);
-    in
-      config.lib.neg.mkWarnIf (current == oldPath)
-        "MPD dataDir uses ~/.config/mpd. Consider migrating to $XDG_STATE_HOME/mpd for better XDG compliance.")
+    in {
+      warnings = lib.optional (current == oldPath)
+        "MPD dataDir uses ~/.config/mpd. Consider migrating to $XDG_STATE_HOME/mpd for better XDG compliance.";
+    })
   ])
