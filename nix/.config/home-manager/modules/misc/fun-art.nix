@@ -573,7 +573,8 @@ with lib;
           executable = true;
         };
         "hack-art/nvim-logo" = {
-          text = ''
+          text = (builtins.readFile ./fun-art/nvim-logo.sh);
+          /*
             #!/bin/sh
             # neovim logo by @sunjon https://github.com/nvimdev/dashboard-nvim/wiki/Ascii-Header-Text
             # color variations and script by @xero https://git.io/.files
@@ -648,7 +649,7 @@ with lib;
             ;;
             esac
             exit 0
-          '';
+          */
           executable = true;
         };
         "hack-art/rain" = {
