@@ -12,7 +12,7 @@
 
       services.mpd = {
         enable = false;
-        dataDir = "${config.home.homeDirectory}/.config/mpd";
+        dataDir = "${config.xdg.stateHome}/mpd";
         musicDirectory = "${config.home.homeDirectory}/music";
       };
 
