@@ -83,14 +83,12 @@ in {
     ./nushell.nix
     ./config-links.nix # dircolors, f-sy-h, zsh, inputrc
     ./amfora.nix
+    ./icedtea-web.nix
     ./dosbox.nix
     ./fzf.nix
     ./tmux.nix
     ./tig.nix
     ./yazi.nix
-  ]
-  ++ lib.optionals (config.features.cli.icedteaWeb.enable or false) [
-    ./icedtea-web.nix
   ];
   config = {
     programs = {

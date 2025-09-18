@@ -41,17 +41,16 @@ in {
     };
   };
 
-  imports =
-    lib.optionals (config.features.dev.enable or false) [
-      ./android
-      ./benchmarks
-      ./cachix
-      ./ansible
-      ./editor
-      ./git
-      ./gdb
-      ./hack
-      ./pkgs
-      ./python
-    ];
+  imports = [
+    ./android
+    ./benchmarks
+    ./cachix
+    ./ansible
+    ./editor
+    ./git
+    ./gdb
+    ./hack
+    ./pkgs
+    ./python
+  ];
 }

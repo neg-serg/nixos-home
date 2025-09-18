@@ -147,7 +147,9 @@ in {
       features.dev.ai.enable = mkDefault false;
     })
     (mkIf (! cfg.gui.enable) {
-      features.gui = {};
+      features.gui = {
+        qt.enable = mkDefault false;
+      };
     })
     (mkIf (! cfg.mail.enable) {
       features.mail = {};
