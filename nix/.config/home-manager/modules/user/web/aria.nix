@@ -26,13 +26,14 @@ in
           save-session-interval = 1800;
         };
       };
-
-      # Simple user service: read only from the generated config
-      systemd.user.services.aria2 = lib.recursiveUpdate {
-        Unit.Description = "aria2 download manager";
-        Service.ExecStart = "${aria2Bin} --conf-path=${configHome}/aria2/aria2.conf";
-      } (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["graphical"]; });
     }
+    # Simple user service: read only from the generated config
+    (config.lib.neg.systemdUser.mkSimpleService {
+      name = "aria2";
+      description = "aria2 download manager";
+      execStart = "${aria2Bin} --conf-path=${configHome}/aria2/aria2.conf";
+      presets = ["graphical"];
+    })
     # Ensure the session file exists so input-file does not fail on first run
     (xdg.mkXdgDataText "aria2/session" "")
     # Soft migration warning: ensure session paths are under XDG data
