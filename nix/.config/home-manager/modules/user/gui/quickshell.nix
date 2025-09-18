@@ -1,10 +1,10 @@
-{ lib, pkgs, config, inputs, xdg, ... }:
+{ lib, pkgs, config, xdg, qsProvider ? null, rsmetrxProvider ? null, ... }:
 with lib; let
   qsPath = pkgs.lib.makeBinPath [
     pkgs.fd # fast file finder used by QS scripts
     pkgs.coreutils # basic CLI utilities
   ];
-  qsBin = lib.getExe' inputs.quickshell.packages.${pkgs.system}.default "qs";
+  qsBin = let qs = if qsProvider != null then (qsProvider pkgs) else pkgs.emptyFile; in lib.getExe' qs "qs";
   quickshellWrapped = pkgs.stdenv.mkDerivation {
     name = "quickshell-wrapped";
     buildInputs = [
@@ -32,7 +32,7 @@ in
       home.packages = with pkgs; config.lib.neg.pkgsList [
       cantarell-fonts # GNOME Cantarell fonts
       cava # console audio visualizer
-      inputs.rsmetrx.packages.${pkgs.system}.default # metrics/telemetry helper
+      (if rsmetrxProvider != null then (rsmetrxProvider pkgs) else pkgs.emptyFile) # metrics/telemetry helper
       kdePackages.kdialog # simple Qt dialog helper
       kdePackages.qt5compat # needed for Qt5Compat modules in Qt6
       kdePackages.qtdeclarative # Qt 6 QML

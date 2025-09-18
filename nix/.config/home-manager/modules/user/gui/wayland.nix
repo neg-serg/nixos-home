@@ -2,7 +2,7 @@
   lib,
   pkgs,
   config,
-  inputs,
+  iwmenuProvider ? null,
   ...
 }:
 with lib;
@@ -26,7 +26,7 @@ with lib;
           wtype # typing for wayland
         ];
         # extras evaluated only when enabled (prevents pulling input in dev-speed)
-        extras = lib.optionals (! devSpeed) [ inputs.iwmenu.packages.${pkgs.system}.default ];
+        extras = lib.optionals (! devSpeed && (iwmenuProvider != null)) [ (iwmenuProvider pkgs) ];
       };
       flags = { core = true; extras = true; };
     in {

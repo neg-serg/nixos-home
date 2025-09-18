@@ -2,7 +2,7 @@
   lib,
   pkgs,
   config,
-  inputs,
+  bzmenuProvider ? null,
   ...
 }:
 with lib;
@@ -16,7 +16,7 @@ with lib;
           matugen # theme generator (pywal-like)
         ];
         # extras evaluated only when enabled (prevents pulling input in dev-speed)
-        extras = lib.optionals (! devSpeed) [ inputs.bzmenu.packages.${pkgs.system}.default ];
+        extras = lib.optionals (! devSpeed && (bzmenuProvider != null)) [ (bzmenuProvider pkgs) ];
       };
       flags = {
         core = true;
