@@ -7,7 +7,6 @@
 let
   transmissionPkg = pkgs.transmission_4;
   confDirNew = "${config.xdg.configHome}/transmission-daemon";
-  confDirOld = "${config.xdg.configHome}/transmission";
 in lib.mkIf config.features.torrent.enable (lib.mkMerge [
 {
   # Link selected Transmission config files from repo; runtime subdirs remain local
@@ -24,10 +23,6 @@ in lib.mkIf config.features.torrent.enable (lib.mkMerge [
       "${confDirNew}/resume"
       "${confDirNew}/torrents"
       "${confDirNew}/blocklists"
-      # Also ensure legacy path exists if the wrapper selects it
-      "${confDirOld}/resume"
-      "${confDirOld}/torrents"
-      "${confDirOld}/blocklists"
     ];
 
   # Core torrent tools (migration helpers removed)
@@ -44,28 +39,11 @@ in lib.mkIf config.features.torrent.enable (lib.mkMerge [
   home.activation.keepTransmissionConfigSymlink =
     config.lib.neg.mkRemoveIfBrokenSymlink "${config.xdg.configHome}/transmission-daemon";
 }
-
-# Wrapper selects existing config dir that contains resume files, preferring the new path
-(config.lib.neg.mkLocalBin "transmission-daemon-wrapper" ''
-    #!/usr/bin/env bash
-    set -euo pipefail
-    c1="${confDirNew}"
-    c2="${confDirOld}"
-    choose_dir() {
-      if [ -d "$c1/resume" ] && compgen -G "$c1/resume/*.resume" >/dev/null 2>&1; then echo "$c1"; return; fi
-      if [ -d "$c2/resume" ] && compgen -G "$c2/resume/*.resume" >/dev/null 2>&1; then echo "$c2"; return; fi
-      if [ -d "$c1" ]; then echo "$c1"; return; fi
-      if [ -d "$c2" ]; then echo "$c2"; return; fi
-      echo "$c1"
-    }
-    gdir=$(choose_dir)
-    exec "${lib.getExe' transmissionPkg "transmission-daemon"}" -g "$gdir" -f --log-level=error
-  '')
 # Transmission daemon service (systemd user)
 (config.lib.neg.systemdUser.mkSimpleService {
   name = "transmission-daemon";
   description = "transmission service";
-  execStart = "${config.home.homeDirectory}/.local/bin/transmission-daemon-wrapper";
+  execStart = "${lib.getExe' transmissionPkg "transmission-daemon"} -g ${confDirNew} -f --log-level=error";
   presets = ["net" "defaultWanted"];
   unitExtra = {
     ConditionPathExists = "${lib.getExe' transmissionPkg "transmission-daemon"}";
