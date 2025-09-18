@@ -1,6 +1,7 @@
-{ lib, config, pkgs, hy3, xdg ? import ../../lib/xdg-helpers.nix { inherit lib pkgs; }, ... }:
+{ lib, config, pkgs, hy3, ... }:
 with lib; let
   hy3Plugin = hy3.packages.${pkgs.system}.hy3;
+  xdg = import ../../lib/xdg-helpers.nix { inherit lib pkgs; };
 in
   mkIf config.features.gui.enable (let
     # Declarative workspaces list -> generates workspaces.conf

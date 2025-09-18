@@ -1,5 +1,7 @@
-{ pkgs, lib, config, xdg ? import ../../lib/xdg-helpers.nix { inherit lib pkgs; }, ... }:
-lib.mkMerge [
+{ pkgs, lib, config, ... }:
+let
+  xdg = import ../../lib/xdg-helpers.nix { inherit lib pkgs; };
+in lib.mkMerge [
   {
     home.packages = config.lib.neg.pkgsList [pkgs.handlr];
   }

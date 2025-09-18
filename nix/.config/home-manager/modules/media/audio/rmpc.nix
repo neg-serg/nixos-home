@@ -1,5 +1,6 @@
-{ lib, config, pkgs, xdg ? import ../../lib/xdg-helpers.nix { inherit lib; }, ... }:
-lib.mkMerge [
+{ lib, config, pkgs, ... }:
+let xdg = import ../../lib/xdg-helpers.nix { inherit lib; };
+in lib.mkMerge [
   {
     # Ensure rmpc is installed
     home.packages = config.lib.neg.pkgsList [pkgs.rmpc];

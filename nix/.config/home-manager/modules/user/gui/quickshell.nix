@@ -1,5 +1,6 @@
-{ lib, pkgs, config, inputs, xdg ? import ../../lib/xdg-helpers.nix { inherit lib; }, ... }:
+{ lib, pkgs, config, inputs, ... }:
 with lib; let
+  xdg = import ../../lib/xdg-helpers.nix { inherit lib; };
   qsPath = pkgs.lib.makeBinPath [
     pkgs.fd # fast file finder used by QS scripts
     pkgs.coreutils # basic CLI utilities

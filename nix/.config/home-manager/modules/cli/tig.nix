@@ -1,5 +1,7 @@
-{ lib, config, pkgs, xdg ? import ../lib/xdg-helpers.nix { inherit lib; }, ... }:
-lib.mkMerge [
+{ lib, config, pkgs, ... }:
+let
+  xdg = import ../lib/xdg-helpers.nix { inherit lib; };
+in lib.mkMerge [
   {
   # Install tig and provide its configuration via XDG
   home.packages = config.lib.neg.pkgsList [pkgs.tig];

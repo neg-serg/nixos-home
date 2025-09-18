@@ -1,6 +1,6 @@
-{ lib, pkgs, config, xdg ? import ../../../lib/xdg-helpers.nix { inherit lib; }, ... }:
+{ lib, pkgs, config, ... }:
 with lib;
-  mkIf (config.features.mail.enable && config.features.mail.vdirsyncer.enable) (lib.mkMerge [
+  mkIf (config.features.mail.enable && config.features.mail.vdirsyncer.enable) (let xdg = import ../../../lib/xdg-helpers.nix { inherit lib; }; in lib.mkMerge [
     {
       home.packages = with pkgs; config.lib.neg.pkgsList [
         vdirsyncer # add vdirsyncer binary for sync and initialization

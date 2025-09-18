@@ -1,5 +1,7 @@
-{ pkgs, lib, config, xdg ? import ../lib/xdg-helpers.nix { inherit lib; }, ... }:
-lib.mkMerge [
+{ pkgs, lib, config, ... }:
+let
+  xdg = import ../lib/xdg-helpers.nix { inherit lib; };
+in lib.mkMerge [
   # Install tmux and provide its configuration via XDG
   # Avoid adding base python when a python env is present elsewhere (prevents bin/idle conflict)
   {

@@ -1,7 +1,8 @@
-{ lib, config, xdg ? import ../../../lib/xdg-helpers.nix { inherit lib; }, ... }:
+{ lib, config, ... }:
 with lib;
   mkIf config.features.mail.enable (
-    lib.mkMerge [
+    let xdg = import ../../../lib/xdg-helpers.nix { inherit lib; };
+    in lib.mkMerge [
       (xdg.mkXdgSource "mutt" { source = ./conf; })
     ]
   )

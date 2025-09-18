@@ -1,5 +1,7 @@
-{ lib, pkgs, config, xdg ? import ../lib/xdg-helpers.nix { inherit lib; }, ... }:
-lib.mkIf config.features.cli.icedteaWeb.enable (
+{ lib, pkgs, config, ... }:
+let
+  xdg = import ../lib/xdg-helpers.nix { inherit lib; };
+in lib.mkIf config.features.cli.icedteaWeb.enable (
   lib.mkMerge [
     # Install icedtea-web if available and ship its config via XDG
     {

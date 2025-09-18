@@ -1,6 +1,7 @@
-{ lib, pkgs, config, xdg ? import ../../lib/xdg-helpers.nix { inherit lib; }, ... }:
+{ lib, pkgs, config, ... }:
 with lib;
   mkIf config.features.gui.enable (let
+    xdg = import ../../lib/xdg-helpers.nix { inherit lib; };
     rofiPkg = (pkgs.rofi.override {
       plugins = [
         pkgs.rofi-file-browser
