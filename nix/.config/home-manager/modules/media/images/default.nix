@@ -57,17 +57,17 @@ in lib.mkMerge [
     swayimg swayimg-first viu
   ];
   }
-  (config.lib.neg.mkLocalBin "swayimg" ''
-    #!/usr/bin/env bash
-    set -euo pipefail
-    exec "${swayimg-first}/bin/swayimg-first" "$@"
-  '')
-  (config.lib.neg.mkLocalBin "sx" ''
-    #!/usr/bin/env bash
-    set -euo pipefail
-    exec swayimg-first "$@"
-  '')
-  (config.lib.neg.mkLocalBin "sxivnc" ''
+  {
+  home.file.".local/bin/swayimg".source = "${swayimg-first}/bin/swayimg-first";
+  home.file.".local/bin/sx" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env bash
+      set -euo pipefail
+      exec swayimg-first "$@"
+    '';
+  };
+  home.file.".local/bin/sxivnc".text = ''
     #!/usr/bin/env bash
     set -euo pipefail
     if command -v nsxiv >/dev/null 2>&1; then
@@ -80,12 +80,16 @@ in lib.mkMerge [
       echo "sxivnc: no nsxiv/sxiv/swayimg in PATH" >&2
       exit 127
     fi
-  '')
+  '';
+  }
 
   # Guard: ensure we don't write through an unexpected symlink or file at ~/.local/bin/swayimg
   # Collapse to a single step that removes any pre-existing file/dir/symlink.
   # Prepared via global prepareUserPaths action
 
   # Live-editable Swayimg config via helper (guards parent dir and target)
-  (xdg.mkXdgSource "swayimg" (config.lib.neg.mkDotfilesSymlink "nix/.config/home-manager/modules/media/images/swayimg/conf" true))
+  (xdg.mkXdgSource "swayimg" {
+    source = config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/nix/.config/home-manager/modules/media/images/swayimg/conf";
+    recursive = true;
+  })
 ]

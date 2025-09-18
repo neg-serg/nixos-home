@@ -12,7 +12,10 @@ in lib.mkMerge [
     home.packages = config.lib.neg.pkgsList [pkgs.nushell];
   }
   # Live-editable config via helper (guards parent dir and target)
-  (xdg.mkXdgSource "nushell" (config.lib.neg.mkDotfilesSymlink "nix/.config/home-manager/modules/cli/nushell-conf" true))
+  (xdg.mkXdgSource "nushell" {
+    source = config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/nix/.config/home-manager/modules/cli/nushell-conf";
+    recursive = true;
+  })
   # Provide Nushell module search path via NU_LIB_DIRS, pointing to the nupm modules in the store
   # and the user's local modules directory for overrides.
   {

@@ -1,6 +1,12 @@
 {config, ...}: {
   xdg.configFile = {
-    "wireplumber" = config.lib.neg.mkDotfilesSymlink "media/.config/wireplumber" true;
-    "pipewire" = config.lib.neg.mkDotfilesSymlink "media/.config/pipewire" true;
+    "wireplumber" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/media/.config/wireplumber";
+      recursive = true;
+    };
+    "pipewire" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/media/.config/pipewire";
+      recursive = true;
+    };
   };
 }

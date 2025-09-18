@@ -7,14 +7,17 @@
 with lib;
   mkIf config.features.dev.enable (let xdg = import ../../lib/xdg-helpers.nix { inherit lib; }; in lib.mkMerge [
     # Link user excludes file from repo into ~/.config/git/ignore with guards
-    (xdg.mkXdgSource "git/ignore" (config.lib.neg.mkDotfilesSymlink "git/.config/git/ignore" false))
+    (xdg.mkXdgSource "git/ignore" {
+      source = config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/git/.config/git/ignore";
+      recursive = false;
+    })
     # Git hooks via helper: ensure parent dir is real and mark as executable
     (xdg.mkXdgSource "git/hooks/pre-commit" {
       text = ''
         #!/usr/bin/env bash
         set -euo pipefail
         # Repo root configured in HM (dotfilesRoot)
-        repo="${config.lib.neg.dotfilesRoot}/nix/.config/home-manager"
+        repo="${config.neg.dotfilesRoot}/nix/.config/home-manager"
         # Run flake checks for HM (format docs, evals, etc.)
         (cd "$repo" && nix flake check -L)
         # Format the repo via treefmt (Nix, shell, Python, etc.)

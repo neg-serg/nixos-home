@@ -11,5 +11,8 @@ in lib.mkMerge [
     home.packages = config.lib.neg.pkgsList [pkgs.rmpc];
   }
   # Live-editable config via helper (guards parent dir and target)
-  (xdg.mkXdgSource "rmpc" (config.lib.neg.mkDotfilesSymlink "nix/.config/home-manager/modules/media/audio/rmpc/conf" true))
+  (xdg.mkXdgSource "rmpc" {
+    source = config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/nix/.config/home-manager/modules/media/audio/rmpc/conf";
+    recursive = true;
+  })
 ]

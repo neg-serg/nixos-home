@@ -35,6 +35,9 @@ with {}; {
   };
   xdg.configFile = {
     # █▓▒░ nvim ─────────────────────────────────────────────────────────────────────────
-    "nvim" = config.lib.neg.mkDotfilesSymlink "nvim/.config/nvim" true;
+    "nvim" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/nvim/.config/nvim";
+      recursive = true;
+    };
   };
 }

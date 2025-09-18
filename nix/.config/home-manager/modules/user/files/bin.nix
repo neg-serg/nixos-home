@@ -1,3 +1,6 @@
 { config, ... }: {
-  home.file."bin" = config.lib.neg.mkDotfilesSymlink "bin" false;
+  home.file."bin" = {
+    source = config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/bin";
+    recursive = false;
+  };
 }
