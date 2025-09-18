@@ -5,10 +5,13 @@
   ...
 }:
 let
-  xdg = import ../../lib/xdg-helpers.nix { inherit lib; };
+  xdg = import ../../lib/xdg-helpers.nix { inherit lib pkgs; };
 in lib.mkMerge [
   {
     home.packages = config.lib.neg.pkgsList [pkgs.handlr];
   }
-  (xdg.mkXdgSource "handlr" { source = ./handlr-conf; })
+  (xdg.mkXdgConfigToml "handlr/handlr.toml" {
+    enable_selector = false;
+    selector = "rofi -dmenu -p 'Open With: '";
+  })
 ]
