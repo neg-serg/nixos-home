@@ -38,6 +38,9 @@ in {
       ai = {
         enable = mkBool "enable AI tools (e.g., LM Studio)" true;
       };
+      haskell = {
+        enable = mkBool "enable Haskell tooling (ghc, cabal, stack, HLS)" true;
+      };
     };
 
     web = {
@@ -175,6 +178,22 @@ in {
     })
     (mkIf (! cfg.dev.enable) {
       features.dev.ai.enable = mkDefault false;
+    })
+    (mkIf (! cfg.dev.haskell.enable) {
+      # When Haskell tooling is disabled, proactively exclude common Haskell tool pnames
+      # from curated package lists that honor features.excludePkgs via config.lib.neg.pkgsList.
+      features.excludePkgs =
+        mkAfter [
+          "ghc"
+          "cabal-install"
+          "stack"
+          "haskell-language-server"
+          "hlint"
+          "ormolu"
+          "fourmolu"
+          "hindent"
+          "ghcid"
+        ];
     })
     (mkIf (! cfg.gui.enable) {
       features.gui = {
