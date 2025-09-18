@@ -32,6 +32,19 @@
       deheader # remove unneeded C/C++ includes
     ];
 
+    # Haskell toolchain and related tools
+    haskell = [
+      ghc
+      cabal-install
+      stack
+      haskell-language-server
+      hlint
+      ormolu
+      fourmolu
+      hindent
+      ghcid
+    ];
+
     # IaC backend package (Terraform or OpenTofu) controlled by
     # features.dev.iac.backend (default: "terraform").
     iac = let
@@ -45,7 +58,11 @@
 in
   lib.mkIf config.features.dev.enable {
     home.packages =
-      config.lib.neg.pkgsList (
-        config.lib.neg.mkEnabledList config.features.dev.pkgs groups
+      let
+        flags = (config.features.dev.pkgs or {}) // {
+          haskell = config.features.dev.haskell.enable or false;
+        };
+      in config.lib.neg.pkgsList (
+        config.lib.neg.mkEnabledList flags groups
       );
   }
