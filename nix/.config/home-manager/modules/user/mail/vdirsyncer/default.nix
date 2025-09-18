@@ -41,51 +41,10 @@ with lib;
         (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["timers"]; })
       ];
     }
-    (xdg.mkXdgText "vdirsyncer/config" ''
-      [general]
-      status_path = "${config.xdg.stateHome or "$HOME/.local/state"}/vdirsyncer"
-
-      # Calendars pair (filesystem <-> CalDAV)
-      [pair calendars]
-      a = "calendars_local"
-      b = "calendars_remote"
-      collections = ["from b"]
-      conflict_resolution = "b wins"
-      metadata = ["color", "displayname"]
-
-      [storage calendars_local]
-      type = "filesystem"
-      path = "${config.home.homeDirectory}/.config/vdirsyncer/calendars"
-      fileext = ".ics"
-
-      [storage calendars_remote]
-      type = "caldav"
-      # TODO: Replace with your CalDAV base URL (e.g., Nextcloud/Fastmail)
-      # Example (Nextcloud): https://cloud.example.com/remote.php/dav/calendars/USERNAME/
-      url = "https://REPLACE-ME-CALDAV-BASE/"
-      username = "REPLACE-ME-USER"
-      password = "REPLACE-ME-PASSWORD"
-      verify = true
-
-      # Contacts pair (filesystem <-> CardDAV)
-      [pair contacts]
-      a = "contacts_local"
-      b = "contacts_remote"
-      collections = ["from b"]
-      conflict_resolution = "b wins"
-
-      [storage contacts_local]
-      type = "filesystem"
-      path = "${config.home.homeDirectory}/.config/vdirsyncer/contacts"
-      fileext = ".vcf"
-
-      [storage contacts_remote]
-      type = "carddav"
-      # TODO: Replace with your CardDAV base URL (e.g., Nextcloud/Fastmail)
-      # Example (Nextcloud): https://cloud.example.com/remote.php/dav/addressbooks/users/USERNAME/
-      url = "https://REPLACE-ME-CARDDAV-BASE/"
-      username = "REPLACE-ME-USER"
-      password = "REPLACE-ME-PASSWORD"
-      verify = true
-    '')
+    (let
+       tpl = builtins.readFile ./config.tpl;
+       stateHome = (config.xdg.stateHome or "$HOME/.local/state");
+       home = config.home.homeDirectory;
+       rendered = lib.replaceStrings ["@XDG_STATE@" "@HOME@"] [ stateHome home ] tpl;
+     in xdg.mkXdgText "vdirsyncer/config" rendered)
   ])
