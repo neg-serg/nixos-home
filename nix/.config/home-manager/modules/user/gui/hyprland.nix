@@ -231,6 +231,4 @@ in
     (xdg.mkXdgText "hypr/rules-routing.conf" routesConf)
     # Submaps and binding helpers
     (lib.mkMerge (map (f: mkHyprSource ("bindings/" + f)) bindingFiles))
-    # Tools: window switcher using rofi
-    { }
   ])

@@ -1,4 +1,4 @@
-{
+{ 
   lib,
   config,
   pkgs,
@@ -60,21 +60,25 @@ with rec {
       "x-scheme-handler/magnet" = torrent;
     }
   );
-}; {
+}; let
+  cfgNames = builtins.attrNames (config.xdg.configFile or {});
+  dataNames = builtins.attrNames (config.xdg.dataFile or {});
+  cacheNames = builtins.attrNames (config.xdg.cacheFile or {});
+in {
   home.packages = with pkgs; config.lib.neg.pkgsList [
     handlr # xdg-open replacement with per-handler rules
     xdg-ninja # detect mislocated files in $HOME
   ];
   # Aggregate XDG fixups via lib.neg helpers for readability and reuse.
   home.activation.xdgFixParents = config.lib.neg.mkXdgFixParents {
-    configs = builtins.attrNames (config.xdg.configFile or {});
-    datas = builtins.attrNames (config.xdg.dataFile or {});
-    caches = builtins.attrNames (config.xdg.cacheFile or {});
+    configs = cfgNames;
+    datas = dataNames;
+    caches = cacheNames;
   };
   home.activation.xdgFixTargets = config.lib.neg.mkXdgFixTargets {
-    configs = builtins.attrNames (config.xdg.configFile or {});
-    datas = builtins.attrNames (config.xdg.dataFile or {});
-    caches = builtins.attrNames (config.xdg.cacheFile or {});
+    configs = cfgNames;
+    datas = dataNames;
+    caches = cacheNames;
   };
   xdg = {
     enable = true;
