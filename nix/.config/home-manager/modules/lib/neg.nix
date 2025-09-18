@@ -5,7 +5,7 @@
   ...
 }: {
   # Project-specific helpers under lib.neg
-  config.lib.neg = {
+  config.lib.neg = rec {
     # Configurable root of your dotfiles repository (see options.neg.dotfilesRoot)
 
     # mkEnabledList flags groups -> concatenated list of groups
@@ -20,19 +20,21 @@
       );
 
     # Alias
-    mkPackagesFromGroups = flags: groups: (config.lib.neg.mkEnabledList flags groups);
+    mkPackagesFromGroups = flags: groups: (mkEnabledList flags groups);
 
     # Package list helpers
     pnameOf = pkg: (pkg.pname or (builtins.parseDrvName (pkg.name or "")).name);
     filterByNames = names: pkgsList:
-      builtins.filter (p: !(builtins.elem (config.lib.neg.pnameOf p) names)) pkgsList;
+      builtins.filter (p: !(builtins.elem (pnameOf p) names)) pkgsList;
+    # Apply global excludePkgs filter to a list of packages by pname
+    # Example: exclude tools like "dsniff" from curated groups without editing modules
     filterByExclude = pkgsList:
-      config.lib.neg.filterByNames (config.features.excludePkgs or []) pkgsList;
+      builtins.filter (p: !(builtins.elem (pnameOf p) (config.features.excludePkgs or []))) pkgsList;
 
     # Shorthand: apply global excludePkgs filter to a list of packages
     # Usage:
     #   home.packages = with pkgs; config.lib.neg.pkgsList [ foo bar ];
-    pkgsList = xs: config.lib.neg.filterByExclude xs;
+    pkgsList = xs: filterByExclude xs;
 
     # Emit a warning (non-fatal) when condition holds
     mkWarnIf = cond: msg: {
@@ -49,12 +51,7 @@
     mkWhen = cond: attrs: lib.mkIf cond attrs;
     mkUnless = cond: attrs: lib.mkIf (! cond) attrs;
 
-    # Create a Home Manager home.file symlink from dotfilesRoot
-    # Usage: config.lib.neg.mkDotfilesSymlink "path/in/repo" false
-    mkDotfilesSymlink = path: recursive: {
-      source = config.lib.file.mkOutOfStoreSymlink "${config.lib.neg.dotfilesRoot}/${path}";
-      inherit recursive;
-    };
+    # mkDotfilesSymlink removed to avoid config.lib recursion in evaluation.
 
     # Browser addons helper: produce well-known addon lists given NUR addons set
     browserAddons = fa: {
@@ -189,7 +186,7 @@
                 // unitExtra;
               Service = ({ExecStart = execStart;} // serviceExtra);
             }
-            (config.lib.neg.systemdUser.mkUnitFromPresets {
+            (mkUnitFromPresets {
               inherit presets after wants partOf wantedBy;
             });
       };
@@ -232,7 +229,7 @@
                  // lib.optionalAttrs (persistent != null) { Persistent = persistent; }
                  // timerExtra);
             }
-            (config.lib.neg.systemdUser.mkUnitFromPresets {
+            (mkUnitFromPresets {
               inherit presets after wants partOf;
               wantedBy = finalWantedBy;
             });
@@ -275,7 +272,7 @@
                  // lib.optionalAttrs (listenFIFO != null) { ListenFIFO = listenFIFO; }
                  // socketExtra);
             }
-            (config.lib.neg.systemdUser.mkUnitFromPresets {
+            (mkUnitFromPresets {
               inherit presets after wants partOf;
               wantedBy = finalWantedBy;
             });
@@ -505,7 +502,7 @@
     # avoiding conflicts across refactors.
     mkLocalBin = name: text: {
       home.activation."cleanBin_${name}" =
-        config.lib.neg.mkEnsureAbsent "${config.home.homeDirectory}/.local/bin/${name}";
+        mkEnsureAbsent "${config.home.homeDirectory}/.local/bin/${name}";
       home.file.".local/bin/${name}" = {
         executable = true;
         inherit text;
@@ -520,13 +517,11 @@
     # See STYLE.md ("XDG file helpers") for examples and guidance.
   };
 
-  # Provide a typed option for dotfiles root, and mirror it under lib.neg
+  # Provide a typed option for dotfiles root
   options.neg.dotfilesRoot = lib.mkOption {
     type = lib.types.str;
     default = "${config.home.homeDirectory}/.dotfiles";
     description = "Path to the root of the user's dotfiles repository.";
     example = "/home/neg/.cfg";
   };
-
-  config.lib.neg.dotfilesRoot = config.neg.dotfilesRoot;
 }

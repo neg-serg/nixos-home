@@ -8,10 +8,8 @@
 }:
 with lib; let
   cfg = config.features;
-  mkBool =
-    if (config ? lib) && (config.lib ? neg) && (config.lib.neg ? mkBool)
-    then config.lib.neg.mkBool
-    else (desc: default: (lib.mkEnableOption desc) // {inherit default;});
+  # Use a local mkBool to avoid early dependency on config.lib.neg during option evaluation
+  mkBool = (desc: default: (lib.mkEnableOption desc) // {inherit default;});
 in {
   options.features = {
     # Global package exclusions for curated lists in modules that adopt this filter.
@@ -165,8 +163,6 @@ in {
         # If either pin changes, fail early with a helpful message.
         (let
           # Best-effort extraction of versions from flake inputs without forcing builds
-          # lib.attrByPath already returns the provided default (null) when the path is missing,
-          # so avoid using the attribute-selection fallback syntax (`or`) here.
           hyprlandVersion = lib.attrByPath ["packages" pkgs.system "hyprland" "version"] null inputs.hyprland;
           hy3Rev = lib.attrByPath ["rev"] null hy3;
           # Known compatible matrix (extend as you update pins)
@@ -176,7 +172,7 @@ in {
               rev = "1fdc0a291f8c23b22d27d6dabb466d018757243c";
             }
           ];
-          # Normalize Hyprland version like "0.50.1+date=2025-07-19_4e242d0" -> "0.50.1"
+          # Normalize Hyprland version like "0.50.1+date=..." -> "0.50.1"
           hvNorm =
             if hyprlandVersion == null then null
             else let s = toString hyprlandVersion; in (builtins.head (lib.splitString "+" s));

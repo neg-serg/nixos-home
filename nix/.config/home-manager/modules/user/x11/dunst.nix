@@ -4,7 +4,6 @@
   config,
   ...
 }: let
-  # Be robust if defaultBrowser is not set yet
   db = config.lib.neg.web.defaultBrowser or {};
   browserBin = db.bin or "${lib.getExe' pkgs.xdg-utils "xdg-open"}";
   browserArg = db.newTabArg or "";
