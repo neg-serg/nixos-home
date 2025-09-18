@@ -272,13 +272,13 @@ _exists fzf && {
 }
 _exists systemctl && {
     alias ctl='systemctl'
-    alias stl='s systemctl'
+    alias dn='sudo systemctl stop'
+    alias j='journalctl'
+    alias stl='sudo systemctl'
+    alias un='systemctl --user stop'
+    alias up='sudo systemctl start'
     alias utl='systemctl --user'
     alias ut='systemctl --user start'
-    alias un='systemctl --user stop'
-    alias up='s systemctl start'
-    alias dn='s systemctl stop'
-    alias j='journalctl'
 }
 
 if [[ -e /etc/NIXOS ]]; then
