@@ -12,7 +12,9 @@ in lib.mkMerge [
       onefetch # repository summary in terminal
     ];
   }
-  # Link static configuration directory to XDG config
-  (xdg.mkXdgSource "fastfetch"
-    (config.lib.neg.mkDotfilesSymlink "nix/.config/home-manager/modules/cli/fastfetch/conf" true))
+  # Link static configuration directory (config.jsonc + skull) from repo
+  (xdg.mkXdgSource "fastfetch" {
+    source = config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/nix/.config/home-manager/modules/cli/fastfetch/conf";
+    recursive = true;
+  })
 ]
