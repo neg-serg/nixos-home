@@ -10,7 +10,8 @@ with lib;
       dataFile = {
         # hack-art files
         "hack-art/bonsai" = {
-          text = ''
+          text = (builtins.readFile ./fun-art/bonsai.sh);
+          /*
             #!/usr/bin/env bash
 
             # I'm a bonsai-making machine!
@@ -585,21 +586,21 @@ with lib;
           executable = true;
         };
         "hack-art/skullmono.sh" = {
-          text = ''
+          text = (if builtins.pathExists ./fun-art/skullmono.sh then (builtins.readFile ./fun-art/skullmono.sh) else ''
             #!/bin/sh
             echo '                      :::!~!!!!!:.'
             echo '                  .xUHWH!! !!?M88WHX:.'
             echo '                .X*#M@$!!  !X!M$$$$$$WWx:.'
             echo '               :!!!!!!?H! :!$!$$$$$$$$$$8X:'
             echo '              !!~  ~:~!! :~!$!#$$$$$$$$$$8X:'
-            echo '             :!~::!H!<   ~.U$X!?R$$$$$$$$'
-            echo '             ~!~!!!!~~ .:XW$$$U!!?$$$$$$RMM!'
+            echo "             :!~::!H!<   ~.U$X!?R$$$$$$$$"
+            echo "             ~!~!!!!~~ .:XW$$$U!!?$$$$$$RMM!"
             echo '               !:~~~ .:!M"T#$$$$WX??#MRRMMM!'
             echo '               ~?WuxiW*`   `"#$$$$8!!!!??!!!'
             echo '             :X- M$$$$       `"T#$T~!8$WUXU~'
             echo '            :%`  ~#$$$m:        ~!~ ?$$$$$$'
             echo '          :!`.-   ~T$$$$8xx.  .xWW- ~""##*"'
-            echo '....   -~~:<` !    ~?T#$$@@W@*?$$    /`'
+            echo "....   -~~:<` !    ~?T#$$@@W@*?$$    /`"
             echo 'W$@@M!!! .!~~ !!     .:XUW$W!~ `"~:    :'
             echo '#"~~`.:x%`!!  !H:   !WM$$$$Ti.: .!WUn+!`'
             echo ':::~:!!`:X~ .: ?H.!u "$$$B$$$!W:U!T$$M~'
@@ -607,11 +608,11 @@ with lib;
             echo 'Wi.~!X$?!-~    : ?$$$B$Wu("**$RM!'
             echo '$R@i.~~ !     :   ~$$$$$B$$en:``'
             echo '?MXT@Wx.~    :     ~"##*$$$$M~'
-          '';
+          '');
           executable = true;
         };
         "hack-art/skulls" = {
-          text = ''
+          text = (if builtins.pathExists ./fun-art/skulls.sh then (builtins.readFile ./fun-art/skulls.sh) else ''
             #!/bin/sh
             #
             #  ┳━┓┳━┓0┏┓┓┳━┓┏━┓┓ ┳
@@ -677,7 +678,7 @@ with lib;
                 \u001b[1;31;40mXXXX\u001b[0;31;40mXXXX\u001b[1;33;40mXXXX\u001b[0;33;40mXXXX\u001b[1;35;40mXXXX\u001b[0;35;40mXXXX\u001b[1;32;40mXXXX\u001b[0;32;40mXXXX\u001b[1;34;40mXXXX\u001b[0;34;40mXXXX\u001b[1;37;40mXER0
 
             EOF
-          '';
+          '');
           executable = true;
         };
         "hack-art/skull.txt" = {
@@ -690,7 +691,7 @@ with lib;
 
         # fantasy-art files
         "fantasy-art/gandalf.txt" = {
-          text = ''
+          text = (if builtins.pathExists ./fun-art/gandalf.txt then (builtins.readFile ./fun-art/gandalf.txt) else ''
             ⠀⠀⠀⠀⠀⠀⢀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
             ⠀⠀⠀⠀⠀⢀⠎⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
             ⠀⠀⠀⠀⢀⣾⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⠤⠶⢶⣿⣿⣿⣿⣯⣴⣖⣤⡀⠀⠀⠀⠀⠀⠀⠀⣠⠔⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -753,10 +754,10 @@ with lib;
             ⠀⠐⠊⠉⢉⣡⠝⠡⠄⠐⢒⡒⠦⠚⠀⠀⠀⠀⠀⠀⠀⡀⠀⢀⡠⠩⠑⠲⠮⠍⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
             ⠀⠀⠀⠀⠀⠀⠄⠐⠊⠓⣐⠶⠆⠤⢐⣠⡔⣀⡀⠀⠀⠀⠁⠒⠀⠉⠛⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
             ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-          '';
+          '');
         };
         "fantasy-art/helmet.txt" = {
-          text = ''
+          text = (if builtins.pathExists ./fun-art/helmet.txt then (builtins.readFile ./fun-art/helmet.txt) else ''
             ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
             ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
             ⠀⠀⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -803,10 +804,10 @@ with lib;
             ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
             ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
             ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢘⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-          '';
+          '');
         };
         "fantasy-art/hydra.txt" = {
-          text = ''
+          text = (if builtins.pathExists ./fun-art/hydra.txt then (builtins.readFile ./fun-art/hydra.txt) else ''
 
 
 
@@ -821,10 +822,10 @@ with lib;
             ⠙⠃   ⣼⣿⡟  ⠈⠻⣿⣿⣦⣌⡇⠻⣿⣿⣷⣿⣿⣿ ⣿⣿⡇ ⠛⠻⢷⣄
                  ⢻⣿⣿⣄   ⠈⠻⣿⣿⣿⣷⣿⣿⣿⣿⣿⡟ ⠫⢿⣿⡆
                   ⠻⣿⣿⣿⣿⣶⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⡟⢀⣀⣤⣾⡿⠃
-          '';
+          '');
         };
         "fantasy-art/skeleton_hood.txt" = {
-          text = ''
+          text = (if builtins.pathExists ./fun-art/skeleton_hood.txt then (builtins.readFile ./fun-art/skeleton_hood.txt) else ''
             ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⠴⠂⠀⠈⠁⠀⠀⠀⠉⠁⠀⠒⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
             ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⠔⠊⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠑⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⠤⠄⠀⠀⠀⠀⠀⠀
             ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡠⠊⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠂⠀⠀⠀⠀⠀⠀⠀⠀⡠⠊⡀⠀⠀⣳⠀⠀⠀⠀⠀
@@ -858,7 +859,7 @@ with lib;
             ⠀⠀⠀⠀⠢⠌⠀⠀⠀⠀⠁⠑⠄⠀⠀⠀⡠⠀⠀⢸⡄⠿⢀⠀⠀⢀⡁⠀⢀⡠⢊⠴⠀⠀⠀⢄⡠⡵⠘⠈⠠⠔⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
             ⠐⠀⠀⠀⠀⠀⠀⡔⠀⠀⠀⠀⠰⠄⠠⠄⠀⢆⠀⠈⠀⠈⡸⠁⠈⠉⠁⠒⠈⢀⡠⠐⣉⠴⠂⠁⠀⠀⠂⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
             ⠀⠀⠀⠀⡀⠀⠀⠁⠢⠀⠀⠀⠀⠀⠀⠀⠀⠈⠈⠀⠀⠀⠈⠈⠒⠲⠶⠶⠖⠒⢊⣉⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-          '';
+          '');
         };
       };
     };
