@@ -283,7 +283,6 @@ _exists systemctl && {
 
 if [[ -e /etc/NIXOS ]]; then
     # thx to @oni: https://discourse.nixos.org/t/nvd-simple-nix-nixos-version-diff-tool/12397/3
-    hash -d nix-hm="/nix/var/nix/profiles/per-user/$USER/home-manager"
     hash -d nix-now="/run/current-system"
     hash -d nix-boot="/nix/var/nix/profiles/system"
     _exists nixos-rebuild && {
@@ -298,7 +297,7 @@ if [[ -e /etc/NIXOS ]]; then
         # unpackPhase && cd linux-*; patchPhase; make nconfig
     }
     _exists nh && {
-        alias seh="home-manager -b bck switch -j 32 --cores 32 --flake $(readlink -f ~/.config/home-manager)"
+        alias seh="home-manager -b bck switch -j 32 --cores 32 --flake $(readlink -f ~/.dotfiles/nix/.config/home-manager)"
         alias ser="nh os switch /etc/nixos"
     }
     alias nixify='nix-shell -p nur.repos.kampka.nixify'
