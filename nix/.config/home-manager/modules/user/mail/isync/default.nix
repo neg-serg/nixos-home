@@ -12,37 +12,7 @@ with lib;
 
     # Inline mbsyncrc under XDG with automatic guards via helper
     # (ensures parent dir is real and removes stale file/symlink)
-    xdg.configFile."isync/mbsyncrc" = {
-      text = ''
-        #-- gmail
-        IMAPAccount gmail
-        Host imap.gmail.com
-        User serg.zorg@gmail.com
-        PassCmd "pass show mail/gmail/serg.zorg@gmail.com/mbsync-app"
-        AuthMechs LOGIN
-        SSLType IMAPS
-        CertificateFile /etc/ssl/certs/ca-bundle.crt
-
-        IMAPStore gmail-remote
-        Account gmail
-
-        MaildirStore gmail-local
-        Subfolders Verbatim
-        Path ~/.local/mail/gmail/
-        Inbox ~/.local/mail/gmail/INBOX/
-
-        Channel gmail
-        Far :gmail-remote:
-        Near :gmail-local:
-        Patterns "INBOX" "[Gmail]/Sent Mail" "[Gmail]/Drafts" "[Gmail]/All Mail" "[Gmail]/Trash" "[Gmail]/Spam"
-        # Download-only to avoid uploading local changes to Gmail
-        Sync Pull
-        # Create/expunge only locally (Near) to prevent remote changes
-        Create Near
-        Expunge Near
-        SyncState *
-      '';
-    };
+    xdg.configFile."isync/mbsyncrc".text = builtins.readFile ./mbsyncrc;
 
     # Optional: ensure the binary is present even if HM changes defaults
     # Also provide a non-blocking trigger to start sync in background

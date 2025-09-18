@@ -16,35 +16,11 @@ in
         ANSIBLE_GALAXY_COLLECTIONS_PATHS = "${XDG_DATA}/ansible/collections";
       };
     }
-  (xdg.mkXdgText "ansible/ansible.cfg" ''
-      [defaults]
-      roles_path = ${XDG_DATA}/ansible/roles
-      collections_paths = ${XDG_DATA}/ansible/collections
-      inventory = ${XDG_CFG}/ansible/hosts
-      retry_files_enabled = False
-      stdout_callback = yaml
-      bin_ansible_callbacks = True
-      interpreter_python = auto_silent
-      forks = 20
-      strategy = free
-      gathering = smart
-      fact_caching = jsonfile
-      fact_caching_connection = ${XDG_CACHE}/ansible/facts
-      fact_caching_timeout = 86400
-      timeout = 30
-
-      [galaxy]
-      server_list = galaxy
-
-      [galaxy_server.galaxy]
-      url=https://galaxy.ansible.com/
-
-      [ssh_connection]
-      pipelining = True
-      control_path_dir = ${XDG_CACHE}/ansible/ssh
-      ssh_args = -o ControlMaster=auto -o ControlPersist=60s
-    '')
-  (xdg.mkXdgText "ansible/hosts" ''# Add your inventory groups/hosts here\n'')
+  (let
+     cfgTemplate = builtins.readFile ./ansible.cfg;
+     rendered = lib.replaceStrings ["@XDG_DATA@" "@XDG_CFG@" "@XDG_CACHE@"] [XDG_DATA XDG_CFG XDG_CACHE] cfgTemplate;
+   in xdg.mkXdgText "ansible/ansible.cfg" rendered)
+  (xdg.mkXdgText "ansible/hosts" (builtins.readFile ./hosts))
   # Data/cache .keep files via helpers (ensure real dirs + safe writes)
   (xdg.mkXdgDataText "ansible/roles/.keep" "")
   (xdg.mkXdgDataText "ansible/collections/.keep" "")
