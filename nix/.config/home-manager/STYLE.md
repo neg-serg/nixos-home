@@ -46,6 +46,14 @@ See also: AGENTS.md for a short guide on helpers, activation aggregators, system
     - Example:
       `systemd.user.paths.my-path = lib.recursiveUpdate { Unit.Description = "Watch foo"; Path.PathChanged = "%h/.config/foo/config"; } (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["defaultWanted"]; });`
 
+- Systemd sugar (timers/sockets)
+  - Use `config.lib.neg.systemdUser.mkSimpleTimer` to define small timers; defaults WantedBy to `timers.target` if preset includes `"timers"`.
+    - Example:
+      `(config.lib.neg.systemdUser.mkSimpleTimer { name = "newsboat-sync"; onCalendar = "hourly"; presets = ["timers"]; timerExtra = { Persistent = true; }; })`
+  - Use `config.lib.neg.systemdUser.mkSimpleSocket` to define sockets; defaults WantedBy to `sockets.target` if preset includes `"socketsTarget"`.
+    - Example:
+      `(config.lib.neg.systemdUser.mkSimpleSocket { name = "my-sock"; listenStream = "%t/my.sock"; presets = ["socketsTarget"]; socketExtra = { SocketMode = "0600"; }; })`
+
 - Commit messages
   - Use bracketed scope: `[scope] subject` (English imperative, concise).
     - Examples: `[activation] add guards for xyz`, `[docs] update OPTIONS.md`.

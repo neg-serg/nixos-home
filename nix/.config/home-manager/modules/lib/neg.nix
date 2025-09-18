@@ -193,6 +193,93 @@
               inherit presets after wants partOf wantedBy;
             });
       };
+
+      # Minimal sugar to declare a simple Timer unit with presets.
+      # Creates systemd.user.timers.<name>. Does not define the matching Service.
+      # Defaults to WantedBy=["timers.target"] when using the "timers" preset and not overridden.
+      # Usage:
+      #   (config.lib.neg.systemdUser.mkSimpleTimer {
+      #     name = "my-job"; onCalendar = "daily"; presets = ["timers"]; timerExtra = { Persistent = true; };
+      #   })
+      mkSimpleTimer = {
+        name,
+        presets ? [],
+        description ? null,
+        onCalendar ? null,
+        accuracySec ? null,
+        persistent ? null,
+        timerExtra ? {},
+        unitExtra ? {},
+        after ? [],
+        wants ? [],
+        partOf ? [],
+        wantedBy ? null,
+      }: let
+        # Default WantedBy to timers.target if not explicitly provided and timers preset is used
+        finalWantedBy =
+          if wantedBy != null then wantedBy else (lib.optional (lib.elem "timers" presets) "timers.target");
+      in {
+        systemd.user.timers."${name}" =
+          lib.recursiveUpdate
+            {
+              Unit =
+                (lib.optionalAttrs (description != null) {Description = description;})
+                // unitExtra;
+              Timer =
+                ({ }
+                 // lib.optionalAttrs (onCalendar != null) { OnCalendar = onCalendar; }
+                 // lib.optionalAttrs (accuracySec != null) { AccuracySec = accuracySec; }
+                 // lib.optionalAttrs (persistent != null) { Persistent = persistent; }
+                 // timerExtra);
+            }
+            (config.lib.neg.systemdUser.mkUnitFromPresets {
+              inherit presets after wants partOf;
+              wantedBy = finalWantedBy;
+            });
+      };
+
+      # Minimal sugar to declare a simple Socket unit with presets.
+      # Creates systemd.user.sockets.<name>. Often pair with a .service of same name.
+      # Defaults to WantedBy=["sockets.target"] when using the "socketsTarget" preset and not overridden.
+      # Usage:
+      #   (config.lib.neg.systemdUser.mkSimpleSocket {
+      #     name = "my-sock"; listenStream = "%t/my.sock"; presets = ["socketsTarget"]; socketExtra = { SocketMode = "0600"; };
+      #   })
+      mkSimpleSocket = {
+        name,
+        presets ? [],
+        description ? null,
+        listenStream ? null,
+        listenDatagram ? null,
+        listenFIFO ? null,
+        socketExtra ? {},
+        unitExtra ? {},
+        after ? [],
+        wants ? [],
+        partOf ? [],
+        wantedBy ? null,
+      }: let
+        finalWantedBy =
+          if wantedBy != null then wantedBy else (lib.optional (lib.elem "socketsTarget" presets) "sockets.target");
+      in {
+        systemd.user.sockets."${name}" =
+          lib.recursiveUpdate
+            {
+              Unit =
+                (lib.optionalAttrs (description != null) {Description = description;})
+                // unitExtra;
+              Socket =
+                ({ }
+                 // lib.optionalAttrs (listenStream != null) { ListenStream = listenStream; }
+                 // lib.optionalAttrs (listenDatagram != null) { ListenDatagram = listenDatagram; }
+                 // lib.optionalAttrs (listenFIFO != null) { ListenFIFO = listenFIFO; }
+                 // socketExtra);
+            }
+            (config.lib.neg.systemdUser.mkUnitFromPresets {
+              inherit presets after wants partOf;
+              wantedBy = finalWantedBy;
+            });
+      };
     };
 
     # Web helpers defaults

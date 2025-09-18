@@ -43,6 +43,10 @@ This repo is configured for Home Manager + flakes with a small set of helpers to
         execStart = "${pkgs.aria2}/bin/aria2c --conf-path=$XDG_CONFIG_HOME/aria2/aria2.conf";
         presets = ["graphical"];
       })`
+    - `config.lib.neg.systemdUser.mkSimpleTimer { name; onCalendar; presets = ["timers"]; /* timerExtra, unitExtra */ }`
+      - Example: `(config.lib.neg.systemdUser.mkSimpleTimer { name = "newsboat-sync"; onCalendar = "hourly"; presets = ["timers"]; })` (WantedBy defaults to `timers.target`)
+    - `config.lib.neg.systemdUser.mkSimpleSocket { name; listenStream; presets = ["socketsTarget"]; /* socketExtra, unitExtra */ }`
+      - Example: `(config.lib.neg.systemdUser.mkSimpleSocket { name = "my-sock"; listenStream = "%t/my.sock"; presets = ["socketsTarget"]; })` (WantedBy defaults to `sockets.target`)
   - Soft migrations (warnings):
     - Use `config.lib.neg.mkWarnIf cond "message"` to emit non-fatal guidance.
     - Example (MPD path change):
