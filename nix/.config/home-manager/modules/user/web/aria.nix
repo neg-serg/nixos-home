@@ -35,4 +35,11 @@ in
     }
     # Ensure the session file exists so input-file does not fail on first run
     (xdg.mkXdgDataText "aria2/session" "")
+    # Soft migration warning: ensure session paths are under XDG data
+    (let
+      s = toString ((config.programs.aria2.settings or {}).save-session or "");
+      i = toString ((config.programs.aria2.settings or {})."input-file" or "");
+      dh = toString config.xdg.dataHome;
+      ok = (lib.hasPrefix (dh + "/") s) && (lib.hasPrefix (dh + "/") i);
+    in config.lib.neg.mkWarnIf (! ok) "aria2 session paths should be under $XDG_DATA_HOME/aria2 (save-session/input-file).")
   ])

@@ -8,7 +8,8 @@ let
   transmissionPkg = pkgs.transmission_4;
   confDirNew = "${config.xdg.configHome}/transmission-daemon";
   confDirOld = "${config.xdg.configHome}/transmission";
-in lib.mkIf config.features.torrent.enable {
+in lib.mkIf config.features.torrent.enable (lib.mkMerge [
+{
   # Link selected Transmission config files from repo; runtime subdirs remain local
   xdg.configFile."transmission-daemon/settings.json" =
     config.lib.neg.mkDotfilesSymlink "nix/.config/home-manager/modules/misc/transmission-daemon/conf/settings.json" false;
@@ -78,3 +79,9 @@ in lib.mkIf config.features.torrent.enable {
     };
   } (config.lib.neg.systemdUser.mkUnitFromPresets {presets = ["net" "defaultWanted"];});
 }
+# Soft migration warning: detect legacy config under $XDG_CONFIG_HOME/transmission
+(let
+  cfgFiles = builtins.attrNames (config.xdg.configFile or {});
+  old = builtins.filter (n: lib.hasPrefix "transmission/" n) cfgFiles;
+in config.lib.neg.mkWarnIf (old != []) "Transmission config under $XDG_CONFIG_HOME/transmission detected; migrate to $XDG_CONFIG_HOME/transmission-daemon.")
+])
