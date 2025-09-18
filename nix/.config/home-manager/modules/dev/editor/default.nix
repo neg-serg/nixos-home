@@ -12,12 +12,12 @@ with lib; {
       home.packages =
         config.lib.neg.pkgsList (
           let
-            groups = with pkgs; {
+            groups = {
               core = [
-                code-cursor-fhs # AI-powered code editor built on VS Code
-                lapce # fast code editor in Rust
+                pkgs.code-cursor-fhs # AI-powered code editor built on VS Code
+                pkgs.lapce # fast code editor in Rust
               ];
-              ai = [ lmstudio ]; # desktop app for local/open LLMs
+              ai = [ pkgs.lmstudio ]; # desktop app for local/open LLMs
             };
             flags = {
               core = true;

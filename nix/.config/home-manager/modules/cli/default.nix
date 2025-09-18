@@ -6,62 +6,62 @@
 }:
 with lib; let
   mkBool = desc: default: (lib.mkEnableOption desc) // { inherit default; };
-  groups = with pkgs; rec {
+  groups = rec {
     # Text/formatting/regex/CSV/TOML tools
     text = [
-      choose # yet another cut/awk alternative
-      enca # reencode files based on content
-      grex # generate regexes from examples
-      miller # awk/cut/join alternative for CSV/TSV/JSON
-      par # paragraph reformatter (fmt++)
-      sad # simpler sed alternative
-      sd # intuitive sed alternative
-      taplo # TOML toolkit (fmt, lsp, lint)
+      pkgs.choose # yet another cut/awk alternative
+      pkgs.enca # reencode files based on content
+      pkgs.grex # generate regexes from examples
+      pkgs.miller # awk/cut/join alternative for CSV/TSV/JSON
+      pkgs.par # paragraph reformatter (fmt++)
+      pkgs.sad # simpler sed alternative
+      pkgs.sd # intuitive sed alternative
+      pkgs.taplo # TOML toolkit (fmt, lsp, lint)
     ];
 
     # Filesystems, archives, hashing, mass rename, duplication
     fs = [
-      convmv # convert filename encodings
-      czkawka # find duplicates/similar files
-      dcfldd # dd with progress/hash
-      massren # massive rename utility
-      ouch # archive extractor/creator
-      patool # universal archive unpacker (python)
-      ranger # file manager (needed for termfilechooser)
-      rhash # hash sums calculator
+      pkgs.convmv # convert filename encodings
+      pkgs.czkawka # find duplicates/similar files
+      pkgs.dcfldd # dd with progress/hash
+      pkgs.massren # massive rename utility
+      pkgs.ouch # archive extractor/creator
+      pkgs.patool # universal archive unpacker (python)
+      pkgs.ranger # file manager (needed for termfilechooser)
+      pkgs.rhash # hash sums calculator
     ];
 
     # Networking, cloud CLIs, URL tooling
     net = [
-      kubectx # fast switch Kubernetes contexts
-      scaleway-cli # Scaleway cloud CLI
-      speedtest-cli # internet speed test
-      urlscan # extract URLs from text
-      urlwatch # watch pages for changes
-      zfxtop # Cloudflare/ZFX top-like monitor
+      pkgs.kubectx # fast switch Kubernetes contexts
+      pkgs.scaleway-cli # Scaleway cloud CLI
+      pkgs.speedtest-cli # internet speed test
+      pkgs.urlscan # extract URLs from text
+      pkgs.urlwatch # watch pages for changes
+      pkgs.zfxtop # Cloudflare/ZFX top-like monitor
     ];
 
     # System info and observability
     obs = [
-      below # BPF-based system history
-      lnav # log file navigator
-      viddy # modern watch with history
+      pkgs.below # BPF-based system history
+      pkgs.lnav # log file navigator
+      pkgs.viddy # modern watch with history
     ];
     sys = [
-      cpufetch # CPU info fetch
-      ramfetch # RAM info fetch
+      pkgs.cpufetch # CPU info fetch
+      pkgs.ramfetch # RAM info fetch
     ];
 
     # Dev helpers, diffs, automation, navigation
     dev = [
-      babashka # native Clojure scripting runtime
-      diffoscope # deep diff for many formats
-      diff-so-fancy # human-friendly git diff pager
-      entr # run commands on file change
-      expect # automate interactive TTY programs
-      fasd # MRU-based CLI autojump/completion
-      mergiraf # AST-aware git merge driver
-      zoxide # smarter cd with ranking
+      pkgs.babashka # native Clojure scripting runtime
+      pkgs.diffoscope # deep diff for many formats
+      pkgs.diff-so-fancy # human-friendly git diff pager
+      pkgs.entr # run commands on file change
+      pkgs.expect # automate interactive TTY programs
+      pkgs.fasd # MRU-based CLI autojump/completion
+      pkgs.mergiraf # AST-aware git merge driver
+      pkgs.zoxide # smarter cd with ranking
     ];
   };
 in {

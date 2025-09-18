@@ -3,29 +3,29 @@
   config,
   ...
 }: let
-  groups = with pkgs; rec {
+  groups = rec {
     fs = [
-      ddrescue # data recovery utility
-      ext4magic # recover deleted files from ext4
-      extundelete # undelete files from ext3/ext4
-      sleuthkit # filesystem forensics toolkit
+      pkgs.ddrescue # data recovery utility
+      pkgs.ext4magic # recover deleted files from ext4
+      pkgs.extundelete # undelete files from ext3/ext4
+      pkgs.sleuthkit # filesystem forensics toolkit
     ];
     stego = [
-      outguess # universal steganography tool
-      steghide # hide/extract data in images/audio
-      stegseek # crack steghide passwords fast
-      stegsolve # image steganography analyzer/solver
-      zsteg # detect hidden data in PNG/BMP
+      pkgs.outguess # universal steganography tool
+      pkgs.steghide # hide/extract data in images/audio
+      pkgs.stegseek # crack steghide passwords fast
+      pkgs.stegsolve # image steganography analyzer/solver
+      pkgs.zsteg # detect hidden data in PNG/BMP
     ];
     analysis = [
-      ghidra-bin # reverse engineering suite
-      binwalk # scan binaries for embedded files
-      capstone # multi-arch disassembly engine
-      volatility3 # memory forensics framework
-      pdf-parser # analyze/parse PDF documents
+      pkgs.ghidra-bin # reverse engineering suite
+      pkgs.binwalk # scan binaries for embedded files
+      pkgs.capstone # multi-arch disassembly engine
+      pkgs.volatility3 # memory forensics framework
+      pkgs.pdf-parser # analyze/parse PDF documents
     ];
     network = [
-      p0f # passive OS/network fingerprinting
+      pkgs.p0f # passive OS/network fingerprinting
     ];
   };
 in {

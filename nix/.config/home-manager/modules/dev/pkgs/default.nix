@@ -4,32 +4,32 @@
   config,
   ...
 }: let
-  groups = with pkgs; rec {
+  groups = rec {
     formatters = [
-      shfmt # shell script formatter
-      black # Python formatter
-      stylua # Lua code formatter
+      pkgs.shfmt # shell script formatter
+      pkgs.black # Python formatter
+      pkgs.stylua # Lua code formatter
     ];
     analyzers = [
-      flawfinder # examine C/C++ code for security flaws
-      ruff # Python linter
-      shellcheck # shell linter
-      mypy # optional static typing checker for Python
+      pkgs.flawfinder # examine C/C++ code for security flaws
+      pkgs.ruff # Python linter
+      pkgs.shellcheck # shell linter
+      pkgs.mypy # optional static typing checker for Python
     ];
     codecount = [
-      cloc # count lines of code
-      scc # fast, parallel code counter
-      tokei # blazingly fast code counter
+      pkgs.cloc # count lines of code
+      pkgs.scc # fast, parallel code counter
+      pkgs.tokei # blazingly fast code counter
     ];
     radicle = [
-      radicle-node # Radicle server/node
-      radicle-explorer # Web frontend for Radicle
+      pkgs.radicle-node # Radicle server/node
+      pkgs.radicle-explorer # Web frontend for Radicle
     ];
     runtime = [
-      nodejs_24 # Node.js runtime (npm/yarn tooling)
+      pkgs.nodejs_24 # Node.js runtime (npm/yarn tooling)
     ];
     misc = [
-      deheader # remove unneeded C/C++ includes
+      pkgs.deheader # remove unneeded C/C++ includes
     ];
 
     # Haskell toolchain and related tools
@@ -53,9 +53,9 @@
       backend = config.features.dev.iac.backend or "terraform";
       main =
         if backend == "tofu"
-        then opentofu
-        else terraform;
-    in [main ansible];
+        then pkgs.opentofu
+        else pkgs.terraform;
+    in [main pkgs.ansible];
   };
 in
   lib.mkIf config.features.dev.enable {

@@ -5,17 +5,17 @@
   ...
 }:
 with lib; let
-  groups = with pkgs; rec {
+  groups = rec {
     secrets = [
-      gitleaks # scan repositories for secrets
-      git-secrets # prevent committing secrets to git
+      pkgs.gitleaks # scan repositories for secrets
+      pkgs.git-secrets # prevent committing secrets to git
     ];
     reverse = [
-      binwalk # analyze binaries for embedded files
-      capstone # disassembly framework
+      pkgs.binwalk # analyze binaries for embedded files
+      pkgs.capstone # disassembly framework
     ];
     crawl = [
-      katana # modern web crawler/spider
+      pkgs.katana # modern web crawler/spider
     ];
   };
 in {
