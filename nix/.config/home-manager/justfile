@@ -56,10 +56,14 @@ show-features:
     items=(${NAMES}); \
     else \
     items=( \
-    hm-eval-neg-retro-on \
-    hm-eval-neg-retro-off \
-    hm-eval-lite-retro-on \
-    hm-eval-lite-retro-off \
+      hm-eval-neg-retro-on \
+      hm-eval-neg-retro-off \
+      hm-eval-lite-retro-on \
+      hm-eval-lite-retro-off \
+      hm-eval-neg-nogui-retro-on \
+      hm-eval-neg-nogui-retro-off \
+      hm-eval-lite-nogui-retro-on \
+      hm-eval-lite-nogui-retro-off \
     ); \
     fi
     for name in "${items[@]}"; do \

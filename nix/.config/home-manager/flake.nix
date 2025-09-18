@@ -389,12 +389,42 @@
               else "off"
             }.json"
             (builtins.toJSON hmCfg.config.features);
+          # Fast-path eval: disable GUI and Web to focus on CLI/Dev
+          evalNoGuiWith = profile: retroFlag: let
+            hmCfg = homeManagerInput.lib.homeManagerConfiguration {
+              inherit (perSystem.${s}) pkgs;
+              extraSpecialArgs = mkHMArgs s;
+              modules = hmBaseModules {
+                inherit profile;
+                extra = [
+                  (_: {
+                    features.gui.enable = false;
+                    features.gui.qt.enable = false;
+                    features.web.enable = false;
+                    features.emulators.retroarch.full = retroFlag;
+                  })
+                ];
+              };
+            };
+          in
+            perSystem.${s}.pkgs.writeText
+            "hm-eval-${
+              if profile == "lite" then "lite" else "neg"
+            }-nogui-retro-${
+              if retroFlag then "on" else "off"
+            }.json"
+            (builtins.toJSON hmCfg.config.features);
           base = perSystem.${s}.checks;
           fast = {
             hm-eval-neg-retro-on = evalWith null true;
             hm-eval-neg-retro-off = evalWith null false;
             hm-eval-lite-retro-on = evalWith "lite" true;
             hm-eval-lite-retro-off = evalWith "lite" false;
+            # No-GUI fast path (GUI + Web disabled)
+            hm-eval-neg-nogui-retro-on = evalNoGuiWith null true;
+            hm-eval-neg-nogui-retro-off = evalNoGuiWith null false;
+            hm-eval-lite-nogui-retro-on = evalNoGuiWith "lite" true;
+            hm-eval-lite-nogui-retro-off = evalNoGuiWith "lite" false;
           };
           heavy = lib.optionalAttrs (s == defaultSystem) {
             hm = self.homeConfigurations."neg".activationPackage;
