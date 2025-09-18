@@ -586,7 +586,8 @@ with lib;
           executable = true;
         };
         "hack-art/skullmono.sh" = {
-          text = (if builtins.pathExists ./fun-art/skullmono.sh then (builtins.readFile ./fun-art/skullmono.sh) else ''
+          text = (builtins.readFile ./fun-art/skullmono.sh);
+          /* text = (if builtins.pathExists ./fun-art/skullmono.sh then (builtins.readFile ./fun-art/skullmono.sh) else ''
             #!/bin/sh
             echo '                      :::!~!!!!!:.'
             echo '                  .xUHWH!! !!?M88WHX:.'
@@ -608,11 +609,12 @@ with lib;
             echo 'Wi.~!X$?!-~    : ?$$$B$Wu("**$RM!'
             echo '$R@i.~~ !     :   ~$$$$$B$$en:``'
             echo '?MXT@Wx.~    :     ~"##*$$$$M~'
-          '');
+          ''); */
           executable = true;
         };
         "hack-art/skulls" = {
-          text = (if builtins.pathExists ./fun-art/skulls.sh then (builtins.readFile ./fun-art/skulls.sh) else ''
+          text = (builtins.readFile ./fun-art/skulls.sh);
+          /* text = (if builtins.pathExists ./fun-art/skulls.sh then (builtins.readFile ./fun-art/skulls.sh) else ''
             #!/bin/sh
             #
             #  ┳━┓┳━┓0┏┓┓┳━┓┏━┓┓ ┳
@@ -678,7 +680,7 @@ with lib;
                 \u001b[1;31;40mXXXX\u001b[0;31;40mXXXX\u001b[1;33;40mXXXX\u001b[0;33;40mXXXX\u001b[1;35;40mXXXX\u001b[0;35;40mXXXX\u001b[1;32;40mXXXX\u001b[0;32;40mXXXX\u001b[1;34;40mXXXX\u001b[0;34;40mXXXX\u001b[1;37;40mXER0
 
             EOF
-          '');
+          ''); */
           executable = true;
         };
         "hack-art/skull.txt" = {
@@ -691,7 +693,8 @@ with lib;
 
         # fantasy-art files
         "fantasy-art/gandalf.txt" = {
-          text = (if builtins.pathExists ./fun-art/gandalf.txt then (builtins.readFile ./fun-art/gandalf.txt) else ''
+          text = (builtins.readFile ./fun-art/gandalf.txt);
+          /* text = (if builtins.pathExists ./fun-art/gandalf.txt then (builtins.readFile ./fun-art/gandalf.txt) else ''
             ⠀⠀⠀⠀⠀⠀⢀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
             ⠀⠀⠀⠀⠀⢀⠎⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
             ⠀⠀⠀⠀⢀⣾⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⠤⠶⢶⣿⣿⣿⣿⣯⣴⣖⣤⡀⠀⠀⠀⠀⠀⠀⠀⣠⠔⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -754,10 +757,11 @@ with lib;
             ⠀⠐⠊⠉⢉⣡⠝⠡⠄⠐⢒⡒⠦⠚⠀⠀⠀⠀⠀⠀⠀⡀⠀⢀⡠⠩⠑⠲⠮⠍⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
             ⠀⠀⠀⠀⠀⠀⠄⠐⠊⠓⣐⠶⠆⠤⢐⣠⡔⣀⡀⠀⠀⠀⠁⠒⠀⠉⠛⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
             ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-          '');
+          ''); */
         };
         "fantasy-art/helmet.txt" = {
-          text = (if builtins.pathExists ./fun-art/helmet.txt then (builtins.readFile ./fun-art/helmet.txt) else ''
+          text = (builtins.readFile ./fun-art/helmet.txt);
+          /* text = (if builtins.pathExists ./fun-art/helmet.txt then (builtins.readFile ./fun-art/helmet.txt) else ''
             ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
             ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
             ⠀⠀⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -804,10 +808,11 @@ with lib;
             ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
             ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
             ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢘⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-          '');
+          ''); */
         };
         "fantasy-art/hydra.txt" = {
-          text = (if builtins.pathExists ./fun-art/hydra.txt then (builtins.readFile ./fun-art/hydra.txt) else ''
+          text = (builtins.readFile ./fun-art/hydra.txt);
+          /* text = (if builtins.pathExists ./fun-art/hydra.txt then (builtins.readFile ./fun-art/hydra.txt) else ''
 
 
 
@@ -822,10 +827,11 @@ with lib;
             ⠙⠃   ⣼⣿⡟  ⠈⠻⣿⣿⣦⣌⡇⠻⣿⣿⣷⣿⣿⣿ ⣿⣿⡇ ⠛⠻⢷⣄
                  ⢻⣿⣿⣄   ⠈⠻⣿⣿⣿⣷⣿⣿⣿⣿⣿⡟ ⠫⢿⣿⡆
                   ⠻⣿⣿⣿⣿⣶⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⡟⢀⣀⣤⣾⡿⠃
-          '');
+          ''); */
         };
         "fantasy-art/skeleton_hood.txt" = {
-          text = (if builtins.pathExists ./fun-art/skeleton_hood.txt then (builtins.readFile ./fun-art/skeleton_hood.txt) else ''
+          text = (builtins.readFile ./fun-art/skeleton_hood.txt);
+          /* text = (if builtins.pathExists ./fun-art/skeleton_hood.txt then (builtins.readFile ./fun-art/skeleton_hood.txt) else ''
             ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⠴⠂⠀⠈⠁⠀⠀⠀⠉⠁⠀⠒⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
             ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⠔⠊⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠑⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⠤⠄⠀⠀⠀⠀⠀⠀
             ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡠⠊⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠂⠀⠀⠀⠀⠀⠀⠀⠀⡠⠊⡀⠀⠀⣳⠀⠀⠀⠀⠀
@@ -859,7 +865,7 @@ with lib;
             ⠀⠀⠀⠀⠢⠌⠀⠀⠀⠀⠁⠑⠄⠀⠀⠀⡠⠀⠀⢸⡄⠿⢀⠀⠀⢀⡁⠀⢀⡠⢊⠴⠀⠀⠀⢄⡠⡵⠘⠈⠠⠔⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
             ⠐⠀⠀⠀⠀⠀⠀⡔⠀⠀⠀⠀⠰⠄⠠⠄⠀⢆⠀⠈⠀⠈⡸⠁⠈⠉⠁⠒⠈⢀⡠⠐⣉⠴⠂⠁⠀⠀⠂⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
             ⠀⠀⠀⠀⡀⠀⠀⠁⠢⠀⠀⠀⠀⠀⠀⠀⠀⠈⠈⠀⠀⠀⠈⠈⠒⠲⠶⠶⠖⠒⢊⣉⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-          '');
+          ''); */
         };
       };
     };
