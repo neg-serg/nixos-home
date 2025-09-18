@@ -1,6 +1,5 @@
-{ lib, pkgs, config, inputs, ... }:
+{ lib, pkgs, config, inputs, xdg, ... }:
 with lib; let
-  xdg = import ../../lib/xdg-helpers.nix { inherit lib; };
   qsPath = pkgs.lib.makeBinPath [
     pkgs.fd # fast file finder used by QS scripts
     pkgs.coreutils # basic CLI utilities
@@ -28,7 +27,7 @@ with lib; let
     '';
   };
 in
-  mkIf config.features.gui.enable (lib.mkMerge [
+  mkIf (config.features.gui.enable && (! (config.features.devSpeed.enable or false))) (lib.mkMerge [
     {
       home.packages = with pkgs; config.lib.neg.pkgsList [
       cantarell-fonts # GNOME Cantarell fonts

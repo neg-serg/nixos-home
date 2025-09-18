@@ -1,6 +1,5 @@
-{ lib, config, ... }:
-let xdg = import ../../lib/xdg-helpers.nix { inherit lib; };
-in lib.mkMerge [
+{ lib, config, xdg, ... }:
+lib.mkMerge [
   # Live-editable config via helper (guards parent dir and target)
   (xdg.mkXdgSource "kitty" {
     source = config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/nix/.config/home-manager/modules/user/gui/kitty/conf";

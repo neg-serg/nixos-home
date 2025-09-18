@@ -1,6 +1,6 @@
-{ lib, config, pkgs, ... }:
+{ lib, config, pkgs, xdg, ... }:
 with lib;
-  mkIf config.features.gui.enable (let xdg = import ../../lib/xdg-helpers.nix { inherit lib; }; in lib.mkMerge [
+  mkIf config.features.gui.enable (lib.mkMerge [
     {
       home.packages = config.lib.neg.pkgsList [pkgs.walker];
     }

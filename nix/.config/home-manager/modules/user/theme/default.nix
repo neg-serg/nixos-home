@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  config,
   iosevkaNeg,
   ...
 }:
@@ -106,9 +107,8 @@ with {
   };
 
   stylix = {
-    enable = true;
+    enable = lib.mkIf ((config.features.gui.enable or false) && (! (config.features.devSpeed.enable or false))) true;
     autoEnable = false;
-
     targets = {
       bemenu.enable = true;
       btop.enable = true;
@@ -121,7 +121,6 @@ with {
       helix.enable = true;
       sxiv.enable = false;
     };
-
     base16Scheme = {
       base00 = "#020202"; # Background
       base01 = "#010912"; # Alternate background(for toolbars)
@@ -140,13 +139,11 @@ with {
       base0E = "#5B5BBB"; # Purple
       base0F = "#162b44"; # Brown
     };
-
     cursor = {
       size = 23;
       name = "Alkano-aio";
       package = alkano-aio;
     };
-
     polarity = "dark";
     fonts = {
       serif = {
