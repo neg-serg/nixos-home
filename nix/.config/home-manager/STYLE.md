@@ -77,9 +77,13 @@ See also: AGENTS.md for a short guide on helpers, activation aggregators, system
     - Cache keep: `(xdg.mkXdgCacheText "ansible/facts/.keep" "")`
     - Config JSON: `(xdg.mkXdgConfigJson "fastfetch/config.jsonc" { logo = { source = "$XDG_CONFIG_HOME/fastfetch/skull"; }; })`
     - Data JSON: `(xdg.mkXdgDataJson "aria2/state.json" { version = 1; })`
+    - Config TOML: `(xdg.mkXdgConfigToml "app/config.toml" { enable = true; nested.option = 1; })`
+    - Data TOML: `(xdg.mkXdgDataToml "app/state.toml" { version = 1; list = [1 2 3]; })`
   - Import tip (robust for docs eval): 
-    - From `modules/dev/...` or `modules/media/...`: `let xdg = import ../../lib/xdg-helpers.nix { inherit lib; };`
-    - From `modules/user/mail/...`: `let xdg = import ../../../lib/xdg-helpers.nix { inherit lib; };`
+    - If JSON/TOML helpers are needed, include `pkgs`:
+      - From `modules/dev/...` or `modules/media/...`: `let xdg = import ../../lib/xdg-helpers.nix { inherit lib pkgs; };`
+      - From `modules/user/mail/...`: `let xdg = import ../../../lib/xdg-helpers.nix { inherit lib pkgs; };`
+    - Otherwise (no TOML/JSON needed), `inherit lib` is enough.
 
 - Merging attrsets
   - Prefer `lib.mkMerge [ a b ... ]` over top-level `//` for combining module fragments.

@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs ? null, ... }:
 {
   mkXdgText = relPath: text: {
     # Aggregated XDG fixups handle parent/target state; just declare the file.
@@ -45,5 +45,17 @@
   #   (xdg.mkXdgDataJson "myapp/state.json" { version = 1; })
   mkXdgDataJson = relPath: attrs: {
     xdg.dataFile."${relPath}".text = builtins.toJSON attrs;
+  };
+
+  # Convenience: write TOML to an XDG config file using nixpkgs' TOML formatter.
+  # Requires passing `pkgs` when importing this helper module:
+  #   let xdg = import ../../lib/xdg-helpers.nix { inherit lib pkgs; };
+  mkXdgConfigToml = relPath: attrs: {
+    xdg.configFile."${relPath}".source = (pkgs.formats.toml { }).generate relPath attrs;
+  };
+
+  # Convenience: write TOML to an XDG data file using nixpkgs' TOML formatter.
+  mkXdgDataToml = relPath: attrs: {
+    xdg.dataFile."${relPath}".source = (pkgs.formats.toml { }).generate relPath attrs;
   };
 }
