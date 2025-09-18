@@ -105,3 +105,40 @@ clean-caches:
     rm -rf "$XDG_CACHE_HOME/zsh" || true
     rm -rf "$XDG_CACHE_HOME/nu" "$XDG_CACHE_HOME/nushell" || true
     rm -f "$XDG_STATE_HOME/nushell/history.sqlite3"* || true
+hm-bench:
+    # Fast eval stats for baseline + no-GUI + no-Web matrices
+    set -eu
+    sys=${SYSTEM:-x86_64-linux}
+    if [ -n "${NAMES:-}" ]; then \
+      items=(${NAMES}); \
+    else \
+      items=( \
+        hm-eval-neg-retro-off \
+        hm-eval-lite-retro-off \
+        hm-eval-neg-nogui-retro-off \
+        hm-eval-lite-nogui-retro-off \
+        hm-eval-neg-noweb-retro-off \
+        hm-eval-lite-noweb-retro-off \
+      ); \
+    fi
+    for name in "${items[@]}"; do \
+      echo "== ${name} (system=${sys}) =="; \
+      NIX_SHOW_STATS=1 nix build --no-link ".#checks.${sys}.${name}" -L || true; \
+      echo; \
+    done
+
+hm-bench-fast:
+    # Fast eval stats only for no-GUI/no-Web matrices
+    set -eu
+    sys=${SYSTEM:-x86_64-linux}
+    items=( \
+      hm-eval-neg-nogui-retro-off \
+      hm-eval-lite-nogui-retro-off \
+      hm-eval-neg-noweb-retro-off \
+      hm-eval-lite-noweb-retro-off \
+    )
+    for name in "${items[@]}"; do \
+      echo "== ${name} (system=${sys}) =="; \
+      NIX_SHOW_STATS=1 nix build --no-link ".#checks.${sys}.${name}" -L || true; \
+      echo; \
+    done
