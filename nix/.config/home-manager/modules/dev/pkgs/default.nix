@@ -33,17 +33,19 @@
     ];
 
     # Haskell toolchain and related tools
-    haskell = [
-      ghc
-      cabal-install
-      stack
-      haskell-language-server
-      hlint
-      ormolu
-      fourmolu
-      hindent
-      ghcid
-    ];
+    haskell =
+      [
+        ghc
+        cabal-install
+        stack
+        haskell-language-server
+        hlint
+        ormolu
+        ghcid
+      ]
+      # Some Haskell tools may be unavailable on a given nixpkgs pin — include conditionally.
+      ++ (lib.optionals (pkgs ? fourmolu) [ pkgs.fourmolu ])
+      ++ (lib.optionals (pkgs ? hindent) [ pkgs.hindent ]);
 
     # IaC backend package (Terraform or OpenTofu) controlled by
     # features.dev.iac.backend (default: "terraform").
