@@ -9,13 +9,16 @@ with {
   alkano-aio = pkgs.callPackage ./alkano-aio.nix {};
 }; {
   home = {
-    packages = with pkgs; [
-      adw-gtk3 # adwaita port to gtk3
-      dconf # gnome registry
-      iosevkaNeg.nerd-font # install my custom iosevka build
-      kdePackages.qtstyleplugin-kvantum # nice qt6 themes
-      libsForQt5.qtstyleplugin-kvantum # nice qt5 themes
-    ];
+    packages = with pkgs;
+      [
+        adw-gtk3 # adwaita port to gtk3
+        dconf # gnome registry
+        iosevkaNeg.nerd-font # install my custom iosevka build
+      ]
+      ++ lib.optionals (config.features.gui.qt.enable or false) [
+        kdePackages.qtstyleplugin-kvantum # nice qt6 themes
+        libsForQt5.qtstyleplugin-kvantum # nice qt5 themes
+      ];
     pointerCursor = {
       gtk.enable = true;
       x11.enable = lib.mkForce false;
@@ -39,7 +42,7 @@ with {
     };
   };
 
-  qt = {
+  qt = lib.mkIf (config.features.gui.qt.enable or false) {
     platformTheme = "qt6ct";
   };
 

@@ -27,7 +27,7 @@ with lib; let
     '';
   };
 in
-  mkIf (config.features.gui.enable && (! (config.features.devSpeed.enable or false))) (lib.mkMerge [
+  mkIf (config.features.gui.enable && (config.features.gui.qt.enable or false) && (! (config.features.devSpeed.enable or false))) (lib.mkMerge [
     {
       home.packages = with pkgs; config.lib.neg.pkgsList [
       cantarell-fonts # GNOME Cantarell fonts
