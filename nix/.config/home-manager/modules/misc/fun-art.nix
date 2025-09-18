@@ -11,6 +11,7 @@ with lib;
         # hack-art files
         "hack-art/bonsai" = {
           text = (builtins.readFile ./fun-art/bonsai.sh);
+          /*
             #!/usr/bin/env bash
 
             # I'm a bonsai-making machine!
@@ -565,6 +566,7 @@ with lib;
             	sleep 2
             	bonsai
             done
+          */
           executable = true;
         };
         "hack-art/chess" = {
@@ -965,6 +967,7 @@ with lib;
         # fantasy-art files
         "fantasy-art/gandalf.txt" = {
           text = (builtins.readFile ./fun-art/gandalf.txt);
+          /*
             ⠀⠀⠀⠀⠀⠀⢀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
             ⠀⠀⠀⠀⠀⢀⠎⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
             ⠀⠀⠀⠀⢀⣾⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⠤⠶⢶⣿⣿⣿⣿⣯⣴⣖⣤⡀⠀⠀⠀⠀⠀⠀⠀⣠⠔⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -1027,6 +1030,7 @@ with lib;
             ⠀⠐⠊⠉⢉⣡⠝⠡⠄⠐⢒⡒⠦⠚⠀⠀⠀⠀⠀⠀⠀⡀⠀⢀⡠⠩⠑⠲⠮⠍⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
             ⠀⠀⠀⠀⠀⠀⠄⠐⠊⠓⣐⠶⠆⠤⢐⣠⡔⣀⡀⠀⠀⠀⠁⠒⠀⠉⠛⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
             ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+          */
         };
         "fantasy-art/helmet.txt" = {
           text = ''
@@ -1078,7 +1082,8 @@ with lib;
             ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢘⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
         };
         "fantasy-art/hydra.txt" = {
-          text = ''
+          text = (builtins.readFile ./fun-art/hydra.txt);
+          /*
 
 
 
@@ -1093,7 +1098,7 @@ with lib;
             ⠙⠃   ⣼⣿⡟  ⠈⠻⣿⣿⣦⣌⡇⠻⣿⣿⣷⣿⣿⣿ ⣿⣿⡇ ⠛⠻⢷⣄
                  ⢻⣿⣿⣄   ⠈⠻⣿⣿⣿⣷⣿⣿⣿⣿⣿⡟ ⠫⢿⣿⡆
                   ⠻⣿⣿⣿⣿⣶⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⡟⢀⣀⣤⣾⡿⠃
-          '';
+          */
         };
         "fantasy-art/skeleton_hood.txt" = {
           text = ''
