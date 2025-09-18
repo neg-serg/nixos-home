@@ -45,22 +45,23 @@ in lib.mkIf config.features.torrent.enable (lib.mkMerge [
 }
 {
   # Transmission daemon service (systemd user)
-  systemd.user.services."transmission-daemon" = {
-    Unit = {
-      Description = "transmission service";
-      ConditionPathExists = "${lib.getExe' transmissionPkg "transmission-daemon"}";
-      After = ["network.target"];
-    };
-    Install.WantedBy = ["default.target"];
-    Service = {
-      Type = "simple";
-      ExecStart = "${lib.getExe' transmissionPkg "transmission-daemon"} -g ${confDirNew} -f --log-level=error";
-      Restart = "on-failure";
-      RestartSec = "30";
-      StartLimitBurst = "8";
-      ExecReload = "${lib.getExe' pkgs.util-linux "kill"} -s HUP $MAINPID";
-    };
-  };
+  systemd.user.services."transmission-daemon" = lib.mkMerge [
+    {
+      Unit = {
+        Description = "transmission service";
+        ConditionPathExists = "${lib.getExe' transmissionPkg "transmission-daemon"}";
+      };
+      Service = {
+        Type = "simple";
+        ExecStart = "${lib.getExe' transmissionPkg "transmission-daemon"} -g ${confDirNew} -f --log-level=error";
+        Restart = "on-failure";
+        RestartSec = "30";
+        StartLimitBurst = "8";
+        ExecReload = "${lib.getExe' pkgs.util-linux "kill"} -s HUP $MAINPID";
+      };
+    }
+    (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["net" "defaultWanted"]; })
+  ];
 }
 # Soft migration warning: detect legacy config under $XDG_CONFIG_HOME/transmission
 (let

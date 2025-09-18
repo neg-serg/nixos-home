@@ -23,18 +23,20 @@
       };
 
       systemd.user.services = {
-        mpdas = {
-          Unit = {
-            Description = "mpdas last.fm scrobbler";
-            After = ["network.target" "sound.target"];
-          };
-          Install.WantedBy = ["default.target"];
-          Service = {
-            ExecStart = "${pkgs.mpdas}/bin/mpdas -c ${config.sops.secrets.mpdas_negrc.path}";
-            Restart = "on-failure";
-            RestartSec = "10";
-          };
-        };
+        mpdas = lib.mkMerge [
+          {
+            Unit = { Description = "mpdas last.fm scrobbler"; };
+            Service = {
+              ExecStart = "${pkgs.mpdas}/bin/mpdas -c ${config.sops.secrets.mpdas_negrc.path}";
+              Restart = "on-failure";
+              RestartSec = "10";
+            };
+          }
+          (config.lib.neg.systemdUser.mkUnitFromPresets {
+            presets = ["net" "defaultWanted"];
+            after = ["sound.target"]; # preserve additional ordering
+          })
+        ];
       };
     }
     # Soft migration notice: move MPD dataDir to XDG state

@@ -29,15 +29,13 @@ in
     }
     # Simple user service: read only from the generated config
     {
-      systemd.user.services.aria2 = {
-        Unit = {
-          Description = "aria2 download manager";
-          After = ["graphical-session.target"];
-          Wants = ["graphical-session.target"];
-        };
-        Install.WantedBy = ["graphical-session.target"];
-        Service.ExecStart = "${aria2Bin} --conf-path=${configHome}/aria2/aria2.conf";
-      };
+      systemd.user.services.aria2 = lib.mkMerge [
+        {
+          Unit = { Description = "aria2 download manager"; };
+          Service.ExecStart = "${aria2Bin} --conf-path=${configHome}/aria2/aria2.conf";
+        }
+        (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["graphical"]; })
+      ];
     }
     # Ensure the session file exists so input-file does not fail on first run
     (xdg.mkXdgDataText "aria2/session" "")
