@@ -293,9 +293,21 @@
 
     # Use defaultSystem for user HM configs
   in {
-    devShells = lib.genAttrs systems (s: perSystem.${s}.devShells);
+    # Gate devShells/formatter under HM_EXTRAS; always keep defaultSystem for local dev.
+    # This reduces multi-system eval noise in CI unless explicitly requested.
+    devShells =
+      let
+        extrasEnv = builtins.getEnv "HM_EXTRAS";
+        extras = extrasEnv == "1" || extrasEnv == "true" || extrasEnv == "yes";
+        sysList = if extras then systems else [ defaultSystem ];
+      in lib.genAttrs sysList (s: perSystem.${s}.devShells);
     packages = lib.genAttrs systems (s: perSystem.${s}.packages);
-    formatter = lib.genAttrs systems (s: perSystem.${s}.formatter);
+    formatter =
+      let
+        extrasEnv = builtins.getEnv "HM_EXTRAS";
+        extras = extrasEnv == "1" || extrasEnv == "true" || extrasEnv == "yes";
+        sysList = if extras then systems else [ defaultSystem ];
+      in lib.genAttrs sysList (s: perSystem.${s}.formatter);
     # Docs outputs are gated by HM_DOCS env; heavy HM evals are skipped by default.
     docs = lib.genAttrs systems (
       s: let
