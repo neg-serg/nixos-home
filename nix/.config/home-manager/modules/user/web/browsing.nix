@@ -28,11 +28,11 @@ in {
     }
     (mkIf config.features.web.enable {
       # Collect package groups and flatten via mkEnabledList to reduce scattered optionals
-      home.packages = with pkgs;
+      home.packages =
         config.lib.neg.pkgsList (
           let
             groups = {
-              core = [ passff-host ];
+              core = [ pkgs.passff-host ];
               yandex = lib.optionals (yandexBrowser != null) [ yandexBrowser.yandex-browser-stable ];
             };
             flags = {

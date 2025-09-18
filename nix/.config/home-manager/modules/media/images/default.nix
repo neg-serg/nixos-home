@@ -10,7 +10,7 @@ let
   # Package selection kept simple: apply global exclude filter only.
 in lib.mkMerge [
   {
-  home.packages = with pkgs; config.lib.neg.pkgsList [
+  home.packages = config.lib.neg.pkgsList (with pkgs; [
     # metadata
     exiftool exiv2 mediainfo
     # editors
@@ -23,7 +23,7 @@ in lib.mkMerge [
     qrencode zbar
     # viewers
     swayimg swayimg-first viu
-  ];
+  ]);
   }
   {
   home.file.".local/bin/swayimg".source = "${swayimg-first}/bin/swayimg-first";

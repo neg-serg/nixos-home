@@ -29,7 +29,7 @@ with lib; let
 in
   mkIf (config.features.gui.enable && (config.features.gui.qt.enable or false) && (! (config.features.devSpeed.enable or false))) (lib.mkMerge [
     {
-      home.packages = with pkgs; config.lib.neg.pkgsList [
+      home.packages = config.lib.neg.pkgsList (with pkgs; [
       cantarell-fonts # GNOME Cantarell fonts
       cava # console audio visualizer
       (if rsmetrxProvider != null then (rsmetrxProvider pkgs) else pkgs.emptyFile) # metrics/telemetry helper
@@ -50,9 +50,9 @@ in
       material-symbols # Material Symbols font
       networkmanager # nmcli and helpers
       qt6.qtimageformats # extra image formats (Qt6)
-      qt6.qtsvg # SVG support (Qt6)
+        qt6.qtsvg # SVG support (Qt6)
         quickshellWrapped # wrapper with required env paths
-      ];
+      ]);
     }
     # Live-editable config via helper (guards parent dir and target)
   (xdg.mkXdgSource "quickshell" {

@@ -107,24 +107,24 @@ in
         systemd.variables = ["--all"];
       };
       # Package groups flattened via mkEnabledList
-      home.packages = with pkgs;
+      home.packages =
         config.lib.neg.pkgsList (
           let
             groups = {
               core = [
-                hyprcursor # modern cursor theme format (replaces xcursor)
-                hypridle # idle daemon
-                hyprpicker # color picker
-                hyprpolkitagent # polkit agent
-                hyprprop # xprop-like tool for Hyprland
-                hyprutils # core utils for Hyprland
-                pyprland # Hyprland plugin system
-                upower # power management daemon
+                pkgs.hyprcursor # modern cursor theme format (replaces xcursor)
+                pkgs.hypridle # idle daemon
+                pkgs.hyprpicker # color picker
+                pkgs.hyprpolkitagent # polkit agent
+                pkgs.hyprprop # xprop-like tool for Hyprland
+                pkgs.hyprutils # core utils for Hyprland
+                pkgs.pyprland # Hyprland plugin system
+                pkgs.upower # power management daemon
               ];
               qt = [
-                hyprland-qt-support # Qt integration fixes
-                hyprland-qtutils # Hyprland Qt helpers
-                kdePackages.qt6ct # Qt6 config tool
+                pkgs.hyprland-qt-support # Qt integration fixes
+                pkgs.hyprland-qtutils # Hyprland Qt helpers
+                pkgs.kdePackages.qt6ct # Qt6 config tool
               ];
               tools = [ hyprWinList ];
             };
