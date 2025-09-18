@@ -5,7 +5,7 @@ This directory contains Home Manager modules grouped by domain. Feature flags li
 - Top-level files
   - `default.nix` — aggregates subdirectories into the HM module tree.
   - `features.nix` — declares `features.*` options and profile defaults (full/lite).
-  - `lib/neg.nix` — project helpers (`mkBool`, `mkEnabledList`, `mkDotfilesSymlink`, `systemdUser.*`, etc.).
+  - `lib/neg.nix` — project helpers (`mkBool`, `mkEnabledList`, `systemdUser.*`, etc.).
 
 - Subdirectories (map)
   - `cli/` — command‑line tools, shells, and per‑program configs (fzf, tmux, zsh, direnv, etc.).
@@ -33,4 +33,3 @@ This directory contains Home Manager modules grouped by domain. Feature flags li
   - Prefer `config.lib.neg.mkBool` for boolean options with defaults.
   - Factor package lists into `groups = { ... }` and flatten via `config.lib.neg.mkEnabledList`.
   - For systemd user units, use `config.lib.neg.systemdUser.mkUnitFromPresets` with presets instead of hard‑coding targets; extend with `after`/`wants`/`partOf`/`wantedBy` only when needed.
-

@@ -25,8 +25,8 @@ See also: AGENTS.md for a short guide on helpers, activation aggregators, system
   - Gate per-area configuration via `mkIf` using `features.*` flags.
 - Assertions
   - Provide actionable messages when extra inputs or packages are required by a flag.
-  - Prefer non-blocking `warnings` via `config.lib.neg.mkWarnIf` for soft migrations and deprecations.
-    - Example: `config.lib.neg.mkWarnIf cond "<what to change and how>"`
+  - Prefer non-blocking warnings via `warnings = lib.optional cond "..."` for soft migrations and deprecations.
+    - Example: `{ warnings = lib.optional cond "<what to change and how>"; }`
 - Naming
   - Use camelCase for extraSpecialArgs and internal aliases (e.g., `yandexBrowser`, `iosevkaNeg`).
 - Structure
@@ -72,7 +72,7 @@ See also: AGENTS.md for a short guide on helpers, activation aggregators, system
       a file/link is expected.
   - Examples:
     - Config text: `(xdg.mkXdgText "nyxt/init.lisp" "... Lisp ...")`
-    - Config source: `(xdg.mkXdgSource "swayimg" (config.lib.neg.mkDotfilesSymlink "nix/.config/home-manager/modules/media/images/swayimg/conf" true))`
+    - Config source: `(xdg.mkXdgSource "swayimg" { source = config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/nix/.config/home-manager/modules/media/images/swayimg/conf"; recursive = true; })`
     - Data keep: `(xdg.mkXdgDataText "ansible/roles/.keep" "")`
     - Cache keep: `(xdg.mkXdgCacheText "ansible/facts/.keep" "")`
     - Config JSON: `(xdg.mkXdgConfigJson "fastfetch/config.jsonc" { logo = { source = "$XDG_CONFIG_HOME/fastfetch/skull"; }; })`
@@ -120,10 +120,9 @@ See also: AGENTS.md for a short guide on helpers, activation aggregators, system
         presets = ["graphical"];
       })`
   - Under the hood it composes `Unit/Service` and applies `mkUnitFromPresets` for `After/Wants/WantedBy/PartOf`.
-
 - Out-of-store dotfile links
-  - For live-editable configs stored in this repo, prefer: `config.lib.neg.mkDotfilesSymlink "path/in/repo" <recursive?>`.
-  - Combine with `xdg.mkXdgSource` to get guards + correct placement under XDG.
+  - For live-editable configs stored in this repo, use `config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/<path/in/repo>"`.
+  - Combine with `xdg.mkXdgSource` for guards and correct placement under XDG.
 
 - Imports (xdg helpers) — convention
   - Use a local binding near the top of a module:

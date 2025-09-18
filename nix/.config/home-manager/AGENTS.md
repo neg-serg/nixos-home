@@ -51,9 +51,10 @@ This repo is configured for Home Manager + flakes with a small set of helpers to
     - `config.lib.neg.systemdUser.mkSimpleSocket { name; listenStream; presets = ["socketsTarget"]; /* socketExtra, unitExtra */ }`
       - Example: `(config.lib.neg.systemdUser.mkSimpleSocket { name = "my-sock"; listenStream = "%t/my.sock"; presets = ["socketsTarget"]; })` (WantedBy defaults to `sockets.target`)
   - Soft migrations (warnings):
-    - Use `config.lib.neg.mkWarnIf cond "message"` to emit non-fatal guidance.
+    - Prefer `{ warnings = lib.optional cond "message"; }` to emit non‑fatal guidance.
+    - Avoid referencing `config.lib.neg` in warnings to keep option evaluation acyclic.
     - Example (MPD path change):
-      `config.lib.neg.mkWarnIf (config.services.mpd.enable or false) "MPD dataDir moved to $XDG_STATE_HOME/mpd; consider migrating from ~/.config/mpd."`
+      `{ warnings = lib.optional (config.services.mpd.enable or false) "MPD dataDir moved to $XDG_STATE_HOME/mpd; consider migrating from ~/.config/mpd."; }`
 
 ## App Notes
 
@@ -114,7 +115,7 @@ This repo is configured for Home Manager + flakes with a small set of helpers to
 ## Guard rails
 
 - Don’t reintroduce Hyprland auto‑reload or activation reload hooks.
-- For files under `~/.config` prefer XDG helpers + `mkDotfilesSymlink` instead of manual shell.
+- For files under `~/.config` prefer XDG helpers + `config.lib.file.mkOutOfStoreSymlink` instead of ad‑hoc shell.
 - Use feature flags (`features.*`) with `mkIf`; parent flag off implies children default to off.
 - Quickshell: `quickshell/.config/quickshell/Settings.json` is ignored; do not add it back.
 
