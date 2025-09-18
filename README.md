@@ -67,7 +67,6 @@ Common flags (set in `home.nix` or via module overlays)
 - Emulators: `features.emulators.retroarch.full`
 - GPG: `features.gpg.enable`
 - Exclude packages (by pname) from curated lists: `features.excludePkgs = [ "name" ... ]`
-- Torrents: `features.torrent.enable` (Transmission/tools/service)
 
 Inspect flags without building
 - `just show-features` — prints flattened `features.*` for both profiles and RetroArch toggles
