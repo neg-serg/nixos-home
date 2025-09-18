@@ -2,12 +2,13 @@
   lib,
   pkgs,
   config,
-  yandexBrowser ? null,
+  yandexBrowserProvider ? null,
   nyxt4 ? null,
   ...
 }:
 with lib; let
   cfg = config.features.web;
+  yandexBrowser = if yandexBrowserProvider != null then yandexBrowserProvider pkgs else null;
   browsers = import ./browsers-table.nix { inherit lib pkgs yandexBrowser nyxt4; };
   browser = let key = cfg.default or "floorp"; in lib.attrByPath [key] browsers browsers.floorp;
 in {

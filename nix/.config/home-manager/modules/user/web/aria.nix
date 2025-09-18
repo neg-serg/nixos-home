@@ -1,10 +1,9 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, xdg, ... }:
 let
   inherit (lib) getExe';
   inherit (config.xdg) configHome dataHome;
   aria2Bin = getExe' pkgs.aria2 "aria2c";
   sessionFile = "${dataHome}/aria2/session";
-  xdg = import ../../lib/xdg-helpers.nix { inherit lib; };
 in
   lib.mkIf (config.features.web.enable && config.features.web.tools.enable) (lib.mkMerge [
     {

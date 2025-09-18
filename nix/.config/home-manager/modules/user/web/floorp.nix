@@ -2,11 +2,11 @@
   config,
   pkgs,
   lib,
-  fa ? null,
+  faProvider ? null,
   ...
 }:
 lib.mkIf (config.features.web.enable && config.features.web.floorp.enable) (let
-  common = import ./mozilla-common-lib.nix {inherit lib pkgs config fa;};
+  common = import ./mozilla-common-lib.nix {inherit lib pkgs config faProvider;};
 in (common.mkBrowser {
   name = "floorp";
   package = pkgs.floorp-bin;

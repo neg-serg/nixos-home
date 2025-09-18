@@ -2,10 +2,12 @@
   pkgs,
   lib,
   config,
-  yandexBrowser ? null,
+  yandexBrowserProvider ? null,
   ...
 }:
-with lib; {
+with lib; let
+  yandexBrowser = if yandexBrowserProvider != null then yandexBrowserProvider pkgs else null;
+in {
   imports = [
     ./defaults.nix
     ./floorp.nix

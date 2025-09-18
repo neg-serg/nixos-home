@@ -10,6 +10,10 @@ with lib; let
   cfg = config.features;
   # Use a local mkBool to avoid early dependency on config.lib.neg during option evaluation
   mkBool = (desc: default: (lib.mkEnableOption desc) // {inherit default;});
+  # Read dev-speed mode from environment (HM_DEV_SPEED=1|true|yes)
+  devSpeedEnv =
+    let v = builtins.getEnv "HM_DEV_SPEED";
+    in v == "1" || v == "true" || v == "yes";
 in {
   options.features = {
     # Global package exclusions for curated lists in modules that adopt this filter.
@@ -39,6 +43,7 @@ in {
     web = {
       enable = mkBool "enable Web stack (browsers + tools)" true;
       tools.enable = mkBool "enable web tools (aria2, yt-dlp, misc)" true;
+      addonsFromNUR.enable = mkBool "install Mozilla addons from NUR packages (heavier eval)" true;
       floorp.enable = mkBool "enable Floorp browser" true;
       firefox.enable = mkBool "enable Firefox browser" false;
       librewolf.enable = mkBool "enable LibreWolf browser" false;
@@ -74,6 +79,9 @@ in {
 
     # GPG stack (gpg, gpg-agent, pinentry)
     gpg.enable = mkBool "enable GPG and gpg-agent (creates ~/.gnupg)" true;
+
+    # Development-speed mode: aggressively trim heavy features/inputs for faster local iteration
+    devSpeed.enable = mkBool "enable dev-speed mode (trim heavy features for faster eval)" false;
   };
 
   # Apply profile defaults. Users can still override flags after this.
@@ -98,6 +106,7 @@ in {
         web = {
           enable = mkDefault false;
           tools.enable = mkDefault false;
+          addonsFromNUR.enable = mkDefault false;
           floorp.enable = mkDefault false;
           yandex.enable = mkDefault false;
           prefs.fastfox.enable = mkDefault false;
@@ -113,6 +122,7 @@ in {
         web = {
           enable = mkDefault true;
           tools.enable = mkDefault true;
+          addonsFromNUR.enable = mkDefault true;
           floorp.enable = mkDefault true;
           firefox.enable = mkDefault false;
           librewolf.enable = mkDefault false;
@@ -131,10 +141,30 @@ in {
         dev.ai.enable = mkDefault true;
       };
     })
+    # When dev-speed is enabled, prefer lean defaults for heavy subfeatures
+    (mkIf cfg.devSpeed.enable {
+      features = {
+        web = {
+          tools.enable = mkDefault false;
+          addonsFromNUR.enable = mkDefault false;
+          floorp.enable = mkDefault false;
+          firefox.enable = mkDefault false;
+          librewolf.enable = mkDefault false;
+          nyxt.enable = mkDefault false;
+          yandex.enable = mkDefault false;
+          prefs.fastfox.enable = mkDefault false;
+        };
+        gui.qt.enable = mkDefault false;
+        fun.enable = mkDefault false;
+        dev.ai.enable = mkDefault false;
+        torrent.enable = mkDefault false;
+      };
+    })
     # If parent feature is disabled, default child toggles to false to avoid contradictions
     (mkIf (! cfg.web.enable) {
       features.web = {
         tools.enable = mkDefault false;
+        addonsFromNUR.enable = mkDefault false;
         floorp.enable = mkDefault false;
         firefox.enable = mkDefault false;
         librewolf.enable = mkDefault false;
@@ -200,5 +230,7 @@ in {
           }
         ];
     }
+    # Auto-enable dev-speed by env var
+    (mkIf devSpeedEnv { features.devSpeed.enable = mkDefault true; })
   ];
 }
