@@ -3,7 +3,7 @@
   config,
   ...
 }: {
-  home.packages = with pkgs; config.lib.neg.pkgsList [
+  home.packages = config.lib.neg.pkgsList (with pkgs; [
     zk # notes database
-  ];
+  ]);
 }

@@ -12,10 +12,10 @@
     ./notmuch
     ./vdirsyncer
   ];
-  home.packages = with pkgs;
+  home.packages =
     config.lib.neg.pkgsList (
       let
-        groups = {
+        groups = with pkgs; {
           core = [
             himalaya # modern cli for mail
             kyotocabinet # mail client helper library

@@ -9,10 +9,10 @@ with lib; {
   config =
     (mkIf config.features.dev.enable {
       # Group editor tools and AI tools; flatten via mkEnabledList
-      home.packages = with pkgs;
+      home.packages =
         config.lib.neg.pkgsList (
           let
-            groups = {
+            groups = with pkgs; {
               core = [
                 code-cursor-fhs # AI-powered code editor built on VS Code
                 lapce # fast code editor in Rust
