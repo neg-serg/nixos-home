@@ -7,45 +7,8 @@ with lib;
       recursive = false;
     })
     # Git hooks via helper: ensure parent dir is real and mark as executable
-    (xdg.mkXdgSource "git/hooks/pre-commit" {
-      text = ''
-        #!/usr/bin/env bash
-        set -euo pipefail
-        # Repo root configured in HM (dotfilesRoot)
-        repo="${config.neg.dotfilesRoot}/nix/.config/home-manager"
-        # Run flake checks for HM (format docs, evals, etc.)
-        (cd "$repo" && nix flake check -L)
-        # Format the repo via treefmt (Nix, shell, Python, etc.)
-        (cd "$repo" && nix fmt)
-        # Sanity: reject whitespace errors in staged diff
-        git diff --check
-        # Stage any formatter changes
-        git add -u
-      '';
-      executable = true;
-    })
-    (xdg.mkXdgSource "git/hooks/commit-msg" {
-      text = ''
-        #!/usr/bin/env bash
-        set -euo pipefail
-        f="$1"
-        first_line="$(sed -n '1p' "$f" | tr -d '\r')"
-        # Allowed exceptions
-        case "$first_line" in
-          Merge\ *|Revert\ *|fixup!*|squash!*|WIP:*|WIP\ *)
-            exit 0 ;;
-        esac
-        # Require one or more [scope] blocks followed by a space
-        if echo "$first_line" | ${lib.getExe' pkgs.gnugrep "grep"} -qE '^\[[^][]+\]( \[[^][]+\])*\s'; then
-          exit 0
-        fi
-        echo "Commit message must start with [scope] subject" >&2
-        echo "Got: '$first_line'" >&2
-        echo "Examples: [activation] ..., [docs] ..., [features] ..., [symlinks] ..." >&2
-        exit 1
-      '';
-      executable = true;
-    })
+    (xdg.mkXdgSource "git/hooks/pre-commit" { source = ./hooks/pre-commit.sh; executable = true; })
+    (xdg.mkXdgSource "git/hooks/commit-msg" { source = ./hooks/commit-msg.sh; executable = true; })
     {
     home.packages = with pkgs; config.lib.neg.pkgsList [
       act # run GitHub Actions locally

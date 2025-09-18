@@ -31,84 +31,18 @@ with lib;
       ];
     }
     # Wrap rofi to ensure '-theme <name|name.rasi>' works even when caller uses a relative theme path.
-    # If a theme is given without a path, we `cd` into the themes directory so rofi finds the file.
-    {
-      home.file.".local/bin/rofi" = {
-        executable = true;
-        text = ''
-          #!/usr/bin/env bash
-          set -euo pipefail
-          rofi_bin="${lib.getExe rofiPkg}"
-          jq_bin="${lib.getExe pkgs.jq}"
-          hyprctl_bin="${lib.getExe' pkgs.hyprland "hyprctl"}"
-          xdg_data="${xdgDataHome}"
-          xdg_conf="${config.xdg.configHome}"
-          themes_dir="$xdg_data/rofi/themes"
-          # Default to config dir to make @import in config.rasi resolve relative files
-          cd_dir="$xdg_conf/rofi"
-          prev_is_theme=0
-          have_cfg=0
-          want_offsets=1
-          have_xoff=0; have_yoff=0; have_loc=0
-          for arg in "$@"; do
-            if [ "$prev_is_theme" -eq 1 ]; then
-              val="$arg"
-              prev_is_theme=0
-              case "$val" in
-                /*|*/*) : ;; # absolute or contains path component -> leave as-is
-                *)
-                  case "$val" in *.rasi|*.rasi:*) cd_dir="$themes_dir" ;; esac
-                ;;
-              esac
-            fi
-            case "$arg" in
-              -theme) prev_is_theme=1 ;;
-              -theme=*)
-                val=$(printf '%s' "$arg" | sed -e 's/^-theme=//')
-                case "$val" in
-                  /*|*/*) : ;;
-                  *) case "$val" in *.rasi|*.rasi:*) cd_dir="$themes_dir" ;; esac ;;
-                esac
-                ;;
-              -no-config| -config| -config=*) have_cfg=1 ;;
-              -xoffset| -xoffset=*) have_xoff=1 ;;
-              -yoffset| -yoffset=*) have_yoff=1 ;;
-              -location| -location=*) have_loc=1 ;;
-            esac
-          done
-          [ -d "$cd_dir" ] && cd "$cd_dir"
-
-          # Compute offsets from Quickshell Theme + Hyprland scale to align with panel
-          # Only when caller did not specify offsets explicitly
-          if [ "$want_offsets" -eq 1 ] && [ "$have_xoff" -eq 0 ] && [ "$have_yoff" -eq 0 ]; then
-            theme_json="$HOME/.config/quickshell/Theme.json"
-            # Defaults if quickshell or jq/hyprctl unavailable
-            ph=28; sm=18; ay=4; scale=1
-            if [ -f "$theme_json" ]; then
-              ph=$("$jq_bin" -r 'try .panel.height // 28' "$theme_json" 2>/dev/null || echo 28)
-              sm=$("$jq_bin" -r 'try .panel.sideMargin // 18' "$theme_json" 2>/dev/null || echo 18)
-              ay=$("$jq_bin" -r 'try .panel.menuYOffset // 8' "$theme_json" 2>/dev/null || echo 8)
-            fi
-            # Hyprland monitor scale (focused)
-            scale=$("$hyprctl_bin" -j monitors 2>/dev/null | "$jq_bin" -r 'try (.[ ] | select(.focused==true) | .scale) // 1' 2>/dev/null || echo 1)
-            # Round offsets to ints
-            xoff=$(printf '%.0f\n' "$(awk -v a="$sm" -v s="$scale" 'BEGIN{printf a*s}')")
-            yoff=$(printf '%.0f\n' "$(awk -v a="$ay" -v s="$scale" 'BEGIN{printf -a*s}')")
-            set -- "$@" -xoffset "$xoff" -yoffset "$yoff"
-            # Ensure bottom-left if not specified
-            if [ "$have_loc" -eq 0 ]; then
-              set -- "$@" -location 7
-            fi
-          fi
-
-          # Avoid parsing user/system config if not explicitly requested (rofi 2.0 parser is strict)
-          if [ "$have_cfg" -eq 0 ]; then
-            set -- -no-config "$@"
-          fi
-          exec "$rofi_bin" "$@"
-        '';
-      };
-    }
+    # If a theme is given without a path, we cd into the themes directory so rofi finds the file.
+    (let
+       tpl = builtins.readFile ./rofi/rofi-wrapper.sh;
+       rendered = lib.replaceStrings ["@ROFI_BIN@" "@JQ_BIN@" "@HYPRCTL_BIN@"] [ (lib.getExe rofiPkg) (lib.getExe pkgs.jq) (lib.getExe' pkgs.hyprland "hyprctl") ] tpl;
+       rofiWrapper = pkgs.writeShellApplication {
+         name = "rofi-wrapper";
+         runtimeInputs = [ pkgs.gawk pkgs.gnused ];
+         text = rendered;
+       };
+     in {
+       home.file.".local/bin/rofi".source = "${rofiWrapper}/bin/rofi-wrapper";
+     })
     # Live-editable config via helper (guards parent dir and target)
     (xdg.mkXdgSource "rofi" {
       source = config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/nix/.config/home-manager/modules/user/gui/rofi/conf";
