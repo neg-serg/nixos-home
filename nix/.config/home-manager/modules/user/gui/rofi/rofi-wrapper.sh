@@ -45,9 +45,8 @@ done
 if [ "$want_offsets" -eq 1 ] && [ "$have_xoff" -eq 0 ] && [ "$have_yoff" -eq 0 ]; then
   theme_json="$xdg_conf/quickshell/Theme.json"
   # Defaults if quickshell or jq/hyprctl unavailable
-  ph=28; sm=18; ay=4; scale=1
+  sm=18; ay=4; scale=1
   if [ -f "$theme_json" ]; then
-    ph=$("$jq_bin" -r 'try .panel.height // 28' "$theme_json" 2>/dev/null || echo 28)
     sm=$("$jq_bin" -r 'try .panel.sideMargin // 18' "$theme_json" 2>/dev/null || echo 18)
     ay=$("$jq_bin" -r 'try .panel.menuYOffset // 8' "$theme_json" 2>/dev/null || echo 8)
   fi

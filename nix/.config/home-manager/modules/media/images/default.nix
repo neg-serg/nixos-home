@@ -28,28 +28,8 @@ in lib.mkMerge [
   }
   {
   home.file.".local/bin/swayimg".source = "${swayimg-first}/bin/swayimg-first";
-  home.file.".local/bin/sx" = {
-    executable = true;
-    text = ''
-      #!/usr/bin/env bash
-      set -euo pipefail
-      exec swayimg-first "$@"
-    '';
-  };
-  home.file.".local/bin/sxivnc".text = ''
-    #!/usr/bin/env bash
-    set -euo pipefail
-    if command -v nsxiv >/dev/null 2>&1; then
-      exec nsxiv -n -c "$@"
-    elif command -v sxiv >/dev/null 2>&1; then
-      exec sxiv -n -c "$@"
-    elif command -v swayimg >/dev/null 2>&1; then
-      exec swayimg "$@"
-    else
-      echo "sxivnc: no nsxiv/sxiv/swayimg in PATH" >&2
-      exit 127
-    fi
-  '';
+  home.file.".local/bin/sx" = { executable = true; source = ./sx.sh; };
+  home.file.".local/bin/sxivnc" = { executable = true; source = ./sxivnc.sh; };
   }
 
   # Guard: ensure we don't write through an unexpected symlink or file at ~/.local/bin/swayimg

@@ -10,4 +10,4 @@ with lib;
        tpl = builtins.readFile ./nyxt/init.lisp;
        rendered = lib.replaceStrings ["@DL_DIR@"] [ dlDir ] tpl;
      in xdg.mkXdgText "nyxt/init.lisp" rendered)
-  ]
+  ])
