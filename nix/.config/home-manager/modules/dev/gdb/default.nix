@@ -1,6 +1,6 @@
-{ lib, config, pkgs, ... }:
+{ lib, config, pkgs, xdg, ... }:
 let
-  xdg = import ../../lib/xdg-helpers.nix { inherit lib; };
+  
 in lib.mkMerge [
   {
   # Install gdb and manage its config under XDG
