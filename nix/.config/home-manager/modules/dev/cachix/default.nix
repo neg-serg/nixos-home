@@ -7,7 +7,7 @@
   cfg = config.services.cachix.watchStore;
 in {
   options.services.cachix.watchStore = {
-    enable = config.lib.neg.mkBool "Run cachix watch-store as a user service" false;
+    enable = (lib.mkEnableOption "Run cachix watch-store as a user service") // { default = false; };
 
     cacheName = lib.mkOption {
       type = lib.types.str;
@@ -32,7 +32,7 @@ in {
     };
 
     ownCache = {
-      enable = config.lib.neg.mkBool "Add this cache to Nix substituters and trusted keys" false;
+      enable = (lib.mkEnableOption "Add this cache to Nix substituters and trusted keys") // { default = false; };
       name = lib.mkOption {
         type = lib.types.str;
         default = "";
@@ -48,7 +48,7 @@ in {
     };
 
     hardening = {
-      enable = config.lib.neg.mkBool "Apply systemd hardening options to the service" true;
+      enable = (lib.mkEnableOption "Apply systemd hardening options to the service") // { default = true; };
     };
 
     extraArgs = lib.mkOption {
@@ -69,21 +69,17 @@ in {
     };
 
     }
-    (lib.mkIf cfg.enable (
-      config.lib.neg.systemdUser.mkSimpleService {
-        name = "cachix-watch-store";
-        description = "Cachix watch-store for ${cfg.cacheName}";
-        presets = ["netOnline" "sops" "defaultWanted"];
-        execStart = lib.concatStringsSep " " ([
-            "${lib.getExe pkgs.cachix}"
-            "watch-store"
-            cfg.cacheName
-          ] ++ cfg.extraArgs);
-        unitExtra = {
+    (lib.mkIf cfg.enable {
+      systemd.user.services."cachix-watch-store" = {
+        Unit = {
+          Description = "Cachix watch-store for ${cfg.cacheName}";
           # On non-NixOS systems /run/current-system is absent; avoid spurious errors
           ConditionPathExists = "/run/current-system";
+          After = ["network-online.target" "sops-nix.service"];
+          Wants = ["network-online.target" "sops-nix.service"];
         };
-        serviceExtra =
+        Install.WantedBy = ["default.target"];
+        Service =
           let envFile =
                 lib.mkIf (cfg.authTokenFile != null)
                 (if cfg.requireAuthFile then cfg.authTokenFile else ("-" + cfg.authTokenFile));
@@ -93,6 +89,11 @@ in {
             ExecStartPre = lib.mkIf (cfg.authTokenFile != null && cfg.requireAuthFile) ''
               ${lib.getExe' pkgs.bash "bash"} -c 'if ! ${lib.getExe' pkgs.gnugrep "grep"} -q "^CACHIX_AUTH_TOKEN=" ${cfg.authTokenFile}; then echo "CACHIX_AUTH_TOKEN not set in ${cfg.authTokenFile}"; exit 1; fi'
             '';
+            ExecStart = lib.concatStringsSep " " ([
+              "${lib.getExe pkgs.cachix}"
+              "watch-store"
+              cfg.cacheName
+            ] ++ cfg.extraArgs);
             Restart = "always";
             RestartSec = 10;
             # Optional hardening
@@ -112,7 +113,7 @@ in {
             CapabilityBoundingSet = lib.mkIf cfg.hardening.enable [""];
             RestrictAddressFamilies = lib.mkIf cfg.hardening.enable ["AF_INET" "AF_INET6"];
           };
-      }
-    ))
+      };
+    })
   ]);
 }

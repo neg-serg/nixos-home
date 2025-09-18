@@ -5,6 +5,7 @@
   ...
 }:
 with lib; let
+  mkBool = desc: default: (lib.mkEnableOption desc) // { inherit default; };
   groups = with pkgs; rec {
     # Text/formatting/regex/CSV/TOML tools
     text = [
@@ -65,13 +66,13 @@ with lib; let
   };
 in {
   options.features.cli = {
-    text = config.lib.neg.mkBool "enable text/formatting/CSV/TOML tools" true;
-    fs = config.lib.neg.mkBool "enable filesystem/archive/hash/mass-rename tools" true;
-    net = config.lib.neg.mkBool "enable network/cloud/URL tools" true;
-    obs = config.lib.neg.mkBool "enable observability/log tools" true;
-    sys = config.lib.neg.mkBool "enable system fetch utilities" true;
-    dev = config.lib.neg.mkBool "enable dev helpers/diffs/automation" true;
-    icedteaWeb.enable = config.lib.neg.mkBool "enable IcedTea Web (netx) and user config" false;
+    text = mkBool "enable text/formatting/CSV/TOML tools" true;
+    fs = mkBool "enable filesystem/archive/hash/mass-rename tools" true;
+    net = mkBool "enable network/cloud/URL tools" true;
+    obs = mkBool "enable observability/log tools" true;
+    sys = mkBool "enable system fetch utilities" true;
+    dev = mkBool "enable dev helpers/diffs/automation" true;
+    icedteaWeb.enable = mkBool "enable IcedTea Web (netx) and user config" false;
   };
   imports = [
     ./core-tools.nix # fd, ripgrep, direnv, shell helpers
