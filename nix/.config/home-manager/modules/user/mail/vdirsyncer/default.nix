@@ -1,13 +1,5 @@
-{
-  lib,
-  pkgs,
-  config,
-  ...
-}:
-let
-  # Robust relative import: resolves in normal and docs eval (same modules/ tree)
-  xdg = import ../../../lib/xdg-helpers.nix { inherit lib; };
-in with lib;
+{ lib, pkgs, config, xdg ? import ../../../lib/xdg-helpers.nix { inherit lib; }, ... }:
+with lib;
   mkIf (config.features.mail.enable && config.features.mail.vdirsyncer.enable) (lib.mkMerge [
     {
       home.packages = with pkgs; config.lib.neg.pkgsList [

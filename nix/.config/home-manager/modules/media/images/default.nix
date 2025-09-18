@@ -1,10 +1,5 @@
-{
-  lib,
-  config,
-  pkgs,
-  ...
-}: let
-  xdg = import ../../lib/xdg-helpers.nix { inherit lib; };
+{ lib, config, pkgs, xdg ? import ../../lib/xdg-helpers.nix { inherit lib; }, ... }:
+let
   # Wrapper: start swayimg, export SWAYIMG_IPC, jump to first image via IPC.
   swayimg-first = pkgs.writeShellScriptBin "swayimg-first" ''
     set -euo pipefail

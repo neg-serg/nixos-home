@@ -1,11 +1,5 @@
-{
-  pkgs,
-  lib,
-  config,
-  ...
-}: let
-  xdg = import ../lib/xdg-helpers.nix { inherit lib; };
-in lib.mkMerge [
+{ pkgs, lib, config, xdg ? import ../lib/xdg-helpers.nix { inherit lib; }, ... }:
+lib.mkMerge [
   {
     home.packages = with pkgs; config.lib.neg.pkgsList [
       fastfetch # modern, fast system fetch

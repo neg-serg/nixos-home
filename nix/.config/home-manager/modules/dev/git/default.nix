@@ -1,11 +1,6 @@
-{
-  lib,
-  pkgs,
-  config,
-  ...
-}:
+{ lib, pkgs, config, xdg ? import ../../lib/xdg-helpers.nix { inherit lib; }, ... }:
 with lib;
-  mkIf config.features.dev.enable (let xdg = import ../../lib/xdg-helpers.nix { inherit lib; }; in lib.mkMerge [
+  mkIf config.features.dev.enable (lib.mkMerge [
     # Link user excludes file from repo into ~/.config/git/ignore with guards
     (xdg.mkXdgSource "git/ignore" {
       source = config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/git/.config/git/ignore";

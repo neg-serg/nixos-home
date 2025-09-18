@@ -1,12 +1,5 @@
-{
-  lib,
-  config,
-  pkgs,
-  inputs,
-  ...
-}: let
-  xdg = import ../lib/xdg-helpers.nix { inherit lib; };
-in lib.mkMerge [
+{ lib, config, pkgs, inputs, xdg ? import ../lib/xdg-helpers.nix { inherit lib; }, ... }:
+lib.mkMerge [
   {
     # Ensure Nushell is available
     home.packages = config.lib.neg.pkgsList [pkgs.nushell];

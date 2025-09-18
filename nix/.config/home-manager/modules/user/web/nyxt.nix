@@ -1,14 +1,8 @@
-{
-  lib,
-  pkgs,
-  config,
-  ...
-}:
+{ lib, pkgs, config, xdg ? import ../../lib/xdg-helpers.nix { inherit lib; }, ... }:
 with lib;
   mkIf (config.features.web.enable && config.features.web.nyxt.enable) (let
     nyxtPkg = pkgs.nyxt;
     dlDir = "${config.home.homeDirectory}/dw";
-    xdg = import ../../lib/xdg-helpers.nix { inherit lib; };
   in lib.mkMerge [
     {
       home.packages = config.lib.neg.pkgsList [nyxtPkg];
