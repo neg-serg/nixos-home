@@ -65,10 +65,10 @@ with rec {
   dataNames = builtins.attrNames (config.xdg.dataFile or {});
   cacheNames = builtins.attrNames (config.xdg.cacheFile or {});
 in {
-  home.packages = with pkgs; config.lib.neg.pkgsList [
+  home.packages = config.lib.neg.pkgsList (with pkgs; [
     handlr # xdg-open replacement with per-handler rules
     xdg-ninja # detect mislocated files in $HOME
-  ];
+  ]);
   # Aggregate XDG fixups via lib.neg helpers for readability and reuse.
   home.activation.xdgFixParents = config.lib.neg.mkXdgFixParents {
     configs = cfgNames;

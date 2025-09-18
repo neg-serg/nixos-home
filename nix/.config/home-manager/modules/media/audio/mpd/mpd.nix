@@ -6,9 +6,9 @@
 }:
   lib.mkIf config.features.media.audio.mpd.enable (lib.mkMerge [
     {
-      home.packages = with pkgs; config.lib.neg.pkgsList [
+      home.packages = config.lib.neg.pkgsList (with pkgs; [
         rmpc # alternative tui client with album cover
-      ];
+      ]);
 
       services.mpd = {
         enable = false;

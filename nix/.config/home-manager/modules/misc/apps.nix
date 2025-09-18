@@ -1,6 +1,6 @@
 { config, pkgs, ... }: {
-  home.packages = with pkgs; config.lib.neg.pkgsList [
+  home.packages = config.lib.neg.pkgsList (with pkgs; [
     blesh # bluetooth shell
     pwgen # generate passwords
-  ];
+  ]);
 }

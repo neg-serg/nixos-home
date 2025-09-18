@@ -3,8 +3,8 @@
   config,
   ...
 }: {
-  home.packages = with pkgs; config.lib.neg.pkgsList [
+  home.packages = config.lib.neg.pkgsList (with pkgs; [
     # fontforge # font processing
     pango # for pango-list
-  ];
+  ]);
 }

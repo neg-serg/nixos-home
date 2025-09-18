@@ -6,7 +6,7 @@
 }:
 lib.mkIf config.features.media.audio.apps.enable (
   {
-    home.packages = with pkgs; config.lib.neg.pkgsList [
+  home.packages = config.lib.neg.pkgsList (with pkgs; [
       # codecs / ripping / players
       ape cdparanoia cider
       # analysis
@@ -19,6 +19,6 @@ lib.mkIf config.features.media.audio.apps.enable (
       nicotine-plus scdl streamlink
       # misc
       screenkey
-    ];
+  ]);
   }
 )
