@@ -1,6 +1,6 @@
 #!/bin/bash
 # shellcheck shell=bash
-# shellcheck disable=SC2297,SC2301
+# shellcheck disable=SC2297,SC2301,SC2034,SC2154
 
 f=3 b=4
 for j in f b; do

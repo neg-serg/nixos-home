@@ -1,4 +1,6 @@
 #!/bin/sh
+# shellcheck shell=sh
+# shellcheck disable=SC2006,SC2016,SC2211
 echo '                      :::!~!!!!!:.'
 echo '                  .xUHWH!! !!?M88WHX:.'
 echo '                .X*#M@$!!  !X!M$$$$$$WWx:.'
