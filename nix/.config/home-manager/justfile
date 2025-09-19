@@ -24,9 +24,9 @@ lint:
       black --check --line-length 100 --extend-exclude '(secrets/crypted|modules/user/gui/kitty/conf/tab_bar.py)' .; \
     fi
     # Shellcheck opt-in: check only files that declare a POSIX/Bash shebang
-    git ls-files -z -- '*.sh' '*.bash' ':!modules/misc/fun-art/*' ':!nix/.config/home-manager/modules/misc/fun-art/*' 2>/dev/null \
+    git ls-files -z -- '*.sh' '*.bash' 2>/dev/null \
       | xargs -0 -r grep -lZ -m1 -E '^#!\s*/(usr/)?bin/(env\s+)?(ba)?sh' \
-      | xargs -0 -r shellcheck -S warning -x
+      | xargs -0 -r shellcheck -S error -x
 
 hm-neg:
     home-manager switch --flake .#neg

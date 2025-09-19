@@ -1,4 +1,6 @@
 #!/bin/bash
+# shellcheck shell=bash
+# shellcheck disable=SC2297,SC2301
 
 f=3 b=4
 for j in f b; do
@@ -66,4 +68,3 @@ $f4                       '"VHVHHHAHHHHMMV:"'
 $rst
 
 EOF
-
