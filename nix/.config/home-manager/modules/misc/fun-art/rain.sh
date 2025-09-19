@@ -1,6 +1,6 @@
 #!/bin/bash
 # shellcheck shell=bash
-# shellcheck disable=SC2297
+# shellcheck disable=SC2297,SC2034,SC2125,SC1083,SC2099
 # Let it Rain!
 # Copyright (C) 2011, 2013 by Yu-Jie Lin
 #

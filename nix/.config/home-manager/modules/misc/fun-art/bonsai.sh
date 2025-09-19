@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# shellcheck shell=bash
+# shellcheck disable=SC2034,SC2294
 
 # I'm a bonsai-making machine!
 
@@ -540,4 +542,3 @@ while [ $infinite = true ]; do
 	sleep 2
 	bonsai
 done
-
