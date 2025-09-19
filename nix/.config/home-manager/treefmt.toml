@@ -16,16 +16,7 @@ options = ["-q"]
 includes = ["*.nix"]
 
 # Remove unused attributes from Nix files in-place
-[formatter.deadnix]
-command = "deadnix"
-options = ["--edit"]
-includes = ["*.nix"]
-
-# Static analysis and auto-fixes where possible
-[formatter.statix]
-command = "statix"
-options = ["fix"]
-includes = ["*.nix"]
+## Nix linters (deadnix/statix) run in flake checks; keep only formatters here.
 
 # Shell: format POSIX/Bash scripts (exclude zsh)
 [formatter.shfmt]
@@ -33,10 +24,7 @@ command = "shfmt"
 options = ["-w", "-i", "2", "-ci", "-bn", "-sr"]
 includes = ["**/*.sh", "**/*.bash"]
 
-[formatter.shellcheck]
-command = "shellcheck"
-options = ["-S", "style", "-x"]
-includes = ["**/*.sh", "**/*.bash"]
+## Shellcheck runs in 'just lint' (opt-in by shebang).
 
 # Python: auto-fix with ruff, then format with black
 [formatter.ruff]
