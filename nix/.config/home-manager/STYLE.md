@@ -46,12 +46,12 @@ See also: AGENTS.md for a short guide on helpers, activation aggregators, system
       `systemd.user.paths.my-path = lib.recursiveUpdate { Unit.Description = "Watch foo"; Path.PathChanged = "%h/.config/foo/config"; } (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["defaultWanted"]; });`
 
 - Systemd sugar (policy in this repo)
-  - По умолчанию используем стабильный шаблон: `lib.mkMerge + config.lib.neg.systemdUser.mkUnitFromPresets`.
-    - Пример (service):
+  - Default policy: use the stable pattern: `lib.mkMerge + config.lib.neg.systemdUser.mkUnitFromPresets`.
+    - Example (service):
       `systemd.user.services.foo = lib.mkMerge [ { Unit.Description = "Foo"; Service.ExecStart = "${pkgs.foo}/bin/foo"; } (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["defaultWanted"]; }) ];`
-    - Пример (timer):
+    - Example (timer):
       `systemd.user.timers.foo = lib.mkMerge [ { Unit.Description = "Timer: foo"; Timer = { OnBootSec = "2m"; OnUnitActiveSec = "10m"; Unit = "foo.service"; }; } (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["timers"]; }) ];`
-  - «Упрощённые» хелперы (`mkSimpleService`, `mkSimpleTimer`, `mkSimpleSocket`) доступны, но в этом дереве модулей иногда вызывают рекурсию HM‑eval. Поэтому используйте их только если точно не создаётся цикл; базовый вариант — через `mkUnitFromPresets`.
+  - The "simple" helpers (`mkSimpleService`, `mkSimpleTimer`, `mkSimpleSocket`) are available, but in this module tree they sometimes trigger HM‑eval recursion. Use them only when you are certain they do not introduce a cycle; otherwise prefer `mkUnitFromPresets`.
 
 - Commit messages
   - Use bracketed scope: `[scope] subject` (English imperative, concise).
@@ -102,13 +102,13 @@ See also: AGENTS.md for a short guide on helpers, activation aggregators, system
   - Use these in addition to xdg helpers when apps require extra runtime dirs (sockets, logs, caches) outside XDG config files.
 
 - Local bin wrappers
-  - Prefer `config.lib.neg.mkLocalBin` для `~/.local/bin/<name>` скриптов, чтобы избегать конфликтов путей при активации.
+  - Prefer `config.lib.neg.mkLocalBin` for `~/.local/bin/<name>` scripts to avoid path conflicts during activation.
     - Example:
       `config.lib.neg.mkLocalBin "rofi" ''#!/usr/bin/env bash
         set -euo pipefail
         exec ${pkgs.rofi-wayland}/bin/rofi "$@"''`
   - This removes any existing path (file/dir/symlink) before linking and marks the target executable.
-  - Примечание: в редких случаях (например, при специфической компоновке модулей/мерджей) использование `mkLocalBin` может вызывать рекурсию HM‑eval. В таких местах допускается ровный аналог через `home.file` + `home.activation` guard (см. модули с rofi/swayimg), но для новых обёрток — сначала пробуйте `mkLocalBin`.
+  - Note: in rare cases (for example, due to specific module/merge ordering), `mkLocalBin` may trigger HM‑eval recursion. In such places it is acceptable to use the direct equivalent via `home.file` plus an activation guard (see rofi/swayimg modules). For new wrappers, try `mkLocalBin` first.
 
 - Systemd (user) sugar
   - For simple services use `config.lib.neg.systemdUser.mkSimpleService` instead of repeating the same boilerplate.

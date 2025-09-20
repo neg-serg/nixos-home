@@ -39,9 +39,9 @@ This repo is configured for Home Manager + flakes with a small set of helpers to
         set -euo pipefail
         exec ${pkgs.rofi-wayland}/bin/rofi "$@"''`
   - Systemd (user) sugar:
-    - В этом репозитории используем стабильный шаблон: `lib.mkMerge + config.lib.neg.systemdUser.mkUnitFromPresets`.
-    - «Упрощённые» хелперы (`mkSimpleService`, `mkSimpleTimer`, `mkSimpleSocket`) доступны, но могут вызывать рекурсию HM‑eval в некоторых контекстах. Поэтому по умолчанию — НЕ применять их в модулях; вместо этого собирать юнит как ниже.
-    - Пример (service):
+    - In this repository, use the stable pattern: `lib.mkMerge + config.lib.neg.systemdUser.mkUnitFromPresets`.
+    - The "simple" helpers (`mkSimpleService`, `mkSimpleTimer`, `mkSimpleSocket`) are available but can trigger HM‑eval recursion in some contexts. Default policy: do not use them in modules; instead assemble units as below.
+    - Example (service):
       ```nix
       systemd.user.services.my-service = lib.mkMerge [
         {
@@ -51,7 +51,7 @@ This repo is configured for Home Manager + flakes with a small set of helpers to
         (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["defaultWanted"]; })
       ];
       ```
-    - Пример (timer):
+    - Example (timer):
       ```nix
       systemd.user.timers.my-timer = lib.mkMerge [
         {
@@ -83,7 +83,7 @@ This repo is configured for Home Manager + flakes with a small set of helpers to
       - Attach preset: `(config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["graphical"]; })`.
   - Avoid `ExecStartPre` mkdir/touch logic — aggregated XDG fixups and the data helper make it unnecessary and reduce activation noise.
 - systemd (user) presets
-  - Always use `config.lib.neg.systemdUser.mkUnitFromPresets { presets = [..]; }` (рекомендуемый путь)
+  - Always use `config.lib.neg.systemdUser.mkUnitFromPresets { presets = [..]; }` (recommended)
   - Typical presets:
     - Service in GUI session: `["graphical"]`
     - Wants network online: `["netOnline"]`
