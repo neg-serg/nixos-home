@@ -39,17 +39,28 @@ This repo is configured for Home Manager + flakes with a small set of helpers to
         set -euo pipefail
         exec ${pkgs.rofi-wayland}/bin/rofi "$@"''`
   - Systemd (user) sugar:
-    - `config.lib.neg.systemdUser.mkSimpleService { name; description; execStart; presets = [..]; }`
-    - Example: `(config.lib.neg.systemdUser.mkSimpleService {
-        name = "aria2";
-        description = "aria2 download manager";
-        execStart = "${pkgs.aria2}/bin/aria2c --conf-path=$XDG_CONFIG_HOME/aria2/aria2.conf";
-        presets = ["graphical"];
-      })`
-    - `config.lib.neg.systemdUser.mkSimpleTimer { name; onCalendar; presets = ["timers"]; /* timerExtra, unitExtra */ }`
-      - Example: `(config.lib.neg.systemdUser.mkSimpleTimer { name = "newsboat-sync"; onCalendar = "hourly"; presets = ["timers"]; })` (WantedBy defaults to `timers.target`)
-    - `config.lib.neg.systemdUser.mkSimpleSocket { name; listenStream; presets = ["socketsTarget"]; /* socketExtra, unitExtra */ }`
-      - Example: `(config.lib.neg.systemdUser.mkSimpleSocket { name = "my-sock"; listenStream = "%t/my.sock"; presets = ["socketsTarget"]; })` (WantedBy defaults to `sockets.target`)
+    - В этом репозитории используем стабильный шаблон: `lib.mkMerge + config.lib.neg.systemdUser.mkUnitFromPresets`.
+    - «Упрощённые» хелперы (`mkSimpleService`, `mkSimpleTimer`, `mkSimpleSocket`) доступны, но могут вызывать рекурсию HM‑eval в некоторых контекстах. Поэтому по умолчанию — НЕ применять их в модулях; вместо этого собирать юнит как ниже.
+    - Пример (service):
+      ```nix
+      systemd.user.services.my-service = lib.mkMerge [
+        {
+          Unit = { Description = "My Service"; };
+          Service.ExecStart = "${pkgs.foo}/bin/foo --flag";
+        }
+        (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["defaultWanted"]; })
+      ];
+      ```
+    - Пример (timer):
+      ```nix
+      systemd.user.timers.my-timer = lib.mkMerge [
+        {
+          Unit.Description = "My Timer";
+          Timer = { OnBootSec = "2m"; OnUnitActiveSec = "10m"; Unit = "my-timer.service"; };
+        }
+        (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["timers"]; })
+      ];
+      ```
   - Soft migrations (warnings):
     - Prefer `{ warnings = lib.optional cond "message"; }` to emit non‑fatal guidance.
     - Avoid referencing `config.lib.neg` in warnings to keep option evaluation acyclic.
@@ -72,7 +83,7 @@ This repo is configured for Home Manager + flakes with a small set of helpers to
       - Attach preset: `(config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["graphical"]; })`.
   - Avoid `ExecStartPre` mkdir/touch logic — aggregated XDG fixups and the data helper make it unnecessary and reduce activation noise.
 - systemd (user) presets
-  - Always use `config.lib.neg.systemdUser.mkUnitFromPresets { presets = [..]; }`
+  - Always use `config.lib.neg.systemdUser.mkUnitFromPresets { presets = [..]; }` (рекомендуемый путь)
   - Typical presets:
     - Service in GUI session: `["graphical"]`
     - Wants network online: `["netOnline"]`
