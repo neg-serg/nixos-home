@@ -17,29 +17,29 @@ with lib;
         config.lib.neg.mkEnsureDirsAfterWrite [
           "${config.xdg.stateHome or "$HOME/.local/state"}/vdirsyncer"
         ];
-      # Service via sugar
-      (config.lib.neg.systemdUser.mkSimpleService {
-        name = "vdirsyncer";
-        description = "Vdirsyncer synchronization service";
-        execStart = "${lib.getExe pkgs.vdirsyncer} sync";
-        presets = ["netOnline"];
-        serviceExtra = {
-          Type = "oneshot";
-          ExecStartPre = "${lib.getExe pkgs.vdirsyncer} metasync";
-        };
-      })
+      systemd.user.services.vdirsyncer = lib.mkMerge [
+        {
+          Unit = { Description = "Vdirsyncer synchronization service"; };
+          Service = {
+            Type = "oneshot";
+            ExecStartPre = "${lib.getExe pkgs.vdirsyncer} metasync";
+            ExecStart = "${lib.getExe pkgs.vdirsyncer} sync";
+          };
+        }
+        (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["netOnline"]; })
+      ];
 
-      # Timer via sugar (presets add WantedBy timers.target by default)
-      (config.lib.neg.systemdUser.mkSimpleTimer {
-        name = "vdirsyncer";
-        presets = ["timers"];
-        description = "Vdirsyncer synchronization timer";
-        timerExtra = {
-          OnBootSec = "2m";
-          OnUnitActiveSec = "5m";
-          Unit = "vdirsyncer.service";
-        };
-      })
+      systemd.user.timers.vdirsyncer = lib.mkMerge [
+        {
+          Unit = { Description = "Vdirsyncer synchronization timer"; };
+          Timer = {
+            OnBootSec = "2m";
+            OnUnitActiveSec = "5m";
+            Unit = "vdirsyncer.service";
+          };
+        }
+        (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["timers"]; })
+      ];
     }
     (let
        tpl = builtins.readFile ./config.tpl;
