@@ -30,27 +30,25 @@ with lib;
     # Maildir creation handled by global prepareUserPaths action
 
       # Periodic sync in addition to imapnotify (fallback / catch-up)
-      systemd.user.services."mbsync-gmail" = lib.mkMerge [
-        {
-          Unit.Description = "Sync mail via mbsync (gmail)";
-          Service = {
-            Type = "simple";
-            TimeoutStartSec = "30min";
-            ExecStart = ''${pkgs.isync}/bin/mbsync -Va -c %h/.config/isync/mbsyncrc'';
-          };
-        }
-        (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["netOnline"]; })
-      ];
-      systemd.user.timers."mbsync-gmail" = lib.mkMerge [
-        {
-          Unit = { Description = "Timer: mbsync gmail"; };
-          Timer = {
-            OnBootSec = "2m";
-            OnUnitActiveSec = "10m";
-            Persistent = true;
-          };
-        }
-        (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["timers"]; })
-      ];
+      (config.lib.neg.systemdUser.mkSimpleService {
+        name = "mbsync-gmail";
+        description = "Sync mail via mbsync (gmail)";
+        execStart = ''${pkgs.isync}/bin/mbsync -Va -c %h/.config/isync/mbsyncrc'';
+        presets = ["netOnline"];
+        serviceExtra = {
+          Type = "simple";
+          TimeoutStartSec = "30min";
+        };
+      })
+      (config.lib.neg.systemdUser.mkSimpleTimer {
+        name = "mbsync-gmail";
+        presets = ["timers"];
+        description = "Timer: mbsync gmail";
+        timerExtra = {
+          OnBootSec = "2m";
+          OnUnitActiveSec = "10m";
+          Persistent = true;
+        };
+      })
     }
   ])

@@ -22,22 +22,18 @@
         mpd.port = 6600;
       };
 
-      systemd.user.services = {
-        mpdas = lib.mkMerge [
-          {
-            Unit = { Description = "mpdas last.fm scrobbler"; };
-            Service = {
-              ExecStart = "${pkgs.mpdas}/bin/mpdas -c ${config.sops.secrets.mpdas_negrc.path}";
-              Restart = "on-failure";
-              RestartSec = "10";
-            };
-          }
-          (config.lib.neg.systemdUser.mkUnitFromPresets {
-            presets = ["net" "defaultWanted"];
-            after = ["sound.target"]; # preserve additional ordering
-          })
-        ];
-      };
+      systemd.user.services =
+        (config.lib.neg.systemdUser.mkSimpleService {
+          name = "mpdas";
+          description = "mpdas last.fm scrobbler";
+          execStart = "${pkgs.mpdas}/bin/mpdas -c ${config.sops.secrets.mpdas_negrc.path}";
+          presets = ["net" "defaultWanted"];
+          serviceExtra = {
+            Restart = "on-failure";
+            RestartSec = "10";
+          };
+          after = ["sound.target"];
+        });
     }
     # Soft migration notice: move MPD dataDir to XDG state
     (let

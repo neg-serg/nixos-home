@@ -43,26 +43,24 @@ in lib.mkIf config.features.torrent.enable (lib.mkMerge [
   home.activation.keepTransmissionConfigSymlink =
     config.lib.neg.mkRemoveIfBrokenSymlink "${config.xdg.configHome}/transmission-daemon";
 }
-{
-  # Transmission daemon service (systemd user)
-  systemd.user.services."transmission-daemon" = lib.mkMerge [
-    {
-      Unit = {
-        Description = "transmission service";
-        ConditionPathExists = "${lib.getExe' transmissionPkg "transmission-daemon"}";
-      };
-      Service = {
-        Type = "simple";
-        ExecStart = "${lib.getExe' transmissionPkg "transmission-daemon"} -g ${confDirNew} -f --log-level=error";
-        Restart = "on-failure";
-        RestartSec = "30";
-        StartLimitBurst = "8";
-        ExecReload = "${lib.getExe' pkgs.util-linux "kill"} -s HUP $MAINPID";
-      };
-    }
-    (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["net" "defaultWanted"]; })
-  ];
-}
+(
+  config.lib.neg.systemdUser.mkSimpleService {
+    name = "transmission-daemon";
+    description = "transmission service";
+    execStart = "${lib.getExe' transmissionPkg "transmission-daemon"} -g ${confDirNew} -f --log-level=error";
+    presets = ["net" "defaultWanted"];
+    unitExtra = {
+      ConditionPathExists = "${lib.getExe' transmissionPkg "transmission-daemon"}";
+    };
+    serviceExtra = {
+      Type = "simple";
+      Restart = "on-failure";
+      RestartSec = "30";
+      StartLimitBurst = "8";
+      ExecReload = "${lib.getExe' pkgs.util-linux "kill"} -s HUP $MAINPID";
+    };
+  }
+)
 # Soft migration warning: detect legacy config under $XDG_CONFIG_HOME/transmission
 (let
   cfgFiles = builtins.attrNames (config.xdg.configFile or {});
