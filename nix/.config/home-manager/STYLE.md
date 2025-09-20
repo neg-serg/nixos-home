@@ -3,10 +3,9 @@
 See also: AGENTS.md for a short guide on helpers, activation aggregators, systemd presets, commit message format, and quick `just` commands.
 
 - with pkgs usage
-  - Localize `with pkgs;` right next to the list or group where it’s used.
-    - Good: `home.packages = with pkgs; [ foo bar ];`
-    - Good: `groups = with pkgs; { a = [foo]; b = [bar]; };`
-    - Avoid module-wide `with pkgs;` or leaking it across unrelated scopes.
+  - Prefer explicit `pkgs.*` items in lists (lint enforces: no `with pkgs; [ ... ]`).
+  - It’s acceptable to use `with pkgs;` for building local attrsets (e.g., `groups = with pkgs; { a = [foo]; b = [bar]; };`),
+    but avoid leaking it beyond the immediate scope.
 - Line width (~100 chars)
   - Target ~100 characters per line. This keeps diffs readable.
   - Keep end-of-line comments short; if they don't fit, move them above the line.
