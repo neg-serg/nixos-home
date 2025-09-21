@@ -10,8 +10,8 @@ mkIf config.features.gui.enable (let
 in lib.mkMerge [
   {
     home.packages = config.lib.neg.pkgsList [
-      pkgs.rofi-pass-wayland
-      rofiPkg
+      pkgs.rofi-pass-wayland # pass interface for rofi-wayland
+      rofiPkg # modern dmenu alternative with plugins
     ];
   }
   # Live-editable config via helper (guards parent dir and target)
@@ -20,4 +20,3 @@ in lib.mkMerge [
     recursive = true;
   })
 ])
-

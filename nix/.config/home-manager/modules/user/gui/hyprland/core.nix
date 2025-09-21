@@ -37,21 +37,21 @@ in mkIf config.features.gui.enable (lib.mkMerge [
         let
           groups = {
             core = [
-              pkgs.hyprcursor
-              pkgs.hypridle
-              pkgs.hyprpicker
-              pkgs.hyprpolkitagent
-              pkgs.hyprprop
-              pkgs.hyprutils
-              pkgs.pyprland
-              pkgs.upower
+              pkgs.hyprcursor # modern cursor theme format (replaces xcursor)
+              pkgs.hypridle # idle daemon
+              pkgs.hyprpicker # color picker
+              pkgs.hyprpolkitagent # polkit agent
+              pkgs.hyprprop # xprop-like tool for Hyprland
+              pkgs.hyprutils # core utils for Hyprland
+              pkgs.pyprland # Hyprland plugin system
+              pkgs.upower # power management daemon
             ];
             qt = [
-              pkgs.hyprland-qt-support
-              pkgs.hyprland-qtutils
-              pkgs.kdePackages.qt6ct
+              pkgs.hyprland-qt-support # Qt integration fixes
+              pkgs.hyprland-qtutils # Hyprland Qt helpers
+              pkgs.kdePackages.qt6ct # Qt6 config tool
             ];
-            tools = [ hyprWinList ];
+            tools = [ hyprWinList ]; # helper: list windows from Hyprctl JSON
           };
           flags = {
             core = true;
