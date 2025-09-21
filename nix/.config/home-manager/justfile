@@ -19,6 +19,17 @@ lint:
       grep -R -nE --include='*.nix' --exclude='flake/checks.nix' --exclude='checks.nix' 'targetPkgs[[:space:]]*=[[:space:]]*pkgs:[[:space:]]*with[[:space:]]+pkgs' . || true; \
       exit 1; \
     fi
+    # Guard: avoid mkdir/touch/rm in ExecStartPre/ExecStart within systemd units
+    # Prefer aggregated XDG fixups and mkLocalBin for wrappers.
+    if grep -R -nE --include='*.nix' --exclude='flake/checks.nix' --exclude='checks.nix' \
+         'Exec(Start|Stop)(Pre|Post)[[:space:]]*=.*(mkdir(\s+-p)?|install(\s+-d)?|touch|rm[[:space:]]+-rf?)' modules | \
+       grep -v 'modules/dev/cachix/default.nix' | grep -q .; then \
+      echo 'Found ExecStartPre/ExecStart with mkdir/touch/rm. Use XDG fixups or mkLocalBin.' >&2; \
+      grep -R -nE --include='*.nix' --exclude='flake/checks.nix' --exclude='checks.nix' \
+        'Exec(Start|Stop)(Pre|Post)[[:space:]]*=.*(mkdir(\s+-p)?|install(\s+-d)?|touch|rm[[:space:]]+-rf?)' modules \
+        | grep -v 'modules/dev/cachix/default.nix' || true; \
+      exit 1; \
+    fi
     # Guard: avoid `with pkgs.lib` — use explicit pkgs.lib.*
     if grep -R -nE --include='*.nix' --exclude='flake/checks.nix' --exclude='checks.nix' '\bwith[[:space:]]+pkgs\.lib\b' . | grep -q .; then \
       echo "Found discouraged pattern: avoid 'with pkgs.lib'; use explicit pkgs.lib.*" >&2; \
