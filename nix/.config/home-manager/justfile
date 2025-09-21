@@ -19,6 +19,18 @@ lint:
       grep -R -nE --include='*.nix' --exclude='flake/checks.nix' --exclude='checks.nix' 'targetPkgs[[:space:]]*=[[:space:]]*pkgs:[[:space:]]*with[[:space:]]+pkgs' . || true; \
       exit 1; \
     fi
+    # Guard: avoid `with pkgs.lib` — use explicit pkgs.lib.*
+    if grep -R -nE --include='*.nix' --exclude='flake/checks.nix' --exclude='checks.nix' '\bwith[[:space:]]+pkgs\.lib\b' . | grep -q .; then \
+      echo "Found discouraged pattern: avoid 'with pkgs.lib'; use explicit pkgs.lib.*" >&2; \
+      grep -R -nE --include='*.nix' --exclude='flake/checks.nix' --exclude='checks.nix' '\bwith[[:space:]]+pkgs\.lib\b' . || true; \
+      exit 1; \
+    fi
+    # Guard: avoid generic `with pkgs.<ns>` — prefer explicit pkgs.<ns>.<item>
+    if grep -R -nE --include='*.nix' --exclude='flake/checks.nix' --exclude='checks.nix' '\bwith[[:space:]]+pkgs\.[A-Za-z0-9_-]+' . | grep -v -E 'pkgs\.lib\b' | grep -q .; then \
+      echo "Found discouraged pattern: avoid 'with pkgs.<ns>'; reference explicit pkgs.<ns>.<item>" >&2; \
+      grep -R -nE --include='*.nix' --exclude='flake/checks.nix' --exclude='checks.nix' '\bwith[[:space:]]+pkgs\.[A-Za-z0-9_-]+' . | grep -v -E 'pkgs\.lib\b' || true; \
+      exit 1; \
+    fi
     if git ls-files -- '*.py' >/dev/null 2>&1; then \
       ruff check -- .; \
       black --check --line-length 100 --extend-exclude '(secrets/crypted|modules/user/gui/kitty/conf/tab_bar.py)' .; \
