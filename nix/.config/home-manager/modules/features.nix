@@ -176,8 +176,9 @@ in {
         prefs.fastfox.enable = mkForce false;
       };
     })
+    # When a parent feature is disabled, force-disable children to avoid priority conflicts
     (mkIf (! cfg.dev.enable) {
-      features.dev.ai.enable = mkDefault false;
+      features.dev.ai.enable = mkForce false;
     })
     (mkIf (! cfg.dev.haskell.enable) {
       # When Haskell tooling is disabled, proactively exclude common Haskell tool pnames
@@ -196,12 +197,10 @@ in {
         ];
     })
     (mkIf (! cfg.gui.enable) {
-      features.gui = {
-        qt.enable = mkDefault false;
-      };
+      features.gui.qt.enable = mkForce false;
     })
     (mkIf (! cfg.mail.enable) {
-      features.mail = {};
+      features.mail.vdirsyncer.enable = mkForce false;
     })
     (mkIf (! cfg.hack.enable) {
       features.hack = {};
