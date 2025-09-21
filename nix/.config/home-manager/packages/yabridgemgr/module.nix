@@ -101,8 +101,8 @@ with lib;
           Unit.Description = "Mount yabridge prefix";
           Service = {
             RuntimeDirectory = "yabridgemgr";
-            ExecStart = "${mount_prefix}/bin/mount_prefix";
-            ExecStop = "${umount_prefix}/bin/umount_prefix";
+            ExecStart = let exe = "${mount_prefix}/bin/mount_prefix"; in "${exe}";
+            ExecStop = let exe = "${umount_prefix}/bin/umount_prefix"; in "${exe}";
             RemainAfterExit = "yes";
           };
           Unit.ConditionUser = "${cfg.user}";
@@ -112,8 +112,8 @@ with lib;
           (lib.recursiveUpdate {
             Unit.Description = "yabridgectl sync";
             Service = {
-              ExecStart = "${pkgs.yabridgectl}/bin/yabridgectl sync";
-              ExecStartPre = "${pkgs.coreutils}/bin/sleep 5";
+              ExecStart = let exe = lib.getExe pkgs.yabridgectl; args = [ "sync" ]; in "${exe} ${lib.escapeShellArgs args}";
+              ExecStartPre = let exe = lib.getExe' pkgs.coreutils "sleep"; args = [ "5" ]; in "${exe} ${lib.escapeShellArgs args}";
               Environment = "NIX_PROFILES=/run/current-system/sw";
               RemainAfterExit = "yes";
             };
