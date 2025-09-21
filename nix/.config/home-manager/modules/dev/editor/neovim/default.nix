@@ -2,7 +2,11 @@
   config,
   pkgs,
   ...
-}: {
+}:
+let
+  xdg = import ../../../lib/xdg-helpers.nix { };
+in lib.mkMerge [
+  {
   home.packages = config.lib.neg.pkgsList [
     pkgs.bash-language-server # Bash LSP
     pkgs.neovim # Neovim editor
@@ -32,11 +36,10 @@
     extraLuaPackages = [ pkgs.luajitPackages.magick ];
     extraPackages = [pkgs.imagemagick];
   };
-  xdg.configFile = {
-    # █▓▒░ nvim ─────────────────────────────────────────────────────────────────────────
-    "nvim" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/nvim/.config/nvim";
-      recursive = true;
-    };
-  };
-}
+  }
+  # Live-editable config via helper (guards parent dir and target)
+  (xdg.mkXdgSource "nvim" {
+    source = config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/nvim/.config/nvim";
+    recursive = true;
+  })
+]
