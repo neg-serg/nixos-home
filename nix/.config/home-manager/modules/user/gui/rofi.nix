@@ -39,9 +39,9 @@ with lib;
          runtimeInputs = [ pkgs.gawk pkgs.gnused ];
          text = rendered;
        };
-     in {
-       home.file.".local/bin/rofi".source = "${rofiWrapper}/bin/rofi-wrapper";
-     })
+     in config.lib.neg.mkLocalBin "rofi" ''#!/usr/bin/env bash
+        set -euo pipefail
+        exec ${rofiWrapper}/bin/rofi-wrapper "$@"'')
     # Live-editable config via helper (guards parent dir and target)
     (xdg.mkXdgSource "rofi" {
       source = config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/nix/.config/home-manager/modules/user/gui/rofi/conf";

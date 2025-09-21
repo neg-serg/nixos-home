@@ -27,29 +27,11 @@ in lib.mkMerge [
   ];
   }
   # Replace ad-hoc ~/.local/bin files with guarded wrappers
-  {
-    home.activation.cleanBin_swayimg = config.lib.neg.mkEnsureAbsent "$HOME/.local/bin/swayimg";
-    home.file.".local/bin/swayimg" = {
-      executable = true;
-      text = ''#!/usr/bin/env bash
-        set -euo pipefail
-        exec ${swayimg-first}/bin/swayimg-first "$@"'';
-    };
-  }
-  {
-    home.activation.cleanBin_sx = config.lib.neg.mkEnsureAbsent "$HOME/.local/bin/sx";
-    home.file.".local/bin/sx" = {
-      executable = true;
-      text = (builtins.readFile ./sx.sh);
-    };
-  }
-  {
-    home.activation.cleanBin_sxivnc = config.lib.neg.mkEnsureAbsent "$HOME/.local/bin/sxivnc";
-    home.file.".local/bin/sxivnc" = {
-      executable = true;
-      text = (builtins.readFile ./sxivnc.sh);
-    };
-  }
+  (config.lib.neg.mkLocalBin "swayimg" ''#!/usr/bin/env bash
+    set -euo pipefail
+    exec ${swayimg-first}/bin/swayimg-first "$@"'')
+  (config.lib.neg.mkLocalBin "sx" (builtins.readFile ./sx.sh))
+  (config.lib.neg.mkLocalBin "sxivnc" (builtins.readFile ./sxivnc.sh))
   # Live-editable Swayimg config via helper (guards parent dir and target)
   (xdg.mkXdgSource "swayimg" {
     source = config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/nix/.config/home-manager/modules/media/images/swayimg/conf";

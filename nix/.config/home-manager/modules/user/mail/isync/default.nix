@@ -5,14 +5,12 @@
   ...
 }:
 with lib;
-  mkIf config.features.mail.enable (lib.mkMerge [
+  mkIf config.features.mail.enable (let xdg = import ../../../lib/xdg-helpers.nix { }; in lib.mkMerge [
     {
     # Install isync/mbsync and keep using the XDG config at ~/.config/isync/mbsyncrc
     programs.mbsync.enable = true;
 
-    # Inline mbsyncrc under XDG with automatic guards via helper
-    # (ensures parent dir is real and removes stale file/symlink)
-    xdg.configFile."isync/mbsyncrc".text = builtins.readFile ./mbsyncrc;
+    # Inline mbsyncrc under XDG with helper (guards parent and target)
 
     # Optional: ensure the binary is present even if HM changes defaults
     # Also provide a non-blocking trigger to start sync in background
@@ -53,4 +51,5 @@ with lib;
         (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["timers"]; })
       ];
     }
+    (xdg.mkXdgText "isync/mbsyncrc" (builtins.readFile ./mbsyncrc))
   ])
