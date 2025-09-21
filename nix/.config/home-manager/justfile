@@ -46,6 +46,16 @@ lint:
       ruff check -- .; \
       black --check --line-length 100 --extend-exclude '(secrets/crypted|modules/user/gui/kitty/conf/tab_bar.py)' .; \
     fi
+    # Optional guard: prefer `let exe = lib.getExe' pkgs.pkg "bin"; in "${exe} …"` over direct ${pkgs.*}/bin paths
+    # Enable with: EXECSTART_GUARD=1 just lint
+    if [ "${EXECSTART_GUARD:-}" = "1" ]; then \
+      if grep -R -nE --include='*.nix' 'ExecStart\s*=\s*".*\$\{pkgs\.[^}]+\}/bin/' modules | grep -q .; then \
+        echo 'Found ExecStart using direct ${pkgs.*}/bin path. Prefer:' >&2; \
+        echo '  let exe = lib.getExe'"'"' pkgs.<pkg> "<bin>"; in "${exe} …"' >&2; \
+        grep -R -nE --include='*.nix' 'ExecStart\s*=\s*".*\$\{pkgs\.[^}]+\}/bin/' modules || true; \
+        exit 1; \
+      fi; \
+    fi
     # Shellcheck opt-in: check only files that declare a POSIX/Bash shebang
     git ls-files -z -- '*.sh' '*.bash' 2>/dev/null \
       | xargs -0 -r grep -lZ -m1 -E '^#!\s*/(usr/)?bin/(env\s+)?(ba)?sh' \
