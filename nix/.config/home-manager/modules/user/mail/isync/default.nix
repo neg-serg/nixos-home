@@ -34,7 +34,8 @@ with lib;
           Service = {
             Type = "simple";
             TimeoutStartSec = "30min";
-            ExecStart = let exe = lib.getExe pkgs.isync; in ''${exe} -Va -c %h/.config/isync/mbsyncrc'';
+            # Keep %h unquoted to let systemd expand it; avoid escapeShellArgs here.
+            ExecStart = let exe = lib.getExe pkgs.isync; args = [ "-Va" "-c" "%h/.config/isync/mbsyncrc" ]; in lib.concatStringsSep " " ([ exe ] ++ args);
           };
         }
         (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["netOnline"]; })
