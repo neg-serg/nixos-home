@@ -30,8 +30,6 @@ in lib.mkMerge [
   (config.lib.neg.mkLocalBin "swayimg" ''#!/usr/bin/env bash
     set -euo pipefail
     exec ${swayimg-first}/bin/swayimg-first "$@"'')
-  (config.lib.neg.mkLocalBin "sx" (builtins.readFile ./sx.sh))
-  (config.lib.neg.mkLocalBin "sxivnc" (builtins.readFile ./sxivnc.sh))
   # Live-editable Swayimg config via helper (guards parent dir and target)
   (xdg.mkXdgSource "swayimg" {
     source = config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/nix/.config/home-manager/modules/media/images/swayimg/conf";
