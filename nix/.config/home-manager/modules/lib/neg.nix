@@ -324,7 +324,7 @@
     # Ensure multiple directories exist before linkGeneration and are real dirs (not symlinks)
     # For each path: if path is a symlink, remove it, then mkdir -p path
     mkEnsureRealDirsMany = paths: let
-      quoted = lib.concatStringsSep " " (map (p: "\"" + p + "\"") paths);
+      quoted = lib.concatStringsSep " " (map (p: ''"'' + p + ''"'') paths);
     in
       lib.hm.dag.entryBefore ["linkGeneration"] ''
         set -eu
@@ -347,7 +347,7 @@
     # Ensure directories exist after HM writes files
     # Useful for app runtime dirs that must be present before services start.
     mkEnsureDirsAfterWrite = paths: let
-      quoted = lib.concatStringsSep " " (map (p: "\"" + p + "\"") paths);
+      quoted = lib.concatStringsSep " " (map (p: ''"'' + p + ''"'') paths);
     in
       lib.hm.dag.entryAfter ["writeBoundary"] ''
         set -eu
@@ -365,7 +365,7 @@
       preserveConfigPatterns ? [],
     }:
       let
-        q = s: "\"" + s + "\"";
+        q = s: ''"'' + s + ''"'';
         join = xs: lib.concatStringsSep " " (map q xs);
         patterns = preserveConfigPatterns;
         patJoined = lib.concatMapStringsSep "|" (p: p) patterns;
@@ -410,7 +410,7 @@
       caches ? [],
     }:
       let
-        q = s: "\"" + s + "\"";
+        q = s: ''"'' + s + ''"'';
         join = xs: lib.concatStringsSep " " (map q xs);
       in lib.hm.dag.entryBefore ["linkGeneration"] ''
         set -eu

@@ -6,7 +6,7 @@ _: {
       manager = {show_hidden = true;};
       opener.edit = [
         {
-          run = "nvim \"$@\"";
+          run = ''nvim "$@"'';
           block = true;
         }
       ];
@@ -35,7 +35,7 @@ _: {
         }
         {
           on = ["f"];
-          run = "shell \"$SHELL\" --block";
+          run = ''shell "$SHELL" --block'';
           desc = "Open $SHELL here";
         }
       ];
