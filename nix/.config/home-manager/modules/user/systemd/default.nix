@@ -22,7 +22,11 @@ lib.mkMerge [
               {
                 Unit.Description = "Quickshell Wayland shell";
                 Service = {
-                  ExecStart = let exe = lib.getExe' pkgs.quickshell "qs"; in "${exe}";
+                  ExecStart = let
+                    wrapped = (config.neg.quickshell.wrapperPackage or null);
+                    pkg = if wrapped != null then wrapped else pkgs.quickshell;
+                    exe = lib.getExe' pkg "qs";
+                  in "${exe}";
                   Environment = ["RUST_LOG=info,quickshell.dbus.properties=error"];
                   Restart = "on-failure";
                   RestartSec = "1";

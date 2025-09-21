@@ -526,4 +526,14 @@
     description = "Path to the root of the user's dotfiles repository.";
     example = "/home/neg/.cfg";
   };
+
+  # Optional integration points for modules under the 'neg' namespace
+  options.neg.quickshell = {
+    wrapperPackage = lib.mkOption {
+      type = lib.types.nullOr lib.types.package;
+      default = null;
+      description = "Wrapped quickshell package (provides 'qs') with required QT/QML env prefixes.";
+      example = "pkgs.callPackage ./path/to/wrapper.nix {}";
+    };
+  };
 }
