@@ -18,7 +18,7 @@ lib.mkMerge [
       systemd.user.services =
         (lib.mkIf ((config.features.gui.qt.enable or false) && (! (config.features.devSpeed.enable or false))) {
           quickshell =
-            lib.recursiveUpdate
+            lib.mkMerge [
               {
                 Unit.Description = "Quickshell Wayland shell";
                 Service = {
@@ -29,12 +29,13 @@ lib.mkMerge [
                   Slice = "background-graphical.slice";
                 };
               }
-              (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["graphical"]; });
+              (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["graphical"]; })
+            ];
         })
         // {
           # Pyprland daemon (Hyprland helper)
           pyprland =
-            lib.recursiveUpdate
+            lib.mkMerge [
               {
                 Unit.Description = "Pyprland daemon for Hyprland";
                 Service = {
@@ -45,11 +46,12 @@ lib.mkMerge [
                   Slice = "background-graphical.slice";
                 };
               }
-              (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["graphical"]; });
+              (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["graphical"]; })
+            ];
 
           # Pic dirs notifier
           "pic-dirs" =
-            lib.recursiveUpdate
+            lib.mkMerge [
               {
                 Unit = { Description = "Pic dirs notification"; StartLimitIntervalSec = "0"; };
                 Service = {
@@ -59,11 +61,12 @@ lib.mkMerge [
                   RestartSec = "1";
                 };
               }
-              (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["defaultWanted"]; });
+              (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["defaultWanted"]; })
+            ];
 
           # OpenRGB daemon
           openrgb =
-            lib.recursiveUpdate
+            lib.mkMerge [
               {
                 Unit = {
                   Description = "OpenRGB daemon with profile";
@@ -77,7 +80,8 @@ lib.mkMerge [
               }
               (config.lib.neg.systemdUser.mkUnitFromPresets {
                 presets = ["dbusSocket" "defaultWanted"];
-              });
+              })
+            ];
         };
     }))
 ]
