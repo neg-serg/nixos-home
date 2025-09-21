@@ -146,7 +146,7 @@
       "4k60" = {
         # 2160p @ 60fps (3840x2160 UHDTV)
         profile-desc = "4k60";
-        profile-cond = "((width ==3840 and height ==2160) and p[\"estimated-vf-fps\"]>=31)";
+        profile-cond = ''((width ==3840 and height ==2160) and p["estimated-vf-fps"]>=31)'';
         # deband=yes # necessary to avoid blue screen with KrigBilateral.glsl
         deband = false; # turn off debanding because presume wide color gamut
         interpolation = false; # turn off interpolation because presume 60fps
@@ -159,7 +159,7 @@
       "4k30" = {
         # 2160p @ 24-30fps (3840x2160 UHDTV)
         profile-desc = "4k30";
-        profile-cond = "((width ==3840 and height ==2160) and p[\"estimated-vf-fps\"]<31)";
+        profile-cond = ''((width ==3840 and height ==2160) and p["estimated-vf-fps"]<31)'';
         # deband=yes # necessary to avoid blue screen with KrigBilateral.glsl
         deband = false; # turn off debanding because presume wide color gamut
         # UHD videos are already 4K so no luma upscaling is needed
@@ -171,7 +171,7 @@
       "full-hd60" = {
         # 1080p @ 60fps (progressive ATSC)
         profile-desc = "full-hd60";
-        profile-cond = "((width ==1920 and height ==1080) and not p[\"video-frame-info/interlaced\"] and p[\"estimated-vf-fps\"]>=31)";
+        profile-cond = ''((width ==1920 and height ==1080) and not p["video-frame-info/interlaced"] and p["estimated-vf-fps"]>=31)'';
         # apply all luma and chroma upscaling and downscaling settings
         interpolation = false; # no motion interpolation required because 60fps is hardware ceiling
       };
@@ -179,7 +179,7 @@
       "full-hd30" = {
         # 1080p @ 24-30fps (NextGen TV/ATSC 3.0, progressive Blu-ray)
         profile-desc = "full-hd30";
-        profile-cond = "((width ==1920 and height ==1080) and not p[\"video-frame-info/interlaced\"] and p[\"estimated-vf-fps\"]<31)";
+        profile-cond = ''((width ==1920 and height ==1080) and not p["video-frame-info/interlaced"] and p["estimated-vf-fps"]<31)'';
         # apply all luma and chroma upscaling and downscaling settings
         interpolation = false; # no motion interpolation required because 60fps is hardware ceiling
       };
