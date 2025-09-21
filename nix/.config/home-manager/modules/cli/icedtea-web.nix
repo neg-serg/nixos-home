@@ -6,7 +6,9 @@ lib.mkIf config.features.cli.icedteaWeb.enable (
       home.packages =
         config.lib.neg.pkgsList (
           let
-            groups = { iced = lib.optionals (pkgs ? icedtea-web) [ pkgs.icedtea-web ]; };
+            groups = {
+              iced = lib.optionals (pkgs ? icedtea-web) [ pkgs.icedtea-web ]; # Java Web Start (IcedTea-Web)
+            };
             flags = { iced = (pkgs ? icedtea-web); };
           in config.lib.neg.mkEnabledList flags groups
         );

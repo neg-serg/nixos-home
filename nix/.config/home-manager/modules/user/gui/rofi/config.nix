@@ -3,8 +3,8 @@ with lib;
 mkIf config.features.gui.enable (let
   rofiPkg = pkgs.rofi.override {
     plugins = [
-      pkgs.rofi-file-browser
-      pkgs.neg.rofi_games
+      pkgs.rofi-file-browser # file browser mode for rofi
+      pkgs.neg.rofi_games # custom games menu plugin
     ];
   };
 in lib.mkMerge [

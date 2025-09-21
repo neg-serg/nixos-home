@@ -35,17 +35,17 @@
     # Haskell toolchain and related tools
     haskell =
       [
-        pkgs.ghc
-        pkgs.cabal-install
-        pkgs.stack
-        pkgs.haskell-language-server
-        pkgs.hlint
-        pkgs.ormolu
-        pkgs.ghcid
+        pkgs.ghc # Haskell compiler
+        pkgs.cabal-install # Haskell package/build tool
+        pkgs.stack # alternative Haskell build tool
+        pkgs.haskell-language-server # Haskell LSP for IDEs
+        pkgs.hlint # Haskell linter
+        pkgs.ormolu # Haskell formatter
+        pkgs.ghcid # fast GHCi-based reloader
       ]
       # Some Haskell tools may be unavailable on a given nixpkgs pin — include conditionally.
-      ++ (lib.optionals (pkgs ? fourmolu) [ pkgs.fourmolu ])
-      ++ (lib.optionals (pkgs ? hindent) [ pkgs.hindent ]);
+      ++ (lib.optionals (pkgs ? fourmolu) [ pkgs.fourmolu ]) # alt formatter
+      ++ (lib.optionals (pkgs ? hindent) [ pkgs.hindent ]); # alt formatter
 
     # IaC backend package (Terraform or OpenTofu) controlled by
     # features.dev.iac.backend (default: "terraform").
@@ -55,7 +55,10 @@
         if backend == "tofu"
         then pkgs.opentofu
         else pkgs.terraform;
-    in [main pkgs.ansible];
+    in [
+      main # IaC backend (Terraform/OpenTofu)
+      pkgs.ansible # configuration management tool
+    ];
   };
 in
   lib.mkIf config.features.dev.enable {

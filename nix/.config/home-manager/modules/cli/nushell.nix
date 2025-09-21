@@ -2,7 +2,9 @@
 lib.mkMerge [
   {
     # Ensure Nushell is available
-    home.packages = config.lib.neg.pkgsList [pkgs.nushell];
+    home.packages = config.lib.neg.pkgsList [
+      pkgs.nushell # modern, structured shell
+    ];
   }
   # Live-editable config via helper (guards parent dir and target)
   (xdg.mkXdgSource "nushell" {

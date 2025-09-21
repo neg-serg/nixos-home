@@ -62,16 +62,19 @@ with lib;
       plugins = mkOption {
         type = types.listOf types.package;
         default = [
-          self.packages.${system}.wine-valhalla
-          self.packages.${system}.wine-voxengo-span
-          self.packages.${system}.wine-midichordanalyzer
+          self.packages.${system}.wine-valhalla # Valhalla Supermassive (VST)
+          self.packages.${system}.wine-voxengo-span # Voxengo SPAN analyzer (VST)
+          self.packages.${system}.wine-midichordanalyzer # MIDI chord analyzer (VST)
         ];
         description = "Plugin packages to install";
       };
     };
 
     config = mkIf cfg.enable {
-      environment.systemPackages = [ pkgs.yabridge pkgs.yabridgectl ];
+      environment.systemPackages = [
+        pkgs.yabridge # Windows VST bridge for Linux hosts
+        pkgs.yabridgectl # CLI to manage/sync bridged plugins
+      ];
       systemd.user.tmpfiles.users."${cfg.user}".rules = let
         userHome = config.users.users.${cfg.user}.home;
         ybcfg = pkgs.writeText "yabridgecfg" ''

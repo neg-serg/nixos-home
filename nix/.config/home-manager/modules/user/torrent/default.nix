@@ -31,10 +31,10 @@ in lib.mkIf config.features.torrent.enable (lib.mkMerge [
 
   # Core torrent tools (migration helpers removed)
   home.packages = config.lib.neg.pkgsList [
-    transmissionPkg
-    pkgs.bitmagnet
-    pkgs.neg.bt_migrate
-    pkgs.rustmission
+    transmissionPkg # Transmission 4 BitTorrent client
+    pkgs.bitmagnet # BitTorrent DHT crawler/search (CLI)
+    pkgs.neg.bt_migrate # migrate legacy torrent data/config
+    pkgs.rustmission # transmission-remote replacement (Rust CLI)
   ];
 
   # Preserve user symlinks for Transmission config (history/resume). Do not
