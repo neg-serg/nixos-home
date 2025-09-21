@@ -20,6 +20,6 @@
             --add-flags "--qt-flag enable-features=VaapiVideoDecoder,VaapiVideoEncoder" \
             --add-flags "--qt-flag disable-features=UseChromeOSDirectVideoDecoder"
         '';
-    }))
+    })) # Qutebrowser with Wayland/Vulkan flags
   ];
 }

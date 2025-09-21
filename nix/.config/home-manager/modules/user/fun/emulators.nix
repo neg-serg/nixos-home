@@ -18,8 +18,8 @@ with lib; {
         pkgs.pcsx2 # ps2 emulator
       ] ++ (
         if config.features.emulators.retroarch.full
-        then [pkgs.retroarchFull]
-        else [pkgs.retroarch]
+        then [ pkgs.retroarchFull ] # RetroArch with full core set
+        else [ pkgs.retroarch ] # RetroArch with free cores only
       )
     ); # frontend (full|free cores)
   };

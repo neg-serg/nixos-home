@@ -1,10 +1,13 @@
 { lib, pkgs, config, qsProvider ? null, ... }:
 with lib; let
-  qsPath = pkgs.lib.makeBinPath [ pkgs.fd pkgs.coreutils ];
+  qsPath = pkgs.lib.makeBinPath [
+    pkgs.fd # fast file finder (used by scripts)
+    pkgs.coreutils # basic UNIX tools for PATH
+  ];
   qsBin = let qs = if qsProvider != null then (qsProvider pkgs) else pkgs.emptyFile; in lib.getExe' qs "qs";
   quickshellWrapped = pkgs.stdenv.mkDerivation {
     name = "quickshell-wrapped";
-    buildInputs = [ pkgs.makeWrapper ];
+    buildInputs = [ pkgs.makeWrapper ]; # for makeWrapper helper
     dontUnpack = true;
     installPhase = ''
       mkdir -p $out/bin

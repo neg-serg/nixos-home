@@ -2,8 +2,8 @@
 {
   programs.neovim = {
     plugins = [
-      pkgs.vimPlugins.clangd_extensions-nvim
-      pkgs.vimPlugins.nvim-treesitter
+      pkgs.vimPlugins.clangd_extensions-nvim # extra clangd LSP features (inlay hints, etc.)
+      pkgs.vimPlugins.nvim-treesitter # incremental parsing/highlighting
     ];
     extraLuaConfig = ''
       -- put parsers in a writable dir and ensure it is early on rtp
@@ -16,7 +16,7 @@
       vim.opt.runtimepath:prepend(parser_dir)
       vim.g.ts_install_dir = parser_dir
     '';
-    extraLuaPackages = [ pkgs.luajitPackages.magick ];
-    extraPackages = [ pkgs.imagemagick ];
+    extraLuaPackages = [ pkgs.luajitPackages.magick ]; # LuaJIT bindings for ImageMagick
+    extraPackages = [ pkgs.imagemagick ]; # external tool used by some plugins
   };
 }

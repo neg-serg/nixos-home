@@ -32,8 +32,12 @@ in {
         config.lib.neg.pkgsList (
           let
             groups = {
-              core = [ pkgs.passff-host ];
-              yandex = lib.optionals (yandexBrowser != null) [ yandexBrowser.yandex-browser-stable ];
+              core = [
+                pkgs.passff-host # native host for PassFF extension
+              ];
+              yandex = lib.optionals (yandexBrowser != null) [
+                yandexBrowser.yandex-browser-stable # Yandex Browser (proprietary)
+              ];
             };
             flags = {
               core = true;

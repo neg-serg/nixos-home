@@ -10,7 +10,10 @@ with lib; let
   useNurAddons = config.features.web.addonsFromNUR.enable or false;
   fa = if useNurAddons && faProvider != null then faProvider pkgs else null;
   addons = if fa != null then config.lib.neg.browserAddons fa else { common = []; };
-  nativeMessagingHosts = [ pkgs.pywalfox-native pkgs.tridactyl-native ];
+  nativeMessagingHosts = [
+    pkgs.pywalfox-native # native host for Pywalfox (theme colors)
+    pkgs.tridactyl-native # native host for Tridactyl extension
+  ];
 
   baseSettings = {
     # Locale/region

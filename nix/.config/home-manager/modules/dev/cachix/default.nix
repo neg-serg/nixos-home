@@ -61,7 +61,9 @@ in {
 
   config = lib.mkIf config.features.dev.enable (lib.mkMerge [
     {
-    home.packages = lib.mkIf (cfg.enable || cfg.ownCache.enable) [pkgs.cachix];
+    home.packages = lib.mkIf (cfg.enable || cfg.ownCache.enable) [
+      pkgs.cachix # binary cache hosting/CLI
+    ];
 
     nix.settings = lib.mkIf cfg.ownCache.enable {
       substituters = [("https://" + cfg.ownCache.name + ".cachix.org")];

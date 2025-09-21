@@ -8,9 +8,14 @@ lib.mkIf config.features.media.audio.core.enable (
   {
     home.packages = config.lib.neg.pkgsList [
       # utils
-      pkgs.alsa-utils pkgs.coppwr pkgs.pw-volume pkgs.pwvucontrol
+      pkgs.alsa-utils # ALSA CLI utilities (amixer, aplay)
+      pkgs.coppwr # PipeWire/Audio helper (misc utilities)
+      pkgs.pw-volume # PipeWire volume control CLI
+      pkgs.pwvucontrol # PipeWire volume control GUI
       # routers
-      pkgs.helvum pkgs.qpwgraph pkgs.open-music-kontrollers.patchmatrix
+      pkgs.helvum # GTK patchbay for PipeWire
+      pkgs.qpwgraph # Qt patchbay for PipeWire
+      pkgs.open-music-kontrollers.patchmatrix # JACK/PipeWire patchbay
     ];
   }
 )

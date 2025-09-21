@@ -2,7 +2,12 @@
 with lib; let
   hyprWinList = pkgs.writeShellApplication {
     name = "hypr-win-list";
-    runtimeInputs = [ pkgs.jq pkgs.gawk pkgs.coreutils pkgs.gnused ];
+    runtimeInputs = [
+      pkgs.jq # JSON parsing for hyprctl output
+      pkgs.gawk # awk for text filtering/formatting
+      pkgs.coreutils # standard UNIX utilities
+      pkgs.gnused # GNU sed for stream editing
+    ];
     text = let tpl = builtins.readFile ../hypr/hypr-win-list.sh;
            in lib.replaceStrings ["@HYPRCTL@"] [ (lib.getExe' pkgs.hyprland "hyprctl") ] tpl;
   };

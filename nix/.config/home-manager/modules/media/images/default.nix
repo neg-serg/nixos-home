@@ -13,23 +13,48 @@ in lib.mkMerge [
   {
   home.packages = config.lib.neg.pkgsList [
     # metadata
-    pkgs.exiftool pkgs.exiv2 pkgs.mediainfo
+    pkgs.exiftool # read/write EXIF metadata
+    pkgs.exiv2 # manage image metadata (EXIF/IPTC/XMP)
+    pkgs.mediainfo # show media file metadata (audio/video/images)
     # editors
-    pkgs.gimp pkgs.rawtherapee pkgs.graphviz
+    pkgs.gimp # raster image editor
+    pkgs.rawtherapee # RAW photo editor
+    pkgs.graphviz # graph visualization (render dot files)
     # optimizers
-    pkgs.jpegoptim pkgs.optipng pkgs.pngquant pkgs.advancecomp pkgs.scour
+    pkgs.jpegoptim # optimize/compress JPEG files
+    pkgs.optipng # optimize PNG files
+    pkgs.pngquant # lossy PNG compression/quantization
+    pkgs.advancecomp # recompress ZIP/PNG streams
+    pkgs.scour # optimize/clean SVG files
     # color
-    pkgs.pastel pkgs.lutgen
+    pkgs.pastel # color utilities (picker, convert, mix)
+    pkgs.lutgen # generate LUTs and color gradients
     # qr
-    pkgs.qrencode pkgs.zbar
+    pkgs.qrencode # generate QR codes
+    pkgs.zbar # scan/read barcodes and QR codes
     # viewers
-    pkgs.swayimg swayimg-first pkgs.viu
+    pkgs.swayimg # Wayland image viewer
+    swayimg-first # wrapper: open and jump to first image
+    pkgs.viu # terminal image viewer
   ];
   }
   # Replace ad-hoc ~/.local/bin files with guarded wrappers
-  (config.lib.neg.mkLocalBin "swayimg" ''#!/usr/bin/env bash
-    set -euo pipefail
-    exec ${swayimg-first}/bin/swayimg-first "$@"'')
+  {
+    # Inline mkLocalBin equivalent to avoid early config.lib recursion during hm‑eval
+    home.activation.cleanBin_swayimg = lib.hm.dag.entryBefore ["linkGeneration"] ''
+      set -eu
+      p="$HOME/.local/bin/swayimg"
+      if [ -e "$p" ] && [ ! -L "$p" ]; then
+        if [ -d "$p" ]; then rm -rf "$p"; else rm -f "$p"; fi
+      fi
+    '';
+    home.file.".local/bin/swayimg" = {
+      executable = true;
+      text = ''#!/usr/bin/env bash
+        set -euo pipefail
+        exec ${swayimg-first}/bin/swayimg-first "$@"'';
+    };
+  }
   # Live-editable Swayimg config via helper (guards parent dir and target)
   (xdg.mkXdgSource "swayimg" {
     source = config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/nix/.config/home-manager/modules/media/images/swayimg/conf";
