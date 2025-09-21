@@ -61,11 +61,24 @@ This repo is configured for Home Manager + flakes with a small set of helpers to
         (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["timers"]; })
       ];
       ```
-  - Soft migrations (warnings):
-    - Prefer `{ warnings = lib.optional cond "message"; }` to emit non‑fatal guidance.
-    - Avoid referencing `config.lib.neg` in warnings to keep option evaluation acyclic.
-    - Example (MPD path change):
-      `{ warnings = lib.optional (config.services.mpd.enable or false) "MPD dataDir moved to $XDG_STATE_HOME/mpd; consider migrating from ~/.config/mpd."; }`
+- Soft migrations (warnings):
+  - Prefer `{ warnings = lib.optional cond "message"; }` to emit non‑fatal guidance.
+  - Avoid referencing `config.lib.neg` in warnings to keep option evaluation acyclic.
+  - Example (MPD path change):
+    `{ warnings = lib.optional (config.services.mpd.enable or false) "MPD dataDir moved to $XDG_STATE_HOME/mpd; consider migrating from ~/.config/mpd."; }`
+  - Template and tips:
+    - Keep conditions cheap to evaluate (avoid invoking helpers from `config.lib.neg`).
+    - Phrase messages with clear destination and rationale (XDG compliance, less activation noise, etc.).
+    - Example:
+      ``
+      (let
+        old = "${config.home.homeDirectory}/.config/app";
+        target = "${config.xdg.stateHome}/app";
+        needsMigration = (cfg.enable or false) && ((cfg.dataDir or old) == old);
+      in {
+        warnings = lib.optional needsMigration "App dataDir uses ~/.config/app. Migrate to $XDG_STATE_HOME/app (" + target + ") for XDG compliance.";
+      })
+      ```
 
 ## App Notes
 
