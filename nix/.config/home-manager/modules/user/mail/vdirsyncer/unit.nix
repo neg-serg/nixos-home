@@ -6,11 +6,10 @@ mkIf (config.features.mail.enable && config.features.mail.vdirsyncer.enable) {
       Unit = { Description = "Vdirsyncer synchronization service"; };
       Service = {
         Type = "oneshot";
-        ExecStartPre = let exe = lib.getExe pkgs.vdirsyncer; in "${exe} metasync";
-        ExecStart = let exe = lib.getExe pkgs.vdirsyncer; in "${exe} sync";
+        ExecStartPre = let exe = lib.getExe pkgs.vdirsyncer; args = [ "metasync" ]; in "${exe} ${lib.escapeShellArgs args}";
+        ExecStart = let exe = lib.getExe pkgs.vdirsyncer; args = [ "sync" ]; in "${exe} ${lib.escapeShellArgs args}";
       };
     }
     (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["netOnline"]; })
   ];
 }
-
