@@ -1,14 +1,13 @@
 { config, pkgs, ... }:
 {
   home.packages = config.lib.neg.pkgsList [
-    pkgs.bash-language-server
-    pkgs.neovim
-    pkgs.neovim-remote
-    pkgs.nil
-    pkgs.pylyzer
-    pkgs.pyright
-    pkgs.ruff
-    pkgs.rust-analyzer
+    pkgs.bash-language-server # Bash LSP
+    pkgs.neovim # Neovim editor
+    pkgs.neovim-remote # nvr (remote control for Neovim)
+    pkgs.nil # Nix language server
+    pkgs.pylyzer # Python type checker
+    pkgs.pyright # Python LSP
+    pkgs.ruff # Python linter
+    pkgs.rust-analyzer # Rust LSP
   ];
 }
-

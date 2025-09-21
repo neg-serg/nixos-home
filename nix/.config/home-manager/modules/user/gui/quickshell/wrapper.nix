@@ -22,6 +22,5 @@ with lib; let
   };
 in
 mkIf (config.features.gui.enable && (config.features.gui.qt.enable or false) && (! (config.features.devSpeed.enable or false))) {
-  home.packages = [ quickshellWrapped ];
+  home.packages = [ quickshellWrapped ]; # quickshell wrapper with required env paths
 }
-

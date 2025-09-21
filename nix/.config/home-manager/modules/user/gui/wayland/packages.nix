@@ -5,19 +5,19 @@ mkIf config.features.gui.enable (
     devSpeed = config.features.devSpeed.enable or false;
     groups = {
       core = [
-        pkgs.dragon-drop
-        pkgs.gowall
-        pkgs.grimblast
-        pkgs.grim
-        pkgs.slurp
-        pkgs.swww
-        pkgs.waybar
-        pkgs.waypipe
-        pkgs.wev
-        pkgs.wf-recorder
-        pkgs.wl-clipboard
-        pkgs.wl-clip-persist
-        pkgs.wtype
+        pkgs.dragon-drop # drag-n-drop from console
+        pkgs.gowall # generate palette from wallpaper
+        pkgs.grimblast # Hyprland screenshot helper
+        pkgs.grim # take Wayland screenshots
+        pkgs.slurp # select region in Wayland compositor
+        pkgs.swww # Wayland wallpaper daemon
+        pkgs.waybar # Wayland status bar
+        pkgs.waypipe # Wayland remoting (ssh -X like)
+        pkgs.wev # xev for Wayland
+        pkgs.wf-recorder # screen recording
+        pkgs.wl-clipboard # copy/paste for Wayland
+        pkgs.wl-clip-persist # persist clipboard across app exits
+        pkgs.wtype # fake typing for Wayland
       ];
       extras = lib.optionals (! devSpeed && (iwmenuProvider != null)) [ (iwmenuProvider pkgs) ];
     };
@@ -26,4 +26,3 @@ mkIf config.features.gui.enable (
     home.packages = config.lib.neg.pkgsList (config.lib.neg.mkEnabledList flags groups);
   }
 )
-
