@@ -34,7 +34,7 @@ with lib;
           Service = {
             Type = "simple";
             TimeoutStartSec = "30min";
-            ExecStart = ''${pkgs.isync}/bin/mbsync -Va -c %h/.config/isync/mbsyncrc'';
+            ExecStart = let exe = lib.getExe pkgs.isync; in ''${exe} -Va -c %h/.config/isync/mbsyncrc'';
           };
         }
         (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["netOnline"]; })

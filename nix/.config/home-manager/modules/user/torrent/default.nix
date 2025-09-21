@@ -53,11 +53,13 @@ in lib.mkIf config.features.torrent.enable (lib.mkMerge [
       };
       Service = {
         Type = "simple";
-        ExecStart = "${lib.getExe' transmissionPkg "transmission-daemon"} -g ${confDirNew} -f --log-level=error";
+        ExecStart = let exe = lib.getExe' transmissionPkg "transmission-daemon";
+                        args = [ "-g" confDirNew "-f" "--log-level=error" ];
+                    in "${exe} ${lib.escapeShellArgs args}";
         Restart = "on-failure";
         RestartSec = "30";
         StartLimitBurst = "8";
-        ExecReload = "${lib.getExe' pkgs.util-linux "kill"} -s HUP $MAINPID";
+        ExecReload = let kill = lib.getExe' pkgs.util-linux "kill"; in "${kill} -s HUP $MAINPID";
       };
     }
     (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["net" "defaultWanted"]; })
