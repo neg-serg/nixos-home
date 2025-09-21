@@ -3,7 +3,7 @@
     ./apps.nix
     ./audio
     ./images
-    ./mpv.nix
+    ./mpv
     ./pipewire.nix
     ./playerctld.nix
   ];
