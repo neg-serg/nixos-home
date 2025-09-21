@@ -27,7 +27,7 @@
           {
             Unit = { Description = "mpdas last.fm scrobbler"; };
             Service = {
-              ExecStart = "${pkgs.mpdas}/bin/mpdas -c ${config.sops.secrets.mpdas_negrc.path}";
+              ExecStart = let exe = lib.getExe pkgs.mpdas; args = [ "-c" config.sops.secrets.mpdas_negrc.path ]; in "${exe} ${lib.escapeShellArgs args}";
               Restart = "on-failure";
               RestartSec = "10";
             };

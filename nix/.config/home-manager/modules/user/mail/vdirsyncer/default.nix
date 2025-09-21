@@ -22,8 +22,8 @@ with lib;
           Unit = { Description = "Vdirsyncer synchronization service"; };
           Service = {
             Type = "oneshot";
-            ExecStartPre = "${lib.getExe pkgs.vdirsyncer} metasync";
-            ExecStart = "${lib.getExe pkgs.vdirsyncer} sync";
+            ExecStartPre = let exe = lib.getExe pkgs.vdirsyncer; in "${exe} metasync";
+            ExecStart = let exe = lib.getExe pkgs.vdirsyncer; in "${exe} sync";
           };
         }
         (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["netOnline"]; })

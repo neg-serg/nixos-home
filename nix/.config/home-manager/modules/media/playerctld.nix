@@ -6,7 +6,7 @@ mkIf (config.features.media.audio.apps.enable or false) {
       Unit = { Description = "Keep track of media player activity"; };
       Service = {
         Type = "oneshot";
-        ExecStart = "${lib.getExe' pkgs.playerctl "playerctld"} daemon";
+        ExecStart = let exe = lib.getExe' pkgs.playerctl "playerctld"; in "${exe} daemon";
       };
     }
     (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["defaultWanted"]; })
