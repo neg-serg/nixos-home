@@ -62,10 +62,10 @@
           lockFile = "${blissify-rs-src}/Cargo.lock";
         };
 
-        meta = with pkgs.lib; {
+        meta = {
           description = "Automatic playlist generator written in Rust";
           homepage = "https://github.com/Polochon-street/blissify-rs";
-          license = licenses.mit;
+          license = pkgs.lib.licenses.mit;
         };
       };
     in {

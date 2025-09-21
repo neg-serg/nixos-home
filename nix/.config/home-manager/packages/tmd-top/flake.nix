@@ -71,12 +71,12 @@
             ])
           ];
 
-          meta = with pkgs.lib; {
+          meta = {
             description = "Linux network traffic TUI analyzer (per-connection)";
             homepage = "https://gitee.com/Davin168/tmd-top";
-            license = licenses.mit;
+            license = pkgs.lib.licenses.mit;
             mainProgram = "tmd-top";
-            platforms = platforms.linux;
+            platforms = pkgs.lib.platforms.linux;
           };
         };
       in {
