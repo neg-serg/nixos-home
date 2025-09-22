@@ -89,11 +89,10 @@ in {
               ExecStartPre = lib.mkIf (cfg.authTokenFile != null && cfg.requireAuthFile) ''
                 ${lib.getExe' pkgs.bash "bash"} -c 'if ! ${lib.getExe' pkgs.gnugrep "grep"} -q "^CACHIX_AUTH_TOKEN=" ${cfg.authTokenFile}; then echo "CACHIX_AUTH_TOKEN not set in ${cfg.authTokenFile}"; exit 1; fi'
               '';
-              ExecStart = lib.concatStringsSep " " ([
-                "${lib.getExe pkgs.cachix}"
-                "watch-store"
-                cfg.cacheName
-              ] ++ cfg.extraArgs);
+              ExecStart = let
+                exe = lib.getExe pkgs.cachix;
+                args = [ "watch-store" cfg.cacheName ] ++ cfg.extraArgs;
+              in "${exe} ${lib.escapeShellArgs args}";
               Restart = "always";
               RestartSec = 10;
               # Optional hardening

@@ -5,8 +5,8 @@
   ...
 }:
 with lib; {
-  imports = [./neovim];
-  config =
+  imports = [ ./neovim ];
+  config = lib.mkMerge [
     (mkIf config.features.dev.enable {
       # Group editor tools and AI tools; flatten via mkEnabledList
       home.packages =
@@ -26,7 +26,8 @@ with lib; {
           in config.lib.neg.mkEnabledList flags groups
         );
     })
-    // (mkIf (config.features.dev.ai.enable or false) {
+    (mkIf (config.features.dev.ai.enable or false) {
       programs.claude-code.enable = true;
-    });
+    })
+  ];
 }
