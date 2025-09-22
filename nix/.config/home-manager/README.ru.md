@@ -77,7 +77,7 @@
 - Лаунчер Rofi
   - `~/.local/bin/rofi` гарантирует, что `-theme <name|name.rasi>` находит тему (относительно конфига или в XDG data).
   - `clip.rasi`, `sxiv.rasi` и требуемые `win/*.rasi` линкуются в `$XDG_DATA_HOME/rofi/themes` для использования через `-theme`.
-  - Для emoji‑пикера можно добавить свой `~/bin/rofi-emoji`.
+  - Для emoji‑пикера можно добавить свой `~/.local/bin/rofi-emoji`.
 
 - Браузеры Mozilla
   - Firefox, LibreWolf и Floorp настраиваются через единый конструктор `mkBrowser` в `modules/user/web/mozilla-common-lib.nix`.
