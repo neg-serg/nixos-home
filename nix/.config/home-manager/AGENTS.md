@@ -36,7 +36,7 @@ This repo is configured for Home Manager + flakes with a small set of helpers to
     - Example: `config.lib.neg.mkLocalBin "rofi" ''#!/usr/bin/env bash
         set -euo pipefail
         exec ${pkgs.rofi-wayland}/bin/rofi "$@"''`
-  - Systemd (user) sugar:
+- Systemd (user) sugar:
     - In this repository, use the stable pattern: `lib.mkMerge + config.lib.neg.systemdUser.mkUnitFromPresets`.
     - The "simple" helpers (`mkSimpleService`, `mkSimpleTimer`, `mkSimpleSocket`) are available but can trigger HM‑eval recursion in some contexts. Default policy: do not use them in modules; instead assemble units as below.
     - Example (service):
@@ -59,6 +59,20 @@ This repo is configured for Home Manager + flakes with a small set of helpers to
         (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["timers"]; })
       ];
       ```
+
+- Rofi wrapper (launcher)
+  - A local wrapper is installed to `~/.local/bin/rofi` to provide safe defaults and consistent UX:
+    - Adds `-no-config` unless the caller explicitly passes `-config`/`-no-config`.
+    - Ensures Ctrl+C cancels (`-kb-cancel "Control+c,Escape"`) and frees it from the default copy binding (`-kb-secondary-copy ""`).
+    - Resolves themes passed via `-theme <name|name.rasi>` relative to `$XDG_DATA_HOME/rofi/themes` or `$XDG_CONFIG_HOME/rofi`.
+    - Computes offsets for top bars via Quickshell/Hyprland metadata when not provided.
+  - Guidance:
+    - Keep rofi invocations plain (e.g., `rofi -dmenu ... -theme clip`). Avoid repeating `-no-config`/`-kb-*` in configs.
+    - If you must override keys for a particular call, pass your own `-kb-*` flags — the wrapper will not inject defaults twice.
+
+- Editor shim (`v`)
+  - A tiny wrapper `~/.local/bin/v` launches Neovim (`nvim`). Prefer `v` in bindings/commands where a short editor command is desirable.
+  - Git difftool/mergetool examples in this repo now use `nvim` directly; legacy `~/bin/v` is no longer referenced.
 - Soft migrations (warnings):
   - Prefer `{ warnings = lib.optional cond "message"; }` to emit non‑fatal guidance.
   - Avoid referencing `config.lib.neg` in warnings to keep option evaluation acyclic.
@@ -93,6 +107,11 @@ This repo is configured for Home Manager + flakes with a small set of helpers to
       - `Service.ExecStart = "${pkgs.aria2}/bin/aria2c --conf-path=$XDG_CONFIG_HOME/aria2/aria2.conf"`.
       - Attach preset: `(config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["graphical"]; })`.
   - Avoid `ExecStartPre` mkdir/touch logic — prefer XDG helpers and per‑file `force = true`; reduces activation noise.
+
+- rofi (launcher)
+  - Use the local wrapper `rofi` from `~/.local/bin` (PATH is set so it takes precedence).
+  - Do not pass `-kb-cancel` or `-no-config` unless you need custom behavior; the wrapper ensures sane defaults and Ctrl+C cancellation.
+  - Themes live under `$XDG_CONFIG_HOME/rofi` and `$XDG_DATA_HOME/rofi/themes`; `-theme clip` works out of the box.
 - systemd (user) presets
   - Always use `config.lib.neg.systemdUser.mkUnitFromPresets { presets = [..]; }` (recommended)
   - Typical presets:
