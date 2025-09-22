@@ -46,7 +46,7 @@
             "<Tab>": NextTab,
             ">": NextTrack,
             "?": SearchTab,
-            "7": ExternalCommand(command: ["kitty", "--class", "mpd-add", "~/bin/mpd-add", "-n"]),
+            "7": ExternalCommand(command: ["kitty", "--class", "mpd-add", "~/.local/bin/mpd-add", "-n"]),
             "L": ExternalCommand(command: ["rmpc", "clear"]),
             "O": ShowOutputs,
             "P": PlaylistsTab,

@@ -3,6 +3,35 @@ with lib;
 mkIf (config.features.gui.enable or false) (lib.mkMerge [
   # Centralize simple local wrappers under ~/.local/bin, inline to avoid early config.lib recursion in hm‑eval
   {
+    # Shim: main-menu (rofi-based launcher)
+    home.file.".local/bin/main-menu" = {
+      executable = true;
+      force = true;
+      text = ''#!/usr/bin/env bash
+        set -euo pipefail
+        if [ -x "$HOME/bin/main-menu" ]; then
+          exec "$HOME/bin/main-menu" "$@"
+        fi
+        echo "main-menu shim: missing $HOME/bin/main-menu" >&2
+        exit 127
+      '';
+    };
+  }
+  {
+    # Shim: mpd-add helper
+    home.file.".local/bin/mpd-add" = {
+      executable = true;
+      force = true;
+      text = ''#!/usr/bin/env bash
+        set -euo pipefail
+        if [ -x "$HOME/bin/mpd-add" ]; then
+          exec "$HOME/bin/mpd-add" "$@"
+        fi
+        echo "mpd-add shim: missing $HOME/bin/mpd-add" >&2
+        exit 127
+      '';
+    };
+  }
     # Shim: swayimg actions helper — forward to legacy script if present
     home.file.".local/bin/swayimg-actions.sh" = {
       executable = true;
