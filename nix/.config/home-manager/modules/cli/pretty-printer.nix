@@ -16,14 +16,7 @@ lib.mkMerge [
     in lib.concatStringsSep ":" [ libpp libcolored ];
   }
   {
-    # Clean up legacy script from ~/bin if it exists as a regular file
-    home.activation.removeLegacyPrettyPrinter = lib.hm.dag.entryBefore ["linkGeneration"] ''
-      set -eu
-      legacy="$HOME/bin/pretty_printer.py"
-      if [ -e "$legacy" ] && [ ! -L "$HOME/bin" ]; then
-        rm -f "$legacy" || true
-      fi
-    '';
+    # Legacy cleanup removed to reduce activation noise; PATH prefers ~/.local/bin now.
   }
   (
     # Add a user site .pth to expose the library on Python's sys.path for scripts

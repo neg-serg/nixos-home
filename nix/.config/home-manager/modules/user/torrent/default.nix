@@ -37,11 +37,7 @@ in lib.mkIf config.features.torrent.enable (lib.mkMerge [
     pkgs.rustmission # transmission-remote replacement (Rust CLI)
   ];
 
-  # Preserve user symlinks for Transmission config (history/resume). Do not
-  # force the directory to be a real dir here — only clean up if it's a broken
-  # symlink to avoid nuking external setups.
-  home.activation.keepTransmissionConfigSymlink =
-    config.lib.neg.mkRemoveIfBrokenSymlink "${config.xdg.configHome}/transmission-daemon";
+  # No additional activation cleanup for Transmission config; rely on XDG helpers.
 }
 {
   # Transmission daemon service (systemd user)

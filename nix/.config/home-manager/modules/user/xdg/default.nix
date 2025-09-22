@@ -69,17 +69,20 @@ in {
     pkgs.handlr # xdg-open replacement with per-handler rules
     pkgs.xdg-ninja # detect mislocated files in $HOME
   ];
-  # Aggregate XDG fixups via lib.neg helpers for readability and reuse.
-  home.activation.xdgFixParents = config.lib.neg.mkXdgFixParents {
-    configs = cfgNames;
-    datas = dataNames;
-    caches = cacheNames;
-  };
-  home.activation.xdgFixTargets = config.lib.neg.mkXdgFixTargets {
-    configs = cfgNames;
-    datas = dataNames;
-    caches = cacheNames;
-  };
+  # Optional aggregated XDG fixups (parents/targets); enable via features.xdg.fixups.enable
+  # When disabled, individual helpers should set force=true as needed.
+  home.activation.xdgFixParents = lib.mkIf (config.features.xdg.fixups.enable or false)
+    (config.lib.neg.mkXdgFixParents {
+      configs = cfgNames;
+      datas = dataNames;
+      caches = cacheNames;
+    });
+  home.activation.xdgFixTargets = lib.mkIf (config.features.xdg.fixups.enable or false)
+    (config.lib.neg.mkXdgFixTargets {
+      configs = cfgNames;
+      datas = dataNames;
+      caches = cacheNames;
+    });
   xdg = {
     enable = true;
     userDirs = {
