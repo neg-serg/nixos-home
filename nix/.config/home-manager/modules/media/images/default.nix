@@ -40,16 +40,9 @@ in lib.mkMerge [
   }
   # Replace ad-hoc ~/.local/bin files with guarded wrappers
   {
-    # Inline mkLocalBin equivalent to avoid early config.lib recursion during hm‑eval
-    home.activation.cleanBin_swayimg = lib.hm.dag.entryBefore ["linkGeneration"] ''
-      set -eu
-      p="$HOME/.local/bin/swayimg"
-      if [ -e "$p" ] && [ ! -L "$p" ]; then
-        if [ -d "$p" ]; then rm -rf "$p"; else rm -f "$p"; fi
-      fi
-    '';
     home.file.".local/bin/swayimg" = {
       executable = true;
+      force = true;
       text = ''#!/usr/bin/env bash
         set -euo pipefail
         exec ${swayimg-first}/bin/swayimg-first "$@"'';

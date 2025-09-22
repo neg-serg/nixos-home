@@ -3,42 +3,23 @@ with lib;
 mkIf (config.features.gui.enable or false) (lib.mkMerge [
   # Centralize simple local wrappers under ~/.local/bin, inline to avoid early config.lib recursion in hm‑eval
   {
-    home.activation.cleanBin_sx = lib.hm.dag.entryBefore ["linkGeneration"] ''
-      set -eu
-      p="$HOME/.local/bin/sx"
-      if [ -e "$p" ] && [ ! -L "$p" ]; then
-        if [ -d "$p" ]; then rm -rf "$p"; else rm -f "$p"; fi
-      fi
-    '';
     home.file.".local/bin/sx" = {
       executable = true;
+      force = true;
       text = (builtins.readFile ../../media/images/sx.sh);
     };
   }
   {
-    home.activation.cleanBin_sxivnc = lib.hm.dag.entryBefore ["linkGeneration"] ''
-      set -eu
-      p="$HOME/.local/bin/sxivnc"
-      if [ -e "$p" ] && [ ! -L "$p" ]; then
-        if [ -d "$p" ]; then rm -rf "$p"; else rm -f "$p"; fi
-      fi
-    '';
     home.file.".local/bin/sxivnc" = {
       executable = true;
+      force = true;
       text = (builtins.readFile ../../media/images/sxivnc.sh);
     };
   }
   {
-    # Wrapper to ensure legacy ~/bin/vid-info can import pretty_printer from the packaged lib
-    home.activation.cleanBin_vid_info = lib.hm.dag.entryBefore ["linkGeneration"] ''
-      set -eu
-      p="$HOME/.local/bin/vid-info"
-      if [ -e "$p" ] && [ ! -L "$p" ]; then
-        if [ -d "$p" ]; then rm -rf "$p"; else rm -f "$p"; fi
-      fi
-    '';
     home.file.".local/bin/vid-info" = {
       executable = true;
+      force = true;
       text = let
         sp = pkgs.python3.sitePackages;
         libpp = "${pkgs.neg.pretty_printer}/${sp}";
