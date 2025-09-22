@@ -56,6 +56,22 @@ lint:
         exit 1; \
       fi; \
     fi
+    # Optional guard: if using the "let exe … in \"${exe} …\"" pattern, prefer lib.escapeShellArgs for args
+    # Enable with: ESCAPEARGS_GUARD=1 just lint
+    if [ "${ESCAPEARGS_GUARD:-}" = "1" ]; then \
+      tmp=$(mktemp); \
+      grep -R -nE --include='*.nix' 'ExecStart\s*=\s*let[^;]+in\s*"\$\{exe\}\s' modules \
+        | grep -v 'escapeShellArgs' \
+        | grep -v 'modules/user/mail/isync/default.nix' \
+        > "$tmp" || true; \
+      if [ -s "$tmp" ]; then \
+        echo 'Found ExecStart pattern using ${exe} without lib.escapeShellArgs for args:' >&2; \
+        cat "$tmp" >&2; \
+        rm -f "$tmp"; \
+        exit 1; \
+      fi; \
+      rm -f "$tmp"; \
+    fi
     # Shellcheck opt-in: check only files that declare a POSIX/Bash shebang
     git ls-files -z -- '*.sh' '*.bash' 2>/dev/null \
       | xargs -0 -r grep -lZ -m1 -E '^#!\s*/(usr/)?bin/(env\s+)?(ba)?sh' \
