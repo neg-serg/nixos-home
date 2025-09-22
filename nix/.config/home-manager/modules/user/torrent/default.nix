@@ -65,12 +65,5 @@ in lib.mkIf config.features.torrent.enable (lib.mkMerge [
     (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["net" "defaultWanted"]; })
   ];
 }
-# Soft migration warning: detect legacy config under $XDG_CONFIG_HOME/transmission
-(let
-  cfgFiles = builtins.attrNames (config.xdg.configFile or {});
-  old = builtins.filter (n: lib.hasPrefix "transmission/" n) cfgFiles;
-in {
-  warnings = lib.optional (old != [])
-    "Transmission config under $XDG_CONFIG_HOME/transmission detected; migrate to $XDG_CONFIG_HOME/transmission-daemon.";
-})
+  # Soft migration warning removed; defaults and docs are sufficient
 ])
