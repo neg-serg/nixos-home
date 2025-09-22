@@ -103,6 +103,8 @@ in {
     };
     home.packages =
       config.lib.neg.pkgsList (config.lib.neg.mkEnabledList config.features.cli groups)
-      ++ [pkgs.tealdeer]; # tldr replacement written in Rust
+      ++ [
+        pkgs.tealdeer # tldr replacement written in Rust
+      ];
   };
 }
