@@ -14,8 +14,8 @@ lib.mkMerge [
         '';
       };
     in {
-      # Quickshell session (Qt-bound, skip in dev-speed)
-      systemd.user.services =
+      # Quickshell session (Qt-bound, skip in dev-speed) + other services
+      systemd.user.services = lib.mkMerge [
         (lib.mkIf ((config.features.gui.qt.enable or false) && (! (config.features.devSpeed.enable or false))) {
           quickshell =
             lib.mkMerge [
@@ -36,7 +36,7 @@ lib.mkMerge [
               (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["graphical"]; })
             ];
         })
-        // {
+        {
           # Pyprland daemon (Hyprland helper)
           pyprland =
             lib.mkMerge [
@@ -86,6 +86,7 @@ lib.mkMerge [
                 presets = ["dbusSocket" "defaultWanted"];
               })
             ];
-        };
+        }
+      ];
     }))
 ]
