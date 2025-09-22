@@ -82,7 +82,7 @@
       url = "github:nushell/nupm";
       flake = false;
     };
-    nixpkgs = {url = "github:nixos/nixpkgs";};
+    nixpkgs = { url = "github:NixOS/nixpkgs/nixos-unstable"; };
     quickshell = {
       url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
       inputs.nixpkgs.follows = "nixpkgs";
