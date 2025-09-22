@@ -184,7 +184,11 @@ repeat_action() { # repeat last mv/cp to same dir
 copy_name() { # copy absolute path to clipboard
   file="$1"
   printf '%s\n' "$(realpath "$file")" | wl-copy
-  [ -x "$HOME/bin/pic-notify" ] && "$HOME/bin/pic-notify" "$file" || true
+  if command -v pic-notify >/dev/null 2>&1; then
+    pic-notify "$file" || true
+  elif [ -x "$HOME/bin/pic-notify" ]; then
+    "$HOME/bin/pic-notify" "$file" || true
+  fi
 }
 
 wall() { # wall <mode> <file> via swww
@@ -219,4 +223,3 @@ case "$action" in
   wall-cover) wall cover "$file" ;;
   *) echo "Unknown action: $action" >&2; exit 2 ;;
 esac
-
