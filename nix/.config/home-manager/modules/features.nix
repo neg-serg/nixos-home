@@ -84,6 +84,9 @@ in {
 
     # Development-speed mode: aggressively trim heavy features/inputs for faster local iteration
     devSpeed.enable = mkBool "enable dev-speed mode (trim heavy features for faster eval)" false;
+
+    # XDG aggregated fixups
+    xdg.fixups.enable = mkBool "enable aggregated XDG activation fixups (parents/targets)" false;
   };
 
   # Apply profile defaults. Users can still override flags after this.
