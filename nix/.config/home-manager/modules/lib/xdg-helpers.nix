@@ -1,7 +1,7 @@
 { pkgs ? null, ... }:
 {
   mkXdgText = relPath: text: {
-    # Aggregated XDG fixups handle parent/target state; just declare the file.
+    # Declare the file; use force=true on the caller side if overwriting is needed.
     xdg.configFile."${relPath}".text = text;
   };
 

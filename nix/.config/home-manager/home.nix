@@ -36,8 +36,7 @@ in {
   # Enable GPG stack (gpg + gpg-agent)
   features.gpg.enable = true;
 
-  # Aggregated XDG fixups left disabled by default; enable on demand
-  # features.xdg.fixups.enable = true;
+  # XDG aggregated fixups were removed; rely on per‑file `force = true` when needed.
 
   # Unfree policy centralized in modules/misc/unfree.nix (features.allowUnfree.allowed)
 
