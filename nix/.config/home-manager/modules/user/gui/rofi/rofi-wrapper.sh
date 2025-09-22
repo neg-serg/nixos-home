@@ -10,6 +10,8 @@ themes_dir="$xdg_data/rofi/themes"
 cd_dir="$xdg_conf/rofi"
 prev_is_theme=0
 have_cfg=0
+have_kb_cancel=0
+have_kb_secondary_copy=0
 want_offsets=1
 have_xoff=0; have_yoff=0; have_loc=0
 for arg in "$@"; do
@@ -36,6 +38,8 @@ for arg in "$@"; do
     -xoffset| -xoffset=*) have_xoff=1 ;;
     -yoffset| -yoffset=*) have_yoff=1 ;;
     -location| -location=*) have_loc=1 ;;
+    -kb-cancel| -kb-cancel=*) have_kb_cancel=1 ;;
+    -kb-secondary-copy| -kb-secondary-copy=*) have_kb_secondary_copy=1 ;;
   esac
 done
 [ -d "$cd_dir" ] && cd "$cd_dir"
@@ -63,7 +67,20 @@ if [ "$want_offsets" -eq 1 ] && [ "$have_xoff" -eq 0 ] && [ "$have_yoff" -eq 0 ]
 fi
 
 # Avoid parsing user/system config if not explicitly requested (rofi 2.0 parser is strict)
+# Avoid parsing user/system config if not explicitly requested (rofi 2.0 parser is strict)
 if [ "$have_cfg" -eq 0 ]; then
   set -- -no-config "$@"
+fi
+
+# Only inject keybindings when not loading a config (avoid duplicate "already bound")
+if [ "$have_cfg" -eq 0 ]; then
+  # Free Control+c from default secondary-copy mapping, unless caller sets it
+  if [ "$have_kb_secondary_copy" -eq 0 ]; then
+    set -- -kb-secondary-copy "" "$@"
+  fi
+  # Ensure Ctrl+C always cancels, unless caller specified their own mapping
+  if [ "$have_kb_cancel" -eq 0 ]; then
+    set -- -kb-cancel "Control+c,Escape" "$@"
+  fi
 fi
 exec "$rofi_bin" "$@"
