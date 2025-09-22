@@ -123,6 +123,14 @@ See also: AGENTS.md for a short guide on helpers, activation aggregators, system
   - This removes any existing path (file/dir/symlink) before linking and marks the target executable.
   - Note: in rare cases (for example, due to specific module/merge ordering), `mkLocalBin` may trigger HM‑eval recursion. In such places it is acceptable to use the direct equivalent via `home.file` plus an activation guard (see rofi/swayimg modules). For new wrappers, try `mkLocalBin` first.
 
+- Rofi usage conventions
+  - Prefer calling `rofi` plainly (e.g., `rofi -dmenu ... -theme clip`). The local wrapper enforces:
+    - `-no-config` by default unless the caller provides `-config`/`-no-config`.
+    - `Ctrl+C` to cancel: injects `-kb-secondary-copy ""` and `-kb-cancel "Control+c,Escape"` when not explicitly provided.
+    - Theme path resolution for `-theme <name|name.rasi>` relative to XDG locations.
+  - Avoid duplicating these flags in module code to keep configs concise and prevent "already bound" warnings.
+  - If a specific invocation requires a custom keymap, pass your own `-kb-*` flags; the wrapper will not add defaults twice.
+
 - Systemd (user) sugar
   - For simple services use `config.lib.neg.systemdUser.mkSimpleService` instead of repeating the same boilerplate.
     - Example:
