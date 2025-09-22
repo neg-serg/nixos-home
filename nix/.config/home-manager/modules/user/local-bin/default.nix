@@ -93,19 +93,19 @@ mkIf (config.features.gui.enable or false) (lib.mkMerge [
           exec "$HOME/bin/pl" "$@"
         fi
         # Best-effort fallback to playerctl/wpctl
-        sub=${1:-}
+        sub=''${1:-}
         case "$sub" in
           cmd)
             shift || true
-            case "${1:-}" in
+            case "''${1:-}" in
               play-pause|pause|play|next|previous)
-                exec playerctl "${1}"
+                exec playerctl "''${1}"
                 ;;
             esac
             ;;
           vol)
             shift || true
-            case "${1:-}" in
+            case "''${1:-}" in
               mute)
                 exec wpctl set-mute @DEFAULT_AUDIO_SINK@ 1
                 ;;
