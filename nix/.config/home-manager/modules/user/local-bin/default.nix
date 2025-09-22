@@ -17,6 +17,16 @@ mkIf (config.features.gui.enable or false) (lib.mkMerge [
     };
   }
   {
+    # Minimal editor shim: `v` opens files in Neovim
+    home.file.".local/bin/v" = {
+      executable = true;
+      force = true;
+      text = ''#!/usr/bin/env bash
+        set -euo pipefail
+        exec ${lib.getExe' pkgs.neovim "nvim"} "$@"'';
+    };
+  }
+  {
     home.file.".local/bin/vid-info" = {
       executable = true;
       force = true;
