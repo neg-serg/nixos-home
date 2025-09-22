@@ -19,7 +19,9 @@ mkIf config.features.gui.enable (
         pkgs.wl-clip-persist # persist clipboard across app exits
         pkgs.wtype # fake typing for Wayland
       ];
-      extras = lib.optionals (! devSpeed && (iwmenuProvider != null)) [ (iwmenuProvider pkgs) ];
+      extras = lib.optionals (! devSpeed && (iwmenuProvider != null)) [
+        (iwmenuProvider pkgs) # Wayland app launcher/menu from flake input
+      ];
     };
     flags = { core = true; extras = true; };
   in {
