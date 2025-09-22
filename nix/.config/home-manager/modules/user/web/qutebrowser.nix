@@ -4,7 +4,7 @@
   ...
 }: {
   home.packages = config.lib.neg.pkgsList [
-    (pkgs.qutebrowser.overrideAttrs (oldAttrs: {
+    (pkgs.qutebrowser.overrideAttrs (oldAttrs: { # Qutebrowser with Wayland/Vulkan flags
       qtWrapperArgs =
         (oldAttrs.qtWrapperArgs or [])
         ++ [
@@ -20,6 +20,6 @@
             --add-flags "--qt-flag enable-features=VaapiVideoDecoder,VaapiVideoEncoder" \
             --add-flags "--qt-flag disable-features=UseChromeOSDirectVideoDecoder"
         '';
-    })) # Qutebrowser with Wayland/Vulkan flags
+    }))
   ];
 }

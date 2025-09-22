@@ -16,12 +16,12 @@ with lib;
     # Also provide a non-blocking trigger to start sync in background
     home.packages = config.lib.neg.pkgsList [
       pkgs.isync # mbsync binary (isync)
-      (pkgs.writeShellScriptBin "sync-mail" ''
+      (pkgs.writeShellScriptBin "sync-mail" '' # quick trigger to start mbsync unit
         #!/usr/bin/env bash
         set -euo pipefail
         # Fire-and-forget start of the mbsync systemd unit
         exec systemctl --user start --no-block mbsync-gmail.service
-      '') # quick trigger to start mbsync unit
+      '')
     ];
 
     # Create base maildir on activation (mbsync can also create, but this avoids first-run hiccups)

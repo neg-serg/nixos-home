@@ -8,7 +8,7 @@
     pkgs.keepass # password manager with strong cryptography
     pkgs.pass-git-helper # git credential helper interfacing with pass
     # password manager via gpg
-    (pkgs.pass.withExtensions (ext:
+    (pkgs.pass.withExtensions (ext: # pass CLI with selected extensions
       with ext; [
         # pass-audit # extension for auditing your password repository
         pass-import # tool to import data from existing password managers
