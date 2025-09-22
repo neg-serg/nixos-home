@@ -85,6 +85,7 @@ in {
     ./amfora.nix
     ./icedtea-web.nix
     ./dosbox.nix
+    ./pretty-printer.nix
     ./fzf.nix
     ./tmux.nix
     ./tig.nix
