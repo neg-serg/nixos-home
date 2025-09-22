@@ -20,16 +20,9 @@ mkIf config.features.gui.enable (
     };
   in
     {
-      # Inline mkLocalBin equivalent to avoid early config.lib recursion during hm‑eval
-      home.activation.cleanBin_rofi = lib.hm.dag.entryBefore ["linkGeneration"] ''
-        set -eu
-        p="$HOME/.local/bin/rofi"
-        if [ -e "$p" ] && [ ! -L "$p" ]; then
-          if [ -d "$p" ]; then rm -rf "$p"; else rm -f "$p"; fi
-        fi
-      '';
       home.file.".local/bin/rofi" = {
         executable = true;
+        force = true;
         text = ''#!/usr/bin/env bash
           set -euo pipefail
           exec ${rofiWrapper}/bin/rofi-wrapper "$@"'';
