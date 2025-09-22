@@ -11,10 +11,10 @@
       "--bind='alt-p:toggle-preview,alt-a:select-all,alt-s:toggle-sort'"
       "--bind='alt-d:change-prompt(Directories ❯ )+reload(fd . -t d)'"
       "--bind='alt-f:change-prompt(Files ❯ )+reload(fd . -t f)'"
-      "--bind='ctrl-j:execute(~/bin/v {+})+abort'"
+      "--bind='ctrl-j:execute(v {+})+abort'"
       "--bind='ctrl-space:select-all'"
       "--bind='ctrl-t:accept'"
-      "--bind='ctrl-v:execute(~/bin/v {+})'"
+      "--bind='ctrl-v:execute(v {+})'"
       "--bind='ctrl-y:execute-silent(echo {+} | wl-copy)'"
       "--bind='tab:execute(handlr open {+})+abort'"
 

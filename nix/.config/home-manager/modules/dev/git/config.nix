@@ -99,8 +99,8 @@ mkIf config.features.dev.enable {
       merge.tool = "nvimdiff";
       mergetool.prompt = true;
       credential.helper = "!${pkgs.pass-git-helper}/bin/pass-git-helper --file ~/.config/git/pass.yml";
-      difftool.nwim.cmd = "~/bin/v -d $LOCAL $REMOTE";
-      mergetool.nwim.cmd = "~/bin/v -d $LOCAL $BASE $REMOTE $MERGED -c 'wincmd J | wincmd ='";
+      difftool.nwim.cmd = "nvim -d $LOCAL $REMOTE";
+      mergetool.nwim.cmd = "nvim -d $LOCAL $BASE $REMOTE $MERGED -c 'wincmd J | wincmd ='";
       mergetool.delta = {
         cmd = ''delta --merge-base "$BASE" "$LOCAL" "$REMOTE" > "$MERGED"'';
         trustExitCode = false;
@@ -113,4 +113,3 @@ mkIf config.features.dev.enable {
     };
   };
 }
-
