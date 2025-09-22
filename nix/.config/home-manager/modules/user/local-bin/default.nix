@@ -105,23 +105,19 @@ mkIf (config.features.gui.enable or false) (lib.mkMerge [
     };
   }
   {
-    # Shim: pypr-client -> pypr (Pyprland CLI)
+    # Pypr client (original script)
     home.file.".local/bin/pypr-client" = {
       executable = true;
       force = true;
-      text = let tpl = builtins.readFile ./scripts/pypr-client.sh;
-                 exe = lib.getExe' pkgs.pyprland "pypr";
-             in lib.replaceStrings ["@PYPR_BIN@"] [ exe ] tpl;
+      text = (builtins.readFile ./scripts/pypr-client.sh);
     };
   }
   {
-    # Minimal editor shim: `v` opens files in Neovim
+    # Editor shim: `v` opens files in Neovim (original script)
     home.file.".local/bin/v" = {
       executable = true;
       force = true;
-      text = let tpl = builtins.readFile ./scripts/v.sh;
-                 exe = lib.getExe' pkgs.neovim "nvim";
-             in lib.replaceStrings ["@NVIM_BIN@"] [ exe ] tpl;
+      text = (builtins.readFile ./scripts/v.sh);
     };
   }
   {
