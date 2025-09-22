@@ -17,6 +17,16 @@ mkIf (config.features.gui.enable or false) (lib.mkMerge [
     };
   }
   {
+    # Shim: pypr-client -> pypr (Pyprland CLI)
+    home.file.".local/bin/pypr-client" = {
+      executable = true;
+      force = true;
+      text = ''#!/usr/bin/env bash
+        set -euo pipefail
+        exec ${lib.getExe' pkgs.pyprland "pypr"} "$@"'';
+    };
+  }
+  {
     # Minimal editor shim: `v` opens files in Neovim
     home.file.".local/bin/v" = {
       executable = true;

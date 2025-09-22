@@ -10,7 +10,7 @@ lib.mkMerge [
         name = "pic-dirs-runner";
         text = ''
           set -euo pipefail
-          exec "$HOME/bin/pic-dirs-list"
+          exec pic-dirs-list
         '';
       };
     in {
