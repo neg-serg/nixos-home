@@ -144,7 +144,7 @@ def media_info(filename: str):
             w = stream.get('width'); h = stream.get('height')
             if w and h:
                 out += pp.wrap(f"{w}x{h}")
-            afr = stream.get('avg_frame_rate') or ''
+            afr = stream.get('avg_frame_rate') or ""
             try:
                 num, den = afr.split('/') if '/' in afr else (afr, '1')
                 num_f = float(num)
@@ -184,7 +184,7 @@ def media_info(filename: str):
         out += pp.wrap(str(vid_frame_rate), postfix='fps')
 
     if audio_sample_rate != "":
-        out += pp.size(str(audio_sample_rate), 'K', pref='')
+        out += pp.size(str(audio_sample_rate), 'K', pref="")
     if str(audio_bitrate):
         out += pp.size(str(audio_bitrate), 'kbps', pref='audbrate')
 
