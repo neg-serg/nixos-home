@@ -1,5 +1,7 @@
 { config, ... }: {
   home.sessionPath = [
+    # Ensure local wrappers take precedence over legacy ~/bin
+    "$HOME/.local/bin"
     "$HOME/.local/share/cargo/bin"
   ];
   home.sessionVariables = {
