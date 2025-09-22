@@ -21,7 +21,7 @@ main() {
     {
         for arg in "$@"; do
             [ -f "$arg" ] && printf '%s\0' "$arg"
-        done | xargs -0 -n10 -P 10 vid-info
+        done | xargs -0 -n10 -P 10 ~/.local/bin/vid-info
     } &
     mkdir -p -- "$HOME/tmp"
     mpv --quiet -- "$@" > "$HOME/tmp/mpv.log" 2>&1
