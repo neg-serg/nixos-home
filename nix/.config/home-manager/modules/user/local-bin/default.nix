@@ -32,6 +32,7 @@ mkIf (config.features.gui.enable or false) (lib.mkMerge [
       '';
     };
   }
+  {
     # Shim: swayimg actions helper — forward to legacy script if present
     home.file.".local/bin/swayimg-actions.sh" = {
       executable = true;
@@ -198,6 +199,7 @@ mkIf (config.features.gui.enable or false) (lib.mkMerge [
       '';
     };
   }
+  {
     home.file.".local/bin/sx" = {
       executable = true;
       force = true;
