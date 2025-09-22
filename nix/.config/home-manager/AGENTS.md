@@ -92,7 +92,7 @@ This repo is configured for Home Manager + flakes with a small set of helpers to
     - Systemd (user) service should be simple:
       - `Service.ExecStart = "${pkgs.aria2}/bin/aria2c --conf-path=$XDG_CONFIG_HOME/aria2/aria2.conf"`.
       - Attach preset: `(config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["graphical"]; })`.
-  - Avoid `ExecStartPre` mkdir/touch logic — aggregated XDG fixups and the data helper make it unnecessary and reduce activation noise.
+  - Avoid `ExecStartPre` mkdir/touch logic — prefer XDG helpers and per‑file `force = true`; reduces activation noise.
 - systemd (user) presets
   - Always use `config.lib.neg.systemdUser.mkUnitFromPresets { presets = [..]; }` (recommended)
   - Typical presets:

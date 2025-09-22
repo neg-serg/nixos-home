@@ -146,9 +146,7 @@ Images
 
 XDG helpers
 - Use `modules/lib/xdg-helpers.nix` (`mkXdgText`, `mkXdgSource`, `mkXdgData*`, `mkXdgCache*`).
-- Aggregated fixups ensure parent dirs are real and targets are conflict‑free:
-  - Aggregated XDG fixups were removed; use per‑file `force = true` when you need to overwrite.
-- Optional: `preserveConfigPatterns` to keep specific symlinked parents.
+- If a path already exists, set `force = true` on that entry to overwrite; избегайте ad‑hoc rm/mkdir в ExecStartPre.
 
 Activation helpers
 - `mkEnsureRealDir[s]`, `mkEnsureAbsent[Many]`, `mkEnsureDirsAfterWrite`, `mkEnsureMaildirs`.
@@ -175,7 +173,7 @@ Activation/eval errors
 
 Common issues
 - Services failing on non‑NixOS (missing system paths) — units include guards like `ConditionPathExists`; report if you hit any gaps.
-- Stale symlinks or unexpected files under XDG paths — aggregated fixups remove conflicts before linking.
+- Stale symlinks or unexpected files under XDG paths — используйте `force = true` на конкретных файлах или удалите конфликт вручную один раз.
 - Editor/terminal not launching — defaults come from `features.web.default` and XDG choices; verify via `show-features` and `xdg-mime query`.
 
 Cleanup helpers
@@ -191,7 +189,7 @@ Cleanup helpers
 - `packages/` — overlays and local packages (`pkgs.neg.*` namespace)
 - `secrets/` — sops‑nix secrets (see `.sops.yaml`)
 - Docs:
-  - `AGENTS.md` — helper APIs, activation fixups, presets, commit conventions
+  - `AGENTS.md` — helper APIs, activation helpers, presets, commit conventions
   - `STYLE.md` — coding style and patterns used in modules
   - `OPTIONS.md` — feature flags overview and profile deltas
 
