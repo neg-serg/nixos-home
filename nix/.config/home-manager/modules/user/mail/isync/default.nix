@@ -21,7 +21,7 @@ with lib;
         set -euo pipefail
         # Fire-and-forget start of the mbsync systemd unit
         exec systemctl --user start --no-block mbsync-gmail.service
-      '')
+      '') # quick trigger to start mbsync unit
     ];
 
     # Create base maildir on activation (mbsync can also create, but this avoids first-run hiccups)
