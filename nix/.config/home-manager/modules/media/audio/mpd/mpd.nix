@@ -39,12 +39,5 @@
         ];
       };
     }
-    # Soft migration notice: move MPD dataDir to XDG state
-    (let
-      oldPath = "${config.home.homeDirectory}/.config/mpd";
-      current = (config.services.mpd.dataDir or oldPath);
-    in {
-      warnings = lib.optional (current == oldPath)
-        "MPD dataDir uses ~/.config/mpd. Consider migrating to $XDG_STATE_HOME/mpd for better XDG compliance.";
-    })
+    # Soft migration notice removed (default points to XDG state; no warning needed)
   ])
