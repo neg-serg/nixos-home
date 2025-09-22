@@ -3,6 +3,172 @@ with lib;
 mkIf (config.features.gui.enable or false) (lib.mkMerge [
   # Centralize simple local wrappers under ~/.local/bin, inline to avoid early config.lib recursion in hm‑eval
   {
+    # Shim: swayimg actions helper — forward to legacy script if present
+    home.file.".local/bin/swayimg-actions.sh" = {
+      executable = true;
+      force = true;
+      text = ''#!/usr/bin/env bash
+        set -euo pipefail
+        if [ -x "$HOME/bin/swayimg-actions.sh" ]; then
+          exec "$HOME/bin/swayimg-actions.sh" "$@"
+        fi
+        echo "swayimg-actions.sh shim: missing $HOME/bin/swayimg-actions.sh" >&2
+        exit 127
+      '';
+    };
+  }
+  {
+    # Shim: clipboard menu
+    home.file.".local/bin/clip" = {
+      executable = true;
+      force = true;
+      text = ''#!/usr/bin/env bash
+        set -euo pipefail
+        if [ -x "$HOME/bin/clip" ]; then
+          exec "$HOME/bin/clip" "$@"
+        fi
+        # Fallback: cliphist + rofi + wl-copy
+        if command -v cliphist >/dev/null 2>&1 && command -v rofi >/dev/null 2>&1 && command -v wl-copy >/dev/null 2>&1; then
+          cliphist list | rofi -dmenu -matching fuzzy -i -p "Clipboard" -theme clip | cliphist decode | wl-copy || true
+          exit 0
+        fi
+        echo "clip shim: missing $HOME/bin/clip and no fallback tools available" >&2
+        exit 127
+      '';
+    };
+  }
+  {
+    # Shim: rofi-lutris (menu)
+    home.file.".local/bin/rofi-lutris" = {
+      executable = true;
+      force = true;
+      text = ''#!/usr/bin/env bash
+        set -euo pipefail
+        if [ -x "$HOME/bin/rofi-lutris" ]; then
+          exec "$HOME/bin/rofi-lutris" "$@"
+        fi
+        echo "rofi-lutris shim: missing $HOME/bin/rofi-lutris" >&2
+        exit 127
+      '';
+    };
+  }
+  {
+    # Shim: player control/launcher
+    home.file.".local/bin/pl" = {
+      executable = true;
+      force = true;
+      text = ''#!/usr/bin/env bash
+        set -euo pipefail
+        if [ -x "$HOME/bin/pl" ]; then
+          exec "$HOME/bin/pl" "$@"
+        fi
+        # Best-effort fallback to playerctl/wpctl
+        sub=${1:-}
+        case "$sub" in
+          cmd)
+            shift || true
+            case "${1:-}" in
+              play-pause|pause|play|next|previous)
+                exec playerctl "${1}"
+                ;;
+            esac
+            ;;
+          vol)
+            shift || true
+            case "${1:-}" in
+              mute)
+                exec wpctl set-mute @DEFAULT_AUDIO_SINK@ 1
+                ;;
+              unmute)
+                exec wpctl set-mute @DEFAULT_AUDIO_SINK@ 0
+                ;;
+            esac
+            ;;
+        esac
+        # Fallback: pass through to playerctl
+        if command -v playerctl >/dev/null 2>&1; then
+          exec playerctl "$@"
+        fi
+        echo "pl shim: missing $HOME/bin/pl and no usable fallback" >&2
+        exit 127
+      '';
+    };
+  }
+  {
+    # Shim: wallpaper helper
+    home.file.".local/bin/wl" = {
+      executable = true;
+      force = true;
+      text = ''#!/usr/bin/env bash
+        set -euo pipefail
+        if [ -x "$HOME/bin/wl" ]; then
+          exec "$HOME/bin/wl" "$@"
+        fi
+        echo "wl shim: missing $HOME/bin/wl" >&2
+        exit 127
+      '';
+    };
+  }
+  {
+    # Shim: music rename helper
+    home.file.".local/bin/music-rename" = {
+      executable = true;
+      force = true;
+      text = ''#!/usr/bin/env bash
+        set -euo pipefail
+        if [ -x "$HOME/bin/music-rename" ]; then
+          exec "$HOME/bin/music-rename" "$@"
+        fi
+        echo "music-rename shim: missing $HOME/bin/music-rename" >&2
+        exit 127
+      '';
+    };
+  }
+  {
+    # Shim: unlock helper
+    home.file.".local/bin/unlock" = {
+      executable = true;
+      force = true;
+      text = ''#!/usr/bin/env bash
+        set -euo pipefail
+        if [ -x "$HOME/bin/unlock" ]; then
+          exec "$HOME/bin/unlock" "$@"
+        fi
+        echo "unlock shim: missing $HOME/bin/unlock" >&2
+        exit 127
+      '';
+    };
+  }
+  {
+    # Shim: pic-notify (dunst script)
+    home.file.".local/bin/pic-notify" = {
+      executable = true;
+      force = true;
+      text = ''#!/usr/bin/env bash
+        set -euo pipefail
+        if [ -x "$HOME/bin/pic-notify" ]; then
+          exec "$HOME/bin/pic-notify" "$@"
+        fi
+        # Dunst script compatibility: ignore silently if missing
+        exit 0
+      '';
+    };
+  }
+  {
+    # Shim: pic-dirs-list used by pic-dirs-runner service
+    home.file.".local/bin/pic-dirs-list" = {
+      executable = true;
+      force = true;
+      text = ''#!/usr/bin/env bash
+        set -euo pipefail
+        if [ -x "$HOME/bin/pic-dirs-list" ]; then
+          exec "$HOME/bin/pic-dirs-list" "$@"
+        fi
+        echo "pic-dirs-list shim: missing $HOME/bin/pic-dirs-list" >&2
+        exit 127
+      '';
+    };
+  }
     home.file.".local/bin/sx" = {
       executable = true;
       force = true;
