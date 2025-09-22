@@ -16,7 +16,9 @@ with lib;
           pkgs.matugen # theme generator (pywal-like)
         ];
         # extras evaluated only when enabled (prevents pulling input in dev-speed)
-        extras = lib.optionals (! devSpeed && (bzmenuProvider != null)) [ (bzmenuProvider pkgs) ];
+        extras = lib.optionals (! devSpeed && (bzmenuProvider != null)) [
+          (bzmenuProvider pkgs) # extra menu helper from flake input
+        ];
       };
       flags = {
         core = true;
