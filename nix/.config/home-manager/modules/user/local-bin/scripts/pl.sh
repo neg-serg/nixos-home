@@ -18,11 +18,11 @@ need() { command -v "$1" >/dev/null 2>&1 || { print -u2 "pl: missing $1"; :; }; 
 mp() {
     local -a files
     files=("$@")
-    if [[ -x ~/bin/vid-info ]]; then
+    if command -v vid-info >/dev/null 2>&1; then
         # Info for directories
         for f in "$@"; do
             if [[ -d "$f" ]]; then
-                { find -- "$f" -maxdepth 1 -type f -print0 | xargs -0 -n10 -P 10 ~/bin/vid-info; } &
+                { find -- "$f" -maxdepth 1 -type f -print0 | xargs -0 -n10 -P 10 vid-info; } &
             fi
         done
         # Info for files
@@ -33,7 +33,7 @@ mp() {
                 [[ -f "$f" ]] && only_files+=("$f")
             done
             if (( ${#only_files[@]} )); then
-                printf '%s\0' "${only_files[@]}" | xargs -0 -n10 -P 10 ~/bin/vid-info
+                printf '%s\0' "${only_files[@]}" | xargs -0 -n10 -P 10 vid-info
             fi
         } &
     fi
