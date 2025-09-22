@@ -1,4 +1,4 @@
-{ lib, config, ... }:
+{ lib, config, pkgs, ... }:
 with lib;
 mkIf (config.features.gui.enable or false) (lib.mkMerge [
   # Centralize simple local wrappers under ~/.local/bin, inline to avoid early config.lib recursion in hm‑eval
@@ -39,10 +39,21 @@ mkIf (config.features.gui.enable or false) (lib.mkMerge [
     '';
     home.file.".local/bin/vid-info" = {
       executable = true;
-      text = ''#!/usr/bin/env python3
+      text = let
+        sp = pkgs.python3.sitePackages;
+        libpp = "${pkgs.neg.pretty_printer}/${sp}";
+        libcolored = "${pkgs.python3Packages.colored}/${sp}";
+      in ''#!/usr/bin/env python3
+import sys
 import argparse
 import os
+
+# Ensure packaged libraries are on sys.path (no env required)
+sys.path.insert(0, '${libpp}')
+sys.path.insert(0, '${libcolored}')
+
 from neg_pretty_printer import FileInfoPrinter
+
 
 def main() -> None:
     p = argparse.ArgumentParser(prog='vid-info', description='Pretty print file/dir info')
@@ -60,6 +71,7 @@ def main() -> None:
             FileInfoPrinter.existsfile(path)
         else:
             FileInfoPrinter.nonexistsfile(path)
+
 
 if __name__ == '__main__':
     main()
