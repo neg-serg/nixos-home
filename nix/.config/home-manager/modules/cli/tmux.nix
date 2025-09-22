@@ -11,12 +11,4 @@ lib.mkMerge [
   }
   # Ship the entire tmux config directory (conf + bin) via pure helper
   (xdg.mkXdgSource "tmux" { source = ./tmux-conf; })
-  # Soft migration note: tmux config is managed under $XDG_CONFIG_HOME/tmux
-  # If you still have legacy ~/.tmux.conf or ~/.tmux, prefer migrating to
-  # $XDG_CONFIG_HOME/tmux/tmux.conf to avoid precedence confusion.
-  {
-    warnings = [
-      "tmux config is under $XDG_CONFIG_HOME/tmux. If ~/.tmux.conf or ~/.tmux still exist, migrate to ~/.config/tmux/tmux.conf."
-    ];
-  }
 ]
