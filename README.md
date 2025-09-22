@@ -147,8 +147,7 @@ Images
 XDG helpers
 - Use `modules/lib/xdg-helpers.nix` (`mkXdgText`, `mkXdgSource`, `mkXdgData*`, `mkXdgCache*`).
 - Aggregated fixups ensure parent dirs are real and targets are conflict‑free:
-  - `lib.neg.mkXdgFixParents { configs = attrNames config.xdg.configFile; ... }`
-  - `lib.neg.mkXdgFixTargets { configs = attrNames config.xdg.configFile; ... }`
+  - Aggregated XDG fixups were removed; use per‑file `force = true` when you need to overwrite.
 - Optional: `preserveConfigPatterns` to keep specific symlinked parents.
 
 Activation helpers

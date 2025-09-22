@@ -26,11 +26,9 @@ This repo is configured for Home Manager + flakes with a small set of helpers to
   - `mkEnsureAbsent path` / `mkEnsureAbsentMany [..]` — remove conflicting files/dirs pre‑link
   - `mkEnsureDirsAfterWrite [..]` — create runtime dirs after writeBoundary
   - `mkEnsureMaildirs base [boxes..]` — create Maildir trees after writeBoundary
-  - Aggregated XDG fixups (new helpers):
-    - `mkXdgFixParents { configs = attrNames config.xdg.configFile; datas = attrNames config.xdg.dataFile; caches = attrNames config.xdg.cacheFile; /* optional */ preserveConfigPatterns = [ "some-app/*" ]; }`
-      - By default `preserveConfigPatterns = []`. Pass patterns from the specific module only when you need to keep a symlinked parent for part of the tree (e.g., externally managed app config subtree).
-    - `mkXdgFixTargets { configs = …; datas = …; caches = …; }`
-    - These fixups are wired in `modules/user/xdg/default.nix` as `home.activation.xdgFixParents` and `home.activation.xdgFixTargets`.
+  - Aggregated XDG fixups were removed to reduce activation noise.
+    - Prefer per‑file `force = true` on `home.file` or `xdg.(config|data|cache)File` entries if you need to overwrite a conflicting path.
+    - Keep modules simple: declare targets via `xdg.mkXdg*` helpers and rely on Home Manager to manage links.
   - Common user paths prepared via:
     - `ensureCommonDirs`, `cleanSwayimgWrapper`, `ensureGmailMaildirs`
   - Local bin wrappers (safe ~/.local/bin scripts):
