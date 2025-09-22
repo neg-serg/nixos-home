@@ -81,7 +81,7 @@ in lib.mkIf (config.features.gui.enable or false) {
       pic = {
         appname = "screenshot";
         format = "%s\\n%b";
-        script = "~/bin/pic-notify";
+        script = "~/.local/bin/pic-notify";
         urgency = "normal";
       };
 
