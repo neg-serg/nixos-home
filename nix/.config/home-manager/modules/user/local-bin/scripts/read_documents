@@ -13,7 +13,7 @@ command -v zathura >/dev/null 2>&1 || { print -u2 'read_documents: zathura not f
 
 fd . ~/dw/ -d 1 -t f -0 -e pdf -e djvu -e epub \
   | xargs -0 -n1 \
-  | rofi -auto-select -modi file-browser-extended -show file-browser-extended -p '❯>' \
+  | rofi -auto-select -modi file-browser-extended -show file-browser-extended -p '⟬docs⟭ ❯>' \
       -file-browser-dir "~/dw" -file-browser-depth 1 \
       -file-browser-open-multi-key "kb-accept-alt" \
       -file-browser-open-custom-key "kb-custom-11" \

@@ -34,7 +34,7 @@ list=$(jq -nr \
   ')
 [ -n "$list" ] || exit 0
 
-sel=$(printf '%s\n' "$list" | rofi -dmenu -matching fuzzy -i -p '❯>' -theme clip) || exit 0
+sel=$(printf '%s\n' "$list" | rofi -dmenu -matching fuzzy -i -p 'Windows ❯>' -theme clip) || exit 0
 addr=$(printf '%s' "$sel" | awk -F '\t' '{print $NF}' | sed 's/^ *//')
 [ -n "$addr" ] || exit 0
 
