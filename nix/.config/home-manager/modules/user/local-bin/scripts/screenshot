@@ -46,7 +46,7 @@ menu() {
         " Rect" \
         " Window" \
         " Delay" \
-        | rofi -dmenu -theme clip -markup-rows -p '⟬shot⟭ ❯>' \
+        | rofi -dmenu -theme clip -markup-rows -p 'shot ❯>' \
             -mesg 'Enter: open • Alt+Enter: multi • Ctrl+C: cancel' || true)
     case "$sel" in
         (""*) full "$@" ;;
