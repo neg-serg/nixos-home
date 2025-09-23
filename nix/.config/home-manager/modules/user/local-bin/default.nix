@@ -24,8 +24,8 @@ mkIf (config.features.gui.enable or false) (lib.mkMerge [
       pkgs.grim
       pkgs.slurp
       pkgs.wtype
-      # archive/utils for se
-      pkgs.unrar
+      # archive/utils for se (prefer free tools)
+      pkgs.unar
       pkgs.p7zip
       pkgs.lbzip2
       pkgs.rapidgzip
@@ -35,6 +35,13 @@ mkIf (config.features.gui.enable or false) (lib.mkMerge [
       pkgs.qrencode
       pkgs.zbar
       pkgs.exiftool
+      # wallpapers helper
+      pkgs.essentia
+      # shell utils for menus and translations
+      pkgs.translate-shell
+      pkgs.clipcat-menu
+      # ALSA fallback for volume control
+      pkgs.alsa-utils
       # audio tools
       pkgs.sox
       # Xvfb for exorg
