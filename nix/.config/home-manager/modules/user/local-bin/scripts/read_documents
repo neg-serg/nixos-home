@@ -20,6 +20,5 @@ fd . ~/dw/ -d 1 -t f -0 -e pdf -e djvu -e epub \
       -file-browser-hide-hidden-symbol "" \
       -file-browser-only-files \
       -file-browser-stdin \
-      -file-browser-path-sep "/" -theme clip.rasi \
+      -file-browser-path-sep "/" -theme clip \
       -file-browser-cmd 'zathura' "$@"
-

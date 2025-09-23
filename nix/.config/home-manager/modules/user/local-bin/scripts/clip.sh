@@ -89,7 +89,7 @@ clip_main() {
         clipcat-menu -c "$HOME/.config/clipcat/clipcat-menu.toml"
     else
         # cliphist: show history -> decode -> copy
-        sel=$(cliphist list | rofi -dmenu -lines 10 -i -matching glob -p '⟬clip⟭ ❯>' -theme clip.rasi)
+        sel=$(cliphist list | rofi -dmenu -lines 10 -i -matching glob -p '⟬clip⟭ ❯>' -theme clip)
         [ -z "$sel" ] && exit 0
         idx="$(printf '%s' "$sel" | awk -F ':' '{print $1}')"
         cliphist decode "$idx" | wl-copy
