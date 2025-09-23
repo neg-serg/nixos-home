@@ -25,6 +25,13 @@
   - Темы находятся в `~/.config/rofi` и `~/.local/share/rofi/themes`; Mod4+c использует тему clip.
   - Линки тем генерируются из компактного списка (без ручных дублей в модуле).
 
+### Активация HM: пояснения
+
+- Сообщение «Activating ensureTransmissionDirs»
+  - Это шаг активации Home Manager, который создаёт служебные папки для Transmission в `~/.config/transmission-daemon/`.
+  - Нужен, чтобы избежать ошибок первого запуска вида «resume: No such file or directory», особенно если каталог — симлинк или пустой.
+  - Реализовано через `mkEnsureDirsAfterWrite` в `modules/user/torrent/default.nix` (создаёт `resume/`, `torrents/`, `blocklists/`).
+
 ## Быстрый старт
 
 - Требования
