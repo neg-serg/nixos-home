@@ -22,9 +22,11 @@ list=$(fd . "$dir" -d 1 -t f -0 -e pdf -e djvu -e epub \
       printf "%s %s  <span foreground=\"#7a8a9a\">(%s MiB)</span>\n" "$icon" "$bn" "$mib"
     ' sh {} )
 
+cnt=$(printf '%s\n' "$list" | grep -c . || true)
+dir_label=${dir/#$HOME/~}
 sel=$(printf '%s\n' "$list" \
   | rofi -auto-select -dmenu -p '⟬docs⟭ ❯>' -markup-rows \
-      -mesg 'Enter: open • Alt+Enter: multi • Ctrl+C: cancel' -theme clip)
+      -mesg "Dir: ${dir_label} • Items: ${cnt} • Enter: open • Alt+Enter: multi • Ctrl+C: cancel" -theme clip)
 [ -z "$sel" ] && exit 0
 # Strip tail markup and icon prefix to recover filename
 name=$(printf '%s' "$sel" \
