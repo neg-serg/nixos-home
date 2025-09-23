@@ -167,11 +167,21 @@ main() {
         mode="rofi"; shift
     fi
     if [[ "${1:-}" == "video" ]]; then
-        # Keep legacy rofi file-browser path
+        # File-browser view with dynamic dir and item count in mesg
         shift
+        local fbdir="${1:-${XDG_VIDEOS_DIR:-$HOME/vid}/new}"
+        fbdir="${~fbdir}"
+        local items
+        if command -v fd >/dev/null 2>&1; then
+            items=$(fd -d 1 -t f . "$fbdir" 2>/dev/null | wc -l | tr -d ' ')
+        else
+            items=$(find "$fbdir" -maxdepth 1 -type f 2>/dev/null | wc -l | tr -d ' ')
+        fi
+        local dir_label
+        dir_label=${fbdir/#$HOME/~}
         rofi -modi file-browser-extended -show file-browser-extended -p '⟬vid⟭ ❯>' -markup-rows \
-            -mesg 'Enter: open • Alt+Enter: multi • Ctrl+C: cancel' \
-            -file-browser-dir "~/vid/new" -file-browser-depth 1 \
+            -mesg "Dir: ${dir_label} • Items: ${items} • Enter: open • Alt+Enter: multi • Ctrl+C: cancel" \
+            -file-browser-dir "$fbdir" -file-browser-depth 1 \
             -file-browser-open-multi-key "kb-accept-alt" \
             -file-browser-open-custom-key "kb-custom-11" \
             -file-browser-hide-hidden-symbol "" \
