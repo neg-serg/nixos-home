@@ -1,6 +1,57 @@
 { lib, config, pkgs, ... }:
 with lib;
 mkIf (config.features.gui.enable or false) (lib.mkMerge [
+  {
+    # Runtime dependencies for local-bin scripts
+    home.packages = config.lib.neg.pkgsList [
+      # core tools
+      pkgs.fd
+      pkgs.jq
+      pkgs.curl
+      pkgs.git
+      pkgs.imagemagick
+      pkgs.libnotify # notify-send
+      pkgs.socat
+      pkgs.fasd
+      pkgs.usbutils # lsusb
+      # audio/video + helpers
+      pkgs.mpv
+      pkgs.playerctl
+      pkgs.wireplumber # wpctl
+      pkgs.mpc-cli # mpc
+      # wayland utils
+      pkgs.wl-clipboard # wl-copy/wl-paste
+      pkgs.grim
+      pkgs.slurp
+      pkgs.wtype
+      # archive/utils for se
+      pkgs.unrar
+      pkgs.p7zip
+      pkgs.lbzip2
+      pkgs.rapidgzip
+      pkgs.xz
+      pkgs.unzip
+      # image/qr/info
+      pkgs.qrencode
+      pkgs.zbar
+      pkgs.exiftool
+      # audio tools
+      pkgs.sox
+      # Xvfb for exorg
+      pkgs.xorg.xvfb
+      # rofi consumer
+      pkgs.zathura
+      # notify daemon (dunstify) provided by dunst service; ensure package present
+      pkgs.dunst
+      # inotify for shot-optimizer and pic-dirs-list
+      pkgs.inotify-tools
+      # downloaders for clip
+      pkgs.yt-dlp
+      pkgs.aria2
+      pkgs.cliphist
+      pkgs.clipcat
+    ];
+  }
   # Centralize simple local wrappers under ~/.local/bin, inline to avoid early config.lib recursion in hm‑eval
   {
     # Heavy/long scripts: use out-of-store links from repo bin/
@@ -285,6 +336,13 @@ mkIf (config.features.gui.enable or false) (lib.mkMerge [
       executable = true;
       force = true;
       text = (builtins.readFile ./scripts/cidr);
+    };
+  }
+  {
+    home.file.".local/bin/punzip" = {
+      executable = true;
+      force = true;
+      text = (builtins.readFile ./scripts/punzip);
     };
   }
   {
