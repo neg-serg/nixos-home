@@ -58,312 +58,68 @@ mkIf (config.features.gui.enable or false) (lib.mkMerge [
       pkgs.neg.bpf_host_latency # trace DNS lookup latency via BCC/eBPF (root)
     ];
   }
-  # Centralize simple local wrappers under ~/.local/bin, inline to avoid early config.lib recursion in hm‑eval
+  # Generate ~/.local/bin scripts via a compact list (avoid config.lib recursion)
   {
-    # Heavy/long scripts moved into repo under scripts/
-    home.file.".local/bin/color" = {
-      executable = true;
-      force = true;
-      text = (builtins.readFile ./scripts/color);
-    };
-  }
-  {
-    home.file.".local/bin/browser_profile_migrate.py" = {
-      executable = true;
-      force = true;
-      text = (builtins.readFile ./scripts/browser_profile_migrate.py);
-    };
-  }
-  # bpf-host-latency is large and optional; enable on demand if needed
-  {
-    # Shim: main-menu (rofi-based launcher)
-    home.file.".local/bin/main-menu" = {
-      executable = true;
-      force = true;
-      text = (builtins.readFile ./scripts/main-menu.sh);
-    };
-  }
-  {
-    # Shim: mpd-add helper
-    home.file.".local/bin/mpd-add" = {
-      executable = true;
-      force = true;
-      text = (builtins.readFile ./scripts/mpd-add.sh);
-    };
-  }
-  {
-    # Shim: swayimg actions helper — forward to legacy script if present
-    home.file.".local/bin/swayimg-actions.sh" = {
-      executable = true;
-      force = true;
-      text = (builtins.readFile ./scripts/swayimg-actions.sh);
-    };
-  }
-  {
-    # Shim: clipboard menu
-    home.file.".local/bin/clip" = {
-      executable = true;
-      force = true;
-      text = (builtins.readFile ./scripts/clip.sh);
-    };
-  }
-  
-  {
-    # Shim: player control/launcher
-    home.file.".local/bin/pl" = {
-      executable = true;
-      force = true;
-      text = (builtins.readFile ./scripts/pl.sh);
-    };
-  }
-  {
-    # Shim: wallpaper helper
-    home.file.".local/bin/wl" = {
-      executable = true;
-      force = true;
-      text = (builtins.readFile ./scripts/wl.sh);
-    };
-  }
-  {
-    # Shim: music rename helper
-    home.file.".local/bin/music-rename" = {
-      executable = true;
-      force = true;
-      text = (builtins.readFile ./scripts/music-rename.sh);
-    };
-  }
-  {
-    # Shim: unlock helper
-    home.file.".local/bin/unlock" = {
-      executable = true;
-      force = true;
-      text = (builtins.readFile ./scripts/unlock.sh);
-    };
-  }
-  {
-    # Shim: pic-notify (dunst script)
-    home.file.".local/bin/pic-notify" = {
-      executable = true;
-      force = true;
-      text = (builtins.readFile ./scripts/pic-notify.sh);
-    };
-  }
-  {
-    # Shim: pic-dirs-list used by pic-dirs-runner service
-    home.file.".local/bin/pic-dirs-list" = {
-      executable = true;
-      force = true;
-      text = (builtins.readFile ./scripts/pic-dirs-list.sh);
-    };
-  }
-  {
-    home.file.".local/bin/any" = {
-      executable = true;
-      force = true;
-      text = (builtins.readFile ./scripts/any);
-    };
-  }
-  {
-    home.file.".local/bin/beet-update" = {
-      executable = true;
-      force = true;
-      text = (builtins.readFile ./scripts/beet-update);
-    };
-  }
-  {
-    home.file.".local/bin/sx" = {
-      executable = true;
-      force = true;
-      text = (builtins.readFile ../../media/images/sx.sh);
-    };
-  }
-  {
-    home.file.".local/bin/sxivnc" = {
-      executable = true;
-      force = true;
-      text = (builtins.readFile ../../media/images/sxivnc.sh);
-    };
-  }
-  {
-    home.file.".local/bin/exorg" = {
-      executable = true;
-      force = true;
-      text = (builtins.readFile ./scripts/exorg);
-    };
-  }
-  {
-    home.file.".local/bin/flacspec" = {
-      executable = true;
-      force = true;
-      text = (builtins.readFile ./scripts/flacspec);
-    };
-  }
-  {
-    home.file.".local/bin/iommu-info" = {
-      executable = true;
-      force = true;
-      text = (builtins.readFile ./scripts/iommu-info);
-    };
-  }
-  {
-    home.file.".local/bin/nb" = {
-      executable = true;
-      force = true;
-      text = (builtins.readFile ./scripts/nb);
-    };
-  }
-  {
-    home.file.".local/bin/neovim-autocd.py" = {
-      executable = true;
-      force = true;
-      text = (builtins.readFile ./scripts/neovim-autocd.py);
-    };
-  }
-  {
-    home.file.".local/bin/nix-updates" = {
-      executable = true;
-      force = true;
-      text = (builtins.readFile ./scripts/nix-updates);
-    };
-  }
-  {
-    home.file.".local/bin/pb" = {
-      executable = true;
-      force = true;
-      text = (builtins.readFile ./scripts/pb);
-    };
-  }
-  {
-    home.file.".local/bin/pngoptim" = {
-      executable = true;
-      force = true;
-      text = (builtins.readFile ./scripts/pngoptim);
-    };
-  }
-  {
-    home.file.".local/bin/qr" = {
-      executable = true;
-      force = true;
-      text = (builtins.readFile ./scripts/qr);
-    };
-  }
-  {
-    home.file.".local/bin/read_documents" = {
-      executable = true;
-      force = true;
-      text = (builtins.readFile ./scripts/read_documents);
-    };
-  }
-  {
-    home.file.".local/bin/ren" = {
-      executable = true;
-      force = true;
-      text = (builtins.readFile ./scripts/ren);
-    };
-  }
-  {
-    home.file.".local/bin/screenshot" = {
-      executable = true;
-      force = true;
-      text = (builtins.readFile ./scripts/screenshot);
-    };
-  }
-  {
-    home.file.".local/bin/se" = {
-      executable = true;
-      force = true;
-      text = (builtins.readFile ./scripts/se);
-    };
-  }
-  {
-    home.file.".local/bin/shot-optimizer" = {
-      executable = true;
-      force = true;
-      text = (builtins.readFile ./scripts/shot-optimizer);
-    };
-  }
-  {
-    home.file.".local/bin/swd" = {
-      executable = true;
-      force = true;
-      text = (builtins.readFile ./scripts/swd);
-    };
-  }
-  {
-    home.file.".local/bin/vol" = {
-      executable = true;
-      force = true;
-      text = (builtins.readFile ./scripts/vol);
-    };
-  }
-  {
-    home.file.".local/bin/mp" = {
-      executable = true;
-      force = true;
-      text = (builtins.readFile ./scripts/mp);
-    };
-  }
-  {
-    home.file.".local/bin/mpd_del_album" = {
-      executable = true;
-      force = true;
-      text = (builtins.readFile ./scripts/mpd_del_album);
-    };
-  }
-  {
-    home.file.".local/bin/music-index" = {
-      executable = true;
-      force = true;
-      text = (builtins.readFile ./scripts/music-index);
-    };
-  }
-  {
-    home.file.".local/bin/music-similar" = {
-      executable = true;
-      force = true;
-      text = (builtins.readFile ./scripts/music-similar);
-    };
-  }
-  {
-    home.file.".local/bin/cidr" = {
-      executable = true;
-      force = true;
-      text = (builtins.readFile ./scripts/cidr);
-    };
-  }
-  {
-    home.file.".local/bin/punzip" = {
-      executable = true;
-      force = true;
-      text = (builtins.readFile ./scripts/punzip);
-    };
-  }
-  {
-    # Pypr client (original script)
-    home.file.".local/bin/pypr-client" = {
-      executable = true;
-      force = true;
-      text = (builtins.readFile ./scripts/pypr-client.sh);
-    };
-  }
-  {
-    # Editor shim: `v` opens files in Neovim (original script)
-    home.file.".local/bin/v" = {
-      executable = true;
-      force = true;
-      text = (builtins.readFile ./scripts/v.sh);
-    };
-  }
-  {
-    home.file.".local/bin/vid-info" = {
-      executable = true;
-      force = true;
-      text = let
-        sp = pkgs.python3.sitePackages;
-        libpp = "${pkgs.neg.pretty_printer}/${sp}";
-        libcolored = "${pkgs.python3Packages.colored}/${sp}";
-        tpl = builtins.readFile ./scripts/vid-info.py;
-      in lib.replaceStrings ["@LIBPP@" "@LIBCOLORED@"] [ libpp libcolored ] tpl;
+    home.file = let
+      mkEnt = e: {
+        name = ".local/bin/${e.name}";
+        value = {
+          executable = true;
+          force = true;
+          text = builtins.readFile e.src;
+        };
+      };
+      scripts = [
+        { name = "color"; src = ./scripts/color; }
+        { name = "browser_profile_migrate.py"; src = ./scripts/browser_profile_migrate.py; }
+        { name = "main-menu"; src = ./scripts/main-menu.sh; }
+        { name = "mpd-add"; src = ./scripts/mpd-add.sh; }
+        { name = "swayimg-actions.sh"; src = ./scripts/swayimg-actions.sh; }
+        { name = "clip"; src = ./scripts/clip.sh; }
+        { name = "pl"; src = ./scripts/pl.sh; }
+        { name = "wl"; src = ./scripts/wl.sh; }
+        { name = "music-rename"; src = ./scripts/music-rename.sh; }
+        { name = "unlock"; src = ./scripts/unlock.sh; }
+        { name = "pic-notify"; src = ./scripts/pic-notify.sh; }
+        { name = "pic-dirs-list"; src = ./scripts/pic-dirs-list.sh; }
+        { name = "any"; src = ./scripts/any; }
+        { name = "beet-update"; src = ./scripts/beet-update; }
+        { name = "sx"; src = ../../media/images/sx.sh; }
+        { name = "sxivnc"; src = ../../media/images/sxivnc.sh; }
+        { name = "exorg"; src = ./scripts/exorg; }
+        { name = "flacspec"; src = ./scripts/flacspec; }
+        { name = "iommu-info"; src = ./scripts/iommu-info; }
+        { name = "nb"; src = ./scripts/nb; }
+        { name = "neovim-autocd.py"; src = ./scripts/neovim-autocd.py; }
+        { name = "nix-updates"; src = ./scripts/nix-updates; }
+        { name = "pb"; src = ./scripts/pb; }
+        { name = "pngoptim"; src = ./scripts/pngoptim; }
+        { name = "qr"; src = ./scripts/qr; }
+        { name = "read_documents"; src = ./scripts/read_documents; }
+        { name = "ren"; src = ./scripts/ren; }
+        { name = "screenshot"; src = ./scripts/screenshot; }
+        { name = "se"; src = ./scripts/se; }
+        { name = "shot-optimizer"; src = ./scripts/shot-optimizer; }
+        { name = "swd"; src = ./scripts/swd; }
+        { name = "vol"; src = ./scripts/vol; }
+        { name = "mp"; src = ./scripts/mp; }
+        { name = "mpd_del_album"; src = ./scripts/mpd_del_album; }
+        { name = "music-index"; src = ./scripts/music-index; }
+        { name = "music-similar"; src = ./scripts/music-similar; }
+        { name = "cidr"; src = ./scripts/cidr; }
+        { name = "punzip"; src = ./scripts/punzip; }
+        { name = "pypr-client"; src = ./scripts/pypr-client.sh; }
+        { name = "v"; src = ./scripts/v.sh; }
+      ];
+      base = builtins.listToAttrs (map mkEnt scripts);
+      # Special case: vid-info needs path substitution for libs
+      sp = pkgs.python3.sitePackages;
+      libpp = "${pkgs.neg.pretty_printer}/${sp}";
+      libcolored = "${pkgs.python3Packages.colored}/${sp}";
+      tpl = builtins.readFile ./scripts/vid-info.py;
+      vidInfoText = lib.replaceStrings ["@LIBPP@" "@LIBCOLORED@"] [ libpp libcolored ] tpl;
+    in base // {
+      ".local/bin/vid-info" = { executable = true; force = true; text = vidInfoText; };
     };
   }
 ])
