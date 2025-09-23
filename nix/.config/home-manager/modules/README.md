@@ -36,3 +36,11 @@ This directory contains Home Manager modules grouped by domain. Feature flags li
   - Launchers:
     - `rofi` is wrapped by a local script in `~/.local/bin/rofi` to ensure safe defaults (no-config unless requested, Ctrl+C cancels, theme lookup). Keep invocations plain (`rofi -dmenu ... -theme clip`) and avoid duplicating `-kb-*` flags.
     - `v` is a small Neovim shim in `~/.local/bin/v`. Use it when a short editor command is convenient.
+
+## Activation Hooks
+
+- Transmission: `Activating ensureTransmissionDirs`
+  - Meaning: a Home Manager activation step that creates runtime subdirectories under `~/.config/transmission-daemon/`.
+  - Why: avoids first-run errors like "resume: No such file or directory" when the config dir is a symlink or empty.
+  - Source: `modules/user/torrent/default.nix` uses `config.lib.neg.mkEnsureDirsAfterWrite` to make `resume/`, `torrents/`, and `blocklists/` after files are linked.
+  - Noise level: minimal, runs only when torrent feature is enabled.

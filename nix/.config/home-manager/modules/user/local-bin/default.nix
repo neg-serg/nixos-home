@@ -106,14 +106,7 @@ mkIf (config.features.gui.enable or false) (lib.mkMerge [
       text = (builtins.readFile ./scripts/clip.sh);
     };
   }
-  {
-    # Shim: rofi-lutris (menu)
-    home.file.".local/bin/rofi-lutris" = {
-      executable = true;
-      force = true;
-      text = (builtins.readFile ./scripts/rofi-lutris.sh);
-    };
-  }
+  
   {
     # Shim: player control/launcher
     home.file.".local/bin/pl" = {
