@@ -60,18 +60,18 @@ mkIf (config.features.gui.enable or false) (lib.mkMerge [
   }
   # Centralize simple local wrappers under ~/.local/bin, inline to avoid early config.lib recursion in hm‑eval
   {
-    # Heavy/long scripts: use out-of-store links from repo bin/
+    # Heavy/long scripts moved into repo under scripts/
     home.file.".local/bin/color" = {
       executable = true;
       force = true;
-      source = config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/bin/color";
+      text = (builtins.readFile ./scripts/color);
     };
   }
   {
     home.file.".local/bin/browser_profile_migrate.py" = {
       executable = true;
       force = true;
-      source = config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/bin/browser_profile_migrate.py";
+      text = (builtins.readFile ./scripts/browser_profile_migrate.py);
     };
   }
   # bpf-host-latency is large and optional; enable on demand if needed
