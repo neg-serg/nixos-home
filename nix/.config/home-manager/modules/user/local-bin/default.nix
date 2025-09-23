@@ -55,6 +55,7 @@ mkIf (config.features.gui.enable or false) (lib.mkMerge [
       pkgs.aria2              # segmented downloader (yt-dlp --downloader)
       pkgs.cliphist           # Wayland clipboard history
       pkgs.clipcat            # alternative clipboard history (clipcat-menu)
+      pkgs.neg.bpf_host_latency # trace DNS lookup latency via BCC/eBPF (root)
     ];
   }
   # Centralize simple local wrappers under ~/.local/bin, inline to avoid early config.lib recursion in hm‑eval
