@@ -14,8 +14,7 @@ mkIf (config.features.gui.enable or false) (lib.mkMerge [
       pkgs.socat
       pkgs.fasd
       pkgs.usbutils # lsusb
-      # audio/video + helpers
-      pkgs.mpv
+      # audio/video + helpers (mpv comes from media stack)
       pkgs.playerctl
       pkgs.wireplumber # wpctl
       pkgs.mpc-cli # mpc
@@ -36,10 +35,10 @@ mkIf (config.features.gui.enable or false) (lib.mkMerge [
       pkgs.zbar
       pkgs.exiftool
       # wallpapers helper
-      pkgs.essentia
+      pkgs.essentia-extractor
       # shell utils for menus and translations
       pkgs.translate-shell
-      pkgs.clipcat-menu
+      # clipcat-menu is provided by clipcat package in many nixpkgs; rely on that
       # ALSA fallback for volume control
       pkgs.alsa-utils
       # audio tools
@@ -75,13 +74,7 @@ mkIf (config.features.gui.enable or false) (lib.mkMerge [
       source = config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/bin/browser_profile_migrate.py";
     };
   }
-  {
-    home.file.".local/bin/bpf-host-latency" = {
-      executable = true;
-      force = true;
-      source = config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/bin/bpf-host-latency";
-    };
-  }
+  # bpf-host-latency is large and optional; enable on demand if needed
   {
     # Shim: main-menu (rofi-based launcher)
     home.file.".local/bin/main-menu" = {
