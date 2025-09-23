@@ -42,16 +42,16 @@ full() { shot "$@"; }
 
 menu() {
     sel=$(printf '%s\n' \
-        "Full screen" \
-        "Rectangular selection" \
-        "Current window" \
-        "Delayed (5s)" \
+        " Full screen" \
+        " Rectangular selection" \
+        " Current window" \
+        " Delayed (5s)" \
         | rofi -dmenu -theme clip -markup-rows -p '⟬shot⟭ ❯>' || true)
     case "$sel" in
-        "Full screen") full "$@" ;;
-        "Rectangular selection") select_region "$@" ;;
-        "Current window") current_window "$@" ;;
-        "Delayed (5s)") delay "$@" ;;
+        (""*) full "$@" ;;
+        (""*) select_region "$@" ;;
+        (""*) current_window "$@" ;;
+        (""*) delay "$@" ;;
         *) : ;;
     esac
 }
