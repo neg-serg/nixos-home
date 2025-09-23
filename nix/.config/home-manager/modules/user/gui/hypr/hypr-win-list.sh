@@ -13,6 +13,17 @@ list=$(jq -nr \
     # Build id->name map
     def wmap:
       reduce $wss[] as $w ({}; .[($w.id|tostring)] = (($w.name // ($w.id|tostring))|tostring));
+    # Map class to glyph (fallback to generic window)
+    def glyph(c):
+      if (c|test("^(firefox|floorp)$")) then ""
+      elif (c|test("kitty|term|alacritty|foot")) then ""
+      elif (c|test("mpv")) then ""
+      elif (c|test("zathura|org\\.pwmt\\.zathura")) then ""
+      elif (c|test("steam|Steam")) then ""
+      elif (c|test("discord|Discord")) then ""
+      elif (c|test("obs|obsidian|Obsidian|OBS")) then ""
+      elif (c|test("swayimg|sxiv|nsxiv")) then ""
+      else "" end;
     . as $in
     | ($in | wmap) as $wm
     | [ $clients[]
@@ -25,12 +36,12 @@ list=$(jq -nr \
       ]
     | sort_by(.wid)
     | .[]
-    | ("[" + (.wname|sanitize) + "] "
-       + (.cls|sanitize)
-       + " - "
+    | ("<span foreground='#5c6c7c'>[" + (.wname|sanitize) + "]</span> "
+       + (glyph(.cls)) + " "
+       + "<span foreground='#395573'>" + (.cls|sanitize) + "</span> — "
        + (.ttl|sanitize)
        + "\t"
-       + .addr)
+       + "<span foreground='#7a8a9a'>" + .addr + "</span>")
   ')
 [ -n "$list" ] || exit 0
 
@@ -55,14 +66,15 @@ if ! printf '%s' "$sel" | grep -q '\t'; then
   exit 0
 fi
 rc=$?
-addr=$(printf '%s' "$sel" | awk -F '\t' '{print $NF}' | sed 's/^ *//')
+# Extract raw address: strip markup from right column
+addr=$(printf '%s' "$sel" | awk -F '\t' '{print $NF}' | sed -E 's/<[^>]*>//g; s/^ *//')
 [ -n "$addr" ] || exit 0
 
 if [ "$rc" = 10 ]; then
   # Copy window title (strip workspace and class)
   printf '%s' "$sel" \
     | awk -F '\t' '{print $1}' \
-    | sed -E 's/^\[[^]]+\] *//; s/^[^ ]+ - *//' \
+    | sed -E "s/<[^>]*>//g; s/^\[[^]]+\] *//; s/^[^ ]+ — *//" \
     | wl-copy
   exit 0
 fi
