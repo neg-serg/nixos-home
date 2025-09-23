@@ -9,7 +9,8 @@ workspaces_json="$(@HYPRCTL@ -j workspaces 2>/dev/null || true)"
 list=$(jq -nr \
   --argjson clients "$clients_json" \
   --argjson wss "${workspaces_json:-[]}" '
-    def sanitize: tostring | gsub("[\t\n]"; " ");
+    def sanitize: tostring | gsub("[\t\n]"; " ")
+      | gsub("&"; "&amp;") | gsub("<"; "&lt;") | gsub(">"; "&gt;");
     # Build id->name map
     def wmap:
       reduce $wss[] as $w ({}; .[($w.id|tostring)] = (($w.name // ($w.id|tostring))|tostring));

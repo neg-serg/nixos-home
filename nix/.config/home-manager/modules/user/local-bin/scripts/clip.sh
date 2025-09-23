@@ -25,7 +25,7 @@ yt() {
 read_command() {
     # Offer a tiny preset list; user can also type arbitrary command
     printf '%s\n' sort tac \
-      | rofi -dmenu -matching glob -markup-rows -p 'pipe ❯>' \
+      | rofi -dmenu -matching glob -p 'pipe ❯>' \
         -mesg 'Enter: open • Alt+Enter: multi • Ctrl+C: cancel'
 }
 
@@ -90,7 +90,7 @@ clip_main() {
         clipcat-menu -c "$HOME/.config/clipcat/clipcat-menu.toml"
     else
         # cliphist: show history -> decode -> copy
-        sel=$(cliphist list | rofi -dmenu -lines 10 -i -matching glob -markup-rows -p 'clip ❯>' \
+        sel=$(cliphist list | rofi -dmenu -lines 10 -i -matching glob -p 'clip ❯>' \
             -kb-accept-alt 'Alt+Return' -kb-custom-1 'Alt+1' -kb-custom-2 'Alt+2' \
             -mesg 'Enter: copy • Alt+1: paste now • Alt+2: delete • Ctrl+C: cancel' -theme clip)
         rc=$?
@@ -128,11 +128,11 @@ yr() {
 youtube_url() {
     if command -v rg >/dev/null 2>&1; then
         sel=$(cliphist list | rg -E 'https.*(youtube|vimeo)\\.com' \
-            | rofi -lines 7 -dmenu -markup-rows -p 'youtube ❯>' \
+            | rofi -lines 7 -dmenu -p 'youtube ❯>' \
                 -mesg 'Enter: open • Alt+Enter: multi • Ctrl+C: cancel')
     else
         sel=$(cliphist list | grep -E 'https.*(youtube|vimeo)\\.com' \
-            | rofi -lines 7 -dmenu -markup-rows -p 'youtube ❯>' \
+            | rofi -lines 7 -dmenu -p 'youtube ❯>' \
                 -mesg 'Enter: open • Alt+Enter: multi • Ctrl+C: cancel')
     fi
     [ -z "$sel" ] && exit 1

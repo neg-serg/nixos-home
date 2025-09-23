@@ -102,7 +102,9 @@ pl_rofi() {
             [ -z "$d" ] && continue
             # mtime date
             ddate=$(stat -c '%y' "$dir/$d" 2>/dev/null | awk '{print $1}' )
-            printf ' %s/  <span foreground="#778899">[%s]</span>\n' "$d" "${ddate:-}"
+            # escape markup special chars in name
+            d_esc=$(printf '%s' "$d" | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g')
+            printf ' %s/  <span foreground="#778899">[%s]</span>\n' "$d_esc" "${ddate:-}"
         done
         # Files with duration + date
         printf '%s\n' "$list" | while IFS= read -r f; do
@@ -112,6 +114,8 @@ pl_rofi() {
                 /*) rel="${f#"$dir/"}" ;;
                 *)  rel="$f" ;;
             esac
+            # escape markup special chars in name
+            rel_esc=$(printf '%s' "$rel" | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g')
             # duration (mm:ss or hh:mm:ss) via ffprobe if available
             dur=""
             if command -v ffprobe >/dev/null 2>&1; then
@@ -130,7 +134,7 @@ pl_rofi() {
             else
                 tail="[${fdate:-}]"
             fi
-            printf '%s  <span foreground="#778899">%s</span>\n' "$rel" "$tail"
+            printf '%s  <span foreground="#778899">%s</span>\n' "$rel_esc" "$tail"
         done
     } )
     if [[ -z "$list" ]]; then
