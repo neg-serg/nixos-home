@@ -115,7 +115,7 @@ main() {
         # Keep legacy rofi file-browser path
         shift
         rofi -modi file-browser-extended -show file-browser-extended -p '❯>' \
-            -file-browser-dir "~/vid/new" -file-browser-depth 1 \
+            -file-browser-dir "${HOME}/vid/new" -file-browser-depth 1 \
             -file-browser-open-multi-key "kb-accept-alt" \
             -file-browser-open-custom-key "kb-custom-11" \
             -file-browser-hide-hidden-symbol "" \
