@@ -47,7 +47,8 @@ list=$(printf '%s\n' "$list" | awk '
   }
 ')
 
-sel=$(printf '%s\n' "$list" | rofi -dmenu -matching fuzzy -i -markup-rows -p 'Windows ❯>' -theme clip) || exit 0
+sel=$(printf '%s\n' "$list" | rofi -dmenu -matching fuzzy -i -markup-rows -p 'Windows ❯>' \
+  -mesg 'Enter: open • Alt+Enter: multi • Ctrl+C: cancel' -theme clip) || exit 0
 # Ignore separator/header lines (no address column)
 if ! printf '%s' "$sel" | grep -q '\t'; then
   exit 0
