@@ -85,23 +85,72 @@ pl_rofi() {
     dir="${~dir}"
     local maxd="${2:-}"
     local list sel
+    # Build candidate list (files)
     list=$(find_candidates "$dir" "$maxd")
+    # Also include top-level subdirectories for quick selection
+    local dirs
+    if command -v fd >/dev/null 2>&1; then
+        dirs=$(fd -td -d 1 . "$dir" 2>/dev/null | sed "s:^$dir/::" | sed '/^$/d')
+    else
+        dirs=$(find "$dir" -maxdepth 1 -mindepth 1 -type d -printf '%f\n' 2>/dev/null | sed '/^$/d')
+    fi
+    # Decorate entries with icons and grey tails: duration • date
+    local decorated
+    decorated=$( {
+        # Directories first (prefix icon and trailing slash)
+        printf '%s\n' "$dirs" | while IFS= read -r d; do
+            [ -z "$d" ] && continue
+            # mtime date
+            ddate=$(stat -c '%y' "$dir/$d" 2>/dev/null | awk '{print $1}' )
+            printf ' %s/  <span foreground="#778899">[%s]</span>\n' "$d" "${ddate:-}"
+        done
+        # Files with duration + date
+        printf '%s\n' "$list" | while IFS= read -r f; do
+            [ -z "$f" ] && continue
+            # Normalize to relative (fd already prints relative; rg may print absolute)
+            case "$f" in
+                /*) rel="${f#"$dir/"}" ;;
+                *)  rel="$f" ;;
+            esac
+            # duration (mm:ss or hh:mm:ss) via ffprobe if available
+            dur=""
+            if command -v ffprobe >/dev/null 2>&1; then
+                secs=$(ffprobe -v error -show_entries format=duration -of default=nw=1:nk=1 -- "$dir/$rel" 2>/dev/null | awk '{printf "%d\n", $1}' )
+                if [ -n "${secs}" ] && [ "$secs" -gt 0 ] 2>/dev/null; then
+                    if [ "$secs" -ge 3600 ]; then
+                        dur=$(awk -v s="$secs" 'BEGIN{printf "%d:%02d:%02d\n", int(s/3600), int(s%3600/60), int(s%60)}')
+                    else
+                        dur=$(awk -v s="$secs" 'BEGIN{printf "%d:%02d\n", int(s/60), int(s%60)}')
+                    fi
+                fi
+            fi
+            fdate=$(stat -c '%y' "$dir/$rel" 2>/dev/null | awk '{print $1}')
+            if [ -n "$dur" ]; then
+                tail="[$dur • ${fdate:-}]"
+            else
+                tail="[${fdate:-}]"
+            fi
+            printf '%s  <span foreground="#778899">%s</span>\n' "$rel" "$tail"
+        done
+    } )
     if [[ -z "$list" ]]; then
         return 0
     fi
-    if (( ${#${(f)list}[@]} > 1 )); then
-        sel=$(print -r -- "$list" | rofi -theme clip -p '⟬vid⟭ ❯>' -i -dmenu -markup-rows \
+    if (( ${#${(f)decorated}[@]} > 1 )); then
+        sel=$(print -r -- "$decorated" | rofi -theme clip -p '⟬vid⟭ ❯>' -i -dmenu -markup-rows \
             -kb-accept-alt 'Alt+Return' -kb-custom-1 'Alt+1' -kb-custom-2 'Alt+2' \
             -mesg 'Enter: open • Alt+Enter: multi • Alt+1: copy path • Alt+2: open dir • Ctrl+C: cancel')
         rc=$?
     else
-        sel="$list"; rc=0
+        sel="$decorated"; rc=0
     fi
     [[ -z "${sel:-}" ]] && return 0
+    # Strip grey tail markup and recover path/relname
+    sel="${sel%%  <span*}"
+    # Remove directory icon and trailing slash
+    sel="${sel# }"; sel="${sel%/}"
     # Absolute path
-    if [[ "$sel" != /* ]]; then
-        sel="$dir/$sel"
-    fi
+    if [[ "$sel" != /* ]]; then sel="$dir/$sel"; fi
     case "$rc" in
         10) print -r -- "$sel" | wl-copy ;;                              # Alt+1: copy path
         11) xdg-open "${sel%/*}" >/dev/null 2>&1 || true ;;               # Alt+2: open dir
