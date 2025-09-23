@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 # List windows from Hyprland and select via rofi; focus selected.
-prompt="Windows"
 
 clients_json="$(@HYPRCTL@ -j clients 2>/dev/null || true)"
 [ -n "$clients_json" ] || exit 0
@@ -35,7 +34,7 @@ list=$(jq -nr \
   ')
 [ -n "$list" ] || exit 0
 
-sel=$(printf '%s\n' "$list" | rofi -dmenu -matching fuzzy -i -p "$prompt" -theme clip) || exit 0
+sel=$(printf '%s\n' "$list" | rofi -dmenu -matching fuzzy -i -p '❯>' -theme clip) || exit 0
 addr=$(printf '%s' "$sel" | awk -F '\t' '{print $NF}' | sed 's/^ *//')
 [ -n "$addr" ] || exit 0
 
