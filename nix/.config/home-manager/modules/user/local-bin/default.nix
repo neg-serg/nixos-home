@@ -5,57 +5,56 @@ mkIf (config.features.gui.enable or false) (lib.mkMerge [
     # Runtime dependencies for local-bin scripts
     home.packages = config.lib.neg.pkgsList [
       # core tools
-      pkgs.fd
-      pkgs.jq
-      pkgs.curl
-      pkgs.git
-      pkgs.imagemagick
-      pkgs.libnotify # notify-send
-      pkgs.socat
-      pkgs.fasd
-      pkgs.usbutils # lsusb
+      pkgs.fd                 # fast file finder used by pl/read_documents
+      pkgs.jq                 # JSON processor for various helpers
+      pkgs.curl               # HTTP client for pb/swd
+      pkgs.git                # used by nb (notes repo updates)
+      pkgs.imagemagick        # convert/mogrify for screenshot/swayimg-actions
+      pkgs.libnotify          # notify-send for pic-notify/qr/screenshot
+      pkgs.socat              # UNIX sockets (pypr-client, swayimg IPC)
+      pkgs.fasd               # directory ranking for swayimg-actions destinations
+      pkgs.usbutils           # lsusb (unlock Yubikey detection)
       # audio/video + helpers (mpv comes from media stack)
-      pkgs.playerctl
-      pkgs.wireplumber # wpctl
-      pkgs.mpc-cli # mpc
+      pkgs.playerctl          # media control for pl bindings
+      pkgs.wireplumber        # wpctl for vol/pl volume control
+      pkgs.mpc-cli            # mpc for MPD helpers (mpd-add/mpd_del_album)
       # wayland utils
-      pkgs.wl-clipboard # wl-copy/wl-paste
-      pkgs.grim
-      pkgs.slurp
-      pkgs.wtype
+      pkgs.wl-clipboard       # wl-copy/wl-paste used across many scripts
+      pkgs.grim               # screenshots (qr/screenshot)
+      pkgs.slurp              # region selection (qr/screenshot)
+      pkgs.wtype              # fake keypress (clip pipe/paste)
       # archive/utils for se (prefer free tools)
-      pkgs.unar
-      pkgs.p7zip
-      pkgs.lbzip2
-      pkgs.rapidgzip
-      pkgs.xz
-      pkgs.unzip
+      pkgs.unar               # extract .rar (se)
+      pkgs.p7zip              # 7z extraction (se)
+      pkgs.lbzip2             # bzip2 backend for tar (se)
+      pkgs.rapidgzip          # gzip backend for tar (se)
+      pkgs.xz                 # xz backend for tar/unxz (se)
+      pkgs.unzip              # unzip (used via punzip helper)
       # image/qr/info
-      pkgs.qrencode
-      pkgs.zbar
-      pkgs.exiftool
-      # wallpapers helper
-      pkgs.essentia-extractor
+      pkgs.qrencode           # generate QR codes (qr gen)
+      pkgs.zbar               # scan QR from image (qr)
+      pkgs.exiftool           # EXIF metadata (pic-notify)
+      # audio features extractor for music-index/music-similar
+      pkgs.essentia-extractor # streaming_extractor_music binary
       # shell utils for menus and translations
-      pkgs.translate-shell
-      # clipcat-menu is provided by clipcat package in many nixpkgs; rely on that
+      pkgs.translate-shell    # trans CLI (main-menu translate)
       # ALSA fallback for volume control
-      pkgs.alsa-utils
+      pkgs.alsa-utils         # amixer (vol fallback)
       # audio tools
-      pkgs.sox
+      pkgs.sox                # spectrograms (flacspec)
       # Xvfb for exorg
-      pkgs.xorg.xvfb
-      # rofi consumer
-      pkgs.zathura
+      pkgs.xorg.xvfb          # headless X server (exorg)
+      # document viewer for read_documents
+      pkgs.zathura            # PDF/DJVU/EPUB viewer (rofi file-browser)
       # notify daemon (dunstify) provided by dunst service; ensure package present
-      pkgs.dunst
+      pkgs.dunst              # desktop notifications backend
       # inotify for shot-optimizer and pic-dirs-list
-      pkgs.inotify-tools
-      # downloaders for clip
-      pkgs.yt-dlp
-      pkgs.aria2
-      pkgs.cliphist
-      pkgs.clipcat
+      pkgs.inotify-tools      # inotifywait monitor for folders
+      # downloaders for clip (YouTube DL + aria2 backend)
+      pkgs.yt-dlp             # video downloader
+      pkgs.aria2              # segmented downloader (yt-dlp --downloader)
+      pkgs.cliphist           # Wayland clipboard history
+      pkgs.clipcat            # alternative clipboard history (clipcat-menu)
     ];
   }
   # Centralize simple local wrappers under ~/.local/bin, inline to avoid early config.lib recursion in hm‑eval
