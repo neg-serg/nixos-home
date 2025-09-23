@@ -6,24 +6,25 @@
 IFS=' 	
 '
 
-main_menu='
-title_copy| Title
-artist_copy| Artist
-album_copy| Album
-path_copy| Path
-pipewire_output| PipeWire Output
-alsa_output| ALSA Output
-translate| Translate
-termbin| Termbin
+items='
+
+ Title:title_copy
+ Artist:artist_copy
+ Album:album_copy
+ Path:path_copy
+ PipeWire Output:pipewire_output
+ ALSA Output:alsa_output
+ Translate:translate
+ Termbin:termbin
 '
 
 generate_menu() {
     blue="<span weight='bold' color='#395573'>"
-    printf '%s\n' "$main_menu" \
-      | awk -F '|' -v blue="$blue" '
+    printf '%s\n' "$items" \
+      | awk -F ':' -v blue="$blue" '
           function wrap(s) { printf("%s⟬%s⟭</span>\n", blue, s) }
           {
-            lab=$2; wrap(lab)
+            lab=$1; wrap(lab)
             if (lab==" Path" || lab==" ALSA Output") {
               print "<span foreground=\"#5c6c7c\">───</span>"
             }
@@ -85,7 +86,7 @@ handler() {
     while IFS= read -r line; do
         label=$(printf '%s' "$line" | sed -e 's/<[^>]*>//g' -e 's/.*⟬//' -e 's/⟭.*//')
         [ -z "$label" ] && continue
-        fn=$(printf '%s\n' "$main_menu" | awk -F '|' -v L="$label" '$2==L{print $1; exit}')
+        fn=$(printf '%s\n' "$items" | awk -F ':' -v L="$label" '$1==L{print $2; exit}')
         [ -n "$fn" ] && "$fn"
     done
 }
