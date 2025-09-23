@@ -451,4 +451,18 @@
       example = "pkgs.callPackage ./path/to/wrapper.nix {}";
     };
   };
+
+  # Rofi package (single source of truth) used by wrapper and config
+  options.neg.rofi = {
+    package = lib.mkOption {
+      type = lib.types.package;
+      default = pkgs.rofi.override {
+        plugins = [
+          pkgs.rofi-file-browser # file browser mode for rofi
+          pkgs.neg.rofi_games    # custom games menu plugin
+        ];
+      };
+      description = "Rofi build with required plugins (file-browser, rofi-games).";
+    };
+  };
 }
