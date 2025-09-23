@@ -12,7 +12,7 @@ fi
 main() {
     if [[ -f $1 ]]; then
         case $1 in
-            *.rar) unrar x "$1" ;;
+            *.rar) unar "$1" ;;
             *.tar.bz2) tar -x --use-compress-program=lbzip2 -f "$1" ;;
             *.tar.gz) tar -x --use-compress-program=rapidgzip -f "$1" ;;
             *.tar) tar xvf "$1" ;;
@@ -35,7 +35,7 @@ main() {
 main_here() {
     if [[ -f $1 ]]; then
         case $1 in
-            *.rar) unrar x "$1" "${1%%.rar}" ;;
+            *.rar) unar -o "${1%%.rar}" "$1" ;;
             *.tar.bz2) tar -x --use-compress-program=lbzip2 -f "$1" ;;
             *.tar.gz) tar -x --use-compress-program=rapidgzip -f "$1" ;;
             *.tar) tar -C "${1%%.tar}" xf "$1" ;;
@@ -63,4 +63,3 @@ if [[ $1 == "here" ]]; then
 else
     main "$@"
 fi
-
