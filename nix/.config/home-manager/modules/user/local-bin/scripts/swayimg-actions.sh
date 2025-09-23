@@ -186,8 +186,6 @@ copy_name() { # copy absolute path to clipboard
   printf '%s\n' "$(realpath "$file")" | wl-copy
   if command -v pic-notify >/dev/null 2>&1; then
     pic-notify "$file" || true
-  elif [ -x "$HOME/bin/pic-notify" ]; then
-    "$HOME/bin/pic-notify" "$file" || true
   fi
 }
 
