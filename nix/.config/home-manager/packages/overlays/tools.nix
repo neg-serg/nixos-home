@@ -2,6 +2,9 @@ _final: prev: let
   call = prev.callPackage;
 in {
   neg = rec {
+    # eBPF/BCC tools
+    bpf_host_latency = call ../bpf-host-latency {};
+    "bpf-host-latency" = bpf_host_latency;
     # CLI/util packages
     a2ln = call ../a2ln {};
     bt_migrate = call ../bt-migrate {};

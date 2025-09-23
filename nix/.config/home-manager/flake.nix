@@ -235,6 +235,7 @@
             default = pkgs.zsh;
           } // lib.optionalAttrs extras {
             hy3Plugin = hy3.packages.${system}.hy3;
+            bpf-host-latency = pkgs.neg.bpf_host_latency;
           };
 
         # Formatter: treefmt wrapper pinned to repo config
