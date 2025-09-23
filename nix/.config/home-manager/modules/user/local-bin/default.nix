@@ -91,6 +91,20 @@ mkIf (config.features.gui.enable or false) (lib.mkMerge [
     };
   }
   {
+    home.file.".local/bin/any" = {
+      executable = true;
+      force = true;
+      text = (builtins.readFile ./scripts/any);
+    };
+  }
+  {
+    home.file.".local/bin/beet-update" = {
+      executable = true;
+      force = true;
+      text = (builtins.readFile ./scripts/beet-update);
+    };
+  }
+  {
     home.file.".local/bin/sx" = {
       executable = true;
       force = true;
@@ -102,6 +116,153 @@ mkIf (config.features.gui.enable or false) (lib.mkMerge [
       executable = true;
       force = true;
       text = (builtins.readFile ../../media/images/sxivnc.sh);
+    };
+  }
+  {
+    home.file.".local/bin/exorg" = {
+      executable = true;
+      force = true;
+      text = (builtins.readFile ./scripts/exorg);
+    };
+  }
+  {
+    home.file.".local/bin/flacspec" = {
+      executable = true;
+      force = true;
+      text = (builtins.readFile ./scripts/flacspec);
+    };
+  }
+  {
+    home.file.".local/bin/iommu-info" = {
+      executable = true;
+      force = true;
+      text = (builtins.readFile ./scripts/iommu-info);
+    };
+  }
+  {
+    home.file.".local/bin/nb" = {
+      executable = true;
+      force = true;
+      text = (builtins.readFile ./scripts/nb);
+    };
+  }
+  {
+    home.file.".local/bin/neovim-autocd.py" = {
+      executable = true;
+      force = true;
+      text = (builtins.readFile ./scripts/neovim-autocd.py);
+    };
+  }
+  {
+    home.file.".local/bin/nix-updates" = {
+      executable = true;
+      force = true;
+      text = (builtins.readFile ./scripts/nix-updates);
+    };
+  }
+  {
+    home.file.".local/bin/pb" = {
+      executable = true;
+      force = true;
+      text = (builtins.readFile ./scripts/pb);
+    };
+  }
+  {
+    home.file.".local/bin/pngoptim" = {
+      executable = true;
+      force = true;
+      text = (builtins.readFile ./scripts/pngoptim);
+    };
+  }
+  {
+    home.file.".local/bin/qr" = {
+      executable = true;
+      force = true;
+      text = (builtins.readFile ./scripts/qr);
+    };
+  }
+  {
+    home.file.".local/bin/read_documents" = {
+      executable = true;
+      force = true;
+      text = (builtins.readFile ./scripts/read_documents);
+    };
+  }
+  {
+    home.file.".local/bin/ren" = {
+      executable = true;
+      force = true;
+      text = (builtins.readFile ./scripts/ren);
+    };
+  }
+  {
+    home.file.".local/bin/screenshot" = {
+      executable = true;
+      force = true;
+      text = (builtins.readFile ./scripts/screenshot);
+    };
+  }
+  {
+    home.file.".local/bin/se" = {
+      executable = true;
+      force = true;
+      text = (builtins.readFile ./scripts/se);
+    };
+  }
+  {
+    home.file.".local/bin/shot-optimizer" = {
+      executable = true;
+      force = true;
+      text = (builtins.readFile ./scripts/shot-optimizer);
+    };
+  }
+  {
+    home.file.".local/bin/swd" = {
+      executable = true;
+      force = true;
+      text = (builtins.readFile ./scripts/swd);
+    };
+  }
+  {
+    home.file.".local/bin/vol" = {
+      executable = true;
+      force = true;
+      text = (builtins.readFile ./scripts/vol);
+    };
+  }
+  {
+    home.file.".local/bin/mp" = {
+      executable = true;
+      force = true;
+      text = (builtins.readFile ./scripts/mp);
+    };
+  }
+  {
+    home.file.".local/bin/mpd_del_album" = {
+      executable = true;
+      force = true;
+      text = (builtins.readFile ./scripts/mpd_del_album);
+    };
+  }
+  {
+    home.file.".local/bin/music-index" = {
+      executable = true;
+      force = true;
+      text = (builtins.readFile ./scripts/music-index);
+    };
+  }
+  {
+    home.file.".local/bin/music-similar" = {
+      executable = true;
+      force = true;
+      text = (builtins.readFile ./scripts/music-similar);
+    };
+  }
+  {
+    home.file.".local/bin/cidr" = {
+      executable = true;
+      force = true;
+      text = (builtins.readFile ./scripts/cidr);
     };
   }
   {
