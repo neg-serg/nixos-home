@@ -20,8 +20,15 @@ termbin| Termbin
 generate_menu() {
     blue="<span weight='bold' color='#395573'>"
     printf '%s\n' "$main_menu" \
-      | awk -F '|' '{print $2}' \
-      | sed -e "s/.*/${blue}⟬&⟭<\\/span>/"
+      | awk -F '|' -v blue="$blue" '
+          function wrap(s) { printf("%s⟬%s⟭</span>\n", blue, s) }
+          {
+            lab=$2; wrap(lab)
+            if (lab==" Path" || lab==" ALSA Output") {
+              print "<span foreground=\"#5c6c7c\">───</span>"
+            }
+          }
+        '
 }
 
 # Helpers for JSON from rmpc-song
