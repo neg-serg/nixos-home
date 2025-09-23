@@ -97,9 +97,23 @@ clip_main() {
         [ -z "$sel" ] && exit 0
         idx="$(printf '%s' "$sel" | awk -F ':' '{print $1}')"
         case "$rc" in
-            10) cliphist decode "$idx" | wl-copy; sleep 0.05; send_key 'Control_L+v' ;; # paste now
-            11) cliphist delete "$idx" >/dev/null 2>&1 || true ;;
-            *)  cliphist decode "$idx" | wl-copy ;;
+            10)
+                # paste now
+                cliphist decode "$idx" | wl-copy; sleep 0.05; send_key 'Control_L+v'
+                ;;
+            11)
+                # confirm delete (two-step rofi with red label)
+                conf=$(printf '%s\n%s\n' \
+                    "<span foreground='#d75f5f'> Delete</span>" \
+                    "Cancel" \
+                  | rofi -dmenu -markup-rows -p '⟬confirm⟭ ❯>' -theme clip)
+                if printf '%s' "$conf" | grep -q 'Delete'; then
+                  cliphist delete "$idx" >/dev/null 2>&1 || true
+                fi
+                ;;
+            *)
+                cliphist decode "$idx" | wl-copy
+                ;;
         esac
     fi
 }
