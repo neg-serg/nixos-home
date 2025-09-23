@@ -21,15 +21,7 @@ items='
 generate_menu() {
     blue="<span weight='bold' color='#395573'>"
     printf '%s\n' "$items" \
-      | awk -F ':' -v blue="$blue" '
-          function wrap(s) { printf("%s⟬%s⟭</span>\n", blue, s) }
-          {
-            lab=$1; wrap(lab)
-            if (lab==" Path" || lab==" ALSA Output") {
-              print "<span foreground=\"#5c6c7c\">───</span>"
-            }
-          }
-        '
+      | awk -F ':' -v blue="$blue" '{printf("%s⟬%s⟭</span>\n", blue, $1)}'
 }
 
 # Helpers for JSON from rmpc-song

@@ -9,8 +9,7 @@ workspaces_json="$(@HYPRCTL@ -j workspaces 2>/dev/null || true)"
 list=$(jq -nr \
   --argjson clients "$clients_json" \
   --argjson wss "${workspaces_json:-[]}" '
-    def sanitize: tostring | gsub("[\t\n]"; " ")
-      | gsub("&"; "&amp;") | gsub("<"; "&lt;") | gsub(">"; "&gt;");
+    def sanitize: tostring | gsub("[\t\n]"; " ");
     # Build id->name map
     def wmap:
       reduce $wss[] as $w ({}; .[($w.id|tostring)] = (($w.name // ($w.id|tostring))|tostring));
@@ -37,29 +36,18 @@ list=$(jq -nr \
       ]
     | sort_by(.wid)
     | .[]
-    | ("<span foreground='#5c6c7c'>[" + (.wname|sanitize) + "]</span> "
+    | ("[" + (.wname|sanitize) + "] "
        + (glyph(.cls)) + " "
-       + "<span foreground='#395573'>" + (.cls|sanitize) + "</span> — "
+       + (.cls|sanitize) + " - "
        + (.ttl|sanitize)
        + "\t"
-       + "<span foreground='#7a8a9a'>" + .addr + "</span>")
+       + .addr)
   ')
 [ -n "$list" ] || exit 0
 
-# Insert thin separators between workspace groups for readability
-list=$(printf '%s\n' "$list" | awk '
-  BEGIN{ prev="" }
-  {
-    if (match($0, /^\[([^]]+)\]/, m)) {
-      cur=m[1];
-      if (prev!="" && cur!=prev) { print "<span foreground=\"#5c6c7c\">───</span>" }
-      prev=cur
-    }
-    print
-  }
-')
+## Removed group separators to avoid extra lines in the menu
 
-sel=$(printf '%s\n' "$list" | rofi -dmenu -matching fuzzy -i -markup-rows -p 'Windows ❯>' \
+sel=$(printf '%s\n' "$list" | rofi -dmenu -matching fuzzy -i -p 'Windows ❯>' \
   -kb-accept-alt 'Alt+Return' -kb-custom-1 'Alt+1' -kb-custom-2 'Alt+2' \
   -mesg 'Enter: focus • Alt+1: copy title • Ctrl+C: cancel' -theme clip) || exit 0
 # Ignore separator/header lines (no address column)
@@ -67,15 +55,15 @@ if ! printf '%s' "$sel" | grep -q '\t'; then
   exit 0
 fi
 rc=$?
-# Extract raw address: strip markup from right column
-addr=$(printf '%s' "$sel" | awk -F '\t' '{print $NF}' | sed -E 's/<[^>]*>//g; s/^ *//')
+# Extract raw address from right column
+addr=$(printf '%s' "$sel" | awk -F '\t' '{print $NF}' | sed 's/^ *//')
 [ -n "$addr" ] || exit 0
 
 if [ "$rc" = 10 ]; then
   # Copy window title (strip workspace and class)
   printf '%s' "$sel" \
     | awk -F '\t' '{print $1}' \
-    | sed -E "s/<[^>]*>//g; s/^\[[^]]+\] *//; s/^[^ ]+ — *//" \
+    | sed -E 's/^\[[^]]+\] *//; s/^[^ ]+ - *//' \
     | wl-copy
   exit 0
 fi
