@@ -46,7 +46,7 @@ menu() {
         "Rectangular selection" \
         "Current window" \
         "Delayed (5s)" \
-        | rofi -dmenu -theme clip -p '⟬shot⟭ ❯>' || true)
+        | rofi -dmenu -theme clip -p '❯>' || true)
     case "$sel" in
         "Full screen") full "$@" ;;
         "Rectangular selection") select_region "$@" ;;
@@ -74,4 +74,3 @@ case "${1:-}" in
     -h) show_help;;
     *) full "$@";;
 esac
-

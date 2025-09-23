@@ -14,7 +14,7 @@ mkdir -p ${XDG_DATA_HOME:-$HOME/.local/share}/swayimg
 z="${XDG_DATA_HOME:-$HOME/.local/share}/swayimg/data"
 last_file="${XDG_DATA_HOME:-$HOME/.local/share}/swayimg/last"
 trash="${HOME}/trash/1st-level/pic"
-rofi_cmd='rofi -dmenu -sort -matching fuzzy -no-plugins -no-only-match -theme sxiv -custom'
+rofi_cmd='rofi -dmenu -sort -matching fuzzy -no-plugins -no-only-match -theme sxiv -custom -p "❯>"'
 pics_dir_default="$HOME/Pictures"
 pics_dir="${XDG_PICTURES_DIR:-$pics_dir_default}"
 
@@ -143,7 +143,7 @@ choose_dest() {
   fi
 
   printf '%s\n' "$entries" \
-    | sh -c "$rofi_cmd -p \"⟬$prompt⟭ ❯>\"" \
+    | sh -c "$rofi_cmd" \
     | sed "s:^~:$HOME:"
 }
 

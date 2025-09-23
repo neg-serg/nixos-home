@@ -89,7 +89,7 @@ clip_main() {
         clipcat-menu -c "$HOME/.config/clipcat/clipcat-menu.toml"
     else
         # cliphist: show history -> decode -> copy
-        sel=$(cliphist list | rofi -dmenu -lines 10 -i -matching glob -p '⟬clip⟭ ❯>' -theme clip)
+        sel=$(cliphist list | rofi -dmenu -lines 10 -i -matching glob -p '❯>' -theme clip)
         [ -z "$sel" ] && exit 0
         idx="$(printf '%s' "$sel" | awk -F ':' '{print $1}')"
         cliphist decode "$idx" | wl-copy
@@ -106,10 +106,10 @@ yr() {
 youtube_url() {
     if command -v rg >/dev/null 2>&1; then
         sel=$(cliphist list | rg -E 'https.*(youtube|vimeo)\\.com' \
-            | rofi -lines 7 -dmenu -p '⟬youtube⟭ ❯>')
+            | rofi -lines 7 -dmenu -p '❯>')
     else
         sel=$(cliphist list | grep -E 'https.*(youtube|vimeo)\\.com' \
-            | rofi -lines 7 -dmenu -p '⟬youtube⟭ ❯>')
+            | rofi -lines 7 -dmenu -p '❯>')
     fi
     [ -z "$sel" ] && exit 1
     idx="$(printf '%s' "$sel" | awk -F ':' '{print $1}')"
