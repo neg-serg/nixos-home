@@ -17,9 +17,11 @@ list=$(fd . "$dir" -d 1 -t f -0 -e pdf -e djvu -e epub \
   | xargs -0 -n1 -I {} sh -c '
       f="$1"; bn="${f##*/}"; ext="${bn##*.}"; icon=""
       case "$ext" in pdf|PDF) icon="" ;; djvu|DJVU) icon="" ;; epub|EPUB) icon="" ;; esac
+      # escape markup special chars in name
+      bn_esc=$(printf "%s" "$bn" | sed "s/&/\\&amp;/g; s/</\\&lt;/g; s/>/\\&gt;/g")
       sz=$(stat -c %s -- "$f" 2>/dev/null || echo 0)
       mib=$(awk -v b="$sz" "BEGIN{printf \"%.1f\", (b/1048576)}")
-      printf "%s %s  <span foreground=\"#7a8a9a\">(%s MiB)</span>\n" "$icon" "$bn" "$mib"
+      printf "%s %s  <span foreground=\"#7a8a9a\">(%s MiB)</span>\n" "$icon" "$bn_esc" "$mib"
     ' sh {} )
 
 cnt=$(printf '%s\n' "$list" | grep -c . || true)
