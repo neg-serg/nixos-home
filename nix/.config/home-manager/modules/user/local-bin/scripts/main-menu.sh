@@ -7,23 +7,21 @@ IFS='
 '
 
 main_menu='
-title_copy
-artist_copy
-album_copy
-path_copy
-pipewire_output
-alsa_output
-translate
-termbin
+title_copy| Title
+artist_copy| Artist
+album_copy| Album
+path_copy| Path
+pipewire_output| PipeWire Output
+alsa_output| ALSA Output
+translate| Translate
+termbin| Termbin
 '
 
 generate_menu() {
     blue="<span weight='bold' color='#395573'>"
-    count=0
-    for item in $main_menu; do
-        count=$((count+1))
-        printf '%s\n' "$(printf %X "$count"):${blue}⟬</span>${item}${blue}⟭</span>"
-    done
+    printf '%s\n' "$main_menu" \
+      | awk -F '|' '{print $2}' \
+      | sed -e "s/.*/${blue}⟬&⟭<\\/span>/"
 }
 
 # Helpers for JSON from rmpc-song
@@ -78,16 +76,10 @@ termbin(){
 
 handler() {
     while IFS= read -r line; do
-        sel_item=$(printf '%s' "$line" \
-          | sed -e 's/^[^:]*://' -e 's/<[^>]*>//g' -e 's/.*⟬//' -e 's/⟭.*//')
-        if [ -n "$sel_item" ]; then
-            for t in $main_menu; do
-                if [ "$sel_item" = "$t" ]; then
-                    "$t"
-                    break
-                fi
-            done
-        fi
+        label=$(printf '%s' "$line" | sed -e 's/<[^>]*>//g' -e 's/.*⟬//' -e 's/⟭.*//')
+        [ -z "$label" ] && continue
+        fn=$(printf '%s\n' "$main_menu" | awk -F '|' -v L="$label" '$2==L{print $1; exit}')
+        [ -n "$fn" ] && "$fn"
     done
 }
 
