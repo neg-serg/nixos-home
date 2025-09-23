@@ -90,7 +90,7 @@ pl_rofi() {
         return 0
     fi
     if (( ${#${(f)list}[@]} > 1 )); then
-        sel=$(print -r -- "$list" | rofi -theme clip -p '❯>' -i -dmenu)
+        sel=$(print -r -- "$list" | rofi -theme clip -p '⟬vid⟭ ❯>' -i -dmenu)
     else
         sel="$list"
     fi
@@ -114,7 +114,7 @@ main() {
     if [[ "${1:-}" == "video" ]]; then
         # Keep legacy rofi file-browser path
         shift
-        rofi -modi file-browser-extended -show file-browser-extended -p '❯>' \
+        rofi -modi file-browser-extended -show file-browser-extended -p '⟬vid⟭ ❯>' \
             -file-browser-dir "~/vid/new" -file-browser-depth 1 \
             -file-browser-open-multi-key "kb-accept-alt" \
             -file-browser-open-custom-key "kb-custom-11" \
