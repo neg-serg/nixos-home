@@ -48,13 +48,23 @@ list=$(printf '%s\n' "$list" | awk '
 ')
 
 sel=$(printf '%s\n' "$list" | rofi -dmenu -matching fuzzy -i -markup-rows -p 'Windows ❯>' \
-  -mesg 'Enter: open • Alt+Enter: multi • Ctrl+C: cancel' -theme clip) || exit 0
+  -kb-accept-alt 'Alt+Return' -kb-custom-1 'Alt+1' -kb-custom-2 'Alt+2' \
+  -mesg 'Enter: focus • Alt+1: copy title • Ctrl+C: cancel' -theme clip) || exit 0
 # Ignore separator/header lines (no address column)
 if ! printf '%s' "$sel" | grep -q '\t'; then
   exit 0
 fi
+rc=$?
 addr=$(printf '%s' "$sel" | awk -F '\t' '{print $NF}' | sed 's/^ *//')
 [ -n "$addr" ] || exit 0
 
+if [ "$rc" = 10 ]; then
+  # Copy window title (strip workspace and class)
+  printf '%s' "$sel" \
+    | awk -F '\t' '{print $1}' \
+    | sed -E 's/^\[[^]]+\] *//; s/^[^ ]+ - *//' \
+    | wl-copy
+  exit 0
+fi
 @HYPRCTL@ dispatch focuswindow "address:$addr" >/dev/null 2>&1 || true
 @HYPRCTL@ dispatch bringactivetotop >/dev/null 2>&1 || true

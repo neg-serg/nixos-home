@@ -91,17 +91,22 @@ pl_rofi() {
     fi
     if (( ${#${(f)list}[@]} > 1 )); then
         sel=$(print -r -- "$list" | rofi -theme clip -p '⟬vid⟭ ❯>' -i -dmenu -markup-rows \
-            -mesg 'Enter: open • Alt+Enter: multi • Ctrl+C: cancel')
+            -kb-accept-alt 'Alt+Return' -kb-custom-1 'Alt+1' -kb-custom-2 'Alt+2' \
+            -mesg 'Enter: open • Alt+Enter: multi • Alt+1: copy path • Alt+2: open dir • Ctrl+C: cancel')
+        rc=$?
     else
-        sel="$list"
+        sel="$list"; rc=0
     fi
     [[ -z "${sel:-}" ]] && return 0
-    print -r -- "$sel" | wl-copy || true
     # Absolute path
     if [[ "$sel" != /* ]]; then
         sel="$dir/$sel"
     fi
-    mp "$sel"
+    case "$rc" in
+        10) print -r -- "$sel" | wl-copy ;;                              # Alt+1: copy path
+        11) xdg-open "${sel%/*}" >/dev/null 2>&1 || true ;;               # Alt+2: open dir
+        *)  print -r -- "$sel" | wl-copy || true; mp "$sel" ;;            # default: play
+    esac
 }
 
 main() {

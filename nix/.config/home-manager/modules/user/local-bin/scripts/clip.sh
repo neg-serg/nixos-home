@@ -91,10 +91,16 @@ clip_main() {
     else
         # cliphist: show history -> decode -> copy
         sel=$(cliphist list | rofi -dmenu -lines 10 -i -matching glob -markup-rows -p '⟬clip⟭ ❯>' \
-            -mesg 'Enter: open • Alt+Enter: multi • Ctrl+C: cancel' -theme clip)
+            -kb-accept-alt 'Alt+Return' -kb-custom-1 'Alt+1' -kb-custom-2 'Alt+2' \
+            -mesg 'Enter: copy • Alt+1: paste now • Alt+2: delete • Ctrl+C: cancel' -theme clip)
+        rc=$?
         [ -z "$sel" ] && exit 0
         idx="$(printf '%s' "$sel" | awk -F ':' '{print $1}')"
-        cliphist decode "$idx" | wl-copy
+        case "$rc" in
+            10) cliphist decode "$idx" | wl-copy; sleep 0.05; send_key 'Control_L+v' ;; # paste now
+            11) cliphist delete "$idx" >/dev/null 2>&1 || true ;;
+            *)  cliphist decode "$idx" | wl-copy ;;
+        esac
     fi
 }
 
