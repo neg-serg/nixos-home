@@ -21,9 +21,12 @@
 
 #listview {
     columns: 6;
-    lines: 12;
-    dynamic: true;
+    lines: 4;
+    layout: horizontal;
+    orientation: horizontal;
+    dynamic: false;
     fixed-height: false;
+    fixed-columns: true;
     spacing: 4px;
     scrollbar: true;
     padding: 4px 0px 12px 0px;
