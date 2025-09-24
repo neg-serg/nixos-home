@@ -5,14 +5,15 @@ set -euo pipefail
 clients_json="$(@HYPRCTL@ -j clients 2>/dev/null || true)"
 [ -n "$clients_json" ] || exit 0
 workspaces_json="$(@HYPRCTL@ -j workspaces 2>/dev/null || true)"
+active_json="$(@HYPRCTL@ -j activewindow 2>/dev/null || true)"
+[ -n "$active_json" ] || active_json="null"
 
 list=$(jq -nr \
   --argjson clients "$clients_json" \
-  --argjson wss "${workspaces_json:-[]}" '
+  --argjson wss "${workspaces_json:-[]}" \
+  --argjson active "$active_json" '
     def sanitize: tostring | gsub("[\t\n]"; " ");
-    # Build id->name map
-    def wmap:
-      reduce $wss[] as $w ({}; .[($w.id|tostring)] = (($w.name // ($w.id|tostring))|tostring));
+    def clip($n): sanitize | if (length > $n) then (.[:($n-1)] + "…") else . end;
     # Map class to glyph (fallback to generic window)
     def glyph(c):
       if (c|test("^(firefox|floorp)$")) then ""
@@ -25,21 +26,36 @@ list=$(jq -nr \
       elif (c|test("swayimg|sxiv|nsxiv")) then ""
       else "" end;
     . as $in
-    | ($in | wmap) as $wm
-    | [ $clients[]
-        | select(.mapped==true)
-        | {wid: (.workspace.id|tostring),
-           wname: ($wm[.workspace.id|tostring] // (.workspace.id|tostring)),
+    # Unwrap possible container objects from hyprctl JSON
+    | ($wss | (if (type=="object" and has("workspaces")) then .workspaces else . end)) as $W
+    | ($clients | (if (type=="object" and has("clients")) then .clients else . end)) as $C
+    # Build id->name map from workspaces
+    | ($W | reduce .[] as $w ({}; .[($w.id|tostring)] = (($w.name // ($w.id|tostring))|tostring))) as $wm
+    # Collect IDs of special (scratchpad) workspaces to filter out
+    | ($W | map(select(.special == true or ((.name // "") | tostring | startswith("special"))) | .id)) as $sids
+    | ($active | if (type == "object" and has("address")) then .address else "" end) as $activeAddr
+    # Build rows
+    | [ $C[]
+        # Derive workspace id and name robustly (object or number)
+        | ( ((.workspace // null) | type) ) as $wtype
+        | (if $wtype == "object" then (.workspace.name // "") else "" end) as $wname
+        | (if $wtype == "object" then (.workspace.id // 0) elif $wtype == "number" then .workspace else 0 end) as $wid
+        # Exclude scratchpads/special workspaces by multiple heuristics
+        | select(($wname | tostring | startswith("special")) | not)
+        | select($sids | index($wid) | not)
+        | {wid: ($wid|tostring),
+           wname: ($wm[($wid|tostring)] // ($wid|tostring)),
            cls: (.class // ""),
            ttl: (.title // ""),
            addr: (.address // "")}
+        | select(.addr != $activeAddr)
       ]
     | sort_by(.wid)
     | .[]
-    | ("[" + (.wname|sanitize) + "] "
-       + (glyph(.cls)) + " "
-       + (.cls|sanitize) + " - "
-       + (.ttl|sanitize)
+    | ((glyph(.cls)) + " [" + (.wname|clip(16)) + "] "
+       + (.ttl|clip(52))
+       + " • "
+       + (.cls|clip(18))
        + "\t"
        + .addr)
   ')
@@ -47,14 +63,19 @@ list=$(jq -nr \
 
 ## Removed group separators to avoid extra lines in the menu
 
-sel=$(printf '%s\n' "$list" | rofi -dmenu -matching fuzzy -i -p 'Windows ❯>' \
+rc=0
+set +e
+sel=$(rofi -dmenu -matching fuzzy -i -p 'Windows ❯>' \
   -kb-accept-alt 'Alt+Return' -kb-custom-1 'Alt+1' -kb-custom-2 'Alt+2' \
-  -mesg 'Enter: focus • Alt+1: copy title • Ctrl+C: cancel' -theme clip) || exit 0
+  -columns 6 \
+  -theme menu-columns <<< "$list")
+rc=$?
+set -e
+[ "$rc" -ne 0 ] && exit 0
 # Ignore separator/header lines (no address column)
 if ! printf '%s' "$sel" | grep -q '\t'; then
   exit 0
 fi
-rc=$?
 # Extract raw address from right column
 addr=$(printf '%s' "$sel" | awk -F '\t' '{print $NF}' | sed 's/^ *//')
 [ -n "$addr" ] || exit 0
