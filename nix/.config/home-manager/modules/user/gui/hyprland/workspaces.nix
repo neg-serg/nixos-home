@@ -7,7 +7,7 @@ with lib; let
     { id = 4;  name = " 𐌸:games";     var = "games"; }
     { id = 5;  name = " 𐌳:doc";       var = "doc"; }
     { id = 6;  name = " 𐌴:draw";      var = null; }
-    { id = 7;  name = "✽ vid";         var = "vid"; }
+    { id = 7;  name = " vid";         var = "vid"; }
     { id = 8;  name = "✽ 𐌶:obs";       var = "obs"; }
     { id = 9;  name = " 𐌷:pic";       var = "pic"; }
     { id = 10; name = " 𐌹:sys";       var = null; }
@@ -15,7 +15,7 @@ with lib; let
     { id = 12; name = " 𐌻:wine";      var = "wine"; }
     { id = 13; name = " 𐌼:patchbay";  var = "patchbay"; }
     { id = 14; name = " 𐌽:daw";       var = "daw"; }
-    { id = 15; name = "💾 𐌾:dw";        var = "dw"; }
+    { id = 15; name = " 𐌾:dw";        var = "dw"; }
     { id = 16; name = " 𐌿:keyboard";  var = "keyboard"; }
     { id = 17; name = " 𐍀:im";        var = "im"; }
     { id = 18; name = " 𐍁:remote";    var = "remote"; }
@@ -58,4 +58,3 @@ in mkIf config.features.gui.enable (lib.mkMerge [
   (xdg.mkXdgText "hypr/workspaces.conf" workspacesConf)
   (xdg.mkXdgText "hypr/rules-routing.conf" routesConf)
 ])
-
