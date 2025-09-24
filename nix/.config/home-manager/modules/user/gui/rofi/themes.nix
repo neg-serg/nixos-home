@@ -7,8 +7,9 @@ mkIf config.features.gui.enable (
       "theme.rasi"
       "common.rasi"
       # Named themes used in scripts/tools
-      "clip.rasi"
-      "sxiv.rasi"
+      "menu.rasi"
+      "menu-columns.rasi"
+      "viewer.rasi"
       "neg.rasi"
       "pass.rasi"
       # Window position variants

@@ -83,7 +83,7 @@
 
 - Лаунчер Rofi
   - `~/.local/bin/rofi` гарантирует, что `-theme <name|name.rasi>` находит тему (относительно конфига или в XDG data).
-  - `clip.rasi`, `sxiv.rasi` и требуемые `win/*.rasi` линкуются в `$XDG_DATA_HOME/rofi/themes` для использования через `-theme`.
+  - `menu.rasi`, `menu-columns.rasi`, `viewer.rasi` и требуемые `win/*.rasi` линкуются в `$XDG_DATA_HOME/rofi/themes` для использования через `-theme`.
   - Для emoji‑пикера можно добавить свой `~/.local/bin/rofi-emoji`.
 
 - Браузеры Mozilla

@@ -141,7 +141,7 @@ pl_rofi() {
         return 0
     fi
     if (( ${#${(f)decorated}[@]} > 1 )); then
-        sel=$(print -r -- "$decorated" | rofi -theme clip -p 'vid ❯>' -i -dmenu -markup-rows \
+        sel=$(print -r -- "$decorated" | rofi -theme menu -p 'vid ❯>' -i -dmenu -markup-rows \
             -kb-accept-alt 'Alt+Return' -kb-custom-1 'Alt+1' -kb-custom-2 'Alt+2' \
             -mesg 'Enter: open • Alt+Enter: multi • Alt+1: copy path • Alt+2: open dir • Ctrl+C: cancel')
         rc=$?
@@ -189,7 +189,7 @@ main() {
             -file-browser-open-multi-key "kb-accept-alt" \
             -file-browser-open-custom-key "kb-custom-11" \
             -file-browser-hide-hidden-symbol "" \
-            -file-browser-path-sep "/" -theme clip \
+            -file-browser-path-sep "/" -theme menu \
             -file-browser-cmd 'mpv --input-ipc-server=/tmp/mpvsocket --vo=gpu'
         return
     fi

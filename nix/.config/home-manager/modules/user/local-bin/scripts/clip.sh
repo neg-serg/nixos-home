@@ -92,7 +92,7 @@ clip_main() {
         # cliphist: show history -> decode -> copy
         sel=$(cliphist list | rofi -dmenu -lines 10 -i -matching glob -p 'clip ❯>' \
             -kb-accept-alt 'Alt+Return' -kb-custom-1 'Alt+1' -kb-custom-2 'Alt+2' \
-            -mesg 'Enter: copy • Alt+1: paste now • Alt+2: delete • Ctrl+C: cancel' -theme clip)
+            -mesg 'Enter: copy • Alt+1: paste now • Alt+2: delete • Ctrl+C: cancel' -theme menu)
         rc=$?
         [ -z "$sel" ] && exit 0
         idx="$(printf '%s' "$sel" | awk -F ':' '{print $1}')"
@@ -106,7 +106,7 @@ clip_main() {
                 conf=$(printf '%s\n%s\n' \
                     "<span foreground='#d75f5f'> Delete</span>" \
                     "Cancel" \
-                  | rofi -dmenu -markup-rows -p 'confirm ❯>' -theme clip)
+                  | rofi -dmenu -markup-rows -p 'confirm ❯>' -theme menu)
                 if printf '%s' "$conf" | grep -q 'Delete'; then
                   cliphist delete "$idx" >/dev/null 2>&1 || true
                 fi

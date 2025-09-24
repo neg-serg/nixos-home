@@ -1,0 +1,29 @@
+@import "menu.rasi"
+
+#window {
+    width: 100%;
+    location: south;
+    anchor: south;
+    x-offset: 0;
+    y-offset: -8;
+    padding: 10px 16px;
+    background-color: var(blackdarkest);
+}
+
+#listview {
+    columns: 6;
+    lines: 12;
+    dynamic: true;
+    fixed-height: false;
+    spacing: 4px;
+    scrollbar: true;
+}
+
+#element {
+    padding: 2px 4px;
+}
+
+element-text {
+    background-color: inherit;
+    text-color: inherit;
+}
