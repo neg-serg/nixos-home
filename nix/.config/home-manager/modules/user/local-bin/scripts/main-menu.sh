@@ -6,8 +6,7 @@
 IFS=' 	
 '
 
-items='
-
+items=$(cat <<'EOF'
  Title:title_copy
  Artist:artist_copy
  Album:album_copy
@@ -16,12 +15,12 @@ items='
  ALSA Output:alsa_output
  Translate:translate
  Termbin:termbin
-'
+EOF
+)
 
 generate_menu() {
-    blue="<span weight='bold' color='#395573'>"
-    printf '%s\n' "$items" \
-      | awk -F ':' -v blue="$blue" '{printf("%s⟬%s⟭</span>\n", blue, $1)}'
+    # Plain text rows (no markup) for reliability across rofi versions
+    printf '%s\n' "$items" | awk -F ':' 'NF {print $1}'
 }
 
 # Helpers for JSON from rmpc-song
@@ -76,16 +75,17 @@ termbin(){
 
 handler() {
     while IFS= read -r line; do
-        label=$(printf '%s' "$line" | sed -e 's/<[^>]*>//g' -e 's/.*⟬//' -e 's/⟭.*//')
+        label=$(printf '%s' "$line")
         [ -z "$label" ] && continue
-        fn=$(printf '%s\n' "$items" | awk -F ':' -v L="$label" '$1==L{print $2; exit}')
+        fn=$(printf '%s\n' "$items" | awk -F ':' -v L="$label" 'NF && $1==L{print $2; exit}')
         [ -n "$fn" ] && "$fn"
     done
 }
 
 dac_name='RME ADI-2/4 PRO SE'
-set -- -auto-select -markup-rows -b -lines 1 -theme neg -dmenu -p 'menu ❯>' \
-  -mesg 'Enter: open • Alt+Enter: multi • Ctrl+C: cancel'
+set -- -auto-select -b -theme menu-columns -dmenu -p 'menu ❯>' \
+  -columns 6 \
+  -mesg 'Enter: open • Ctrl+C: cancel'
 if [ "${1:-}" = "-h" ] || [ "${1:-}" = "--help" ]; then
   sed -n '2,2p' "$0" | sed 's/^# \{0,1\}//'; exit 0
 fi
