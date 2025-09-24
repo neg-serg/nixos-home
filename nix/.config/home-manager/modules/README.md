@@ -34,7 +34,7 @@ This directory contains Home Manager modules grouped by domain. Feature flags li
   - Factor package lists into `groups = { ... }` and flatten via `config.lib.neg.mkEnabledList`.
   - For systemd user units, use `config.lib.neg.systemdUser.mkUnitFromPresets` with presets instead of hard‑coding targets; extend with `after`/`wants`/`partOf`/`wantedBy` only when needed.
   - Launchers:
-    - `rofi` is wrapped by a local script in `~/.local/bin/rofi` to ensure safe defaults (no-config unless requested, Ctrl+C cancels, theme lookup). Keep invocations plain (`rofi -dmenu ... -theme clip`) and avoid duplicating `-kb-*` flags.
+    - `rofi` is wrapped by a local script in `~/.local/bin/rofi` to ensure safe defaults (no-config unless requested, Ctrl+C cancels, theme lookup). Keep invocations plain (`rofi -dmenu ... -theme menu`) and avoid duplicating `-kb-*` flags.
     - `v` is a small Neovim shim in `~/.local/bin/v`. Use it when a short editor command is convenient.
 
 ## Activation Hooks

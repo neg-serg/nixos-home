@@ -67,7 +67,7 @@ This repo is configured for Home Manager + flakes with a small set of helpers to
     - Resolves themes passed via `-theme <name|name.rasi>` relative to `$XDG_DATA_HOME/rofi/themes` or `$XDG_CONFIG_HOME/rofi`.
     - Computes offsets for top bars via Quickshell/Hyprland metadata when not provided.
   - Guidance:
-    - Keep rofi invocations plain (e.g., `rofi -dmenu ... -theme clip`). Avoid repeating `-no-config`/`-kb-*` in configs.
+    - Keep rofi invocations plain (e.g., `rofi -dmenu ... -theme menu`). Avoid repeating `-no-config`/`-kb-*` in configs.
     - If you must override keys for a particular call, pass your own `-kb-*` flags — the wrapper will not inject defaults twice.
 
 - Editor shim (`v`)
@@ -111,7 +111,7 @@ This repo is configured for Home Manager + flakes with a small set of helpers to
 - rofi (launcher)
   - Use the local wrapper `rofi` from `~/.local/bin` (PATH is set so it takes precedence).
   - Do not pass `-kb-cancel` or `-no-config` unless you need custom behavior; the wrapper ensures sane defaults and Ctrl+C cancellation.
-  - Themes live under `$XDG_CONFIG_HOME/rofi` and `$XDG_DATA_HOME/rofi/themes`; `-theme clip` works out of the box.
+  - Themes live under `$XDG_CONFIG_HOME/rofi` and `$XDG_DATA_HOME/rofi/themes`; `-theme menu` works out of the box.
 - systemd (user) presets
   - Always use `config.lib.neg.systemdUser.mkUnitFromPresets { presets = [..]; }` (recommended)
   - Typical presets:

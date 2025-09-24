@@ -124,7 +124,7 @@ See also: AGENTS.md for a short guide on helpers, activation aggregators, system
   - Note: in rare cases (for example, due to specific module/merge ordering), `mkLocalBin` may trigger HM‑eval recursion. In such places it is acceptable to use the direct equivalent via `home.file` plus an activation guard (see rofi/swayimg modules). For new wrappers, try `mkLocalBin` first.
 
 - Rofi usage conventions
-  - Prefer calling `rofi` plainly (e.g., `rofi -dmenu ... -theme clip`). The local wrapper enforces:
+  - Prefer calling `rofi` plainly (e.g., `rofi -dmenu ... -theme menu`). The local wrapper enforces:
     - `-no-config` by default unless the caller provides `-config`/`-no-config`.
     - `Ctrl+C` to cancel: injects `-kb-secondary-copy ""` and `-kb-cancel "Control+c,Escape"` when not explicitly provided.
     - Theme path resolution for `-theme <name|name.rasi>` relative to XDG locations.
