@@ -9,7 +9,7 @@
     fgwhite: #b8c5d9;
     fggrey: #828b99;
     /* Near-black translucent background for rofi */
-    blackdarkest: #00000099;
+    blackdarkest: #000000d0;
     selectcolor: #002d59;
     darkgray: #315c70;
     ultra: #005faf55;
