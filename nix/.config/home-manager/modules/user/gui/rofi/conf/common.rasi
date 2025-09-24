@@ -102,20 +102,24 @@ placeholder {
 
 #inputbar {
     background-color: var(blackdarkest);
-    spacing: 0px;
+    spacing: 4px;
+    orientation: horizontal;
+    children: [ prompt, entry, case-indicator ];
 }
 
 #prompt {
     spacing: 0px;
-    padding: 4px 4px;
+    padding: 4px 6px 4px 8px;
     background-color: var(blackwidget);
     text-color: var(maincolor);
+    border-radius: 2px;
 }
 
 #entry {
     padding: 4px 4px;
     background-color: var(blackwidget);
     text-color: var(fgwhite);
+    expand: true;
 }
 
 #case-indicator {

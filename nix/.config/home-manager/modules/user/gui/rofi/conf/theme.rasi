@@ -2,17 +2,17 @@
     maincolor: #005f87;
     urgentcolor: #ab1e87;
 
-    blackwidget: #00000044;
-    mainbg: #02040444;
+    blackwidget: #05080c;
+    mainbg: #05080c;
 
     /* Restore original bright text color */
     fgwhite: #b8c5d9;
     fggrey: #828b99;
-    /* Near-black translucent background for rofi */
-    blackdarkest: #000000d0;
+    /* Near-black opaque background for rofi */
+    blackdarkest: #05080c;
     selectcolor: #002d59;
     darkgray: #315c70;
-    ultra: #005faf55;
+    ultra: #005faf;
 
     font: "Iosevka Medium 12";
     background-color: var(blackdarkest);

@@ -10,27 +10,23 @@
     margin: 0px;
     border: 0px;
     border-radius: 0px;
-    background-color: transparent;
+    background-color: var(blackdarkest);
 }
 
 #mainbox {
     margin: 0px;
     padding: 0px;
-    background-color: transparent;
+    background-color: var(blackdarkest);
 }
 
 #listview {
-    columns: 6;
-    lines: 4;
     layout: horizontal;
-    orientation: horizontal;
-    dynamic: false;
-    fixed-height: false;
-    fixed-columns: true;
+    dynamic: true;
+    fixed-columns: false;
     spacing: 4px;
     scrollbar: true;
     padding: 4px 0px 12px 0px;
-    background-color: transparent;
+    background-color: var(blackdarkest);
 }
 
 #element {
