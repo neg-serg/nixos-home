@@ -7,6 +7,6 @@ lib.mkIf (config.features.gui.enable or false) (lib.mkMerge [
   }
   (xdg.mkXdgConfigToml "handlr/handlr.toml" {
     enable_selector = false;
-    selector = "rofi -dmenu -p 'Open With: ❯>' -mesg 'Enter: open • Alt+Enter: multi • Ctrl+C: cancel'";
+    selector = "rofi -dmenu -p 'Open With: ❯>'";
   })
 ])

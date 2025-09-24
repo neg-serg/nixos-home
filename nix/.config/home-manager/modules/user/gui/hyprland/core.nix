@@ -3,13 +3,16 @@ with lib; let
   hyprWinList = pkgs.writeShellApplication {
     name = "hypr-win-list";
     runtimeInputs = [
-      pkgs.jq # JSON parsing for hyprctl output
-      pkgs.gawk # awk for text filtering/formatting
-      pkgs.coreutils # standard UNIX utilities
-      pkgs.gnused # GNU sed for stream editing
+      pkgs.python3
+      pkgs.hyprland
+      pkgs.wl-clipboard
     ];
-    text = let tpl = builtins.readFile ../hypr/hypr-win-list.sh;
-           in lib.replaceStrings ["@HYPRCTL@"] [ (lib.getExe' pkgs.hyprland "hyprctl") ] tpl;
+    text = let tpl = builtins.readFile ../hypr/hypr-win-list.py;
+           in ''
+             exec python3 <<'PY'
+${lib.replaceStrings ["@HYPRCTL@"] [ (lib.getExe' pkgs.hyprland "hyprctl") ] tpl}
+PY
+           '';
   };
   coreFiles = [
     "init.conf"

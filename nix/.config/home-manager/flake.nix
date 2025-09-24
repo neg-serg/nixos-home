@@ -25,6 +25,7 @@
       "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
       # Garnix
       "cache.garnix.io-1:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
+      "cache.garnix.io:DkGL3YH2w2HgJ3bX78PdWcv16O3MHnNm8GNbVZzQfSg="
       # numtide
       "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE="
       # nixpkgs-wayland
