@@ -84,7 +84,7 @@ handler() {
 
 dac_name='RME ADI-2/4 PRO SE'
 set -- -auto-select -b -theme menu-columns -dmenu -p 'menu ❯>' \
-  -columns 6 \
+  -columns 6 -lines 4 \
   -mesg 'Enter: open • Ctrl+C: cancel'
 if [ "${1:-}" = "-h" ] || [ "${1:-}" = "--help" ]; then
   sed -n '2,2p' "$0" | sed 's/^# \{0,1\}//'; exit 0
