@@ -69,10 +69,6 @@ if [ "$want_offsets" -eq 1 ] && [ "$have_xoff" -eq 0 ] && [ "$have_yoff" -eq 0 ]
   scale=$("$hyprctl_bin" -j monitors 2>/dev/null | "$jq_bin" -r 'try (.[ ] | select(.focused==true) | .scale) // 1' 2>/dev/null || echo 1)
   # reduce y-offset by adjustment (clamp >=0)
   ay=$(awk -v a="$ay" -v e="$extra" 'BEGIN{v=a-e; if(v<0)v=0; print v}')
-  # Per-theme correction: for compact menu (clip) push closer to panel
-  if [ "$theme_name" = "menu" ]; then
-    ay=0
-  fi
   # Round offsets to ints
   xoff=$(printf '%.0f\n' "$(awk -v a="$sm" -v s="$scale" 'BEGIN{printf a*s}')")
   yoff=$(printf '%.0f\n' "$(awk -v a="$ay" -v s="$scale" 'BEGIN{printf -a*s}')")
