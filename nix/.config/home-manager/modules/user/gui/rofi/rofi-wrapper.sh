@@ -9,7 +9,6 @@ themes_dir="$xdg_data/rofi/themes"
 # Default to config dir to make @import in config.rasi resolve relative files
 cd_dir="$xdg_conf/rofi"
 prev_is_theme=0
-theme_name=""
 have_cfg=0
 have_kb_cancel=0
 have_kb_secondary_copy=0
@@ -25,9 +24,6 @@ for arg in "$@"; do
         case "$val" in *.rasi|*.rasi:*) cd_dir="$themes_dir" ;; esac
       ;;
     esac
-    # capture base theme name if possible
-    base=$(printf '%s' "$val" | sed -E 's#.*/##; s/\.rasi(:.*)?$//')
-    [ -n "$base" ] && theme_name="$base"
   fi
   case "$arg" in
     -theme) prev_is_theme=1 ;;
@@ -37,8 +33,6 @@ for arg in "$@"; do
         /*|*/*) : ;;
         *) case "$val" in *.rasi|*.rasi:*) cd_dir="$themes_dir" ;; esac ;;
       esac
-      base=$(printf '%s' "$val" | sed -E 's#.*/##; s/\.rasi(:.*)?$//')
-      [ -n "$base" ] && theme_name="$base"
       ;;
     -no-config| -config| -config=*) have_cfg=1 ;;
     -xoffset| -xoffset=*) have_xoff=1 ;;
