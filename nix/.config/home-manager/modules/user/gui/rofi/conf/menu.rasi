@@ -1,5 +1,4 @@
 @import "theme.rasi"
-@import "win/left_btm.rasi"
 @import "common.rasi"
 
 #window {
