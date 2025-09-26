@@ -7,6 +7,9 @@
 #element { border-color: var(blackdarkest); }
 
 #window {
+    location: south;
+    anchor: south;
+    y-offset: 0;
     padding: 5px;
     border: 1px;
     border-color: #0d141d;
