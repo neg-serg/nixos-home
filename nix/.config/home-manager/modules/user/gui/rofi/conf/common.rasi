@@ -1,5 +1,12 @@
 /* shared styles; theme variables come from the parent file */
 
+#mainbox {
+    orientation: vertical;
+    children: [ listview, inputbar ];
+    spacing: 0px;
+    background-color: var(blackdarkest);
+}
+
 #message {
     padding: 6px 6px;
     background-color: var(blackwidget);
@@ -21,8 +28,8 @@ placeholder {
     fixed-height: false;
     dynamic: true;
     scrollbar: true;
-    spacing: 2px;
-    padding: 6px 6px 6px 6px;
+    spacing: 1px;
+    padding: 2px 4px;
     margin: 0px 0px 0px 0px;
     background-color: var(blackdarkest);
     columns: 1;
@@ -30,8 +37,7 @@ placeholder {
 }
 
 #element {
-    padding: 0 4mm;
-    border-radius: 2px 2px 2px 2px;
+    padding: 0px;
     border: 0px;
 }
 
@@ -59,16 +65,22 @@ placeholder {
 #element.selected.normal {
     background-color: var(selectcolor);
     text-color: var(fgwhite);
+    border-radius: 4px;
+    padding: 2px 8px;
 }
 
 #element.selected.urgent {
     background-color: var(urgentcolor);
     text-color: var(blackdarkest);
+    border-radius: 4px;
+    padding: 2px 8px;
 }
 
 #element.selected.active {
     background-color: var(selectcolor);
     text-color: var(fgwhite);
+    border-radius: 4px;
+    padding: 2px 8px;
 }
 
 #element.alternate.urgent {
@@ -102,21 +114,21 @@ placeholder {
 
 #inputbar {
     background-color: var(blackdarkest);
-    spacing: 4px;
+    spacing: 0px;
     orientation: horizontal;
     children: [ prompt, entry, case-indicator ];
 }
 
 #prompt {
     spacing: 0px;
-    padding: 4px 6px 4px 8px;
+    padding: 2px 6px 2px 6px;
     background-color: var(blackwidget);
     text-color: var(maincolor);
     border-radius: 2px;
 }
 
 #entry {
-    padding: 4px 4px;
+    padding: 3px 4px;
     background-color: var(blackwidget);
     text-color: var(fgwhite);
     expand: true;
