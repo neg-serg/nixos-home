@@ -1,3 +1,17 @@
 @import "theme.rasi"
 @import "win/left_btm.rasi"
 @import "common.rasi"
+
+#window {
+    padding: 5px 5px 2px 5px;
+    border: 1px;
+    border-color: #0d141d;
+    border-radius: 0px;
+    background-color: var(blackdarkest);
+}
+
+#mainbox {
+    margin: 0px;
+    padding: 0px;
+    background-color: var(blackdarkest);
+}

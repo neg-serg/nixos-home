@@ -5,3 +5,10 @@
 #listview { lines: 4; columns: 10; }
 
 #element { border-color: var(blackdarkest); }
+
+#window {
+    padding: 5px;
+    border: 1px;
+    border-color: #0d141d;
+    background-color: var(blackdarkest);
+}

@@ -6,9 +6,10 @@
     anchor: south;
     x-offset: 0;
     y-offset: 0;
-    padding: 0px;
+    padding: 5px;
     margin: 0px;
-    border: 0px;
+    border: 1px;
+    border-color: #0d141d;
     border-radius: 0px;
     background-color: var(blackdarkest);
 }
@@ -25,12 +26,13 @@
     fixed-columns: false;
     spacing: 4px;
     scrollbar: true;
-    padding: 4px 0px 12px 0px;
+    padding: 4px 0px 4px 0px;
     background-color: var(blackdarkest);
 }
 
 #element {
-    padding: 2px 4px;
+    margin: 0px 6px;
+    padding: 0px 4px;
 }
 
 element-text {

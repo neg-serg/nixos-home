@@ -12,13 +12,19 @@
 }
 
 #listview { lines: 12; }
+mainbox {
+    background-color: var(blackdarkest);
+}
 
  
 
 #window {
-    width:96%;
+    width: 96%;
     y-offset: 20;
     location: north;
     anchor: north;
+    padding: 5px;
+    border: 1px;
+    border-color: #0d141d;
     background-color: var(blackdarkest);
 }
