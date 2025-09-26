@@ -57,7 +57,8 @@ if [ "$want_offsets" -eq 1 ] && [ "$have_xoff" -eq 0 ] && [ "$have_yoff" -eq 0 ]
     extra=$("$jq_bin" -r 'try .panel.menuYOffsetAdjust // empty' "$theme_json" 2>/dev/null || echo "")
   fi
   if ! printf '%s' "$extra" | grep -Eq '^[0-9]+(\.[0-9]+)?$'; then
-    extra=$(awk -v a="$ay" 'BEGIN{v=a-4; if(v<0)v=0; print v}')
+    # Default: subtract full menuYOffset so the menu sits flush to panel
+    extra=$(awk -v a="$ay" 'BEGIN{print a}')
   fi
   # Hyprland monitor scale (focused)
   scale=$("$hyprctl_bin" -j monitors 2>/dev/null | "$jq_bin" -r 'try (.[ ] | select(.focused==true) | .scale) // 1' 2>/dev/null || echo 1)
