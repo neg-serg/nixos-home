@@ -19,13 +19,18 @@ mkIf config.features.gpg.enable {
     };
   };
   services.gpg-agent = {
-    defaultCacheTtl = 60480000;
+    # Cache passphrases longer and allow long-lived sessions
+    defaultCacheTtl = 60480000; # ~700 days (user prefers very infrequent prompts)
+    maxCacheTtl = 60480000;
     enableExtraSocket = true;
     enableScDaemon = true;
     enableSshSupport = false;
     enableZshIntegration = true;
     enable = true;
-    extraConfig = ''pinentry-program ${pinentryRofi}/bin/pinentry-rofi-with-env '';
+    extraConfig = ''
+      pinentry-program ${pinentryRofi}/bin/pinentry-rofi-with-env
+      allow-loopback-pinentry
+    '';
     verbose = true;
   };
 }
