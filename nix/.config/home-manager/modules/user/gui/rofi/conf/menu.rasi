@@ -3,7 +3,7 @@
 @import "common.rasi"
 
 #window {
-    padding: 5px 5px 2px 5px;
+    padding: 5px 5px 0px 5px;
     border: 1px;
     border-color: #0d141d;
     border-radius: 0px;
