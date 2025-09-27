@@ -24,7 +24,8 @@ element-icon {
 
 #listview {
     fixed-columns: false;
-    padding: 3px 3px 3px 3px;
+    /* slightly tighter vertical gap */
+    padding: 1px 3px 1px 3px;
     scrollbar: false;
 }
 
