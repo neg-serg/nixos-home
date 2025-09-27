@@ -94,6 +94,7 @@ mkIf (config.features.gui.enable or false) (lib.mkMerge [
         { name = "nix-updates"; src = ./scripts/nix-updates; }
         { name = "pb"; src = ./scripts/pb; }
         { name = "pngoptim"; src = ./scripts/pngoptim; }
+        { name = "pass-2col"; src = ./scripts/pass-2col; }
         { name = "qr"; src = ./scripts/qr; }
         { name = "read_documents"; src = ./scripts/read_documents; }
         { name = "ren"; src = ./scripts/ren; }
