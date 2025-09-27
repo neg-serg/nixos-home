@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+store_dir="${PASSWORD_STORE_DIR:-$HOME/.password-store}"
+[ -d "$store_dir" ] || exit 0
+
+# Collect entries: strip .gpg and leading ./, ignore .gpg-id files
+mapfile -t entries < <(cd "$store_dir" && \
+  find . -type f -name '*.gpg' ! -path './.git/*' -printf '%P\n' 2>/dev/null \
+  | grep -vE '(^|/)\.gpg-id$' \
+  | sed 's#^\./##; s/\.gpg$//' \
+  | LC_ALL=C sort)
+
+count=${#entries[@]:-0}
+[ "$count" -gt 0 ] || exit 0
+
+# Two columns: lines = ceil(count/2), clamp to a sensible max (12)
+lines=$(( (count + 1) / 2 ))
+if [ "$lines" -gt 12 ]; then lines=12; fi
+
+sel=$(printf '%s\n' "${entries[@]}" \
+  | rofi -dmenu -p 'pass ❯>' -columns 2 -lines "$lines" -theme pass)
+
+[ -n "${sel:-}" ] || exit 0
+
+# Copy password (first line of pass show) to clipboard
+pw=$(pass show -- "$sel" 2>/dev/null | head -n1 || true)
+if [ -n "$pw" ]; then
+  if command -v wl-copy >/dev/null 2>&1; then
+    printf '%s' "$pw" | wl-copy
+  else
+    # Fallback to pass -c (may use xclip/xsel)
+    pass -c -- "$sel" >/dev/null 2>&1 || true
+  fi
+  command -v notify-send >/dev/null 2>&1 && notify-send "pass" "Copied: $sel" || true
+fi
+

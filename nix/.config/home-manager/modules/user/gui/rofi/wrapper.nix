@@ -27,12 +27,7 @@ mkIf config.features.gui.enable (
         force = true;
         text = ''#!/usr/bin/env bash
           set -euo pipefail
-          exec ${rofiWrapper}/bin/rofi-wrapper \
-            -modi "pass:${lib.getExe pkgs.rofi-pass-wayland} -m" \
-            -show pass \
-            -theme pass \
-            -columns 2 \
-            -p 'pass ❯>' "$@"'';
+          exec ${config.home.homeDirectory}/.local/bin/pass-2col "$@"'';
       };
     }
 )
