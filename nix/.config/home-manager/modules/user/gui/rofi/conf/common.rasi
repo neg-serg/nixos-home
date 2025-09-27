@@ -17,17 +17,19 @@
     background-color: var(blackwidget);
 }
 
-/* Placeholder color (35% darker than foreground) using rofi 1.7+/2.0 property */
-entry, #entry { placeholder-color: #78808d; }
-
-/* Rofi supports a top-level 'placeholder' style; nested blocks may break parsing on some versions. */
+/* Remove hint text and style its color (rofi 2.0 supports placeholder + placeholder-color) */
+entry {
+    placeholder: "";
+    placeholder-color: #78808d; /* ~35% darker than fg */
+}
 
 #listview {
     fixed-height: false;
     dynamic: true;
     scrollbar: true;
     spacing: 1px;
-    padding: 2px 4px;
+    /* tighter vertical gap between list and inputbar */
+    padding: 1px 4px;
     margin: 0px 0px 0px 0px;
     background-color: var(blackdarkest);
     columns: 1;
@@ -113,20 +115,23 @@ entry, #entry { placeholder-color: #78808d; }
 #inputbar {
     background-color: var(blackdarkest);
     spacing: 0px;
+    margin: 0px;
     orientation: horizontal;
     children: [ prompt, entry, case-indicator ];
 }
 
 #prompt {
     spacing: 0px;
-    padding: 2px 6px 2px 6px;
+    margin: 0px;
+    padding: 1px 5px;
     background-color: var(blackwidget);
     text-color: var(maincolor);
     border-radius: 2px;
 }
 
 #entry {
-    padding: 3px 4px;
+    margin: 0px;
+    padding: 2px 4px;
     background-color: var(blackwidget);
     text-color: var(fgwhite);
     expand: true;

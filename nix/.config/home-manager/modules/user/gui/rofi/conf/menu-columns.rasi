@@ -26,7 +26,8 @@
     fixed-columns: false;
     spacing: 4px;
     scrollbar: true;
-    padding: 4px 0px 4px 0px;
+    /* reduce vertical padding between list and inputbar */
+    padding: 2px 0px 2px 0px;
     background-color: var(blackdarkest);
 }
 
