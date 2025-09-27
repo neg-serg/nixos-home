@@ -9,6 +9,7 @@ themes_dir="$xdg_data/rofi/themes"
 # Default to config dir to make @import in config.rasi resolve relative files
 cd_dir="$xdg_conf/rofi"
 prev_is_theme=0
+theme_name=""
 have_cfg=0
 have_kb_cancel=0
 have_kb_secondary_copy=0
@@ -24,6 +25,9 @@ for arg in "$@"; do
         case "$val" in *.rasi|*.rasi:*) cd_dir="$themes_dir" ;; esac
       ;;
     esac
+    # remember base theme name for per-theme placement tweaks
+    base=$(printf '%s' "$val" | sed -E 's#.*/##; s/\.rasi(:.*)?$//')
+    [ -n "$base" ] && theme_name="$base"
   fi
   case "$arg" in
     -theme) prev_is_theme=1 ;;
@@ -33,6 +37,8 @@ for arg in "$@"; do
         /*|*/*) : ;;
         *) case "$val" in *.rasi|*.rasi:*) cd_dir="$themes_dir" ;; esac ;;
       esac
+      base=$(printf '%s' "$val" | sed -E 's#.*/##; s/\.rasi(:.*)?$//')
+      [ -n "$base" ] && theme_name="$base"
       ;;
     -no-config| -config| -config=*) have_cfg=1 ;;
     -xoffset| -xoffset=*) have_xoff=1 ;;
@@ -43,6 +49,12 @@ for arg in "$@"; do
   esac
 done
 [ -d "$cd_dir" ] && cd "$cd_dir"
+
+# If the caller explicitly picked the pass theme, let the theme position it
+# (pass uses a top-anchored window); skip wrapper offsets in that case.
+if [ "$theme_name" = "pass" ]; then
+  want_offsets=0
+fi
 
 # Compute offsets from Quickshell Theme + Hyprland scale to align with panel
 # Only when caller did not specify offsets explicitly
