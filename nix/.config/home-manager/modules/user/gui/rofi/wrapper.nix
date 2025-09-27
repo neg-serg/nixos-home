@@ -29,7 +29,7 @@ mkIf config.features.gui.enable (
           set -euo pipefail
           # Use rofi wrapper to ensure offsets and theme resolution
           exec ${rofiWrapper}/bin/rofi-wrapper \
-            -modi "pass:${lib.getExe pkgs.rofi-pass-wayland}" \
+            -modi "pass:${lib.getExe pkgs.rofi-pass-wayland} -m" \
             -show pass \
             -theme pass \
             -columns 2 \
