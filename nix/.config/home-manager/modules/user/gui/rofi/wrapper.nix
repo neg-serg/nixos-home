@@ -21,5 +21,19 @@ mkIf config.features.gui.enable (
           set -euo pipefail
           exec ${rofiWrapper}/bin/rofi-wrapper "$@"'';
       };
+      # Force pass menu via rofi's pass modi with our theme and 2 columns
+      home.file.".local/bin/rofi-pass" = {
+        executable = true;
+        force = true;
+        text = ''#!/usr/bin/env bash
+          set -euo pipefail
+          # Use rofi wrapper to ensure offsets and theme resolution
+          exec ${rofiWrapper}/bin/rofi-wrapper \
+            -modi "pass:${lib.getExe pkgs.rofi-pass-wayland}" \
+            -show pass \
+            -theme pass \
+            -columns 2 \
+            -p 'pass ❯>' "$@"'';
+      };
     }
 )
