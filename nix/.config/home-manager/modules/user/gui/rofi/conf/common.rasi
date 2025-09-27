@@ -17,8 +17,8 @@
     background-color: var(blackwidget);
 }
 
-/* Placeholder color (35% darker than foreground) */
-entry, #entry { placeholder { text-color: #78808d; } }
+/* Placeholder color (35% darker than foreground) using rofi 1.7+/2.0 property */
+entry, #entry { placeholder-color: #78808d; }
 
 /* Rofi supports a top-level 'placeholder' style; nested blocks may break parsing on some versions. */
 
