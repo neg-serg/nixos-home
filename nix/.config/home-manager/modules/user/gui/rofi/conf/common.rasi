@@ -22,6 +22,14 @@ placeholder {
     text-color: #78808d;
 }
 
+/* Ensure placeholder color applies across themes/widgets */
+entry {
+    placeholder { text-color: #78808d; }
+}
+#entry {
+    placeholder { text-color: #78808d; }
+}
+
 /* Rofi supports a top-level 'placeholder' style; nested blocks may break parsing on some versions. */
 
 #listview {
