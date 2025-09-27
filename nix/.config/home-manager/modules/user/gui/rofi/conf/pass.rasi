@@ -2,7 +2,11 @@
 @import "win/center_btm.rasi"
 @import "common.rasi"
 
-#listview { lines: 4; columns: 10; }
+#listview {
+    lines: 12;
+    columns: 2;
+    layout: horizontal;
+}
 
 #element { border-color: var(blackdarkest); }
 
