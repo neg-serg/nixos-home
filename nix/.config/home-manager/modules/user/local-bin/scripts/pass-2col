@@ -11,7 +11,7 @@ mapfile -t entries < <(cd "$store_dir" && \
   | sed 's#^\./##; s/\.gpg$//' \
   | LC_ALL=C sort)
 
-count=${#entries[@]:-0}
+count=${#entries[@]}
 [ "$count" -gt 0 ] || exit 0
 
 # Two columns: lines = ceil(count/2), clamp to a sensible max (12)
@@ -34,4 +34,3 @@ if [ -n "$pw" ]; then
   fi
   command -v notify-send >/dev/null 2>&1 && notify-send "pass" "Copied: $sel" || true
 fi
-
