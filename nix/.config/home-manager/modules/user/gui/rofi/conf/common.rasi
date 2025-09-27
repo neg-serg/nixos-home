@@ -19,7 +19,7 @@
 
 /* Ensure entry placeholder text is light */
 placeholder {
-    text-color: var(fgwhite);
+    text-color: #78808d;
 }
 
 /* Rofi supports a top-level 'placeholder' style; nested blocks may break parsing on some versions. */
