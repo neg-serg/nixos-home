@@ -12,6 +12,13 @@
 }
 
 #listview { lines: 12; }
+
+#mainbox {
+    orientation: vertical;
+    children: [ inputbar, listview ];
+    spacing: 0px;
+    background-color: var(blackdarkest);
+}
 mainbox {
     background-color: var(blackdarkest);
 }
