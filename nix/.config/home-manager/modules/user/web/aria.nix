@@ -32,7 +32,23 @@ in
         (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["graphical"]; })
       ];
     }
-    # Ensure the session file exists so input-file does not fail on first run
-    (xdg.mkXdgDataText "aria2/session" "")
-    # Removed soft migration warning for aria2 session paths (kept config sane by default)
+    # Keep the session file writable and avoid activation noise when it already exists
+    {
+      home.activation.ensureAria2SessionParent =
+        config.lib.neg.mkEnsureRealParent sessionFile;
+      home.activation.ensureAria2SessionFile =
+        lib.hm.dag.entryAfter ["writeBoundary"] ''
+          set -eu
+          session_path="${sessionFile}"
+          if [ -L "$session_path" ]; then
+            tmp="$(mktemp)"
+            cp "$session_path" "$tmp"
+            rm -f "$session_path"
+            install -Dm600 "$tmp" "$session_path"
+            rm -f "$tmp"
+          elif [ ! -e "$session_path" ]; then
+            install -Dm600 /dev/null "$session_path"
+          fi
+        '';
+    }
   ])
