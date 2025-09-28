@@ -11,6 +11,8 @@
     lines: 12;
     columns: 2;
     layout: horizontal;
+    /* Force multiple rows; avoid single super‑wide row */
+    fixed-height: true;
     /* remove default dashed separator line from base theme */
     border: 0px;
 }
