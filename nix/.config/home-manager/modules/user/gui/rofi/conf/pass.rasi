@@ -10,7 +10,9 @@
 #listview {
     lines: 12;
     columns: 2;
-    layout: horizontal;
+    /* For multi-row, use vertical layout + horizontal flow (row-major) */
+    layout: vertical;
+    flow: horizontal;
     /* Force multiple rows; avoid single super‑wide row */
     fixed-height: true;
     /* remove default dashed separator line from base theme */
