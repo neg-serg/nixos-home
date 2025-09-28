@@ -2,14 +2,14 @@
     maincolor: #005f87;
     urgentcolor: #ab1e87;
 
-    blackwidget: #05080c;
-    mainbg: #05080c;
+    blackwidget: #000000;
+    mainbg: #000000;
 
     /* Restore original bright text color */
     fgwhite: #b8c5d9;
     fggrey: #828b99;
-    /* Near-black opaque background for rofi */
-    blackdarkest: #05080c;
+    /* Pure black background for rofi */
+    blackdarkest: #000000;
     selectcolor: #002d59;
     darkgray: #315c70;
     ultra: #005faf;
