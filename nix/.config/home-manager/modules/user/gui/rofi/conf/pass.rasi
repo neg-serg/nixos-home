@@ -16,6 +16,7 @@
     location: north;
     anchor: north;
     y-offset: 20;
+    width: 96%;
     padding: 5px;
     /* remove top stitch line: no border for pass */
     border: 0px;
