@@ -13,10 +13,12 @@ in lib.mkIf config.features.torrent.enable (lib.mkMerge [
   xdg.configFile."transmission-daemon/settings.json" = {
     source = config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/nix/.config/home-manager/modules/misc/transmission-daemon/conf/settings.json";
     recursive = false;
+    force = true;
   };
   xdg.configFile."transmission-daemon/bandwidth-groups.json" = {
     source = config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/nix/.config/home-manager/modules/misc/transmission-daemon/conf/bandwidth-groups.json";
     recursive = false;
+    force = true;
   };
 
   # Ensure runtime subdirectories exist even if the config dir is a symlink
