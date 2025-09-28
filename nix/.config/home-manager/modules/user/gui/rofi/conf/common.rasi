@@ -10,6 +10,8 @@
 #message {
     padding: 6px 6px;
     background-color: var(blackwidget);
+    /* hide default dashed separator line when message is shown */
+    border: 0px;
 }
 
 #textbox {
@@ -32,6 +34,8 @@ entry {
     padding: 1px 4px;
     margin: 0px 0px 0px 0px;
     background-color: var(blackdarkest);
+    /* remove default dashed separator from base theme */
+    border: 0px;
     columns: 1;
     lines: 12;
 }
@@ -101,6 +105,8 @@ entry {
 
 #sidebar {
     background-color: var(blackwidget);
+    /* no dashed separator */
+    border: 0px;
 }
 
 #button {
