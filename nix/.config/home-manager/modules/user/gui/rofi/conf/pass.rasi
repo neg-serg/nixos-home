@@ -22,19 +22,19 @@
 #element { border-color: var(blackdarkest); }
 
 #window {
-    location: north;
-    anchor: north;
-    y-offset: 20;
+    location: south;
+    anchor: south;
+    y-offset: 0;
     width: 96%;
     padding: 5px;
-    /* remove top stitch line: no border for pass */
+    /* no border */
     border: 0px;
     background-color: var(blackdarkest);
 }
 
 #mainbox {
     orientation: vertical;
-    children: [ inputbar, listview ];
+    children: [ listview, inputbar ];
     spacing: 0px;
     background-color: var(blackdarkest);
 }
