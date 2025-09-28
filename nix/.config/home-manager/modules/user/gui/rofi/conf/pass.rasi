@@ -6,6 +6,8 @@
     lines: 12;
     columns: 2;
     layout: horizontal;
+    /* remove default dashed separator line from base theme */
+    border: 0px;
 }
 
 #element { border-color: var(blackdarkest); }
