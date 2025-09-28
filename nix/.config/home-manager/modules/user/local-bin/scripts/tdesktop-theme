@@ -1,0 +1,72 @@
+#!/bin/sh
+# tdesktop-theme: unpack/pack Telegram Desktop theme archives
+# Usage:
+#   tdesktop-theme unpack THEME.tdesktop-theme [DESTDIR]
+#   tdesktop-theme pack SOURCEDIR OUTPUT.tdesktop-theme
+
+set -eu
+
+print_usage() {
+  cat <<'EOF'
+Usage:
+  tdesktop-theme unpack <theme.tdesktop-theme> [destdir]
+  tdesktop-theme pack <sourcedir> <output.tdesktop-theme>
+EOF
+}
+
+need_args() {
+  given="$1"
+  required="$2"
+  if [ "$given" -lt "$required" ]; then
+    print_usage >&2
+    exit 2
+  fi
+}
+
+cmd="${1:-}"
+case "$cmd" in
+  unpack)
+    need_args "$#" 2
+    src="$2"
+    dest="${3:-}"
+    [ -f "$src" ] || { echo "tdesktop-theme: missing input $src" >&2; exit 2; }
+    case "$src" in
+      *.tdesktop-theme) :;;
+      *) echo "tdesktop-theme: expected .tdesktop-theme input" >&2; exit 2;;
+    esac
+    if [ -z "$dest" ]; then
+      base=$(basename "$src" ".tdesktop-theme")
+      dest="${base}-theme"
+    fi
+    mkdir -p -- "$dest"
+    unzip -o "$src" -d "$dest" >/dev/null
+    ;;
+
+  pack)
+    need_args "$#" 3
+    srcdir="$2"
+    out="$3"
+    [ -d "$srcdir" ] || { echo "tdesktop-theme: missing source dir $srcdir" >&2; exit 2; }
+    case "$out" in
+      *.tdesktop-theme) :;;
+      *) echo "tdesktop-theme: output must end with .tdesktop-theme" >&2; exit 2;;
+    esac
+    outdir=$(dirname "$out")
+    mkdir -p -- "$outdir"
+    tmp=$(mktemp "$outdir/$(basename "$out").XXXXXX")
+    trap 'rm -f -- "$tmp"' EXIT
+    ( cd "$srcdir" && zip -9 -r -X "$tmp" . >/dev/null )
+    mv -f -- "$tmp" "$out"
+    trap - EXIT
+    ;;
+
+  -h|--help|help)
+    print_usage
+    exit 0
+    ;;
+
+  *)
+    print_usage >&2
+    exit 2
+    ;;
+esac
