@@ -15,8 +15,8 @@
     anchor: north;
     y-offset: 20;
     padding: 5px;
-    border: 1px;
-    border-color: #0d141d;
+    /* remove top stitch line: no border for pass */
+    border: 0px;
     background-color: var(blackdarkest);
 }
 
