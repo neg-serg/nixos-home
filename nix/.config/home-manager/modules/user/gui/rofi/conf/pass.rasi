@@ -2,6 +2,11 @@
 @import "win/center_btm.rasi"
 @import "common.rasi"
 
+* {
+    /* Ensure same font size as other rofi themes */
+    font: "Iosevka Medium 12";
+}
+
 #listview {
     lines: 12;
     columns: 2;
