@@ -29,7 +29,6 @@ mkIf (config.features.gui.enable or false) (lib.mkMerge [
       pkgs.lbzip2             # bzip2 backend for tar (se)
       pkgs.rapidgzip          # gzip backend for tar (se)
       pkgs.xz                 # xz backend for tar/unxz (se)
-      pkgs.zip                # zip creation (tdesktop-theme)
       pkgs.unzip              # unzip (used via punzip helper)
       # image/qr/info
       pkgs.qrencode           # generate QR codes (qr gen)
@@ -97,7 +96,6 @@ mkIf (config.features.gui.enable or false) (lib.mkMerge [
         { name = "pngoptim"; src = ./scripts/pngoptim; }
         { name = "pass-2col"; src = ./scripts/pass-2col; }
         { name = "qr"; src = ./scripts/qr; }
-        { name = "tdesktop-theme"; src = ./scripts/tdesktop-theme; }
         { name = "read_documents"; src = ./scripts/read_documents; }
         { name = "ren"; src = ./scripts/ren; }
         { name = "screenshot"; src = ./scripts/screenshot; }
