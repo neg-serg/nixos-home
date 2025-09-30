@@ -162,14 +162,58 @@ return function(ctx)
   
   -- ── Left (file info) ──────────────────────────────────────────────────────
   local _icon_color_cache = {}
+  local highlights = require('heirline.highlights')
   local CurrentDir = {
-    provider = prof('CurrentDir', function()
+    init = function(self)
       local cwd = win_cwd(get_status_win())
-      return fn.fnamemodify(cwd, ':~')
-    end),
-    hl = function() return { fg = colors.white, bg = colors.base_bg } end,
+      local display = fn.fnamemodify(cwd, ':~') or ''
+      self._parts = {}
+      local function push(text, hl)
+        if not text or text == '' then return end
+        self._parts[#self._parts + 1] = { text = text, hl = hl }
+      end
+      local function slash_part()
+        return { fg = colors.blue, bg = colors.base_bg }
+      end
+      local default_hl = { fg = colors.dir_mid or colors.white, bg = colors.base_bg }
+      local rest = display
+      if rest:sub(1, 1) == '~' then
+        push('~', { fg = colors.green, bg = colors.base_bg, bold = true })
+        rest = rest:sub(2)
+      elseif rest:sub(1, 1) == '/' then
+        push('/', slash_part())
+        rest = rest:sub(2)
+      end
+      local idx = 1
+      while idx <= #rest do
+        local slash_pos = rest:find('/', idx)
+        if slash_pos then
+          local segment = rest:sub(idx, slash_pos - 1)
+          push(segment, default_hl)
+          push('/', slash_part())
+          idx = slash_pos + 1
+        else
+          local tail = rest:sub(idx)
+          push(tail, default_hl)
+          break
+        end
+      end
+      if #rest == 0 and #self._parts == 0 then
+        push(display, default_hl)
+      end
+    end,
     update = { 'DirChanged', 'BufEnter' },
     on_click = { callback = vim.schedule_wrap(function() dbg_push('click: cwd'); open_file_browser_cwd() end), name = 'heirline_cwd_open' },
+    provider = function(self)
+      local parts = self._parts or {}
+      local chunks = {}
+      for _, part in ipairs(parts) do
+        local hl = part.hl or { fg = colors.white, bg = colors.base_bg }
+        local start_hl, end_hl = highlights.eval_hl(hl)
+        chunks[#chunks + 1] = start_hl .. (part.text or '') .. end_hl
+      end
+      return table.concat(chunks)
+    end,
   }
   local FileIcon = {
     condition = function() return not is_empty() end,
