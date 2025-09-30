@@ -393,8 +393,8 @@ return function(ctx)
     local size = fn.getfsize(path); if size <= 0 then return '' end
     local i, suffix = 1, { 'B','K','M','G','T','P' }
     while size >= 1024 and i < #suffix do size = size/1024; i=i+1 end
-    if i == 1 then return string.format('%d%s ', size, suffix[i]) end
-    return string.format((i<=3) and '%.1f%s ' or '%.2f%s ', size, suffix[i])
+    if i == 1 then return string.format('%d%s', size, suffix[i]) end
+    return string.format((i<=3) and '%.1f%s' or '%.2f%s', size, suffix[i])
   end
   local function os_icon()
     local buf = target_buf()
