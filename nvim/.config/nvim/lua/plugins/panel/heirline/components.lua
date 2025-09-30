@@ -781,6 +781,57 @@ return function(ctx)
     update = { 'BufWritePost', 'TextChanged', 'TextChangedI', 'BufModifiedSet' },
   }
 
+  local MODE_LABELS = {
+    n = 'NORMAL', no = 'NORMAL', nov = 'NORMAL', noV = 'NORMAL', ['no\022'] = 'NORMAL',
+    niI = 'NORMAL', niR = 'NORMAL', niV = 'NORMAL',
+    v = 'VISUAL', V = 'V-LINE', ['\022'] = 'V-BLOCK',
+    s = 'SELECT', S = 'S-LINE', ['\019'] = 'S-BLOCK',
+    i = 'INSERT', ic = 'INSERT', ix = 'INSERT',
+    R = 'REPLACE', Rc = 'REPLACE', Rx = 'REPLACE', Rv = 'REPLACE',
+    c = 'COMMAND', cv = 'EX', ce = 'COMMAND',
+    r = 'PROMPT', rm = 'MORE', ['r?'] = 'CONFIRM',
+    t = 'TERMINAL', ['!'] = 'SHELL',
+  }
+  local MODE_COLORS = {
+    NORMAL = colors.white,
+    INSERT = colors.green,
+    VISUAL = colors.yellow,
+    ['V-LINE'] = colors.yellow,
+    ['V-BLOCK'] = colors.yellow,
+    SELECT = colors.yellow,
+    ['S-LINE'] = colors.yellow,
+    ['S-BLOCK'] = colors.yellow,
+    REPLACE = colors.red,
+    COMMAND = colors.cyan,
+    EX = colors.cyan,
+    PROMPT = colors.yellow,
+    MORE = colors.yellow,
+    CONFIRM = colors.yellow,
+    TERMINAL = colors.blue,
+    SHELL = colors.blue,
+  }
+  local ModeBadge = {
+    condition = is_empty,
+    init = function(self)
+      local mode = vim.fn.mode(1)
+      local label = MODE_LABELS[mode] or MODE_LABELS[mode:sub(1, 1)] or 'NORMAL'
+      self.mode_label = label
+      self.mode_color = MODE_COLORS[label] or colors.white
+    end,
+    update = { 'ModeChanged', 'BufEnter', 'BufLeave', 'WinEnter' },
+    provider = function(self)
+      local left_start, left_end = highlights.eval_hl({ fg = colors.blue, bg = colors.base_bg, bold = true })
+      local text_start, text_end = highlights.eval_hl({ fg = self.mode_color, bg = colors.base_bg, bold = true })
+      local right_start, right_end = left_start, left_end
+      return table.concat({
+        left_start, '⟦', left_end,
+        text_start, ' ', self.mode_label, ' ', text_end,
+        right_start, '⟧', right_end,
+        ' ',
+      })
+    end,
+  }
+
   local LeftComponents = {
     condition = function() return not is_empty() end,
     {
@@ -862,7 +913,7 @@ return function(ctx)
 
   local DefaultStatusline = {
     utils.surround({ '', '' }, colors.base_bg, {
-      { condition = is_empty, provider = '[N]', hl = function() return { fg = colors.white, bg = colors.base_bg } end },
+      ModeBadge,
       LeftComponents,
       components.search,
     }),
