@@ -755,9 +755,16 @@ return function(ctx)
           end
           if col then
             local start_sep, end_sep = highlights.eval_hl({ fg = colors.blue, bg = colors.base_bg, italic = true })
-            local start_col, end_col = highlights.eval_hl({ fg = colors.white, bg = colors.base_bg, italic = true })
+            -- Zero-pad column to 4 digits and split into leading zeros and rest (like line)
+            local col_full = string.format('%04d', col)
+            local col_lead = col_full:match('^0+') or ''
+            local col_rest = col_full:sub(#col_lead + 1)
+            if col_rest == '' then col_rest = '0' end
+            local start_col_lead, end_col_lead = highlights.eval_hl({ fg = colors.line_zero or colors.white_dim, bg = colors.base_bg, italic = true })
+            local start_col_rest, end_col_rest = highlights.eval_hl({ fg = colors.white, bg = colors.base_bg, italic = true })
             pieces[#pieces + 1] = start_sep .. ':' .. end_sep
-            pieces[#pieces + 1] = start_col .. tostring(col) .. end_col
+            if col_lead ~= '' then pieces[#pieces + 1] = start_col_lead .. col_lead .. end_col_lead end
+            if col_rest ~= '' then pieces[#pieces + 1] = start_col_rest .. col_rest .. end_col_rest end
           end
           if #pieces == 0 then return '' end
           return table.concat(pieces) .. ' '
