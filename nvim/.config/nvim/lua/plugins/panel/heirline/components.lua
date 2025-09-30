@@ -96,7 +96,7 @@ return function(ctx)
     copilot={'','Copilot'}, ['copilot-chat']={'','Copilot Chat'},
     ['vim-plug']={'','vim-plug'},
   }
-  
+
   local function build_special_list()
     local base = {
       'qf','help','man','lspinfo','checkhealth','undotree','tagbar','vista','which_key',
@@ -120,7 +120,7 @@ return function(ctx)
     return base
   end
   local SPECIAL_FT = build_special_list()
-  
+
   local function ft_label_and_icon()
     local buf = target_buf()
     local bt = buf_option(buf, 'buftype', vim.bo.buftype)
@@ -136,7 +136,7 @@ return function(ctx)
     end
     return 'Special','[special]'
   end
-  
+
   -- ── Smart truncation helpers ───────────────────────────────────────────────
   local function truncate_filename(name, max)
     if #name <= max then return name end
@@ -159,7 +159,7 @@ return function(ctx)
     if name == '' then return ' [No Name]' end
     return ' ' .. truncate_filename(name, max)
   end
-  
+
   -- ── Left (file info) ──────────────────────────────────────────────────────
   local _icon_color_cache = {}
   local highlights = require('heirline.highlights')
@@ -411,12 +411,12 @@ return function(ctx)
     enc = enc:lower()
     return (enc == 'utf-8') and (S.utf8 .. ' ') or (S.latin .. ' ')
   end
-  
+
   -- Search debounce
   local SEARCH_DEBOUNCE_MS = 90
   local last_sc = { t = 0, out = '', pat = '', cur = 0, tot = 0 }
   local function now_ms() return math.floor(vim.loop.hrtime() / 1e6) end
-  
+
   -- ── Mode pill ─────────────────────────────────────────────────────────────
   local function mode_info()
     local m = vim.fn.mode(1)
@@ -436,7 +436,7 @@ return function(ctx)
     hl = function(self) return { fg = colors.white, bg = self.bg } end,
     update = { 'ModeChanged', 'WinEnter' },
   }
-  
+
   -- ── Macro timer state ─────────────────────────────────────────────────────
   local macro_start = nil
   api.nvim_create_autocmd('RecordingEnter', {
@@ -452,7 +452,7 @@ return function(ctx)
     local ss = math.floor(s % 60)
     return string.format('%02d:%02d', mm, ss)
   end
-  
+
   -- ── Components ────────────────────────────────────────────────────────────
   local components = {
     macro = {
@@ -463,7 +463,7 @@ return function(ctx)
       hl = function() return { fg = colors.red, bg = colors.base_bg } end,
       update = { 'RecordingEnter', 'RecordingLeave', 'CursorHold', 'CursorHoldI' },
     },
-  
+
     diag = {
       condition = function(self)
         if is_narrow() then return false end
@@ -496,7 +496,7 @@ return function(ctx)
         end
       end), name = 'heirline_diagnostics_click' },
     },
-  
+
     lsp = {
       condition = function()
         local buf = target_buf()
@@ -550,7 +550,7 @@ return function(ctx)
       hl = function() return { fg = colors.blue_light, bg = colors.base_bg } end,
       update = { 'LspAttach', 'LspDetach', 'CursorHold', 'CursorHoldI', 'BufEnter', 'WinEnter' },
     },
-  
+
     git = {
       condition = function(self)
         if is_narrow() then return false end
@@ -623,13 +623,13 @@ return function(ctx)
         end
       end), name = 'heirline_gitdiff_click' },
     },
-  
+
     encoding = {
       provider = prof('encoding', function() return ' ' .. os_icon() .. enc_icon() end),
       hl = function() return { fg = colors.cyan, bg = colors.base_bg } end,
       update = { 'OptionSet', 'BufEnter' },
     },
-  
+
     size = {
       condition = function() return not is_empty() and not is_narrow() end,
       init = function(self)
@@ -663,7 +663,7 @@ return function(ctx)
         hl = function() return { fg = colors.white, bg = colors.base_bg } end,
       },
     },
-  
+
     search = {
       condition = function() return vim.v.hlsearch == 1 end,
       provider = prof('search', function()
@@ -688,7 +688,7 @@ return function(ctx)
       update = { 'CmdlineLeave', 'CursorMoved', 'CursorMovedI' },
       on_click = { callback = vim.schedule_wrap(function() dbg_push('click: search -> nohlsearch'); pcall(vim.cmd,'nohlsearch') end), name = 'heirline_search_clear' },
     },
-  
+
     position = {
       init = function(self)
         local win = target_win()
@@ -743,7 +743,7 @@ return function(ctx)
         end,
       },
     },
-  
+
     env = {
       condition = function()
         if not SHOW_ENV then return false end
@@ -762,7 +762,7 @@ return function(ctx)
         hl = function() return { fg = colors.blue_light, bg = colors.base_bg, italic = true } end,
       },
     },
-  
+
     toggles = { ListToggle, WrapToggle },
     format_panel = FormatPanel,
     visual_selection = VisualSelection,
@@ -814,7 +814,7 @@ return function(ctx)
       })
     end,
     hl = function() return { fg = colors.white, bg = colors.base_bg } end,
-  
+
     {
       provider = prof('special.label', function()
         local label, icon = ft_label_and_icon()
@@ -839,7 +839,7 @@ return function(ctx)
       on_click = { callback = vim.schedule_wrap(function() dbg_push('click: close buffer'); vim.cmd('bd!') end), name = 'heirline_close_buf' },
     },
   }
-  
+
   -- ── Default statusline ────────────────────────────────────────────────────
   local RightComponents = {
     components.macro,
@@ -866,7 +866,7 @@ return function(ctx)
     align,
     RightComponents,
   }
-  
+
   -- ── Ultra-compact statusline (tiny windows) ───────────────────────────────
   local TinyStatusline = {
     condition = is_tiny,
@@ -882,7 +882,7 @@ return function(ctx)
       components.position,
     }),
   }
-  
+
   return {
     statusline = { fallthrough = false, TinyStatusline, SpecialBuffer, DefaultStatusline },
     SPECIAL_FT = SPECIAL_FT,
