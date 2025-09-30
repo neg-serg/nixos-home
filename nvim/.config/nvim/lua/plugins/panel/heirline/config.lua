@@ -193,6 +193,7 @@ return function()
             diff_change = tohex(dchg.fg)  or '#a0b1c5',
             diff_del    = tohex(ddel.fg)  or fallback.red,
             blue_light  = fallback.blue_light,
+            line_zero   = fallback.line_zero,
             dir_mid     = fallback.dir_mid,
             mode_ins_bg = tohex(hl_get('DiffAdd').bg)    or 'NONE',
             mode_vis_bg = tohex(hl_get('Visual').bg)     or 'NONE',
@@ -219,6 +220,7 @@ return function()
           black = 'NONE', white = '#6d839e', red = '#970d4f',
           green = '#007a51', blue = '#005faf', yellow = '#c678dd',
           cyan = '#6587b3', blue_light = '#517f8d', white_dim = '#3f5063',
+          line_zero = '#3f5876',
           dir_mid = '#7c90a8',
         }
         local colors = themed_colors(colors_fallback)

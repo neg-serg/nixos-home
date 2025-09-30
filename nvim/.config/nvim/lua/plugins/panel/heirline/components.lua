@@ -696,12 +696,18 @@ return function(ctx)
           local lnum = fn.line('.')
           local col = fn.virtcol('.')
           local show_col = col ~= 1
-          local line_str = string.format('%03d', lnum)
-          if is_tiny() then
-            return show_col and string.format('%s:%d', line_str, col) or line_str
+          local full = string.format('%04d', lnum)
+          local lead = full:match('^0+') or ''
+          local rest = full:sub(#lead + 1)
+          if rest == '' then rest = '0' end
+          self._pos_lead = lead
+          self._pos_rest = rest
+          self._pos_col = show_col and col or nil
+          if show_col then
+            return full .. ':' .. col
           end
-          return show_col and string.format('%s:%d', line_str, col) or line_str
-        end, '000')
+          return full
+        end, '0000')
       end,
       update = { 'CursorMoved', 'CursorMovedI', 'WinResized' },
       {
@@ -716,10 +722,25 @@ return function(ctx)
       {
         condition = function(self) return self._pos ~= nil and self._pos ~= '' end,
         provider = function(self)
-          local text = self._pos or ''
-          return text .. ' '
+          local lead = self._pos_lead or ''
+          local rest = self._pos_rest or ''
+          local col = self._pos_col
+          local pieces = {}
+          if lead ~= '' then
+            local start, finish = highlights.eval_hl({ fg = colors.line_zero or colors.white_dim, bg = colors.base_bg, italic = true })
+            pieces[#pieces + 1] = start .. lead .. finish
+          end
+          if rest ~= '' then
+            local start, finish = highlights.eval_hl({ fg = colors.white, bg = colors.base_bg, italic = true })
+            pieces[#pieces + 1] = start .. rest .. finish
+          end
+          if col then
+            local start, finish = highlights.eval_hl({ fg = colors.white, bg = colors.base_bg, italic = true })
+            pieces[#pieces + 1] = start .. ':' .. tostring(col) .. finish
+          end
+          if #pieces == 0 then return '' end
+          return table.concat(pieces) .. ' '
         end,
-        hl = function() return { fg = colors.white, bg = colors.base_bg, italic = true } end,
       },
     },
   
