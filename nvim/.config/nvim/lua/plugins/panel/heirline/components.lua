@@ -265,28 +265,40 @@ return function(ctx)
 
   local function visual_selection_stats()
     local win = target_win()
-    return win_call(win, function()
+    if not win or not api.nvim_win_is_valid(win) then return nil end
+    local ok, info = pcall(api.nvim_win_call, win, function()
       local mode = vim.fn.mode(1)
       if type(mode) ~= 'string' or not mode:match('[vV\022]') then return nil end
-      local vm = vim.fn.visualmode() or mode
-      local stats = vim.fn.wordcount() or {}
-      if vm == 'V' then
-        local lines = stats.visual_lines or 0
-        if lines <= 0 then return nil end
-        return { kind = 'lines', count = lines }
-      elseif vm == '\022' then
-        local start_pos = vim.fn.getpos('v')
-        local end_pos = vim.fn.getpos('.')
-        if not start_pos or not end_pos then return nil end
-        local cols = math.abs((end_pos[3] or 0) - (start_pos[3] or 0)) + 1
-        if cols <= 0 then return nil end
-        return { kind = 'cols', count = cols }
-      else
-        local chars = stats.visual_chars or 0
-        if chars <= 0 then return nil end
-        return { kind = 'cols', count = chars }
-      end
-    end, nil)
+      local vmode = vim.fn.visualmode() or mode
+      local start_pos = vim.fn.getpos("'<")
+      local end_pos = vim.fn.getpos("'>")
+      if not start_pos or not end_pos then return nil end
+      local wc = vim.fn.wordcount() or {}
+      return { mode = mode, vmode = vmode, start = start_pos, finish = end_pos, wc = wc }
+    end)
+    if not ok or not info then return nil end
+    local srow, scol = info.start[2], info.start[3]
+    local erow, ecol = info.finish[2], info.finish[3]
+    if srow == 0 or erow == 0 then return nil end
+    local rows = math.abs(erow - srow) + 1
+    local cols = math.abs(ecol - scol) + 1
+    if info.vmode == 'V' then
+      return {
+        label = 'VLine',
+        detail = tostring(rows),
+      }
+    elseif info.vmode == '\022' then
+      return {
+        label = 'VBlock',
+        detail = string.format('%dx%d', rows, cols),
+      }
+    else
+      local chars = info.wc.visual_chars or 0
+      return {
+        label = 'Visual',
+        detail = (chars > 0) and tostring(chars) or nil,
+      }
+    end
   end
 
   local ListToggle = {
@@ -352,23 +364,23 @@ return function(ctx)
   }
 
   local VisualSelection = {
-    update = { 'ModeChanged', 'CursorMoved', 'CursorMovedI', 'WinEnter', 'WinLeave' },
     init = function(self)
-      self.stats = visual_selection_stats()
+      self._stats = visual_selection_stats()
     end,
-    {
-      condition = function(self) return self.stats ~= nil end,
-      panel_divider(),
-      {
-        provider = function(self)
-          local stats = self.stats
-          if not stats then return '' end
-          local suffix = (stats.kind == 'lines') and 'L' or 'C'
-          return string.format('sel·%d%s ', stats.count, suffix)
-        end,
-        hl = 'HeirlineVisualSel',
-      },
-    },
+    condition = function(self)
+      self._stats = visual_selection_stats()
+      return self._stats ~= nil
+    end,
+    update = { 'ModeChanged', 'CursorMoved', 'CursorMovedI', 'WinEnter', 'WinLeave', 'VisualEnter', 'VisualLeave', 'BufEnter' },
+    provider = function(self)
+      local stats = self._stats
+      if not stats then return '' end
+      local label = stats.label or 'Visual'
+      local detail = stats.detail
+      local text = detail and (label .. ' ' .. detail) or label
+      local start_hl, end_hl = highlights.eval_hl({ fg = colors.yellow, bg = colors.base_bg, italic = true, bold = true })
+      return start_hl .. text .. end_hl .. ' '
+    end,
   }
 
   -- ── Git helpers ───────────────────────────────────────────────────────────
@@ -939,7 +951,6 @@ return function(ctx)
     components.git,
     components.gitdiff,
     components.size,
-    components.visual_selection,
     components.env,
     components.format_panel,
     components.toggles,
@@ -953,6 +964,7 @@ return function(ctx)
   if ENABLE_CENTER_PATH then
     DefaultStatusline = {
       utils.surround({ '', '' }, colors.base_bg, {
+        VisualSelection,
         EmptyBadge,
         LeftComponents,
         components.search,
