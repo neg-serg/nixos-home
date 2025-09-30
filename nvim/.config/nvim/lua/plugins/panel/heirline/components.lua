@@ -736,8 +736,10 @@ return function(ctx)
             pieces[#pieces + 1] = start .. rest .. finish
           end
           if col then
-            local start, finish = highlights.eval_hl({ fg = colors.white, bg = colors.base_bg, italic = true })
-            pieces[#pieces + 1] = start .. ':' .. tostring(col) .. finish
+            local start_sep, end_sep = highlights.eval_hl({ fg = colors.blue, bg = colors.base_bg, italic = true })
+            local start_col, end_col = highlights.eval_hl({ fg = colors.white, bg = colors.base_bg, italic = true })
+            pieces[#pieces + 1] = start_sep .. ':' .. end_sep
+            pieces[#pieces + 1] = start_col .. tostring(col) .. end_col
           end
           if #pieces == 0 then return '' end
           return table.concat(pieces) .. ' '
