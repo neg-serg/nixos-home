@@ -796,6 +796,76 @@ return function(ctx)
     end,
   }
 
+  local CenterFilePath = {
+    condition = function() return not is_empty() end,
+    init = function(self)
+      local buf = get_status_buf()
+      local path = buf_full_path(buf)
+      if not path or path == '' then self._parts = nil; return end
+      local display = fn.fnamemodify(path, ':~')
+      local parts = {}
+      local function push(text, hl)
+        if not text or text == '' then return end
+        parts[#parts + 1] = { text = text, hl = hl }
+      end
+      local slash_hl = { fg = colors.blue, bg = colors.base_bg, italic = true }
+      local dir_hl = { fg = colors.dir_mid or colors.white, bg = colors.base_bg, italic = true }
+      local file_hl = { fg = colors.white, bg = colors.base_bg, bold = true }
+
+      local dir_part, file_part = display:match('^(.*)/([^/]+)$')
+      if not file_part then
+        file_part = display
+        dir_part = nil
+      end
+
+      local function emit_dirs(rest)
+        if not rest or rest == '' then return end
+        local cursor = rest
+        if cursor:sub(1, 1) == '~' then
+          push('~', { fg = colors.green, bg = colors.base_bg, bold = true })
+          cursor = cursor:sub(2)
+        elseif cursor:sub(1, 1) == '/' then
+          push('/', slash_hl)
+          cursor = cursor:sub(2)
+        end
+        local idx = 1
+        while idx <= #cursor do
+          local slash_pos = cursor:find('/', idx)
+          if slash_pos then
+            local segment = cursor:sub(idx, slash_pos - 1)
+            push(segment, dir_hl)
+            push('/', slash_hl)
+            idx = slash_pos + 1
+          else
+            local tail = cursor:sub(idx)
+            push(tail, dir_hl)
+            break
+          end
+        end
+      end
+
+      emit_dirs(dir_part)
+      if dir_part and dir_part ~= '' then push('/', slash_hl) end
+      if display:sub(1, 1) == '/' and not dir_part then push('/', slash_hl) end
+      push(file_part, file_hl)
+
+      self._parts = parts
+    end,
+    update = { 'BufEnter', 'BufFilePost', 'DirChanged', 'WinResized' },
+    provider = function(self)
+      local parts = self._parts
+      if not parts or #parts == 0 then return '' end
+      local chunks = { ' ' }
+      for _, part in ipairs(parts) do
+        local hl = part.hl or { fg = colors.white, bg = colors.base_bg }
+        local start_hl, end_hl = highlights.eval_hl(hl)
+        chunks[#chunks + 1] = start_hl .. (part.text or '') .. end_hl
+      end
+      chunks[#chunks + 1] = ' '
+      return table.concat(chunks)
+    end,
+  }
+
   local LeftComponents = {
     condition = function() return not is_empty() end,
     {
@@ -881,6 +951,8 @@ return function(ctx)
       LeftComponents,
       components.search,
     }),
+    align,
+    CenterFilePath,
     align,
     RightComponents,
   }
