@@ -380,9 +380,13 @@ return function(ctx)
       if not stats then return '' end
       local label = stats.label or 'Visual'
       local detail = stats.detail
-      local text = detail and (label .. ' ' .. detail) or label
-      local start_hl, end_hl = highlights.eval_hl({ fg = colors.yellow, bg = colors.base_bg, italic = true, bold = true })
-      return start_hl .. text .. end_hl .. ' '
+      local lbl_start, lbl_end = highlights.eval_hl({ fg = colors.yellow, bg = colors.base_bg, italic = true, bold = true })
+      if detail and detail ~= '' then
+        -- Numbers: regular font (no italic/bold), use main foreground like other text
+        local num_start, num_end = highlights.eval_hl({ fg = colors.white, bg = colors.base_bg })
+        return table.concat({ lbl_start, label, lbl_end, ' ', num_start, detail, num_end, ' ' })
+      end
+      return lbl_start .. label .. lbl_end .. ' '
     end,
   }
 
