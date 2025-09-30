@@ -632,8 +632,9 @@ return function(ctx)
   
     size = {
       condition = function() return not is_empty() and not is_narrow() end,
-      provider = prof('size', function() return human_size() end),
-      hl = function() return { fg = colors.white, bg = colors.base_bg } end,
+      init = function(self)
+        self._size = human_size()
+      end,
       update = { 'BufEnter', 'BufWritePost', 'WinResized' },
       on_click = {
         callback = vim.schedule_wrap(function()
@@ -641,6 +642,25 @@ return function(ctx)
           if has_mod('telescope.builtin') then require('telescope.builtin').current_buffer_fuzzy_find() end
         end),
         name = 'heirline_size_click',
+      },
+      {
+        condition = function(self) return self._size ~= '' end,
+        provider = ' ',
+      },
+      {
+        condition = function(self) return self._size ~= '' end,
+        provider = function() return '' end,
+        hl = 'HeirlineSizeIcon',
+      },
+      {
+        condition = function(self) return self._size ~= '' end,
+        provider = function(self) return self._size .. ' ' end,
+        hl = function() return { fg = colors.white, bg = colors.base_bg, italic = true } end,
+      },
+      {
+        condition = function(self) return self._size ~= '' end,
+        provider = ' ',
+        hl = function() return { fg = colors.white, bg = colors.base_bg } end,
       },
     },
   
