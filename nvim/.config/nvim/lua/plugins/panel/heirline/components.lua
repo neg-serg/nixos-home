@@ -690,32 +690,60 @@ return function(ctx)
     },
   
     position = {
-      provider = prof('position', function()
+      init = function(self)
         local win = target_win()
-        return win_call(win, function()
-          local lnum = fn.line('.'); local col = fn.virtcol('.')
+        self._pos = win_call(win, function()
+          local lnum = fn.line('.')
+          local col = fn.virtcol('.')
+          local show_col = col ~= 1
           if is_tiny() then
-            return string.format(' %d:%d ', lnum, col)
+            return show_col and string.format('%d:%d', lnum, col) or string.format('%d', lnum)
           end
-          return string.format(' %4d:%-3d ', lnum, col)
-        end, ' 0:0 ')
-      end),
-      hl = function() return { fg = colors.white, bg = colors.base_bg } end,
+          return show_col and string.format('%d:%d', lnum, col) or string.format('%d', lnum)
+        end, '0')
+      end,
       update = { 'CursorMoved', 'CursorMovedI', 'WinResized' },
+      {
+        condition = function(self) return self._pos ~= nil and self._pos ~= '' end,
+        provider = ' ',
+      },
+      {
+        condition = function(self) return self._pos ~= nil and self._pos ~= '' end,
+        provider = function() return '🅻🅽' end,
+        hl = 'HeirlinePositionIcon',
+      },
+      {
+        condition = function(self) return self._pos ~= nil and self._pos ~= '' end,
+        provider = function(self)
+          local text = self._pos or ''
+          return text .. ' '
+        end,
+        hl = function() return { fg = colors.white, bg = colors.base_bg, italic = true } end,
+      },
     },
   
     env = {
-      condition = function() return SHOW_ENV end,
-      provider = prof('env', function()
+      condition = function()
+        if not SHOW_ENV then return false end
         local lbl = env_label()
-        return (lbl ~= '' and (' ['..lbl..'] ')) or ''
-      end),
-      hl = function() return { fg = colors.blue_light, bg = colors.base_bg } end,
+        return lbl ~= nil and lbl ~= ''
+      end,
+      init = function(self)
+        self._env_label = env_label() or ''
+      end,
       update = { 'VimResized' },
+      panel_divider(),
+      {
+        provider = function(self)
+          return 'env·' .. self._env_label .. ' '
+        end,
+        hl = function() return { fg = colors.blue_light, bg = colors.base_bg, italic = true } end,
+      },
     },
   
     toggles = { ListToggle, WrapToggle },
     format_panel = FormatPanel,
+    visual_selection = VisualSelection,
   }
 
   local ModifiedFlag = {
@@ -753,12 +781,6 @@ return function(ctx)
     FileNameClickable,
     Readonly,
     ModifiedFlag,
-    {
-      condition = components.gitdiff.condition,
-      provider = S.sep,
-      hl = function() return { fg = colors.blue, bg = colors.base_bg } end,
-    },
-    components.gitdiff,
   }
 
   -- ── Special buffer statusline ─────────────────────────────────────────────
@@ -803,11 +825,14 @@ return function(ctx)
     components.lsp,
     components.lsp_progress,
     components.encoding,
-    components.size,
-    components.position,
     components.git,
+    components.gitdiff,
+    components.size,
+    components.visual_selection,
     components.env,
+    components.format_panel,
     components.toggles,
+    components.position,
   }
 
   local DefaultStatusline = {
