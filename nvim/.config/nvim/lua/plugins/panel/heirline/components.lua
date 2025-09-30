@@ -215,26 +215,25 @@ return function(ctx)
       return table.concat(chunks)
     end,
   }
+  local function file_icon_for(buf)
+    local name = buf_display_name(buf)
+    if name == '' then return S.doc, colors.cyan end
+    if not ok_devicons or not USE_ICONS then return S.doc, colors.cyan end
+    if _icon_color_cache[name] then return devicons.get_icon(name) or S.doc, _icon_color_cache[name] end
+    local icon, color = devicons.get_icon_color(name, nil, { default = false })
+    if color then _icon_color_cache[name] = color end
+    return icon or S.doc, color or colors.cyan
+  end
+
   local FileIcon = {
     condition = function() return not is_empty() end,
     provider = prof('FileIcon', function()
-      local name = buf_display_name(get_status_buf())
-      if name == '' then return S.doc end
-      if ok_devicons and USE_ICONS then
-        return devicons.get_icon(name) or S.doc
-      end
-      return S.doc
+      local icon = file_icon_for(get_status_buf())
+      return icon
     end),
     hl = function()
-      if not ok_devicons or not USE_ICONS then return { fg = colors.cyan, bg = colors.base_bg } end
-      local name = buf_display_name(get_status_buf())
-      if name == '' then return { fg = colors.cyan, bg = colors.base_bg } end
-      if _icon_color_cache[name] then
-        return { fg = _icon_color_cache[name], bg = colors.base_bg }
-      end
-      local _, color = devicons.get_icon_color(name, nil, { default = false })
-      if color then _icon_color_cache[name] = color; return { fg = color, bg = colors.base_bg } end
-      return { fg = colors.cyan, bg = colors.base_bg }
+      local _, color = file_icon_for(get_status_buf())
+      return { fg = color, bg = colors.base_bg }
     end,
     update = { 'BufEnter', 'BufFilePost' },
   }
@@ -847,6 +846,8 @@ return function(ctx)
       emit_dirs(dir_part)
       if dir_part and dir_part ~= '' then push('/', slash_hl) end
       if display:sub(1, 1) == '/' and not dir_part then push('/', slash_hl) end
+      local icon, icon_color = file_icon_for(buf)
+      push(icon .. ' ', { fg = icon_color, bg = colors.base_bg })
       push(file_part, file_hl)
 
       self._parts = parts
