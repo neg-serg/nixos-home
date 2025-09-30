@@ -152,33 +152,11 @@ return function(ctx)
   }
   local LeftComponents = {
     condition = function() return not is_empty() end,
-    {
-      provider = function()
-        local cwd, home = fn.getcwd(), fn.expand('~')
-        if cwd == home then
-          return (USE_ICONS and ' ' or '~ ')
-        end
-        return S.folder .. ' '
-      end,
-      hl = function()
-        local is_home = (fn.getcwd() == fn.expand('~'))
-        return { fg = (is_home and colors.green or colors.blue), bg = colors.base_bg }
-      end,
-      update = { 'DirChanged' },
-    },
+    { provider = S.folder .. ' ', hl = function() return { fg = colors.blue, bg = colors.base_bg } end },
     CurrentDir,
-  }
-
-  -- Buffer info (center block): file icon, name, and flags
-  local BufferInfo = {
+    { provider = S.sep, hl = function() return { fg = colors.blue, bg = colors.base_bg } end },
     FileIcon,
     FileNameClickable,
-    {
-      -- show the second separator only when there is something to separate
-      condition = function() return (vim.bo.readonly or not vim.bo.modifiable) or vim.bo.modified end,
-      provider = S.sep,
-      hl = function() return { fg = colors.blue, bg = colors.base_bg } end,
-    },
     Readonly,
     {
       condition = function() return vim.bo.modified end,
@@ -525,140 +503,15 @@ return function(ctx)
   }
   
   -- ── Default statusline ────────────────────────────────────────────────────
-  local function cwd_git_branch()
-    local cwd = fn.getcwd()
-    local gitdir = fn.finddir('.git', cwd .. ';')
-    if gitdir == '' then return nil end
-    local ok, head = pcall(fn.readfile, gitdir .. '/HEAD')
-    if not ok or not head or #head == 0 then return nil end
-    local line = head[1]
-    if type(line) ~= 'string' then return nil end
-    if line:sub(1,5) == 'ref: ' then
-      local ref = line:sub(6)
-      return (ref:match('refs/heads/(.+)') or ref):gsub('%s+$','')
-    end
-    return line:sub(1,7)
-  end
-
-  local function listed_buffer_count()
-    local bufs = vim.api.nvim_list_bufs()
-    local n = 0
-    for _, b in ipairs(bufs) do
-      if vim.api.nvim_buf_is_loaded(b) and vim.bo[b].buflisted then n = n + 1 end
-    end
-    return n
-  end
-
-  local EmptyLeft = {
-    condition = is_empty,
-    {
-      provider = function()
-        local cwd, home = fn.getcwd(), fn.expand('~')
-        if cwd == home then
-          return (USE_ICONS and ' ' or '~ ')
-        end
-        return S.folder .. ' '
-      end,
-      hl = function()
-        local is_home = (fn.getcwd() == fn.expand('~'))
-        return { fg = (is_home and colors.green or colors.blue), bg = colors.base_bg }
-      end,
-      update = { 'DirChanged' },
-    },
-    {
-      provider = prof('Empty.Cwd', function() return fn.fnamemodify(fn.getcwd(), ':~') .. ' ' end),
-      hl = function() return { fg = colors.white, bg = colors.base_bg } end,
-      update = { 'DirChanged', 'WinResized' },
-      on_click = { callback = vim.schedule_wrap(function() dbg_push('click: empty cwd'); open_file_browser_cwd() end), name = 'heirline_empty_cwd_open' },
-    },
-    -- no extra separators in empty view
-    {
-      provider = prof('Empty.Buffers', function()
-        return ' ' .. (USE_ICONS and '' or '[buf]') .. ' ' .. listed_buffer_count() .. ' '
-      end),
-      hl = function() return { fg = colors.cyan, bg = colors.base_bg } end,
-      update = { 'BufAdd', 'BufDelete', 'BufEnter' },
-      on_click = { callback = vim.schedule_wrap(function()
-        dbg_push('click: empty buffers')
-        local ok, tb = pcall(require, 'telescope.builtin')
-        if ok then tb.buffers() else vim.cmd('ls') end
-      end), name = 'heirline_empty_buffers' },
-    },
-    {
-      condition = function() return not is_narrow() end,
-      provider = prof('Empty.Git', function()
-        local br = cwd_git_branch()
-        return br and (S.branch .. br .. ' ') or ''
-      end),
-      hl = function() return { fg = colors.blue, bg = colors.base_bg } end,
-      update = { 'DirChanged' },
-      on_click = { callback = vim.schedule_wrap(function() dbg_push('click: empty git'); open_git_ui() end), name = 'heirline_empty_git' },
-    },
-  }
-
-  -- removed time-based greeting component
-
-  local EmptyActions = {
-    condition = function() return is_empty() and not is_narrow() end,
-    -- vertical separator before actions in empty view
-    { provider = S.sep, hl = function() return { fg = colors.blue, bg = colors.base_bg } end },
-    {
-      provider = function() return ' ' .. S.plus .. ' New ' end,
-      hl = function() return { fg = colors.green, bg = colors.base_bg } end,
-      on_click = { callback = vim.schedule_wrap(function()
-        dbg_push('click: empty new file')
-        local default = os.date('new-%Y%m%d-%H%M%S.txt')
-        vim.ui.input({ prompt = 'New file path: ', default = default }, function(path)
-          if not path or path == '' then return end
-          local dir = fn.fnamemodify(path, ':h')
-          if dir ~= '' and dir ~= '.' then pcall(fn.mkdir, dir, 'p') end
-          vim.cmd('edit ' .. fn.fnameescape(path))
-        end)
-      end), name = 'heirline_empty_new_file' },
-    },
-    {
-      provider = function() return S.search .. ' Find ' end,
-      hl = function() return { fg = colors.cyan, bg = colors.base_bg } end,
-      on_click = { callback = vim.schedule_wrap(function()
-        dbg_push('click: empty find files')
-        local ok, tb = pcall(require, 'telescope.builtin')
-        if ok then tb.find_files({ hidden = true }) else open_file_browser_cwd() end
-      end), name = 'heirline_empty_find_files' },
-    },
-    {
-      provider = function() return ' ' .. (USE_ICONS and '⏱' or 'Rec') .. ' Recent ' end,
-      hl = function() return { fg = colors.blue_light, bg = colors.base_bg } end,
-      on_click = { callback = vim.schedule_wrap(function()
-        dbg_push('click: empty recent files')
-        local ok, tb = pcall(require, 'telescope.builtin')
-        if ok then tb.oldfiles({ only_cwd = false }) else vim.cmd('browse oldfiles') end
-      end), name = 'heirline_empty_recent_files' },
-    },
-    {
-      provider = function() return ' ' .. (USE_ICONS and ' ' or '[?] ') .. 'Help ' end,
-      hl = function() return { fg = colors.white, bg = colors.base_bg } end,
-      on_click = { callback = vim.schedule_wrap(function()
-        dbg_push('click: empty help')
-        local ok, tb = pcall(require, 'telescope.builtin')
-        if ok then tb.help_tags() else vim.cmd('help') end
-      end), name = 'heirline_empty_help' },
-    },
-  }
   local DefaultStatusline = {
-    -- Left: cwd and actions (no buffer info here)
     utils.surround({ '', '' }, colors.base_bg, {
-      EmptyLeft,
-      EmptyActions,
+      { condition = is_empty, provider = '[N]', hl = function() return { fg = colors.white, bg = colors.base_bg } end },
       LeftComponents,
-    }),
-    -- Center: buffer info
-    align,
-    BufferInfo,
-    align,
-    -- Right: diagnostics, git, pos, etc.
-    {
       components.search,
+    }),
+    {
       components.macro,
+      align,
       components.diag,
       components.lsp,
       components.lsp_progress,
