@@ -946,17 +946,33 @@ return function(ctx)
     components.position,
   }
 
-  local DefaultStatusline = {
-    utils.surround({ '', '' }, colors.base_bg, {
-      EmptyBadge,
-      LeftComponents,
-      components.search,
-    }),
-    align,
-    CenterFilePath,
-    align,
-    RightComponents,
-  }
+  -- Center path still experimental: keep disabled until layout finalized.
+  local ENABLE_CENTER_PATH = false
+
+  local DefaultStatusline
+  if ENABLE_CENTER_PATH then
+    DefaultStatusline = {
+      utils.surround({ '', '' }, colors.base_bg, {
+        EmptyBadge,
+        LeftComponents,
+        components.search,
+      }),
+      align,
+      CenterFilePath,
+      align,
+      RightComponents,
+    }
+  else
+    DefaultStatusline = {
+      utils.surround({ '', '' }, colors.base_bg, {
+        EmptyBadge,
+        LeftComponents,
+        components.search,
+      }),
+      align,
+      RightComponents,
+    }
+  end
 
   -- ── Ultra-compact statusline (tiny windows) ───────────────────────────────
   local TinyStatusline = {
