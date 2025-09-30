@@ -562,12 +562,18 @@ return function(ctx)
         self.head = head
         return true
       end,
-      provider = prof('git', function(self)
-        return S.branch .. (self.head or '')
-      end),
-      hl = function() return { fg = colors.blue, bg = colors.base_bg } end,
       update = { 'BufEnter', 'BufWritePost', 'User', 'WinEnter', 'WinResized' },
       on_click = { callback = vim.schedule_wrap(function() dbg_push('click: git'); open_git_ui() end), name = 'heirline_git_ui' },
+      {
+        provider = function() return S.branch end,
+        hl = function() return { fg = colors.blue, bg = colors.base_bg } end,
+      },
+      {
+        provider = prof('git.head', function(self)
+          return (self.head or '') .. ' '
+        end),
+        hl = function() return { fg = colors.white, bg = colors.base_bg } end,
+      },
     },
 
     gitdiff = {
