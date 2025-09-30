@@ -269,9 +269,12 @@ return function(ctx)
     local ok, info = pcall(api.nvim_win_call, win, function()
       local mode = vim.fn.mode(1)
       if type(mode) ~= 'string' or not mode:match('[vV\022]') then return nil end
-      local vmode = vim.fn.visualmode() or mode
-      local start_pos = vim.fn.getpos("'<")
-      local end_pos = vim.fn.getpos("'>")
+      -- Determine current visual-kind strictly from mode(1) to avoid stale visualmode()
+      local first = mode:sub(1, 1)
+      local vmode = (first == 'V' and 'V') or (first == '\022' and '\022') or 'v'
+      -- Use live Visual anchors: 'v' = start anchor, '.' = current cursor
+      local start_pos = vim.fn.getpos('v')
+      local end_pos = vim.fn.getpos('.')
       if not start_pos or not end_pos then return nil end
       local wc = vim.fn.wordcount() or {}
       return { mode = mode, vmode = vmode, start = start_pos, finish = end_pos, wc = wc }
@@ -295,7 +298,7 @@ return function(ctx)
     else
       local chars = info.wc.visual_chars or 0
       return {
-        label = 'Visual',
+        label = 'VChar',
         detail = (chars > 0) and tostring(chars) or nil,
       }
     end
