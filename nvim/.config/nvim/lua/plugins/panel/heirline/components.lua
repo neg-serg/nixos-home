@@ -569,6 +569,53 @@ return function(ctx)
       update = { 'LspAttach', 'LspDetach', 'CursorHold', 'CursorHoldI', 'BufEnter', 'WinEnter' },
     },
 
+    code_actions = {
+      condition = function(self)
+        local buf = target_buf(); if not buf then return false end
+        if not vim.lsp then return false end
+        local clients = {}
+        if vim.lsp.get_clients then
+          clients = vim.lsp.get_clients({ bufnr = buf })
+        elseif vim.lsp.buf_get_clients then
+          local map = vim.lsp.buf_get_clients(buf)
+          for _, client in pairs(map or {}) do table.insert(clients, client) end
+        end
+        if not clients or (type(clients) == 'table' and next(clients) == nil) then return false end
+        self._buf = buf
+        return true
+      end,
+      init = function(self)
+        local buf = self._buf or target_buf(); if not buf then self._ca_count = 0; return end
+        local cnt = 0
+        local ok_params, params = pcall(function()
+          local p = (vim.lsp.util and vim.lsp.util.make_range_params) and vim.lsp.util.make_range_params(0) or { textDocument = { uri = vim.uri_from_bufnr(buf) } }
+          p.context = { diagnostics = (vim.diagnostic and vim.diagnostic.get and vim.diagnostic.get(buf, { lnum = (vim.api and vim.api.nvim_win_get_cursor and ((target_win() and vim.api.nvim_win_get_cursor(target_win()) or {1,0})[1] - 1)) }) or {}) }
+          return p
+        end)
+        if ok_params and params and vim.lsp and vim.lsp.buf_request_sync then
+          local ok_req, res = pcall(vim.lsp.buf_request_sync, buf, 'textDocument/codeAction', params, 80)
+          if ok_req and type(res) == 'table' then
+            for _, resp in pairs(res) do
+              local actions = resp and resp.result
+              if type(actions) == 'table' then
+                for _ in ipairs(actions) do cnt = cnt + 1 end
+              end
+            end
+          end
+        end
+        self._ca_count = cnt
+      end,
+      update = { 'LspAttach', 'LspDetach', 'DiagnosticChanged', 'CursorHold', 'CursorHoldI', 'BufEnter', 'WinEnter' },
+      provider = function(self)
+        local n = self._ca_count or 0
+        if n <= 0 then return '' end
+        local icon = (USE_ICONS and '' or 'CA')
+        return string.format(' %s %d ', icon, n)
+      end,
+      hl = function() return { fg = colors.yellow, bg = colors.base_bg } end,
+      on_click = { callback = vim.schedule_wrap(function() dbg_push('click: code actions'); pcall(function() vim.lsp.buf.code_action() end) end), name = 'heirline_code_actions' },
+    },
+
     git = {
       condition = function(self)
         if is_narrow() then return false end
@@ -959,6 +1006,7 @@ return function(ctx)
   local RightComponents = {
     components.macro,
     components.diag,
+    components.code_actions,
     components.lsp,
     components.lsp_progress,
     components.encoding,
