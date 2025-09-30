@@ -6,11 +6,55 @@ return function(ctx)
   local ok_devicons, devicons = ctx.ok_devicons, ctx.devicons
   local USE_ICONS, SHOW_ENV = ctx.USE_ICONS, ctx.SHOW_ENV
   local is_empty, is_narrow, is_tiny = ctx.is_empty, ctx.is_narrow, ctx.is_tiny
+  local align = ctx.align or { provider = '%=' }
+  local get_status_win = ctx.statusline_win
+  local get_status_buf = ctx.statusline_buf
+  local buf_display_name = ctx.buf_name
+  local buf_full_path = ctx.buf_path
+  local win_cwd = ctx.window_cwd
   local open_file_browser_cwd = ctx.open_file_browser_cwd
   local open_git_ui = ctx.open_git_ui
   local open_diagnostics_list = ctx.open_diagnostics_list
   local safe_buffer_matches = ctx.safe_buffer_matches
   local notify = ctx.notify
+
+  -- ── Window/buffer helpers ─────────────────────────────────────────────────
+  local function target_win()
+    local win = get_status_win()
+    if win and api.nvim_win_is_valid(win) then return win end
+    return nil
+  end
+  local function target_buf()
+    local buf = get_status_buf()
+    if buf and api.nvim_buf_is_valid(buf) then return buf end
+    local win = target_win()
+    if win then
+      local ok, win_buf = pcall(api.nvim_win_get_buf, win)
+      if ok and api.nvim_buf_is_valid(win_buf) then return win_buf end
+    end
+    return nil
+  end
+  local function buf_option(bufnr, name, fallback)
+    if bufnr and api.nvim_buf_is_valid(bufnr) then
+      local ok, val = pcall(api.nvim_buf_get_option, bufnr, name)
+      if ok then return val end
+    end
+    return fallback
+  end
+  local function win_option(win, name, fallback)
+    if win and api.nvim_win_is_valid(win) then
+      local ok, val = pcall(api.nvim_win_get_option, win, name)
+      if ok then return val end
+    end
+    return fallback
+  end
+  local function win_call(win, cb, fallback)
+    if win and api.nvim_win_is_valid(win) then
+      local ok, res = pcall(api.nvim_win_call, win, cb)
+      if ok then return res end
+    end
+    return fallback
+  end
 
   -- ── Special types (icons) ─────────────────────────────────────────────────
   local FT_ICON = {
@@ -78,7 +122,9 @@ return function(ctx)
   local SPECIAL_FT = build_special_list()
   
   local function ft_label_and_icon()
-    local bt, ft = vim.bo.buftype, vim.bo.filetype
+    local buf = target_buf()
+    local bt = buf_option(buf, 'buftype', vim.bo.buftype)
+    local ft = buf_option(buf, 'filetype', vim.bo.filetype)
     if bt ~= '' then
       local m=FT_ICON[bt]; if m then return m[2], (USE_ICONS and m[1] or '['..m[2]..']') end
       return bt, '['..bt..']'
@@ -100,16 +146,27 @@ return function(ctx)
     return base:sub(1, keep) .. '….' .. ext
   end
   local function adapt_fname(max_hint)
-    local w = api.nvim_win_get_width(0)
-    local max = max_hint or math.max(10, math.floor(w * 0.25))
-    local n = fn.expand('%:t')
-    return ' ' .. truncate_filename(n, max)
+    local win = get_status_win()
+    local target = (win and api.nvim_win_is_valid(win)) and win or 0
+    local ok_w, width = pcall(api.nvim_win_get_width, target)
+    if not ok_w then
+      local fallback_ok, fallback = pcall(api.nvim_win_get_width, 0)
+      width = (fallback_ok and fallback) or 0
+    end
+    local max = max_hint or math.max(10, math.floor((width or 0) * 0.25))
+    if max <= 0 then max = max_hint or 10 end
+    local name = buf_display_name(get_status_buf())
+    if name == '' then return ' [No Name]' end
+    return ' ' .. truncate_filename(name, max)
   end
   
   -- ── Left (file info) ──────────────────────────────────────────────────────
   local _icon_color_cache = {}
   local CurrentDir = {
-    provider = prof('CurrentDir', function() return fn.fnamemodify(fn.getcwd(), ':~') end),
+    provider = prof('CurrentDir', function()
+      local cwd = win_cwd(get_status_win())
+      return fn.fnamemodify(cwd, ':~')
+    end),
     hl = function() return { fg = colors.white, bg = colors.base_bg } end,
     update = { 'DirChanged', 'BufEnter' },
     on_click = { callback = vim.schedule_wrap(function() dbg_push('click: cwd'); open_file_browser_cwd() end), name = 'heirline_cwd_open' },
@@ -117,7 +174,8 @@ return function(ctx)
   local FileIcon = {
     condition = function() return not is_empty() end,
     provider = prof('FileIcon', function()
-      local name = fn.expand('%:t')
+      local name = buf_display_name(get_status_buf())
+      if name == '' then return S.doc end
       if ok_devicons and USE_ICONS then
         return devicons.get_icon(name) or S.doc
       end
@@ -125,7 +183,8 @@ return function(ctx)
     end),
     hl = function()
       if not ok_devicons or not USE_ICONS then return { fg = colors.cyan, bg = colors.base_bg } end
-      local name = fn.expand('%:t')
+      local name = buf_display_name(get_status_buf())
+      if name == '' then return { fg = colors.cyan, bg = colors.base_bg } end
       if _icon_color_cache[name] then
         return { fg = _icon_color_cache[name], bg = colors.base_bg }
       end
@@ -136,7 +195,12 @@ return function(ctx)
     update = { 'BufEnter', 'BufFilePost' },
   }
   local Readonly = {
-    condition = function() return vim.bo.readonly or not vim.bo.modifiable end,
+    condition = function()
+      local buf = target_buf()
+      local readonly = buf_option(buf, 'readonly', vim.bo.readonly)
+      local modifiable = buf_option(buf, 'modifiable', vim.bo.modifiable)
+      return readonly or not modifiable
+    end,
     provider = S.lock,
     hl = function() return { fg = colors.blue, bg = colors.base_bg } end,
     update = { 'OptionSet', 'BufEnter' },
@@ -146,47 +210,42 @@ return function(ctx)
     hl = function() return { fg = colors.white, bg = colors.base_bg } end,
     update = { 'BufEnter', 'BufFilePost', 'WinResized' },
     on_click = { callback = vim.schedule_wrap(function()
-      local path = fn.expand('%:p'); if path == '' then return end
+      local path = buf_full_path(get_status_buf())
+      if not path or path == '' then return end
       pcall(fn.setreg, '+', path); notify('Copied path: ' .. path); dbg_push('click: filename -> copied path')
     end), name = 'heirline_copy_abs_path' },
   }
-  local LeftComponents = {
-    condition = function() return not is_empty() end,
-    { provider = S.folder .. ' ', hl = function() return { fg = colors.blue, bg = colors.base_bg } end },
-    CurrentDir,
-    { provider = S.sep, hl = function() return { fg = colors.blue, bg = colors.base_bg } end },
-    FileIcon,
-    FileNameClickable,
-    Readonly,
-    {
-      condition = function() return vim.bo.modified end,
-      provider = S.modified,
-      hl = function() return { fg = colors.blue, bg = colors.base_bg } end,
-      update = { 'BufWritePost', 'TextChanged', 'TextChangedI', 'BufModifiedSet' },
-    },
-  }
-  
   -- ── Small toggles ─────────────────────────────────────────────────────────
   local ListToggle = {
     provider = function() return S.pilcrow end,
-    hl = function() return { fg = (vim.wo.list and colors.yellow or colors.white), bg = colors.base_bg } end,
-    update = { 'OptionSet', 'BufWinEnter' },
+    hl = function()
+      local win = target_win()
+      local show = win_option(win, 'list', vim.wo.list)
+      return { fg = (show and colors.yellow or colors.white), bg = colors.base_bg }
+    end,
+    update = { 'OptionSet', 'BufWinEnter', 'WinEnter' },
     on_click = { callback = vim.schedule_wrap(function() vim.o.list = not vim.o.list; dbg_push('toggle: list -> '..tostring(vim.o.list)) end), name = 'heirline_toggle_list' },
   }
   local WrapToggle = {
     provider = function() return S.wrap end,
-    hl = function() return { fg = (vim.wo.wrap and colors.yellow or colors.white), bg = colors.base_bg } end,
-    update = { 'OptionSet', 'BufWinEnter' },
+    hl = function()
+      local win = target_win()
+      local wrap = win_option(win, 'wrap', vim.wo.wrap)
+      return { fg = (wrap and colors.yellow or colors.white), bg = colors.base_bg }
+    end,
+    update = { 'OptionSet', 'BufWinEnter', 'WinEnter' },
     on_click = { callback = vim.schedule_wrap(function() vim.wo.wrap = not vim.wo.wrap; dbg_push('toggle: wrap -> '..tostring(vim.wo.wrap)) end), name = 'heirline_toggle_wrap' },
   }
   
   -- ── Format panel (tabs/spaces, ts, sw) ────────────────────────────────────
-  local function fmt_icon()
-    return vim.bo.expandtab and 'Spaces' or 'Tabs'
+  local function fmt_mode_label()
+    local buf = target_buf()
+    local expandtab = buf_option(buf, 'expandtab', vim.bo.expandtab)
+    return expandtab and 'Spaces' or 'Tabs'
   end
   local FormatPanel = {
     {
-      provider = function() return ' ' .. fmt_icon() .. ' ' end,
+      provider = function() return ' ' .. fmt_mode_label() .. ' ' end,
       hl = function() return { fg = colors.cyan, bg = colors.base_bg } end,
       on_click = { callback = vim.schedule_wrap(function()
         vim.bo.expandtab = not vim.bo.expandtab
@@ -194,7 +253,11 @@ return function(ctx)
       end), name = 'heirline_fmt_toggle_et' },
     },
     {
-      provider = function() return 'ts=' .. vim.bo.tabstop .. ' ' end,
+      provider = function()
+        local buf = target_buf()
+        local ts = buf_option(buf, 'tabstop', vim.bo.tabstop)
+        return string.format(' ts=%d ', ts)
+      end,
       hl = function() return { fg = colors.white, bg = colors.base_bg } end,
       on_click = { callback = vim.schedule_wrap(function()
         local ts = vim.bo.tabstop
@@ -207,7 +270,11 @@ return function(ctx)
       end), name = 'heirline_fmt_cycle_ts' },
     },
     {
-      provider = function() return 'sw=' .. vim.bo.shiftwidth .. ' ' end,
+      provider = function()
+        local buf = target_buf()
+        local sw = buf_option(buf, 'shiftwidth', vim.bo.shiftwidth)
+        return string.format(' sw=%d ', sw)
+      end,
       hl = function() return { fg = colors.white, bg = colors.base_bg } end,
       on_click = { callback = vim.schedule_wrap(function()
         local sw = vim.bo.shiftwidth
@@ -220,23 +287,43 @@ return function(ctx)
       end), name = 'heirline_fmt_cycle_sw' },
     },
   }
-  
+
+  -- ── Git helpers ───────────────────────────────────────────────────────────
+  local function gitsigns_head(bufnr)
+    if not bufnr then return nil end
+    local ok, head = pcall(api.nvim_buf_get_var, bufnr, 'gitsigns_head')
+    if not ok or type(head) ~= 'string' or head == '' then return nil end
+    return head
+  end
+  local function gitsigns_counts(bufnr)
+    if not bufnr then return nil end
+    local ok, dict = pcall(api.nvim_buf_get_var, bufnr, 'gitsigns_status_dict')
+    if not ok or type(dict) ~= 'table' then return nil end
+    return dict
+  end
+
   -- ── Right-side helpers ────────────────────────────────────────────────────
   local function human_size()
-    local size = fn.getfsize(fn.expand('%:p')); if size <= 0 then return '' end
+    local path = buf_full_path(get_status_buf())
+    if not path or path == '' then return '' end
+    local size = fn.getfsize(path); if size <= 0 then return '' end
     local i, suffix = 1, { 'B','K','M','G','T','P' }
     while size >= 1024 and i < #suffix do size = size/1024; i=i+1 end
     if i == 1 then return string.format('%d%s ', size, suffix[i]) end
     return string.format((i<=3) and '%.1f%s ' or '%.2f%s ', size, suffix[i])
   end
   local function os_icon()
+    local buf = target_buf()
+    local fmt = buf_option(buf, 'fileformat', vim.bo.fileformat)
     if not USE_ICONS then
-      return ({ unix='unix ', mac='mac ', dos='dos ' })[vim.bo.fileformat] or 'unix '
+      return ({ unix='unix ', mac='mac ', dos='dos ' })[fmt] or 'unix '
     end
-    return ({ unix=S.linux, mac=S.mac, dos=S.win })[vim.bo.fileformat] .. ' '
+    return ({ unix=S.linux, mac=S.mac, dos=S.win })[fmt] .. ' '
   end
   local function enc_icon()
-    local enc = (vim.bo.fileencoding ~= '' and vim.bo.fileencoding) or vim.o.encoding or 'utf-8'
+    local buf = target_buf()
+    local enc = buf_option(buf, 'fileencoding', vim.bo.fileencoding)
+    if not enc or enc == '' then enc = vim.o.encoding or 'utf-8' end
     enc = enc:lower()
     return (enc == 'utf-8') and (S.utf8 .. ' ') or (S.latin .. ' ')
   end
@@ -294,12 +381,21 @@ return function(ctx)
     },
   
     diag = {
-      condition = function() return c.has_diagnostics() and not is_narrow() end,
-      init = function(self)
-        self.errors = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.ERROR })
-        self.warnings = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.WARN })
+      condition = function(self)
+        if is_narrow() then return false end
+        local buf = target_buf()
+        if not buf then return false end
+        local diags = vim.diagnostic.get(buf)
+        if #diags == 0 then return false end
+        self._status_buf = buf
+        return true
       end,
-      update = { 'DiagnosticChanged', 'BufEnter', 'BufNew', 'WinResized' },
+      init = function(self)
+        local buf = self._status_buf or target_buf()
+        self.errors = #vim.diagnostic.get(buf or 0, { severity = vim.diagnostic.severity.ERROR })
+        self.warnings = #vim.diagnostic.get(buf or 0, { severity = vim.diagnostic.severity.WARN })
+      end,
+      update = { 'DiagnosticChanged', 'BufEnter', 'BufNew', 'WinEnter', 'WinResized' },
       {
         provider = prof('diag.errors', function(self) return (self.errors or 0) > 0 and (S.err .. self.errors .. ' ') or '' end),
         hl = function() return { fg = colors.red, bg = colors.base_bg } end,
@@ -318,15 +414,37 @@ return function(ctx)
     },
   
     lsp = {
-      condition = c.lsp_attached,
+      condition = function()
+        local buf = target_buf()
+        if not buf then return false end
+        local clients = {}
+        if vim.lsp and vim.lsp.get_clients then
+          clients = vim.lsp.get_clients({ bufnr = buf })
+        elseif vim.lsp and vim.lsp.buf_get_clients then
+          local map = vim.lsp.buf_get_clients(buf)
+          for _, client in pairs(map or {}) do table.insert(clients, client) end
+        end
+        return #clients > 0
+      end,
       provider = S.gear,
       hl = function() return { fg = colors.cyan, bg = colors.base_bg } end,
       on_click = { callback = vim.schedule_wrap(function() dbg_push('click: lsp'); vim.cmd('LspInfo') end), name = 'heirline_lsp_info' },
-      update = { 'LspAttach', 'LspDetach' },
+      update = { 'LspAttach', 'LspDetach', 'BufEnter', 'WinEnter' },
     },
-  
+
     lsp_progress = {
-      condition = function() return c.lsp_attached end,
+      condition = function()
+        local buf = target_buf()
+        if not buf then return false end
+        if vim.lsp and vim.lsp.get_clients then
+          return #vim.lsp.get_clients({ bufnr = buf }) > 0
+        end
+        if vim.lsp and vim.lsp.buf_get_clients then
+          local map = vim.lsp.buf_get_clients(buf)
+          return map and (vim.tbl_count(map) > 0)
+        end
+        return false
+      end,
       init = function(self)
         self.frames = { '⠋','⠙','⠹','⠸','⠼','⠴','⠦','⠧','⠇','⠏' }
         self.idx = (self.idx or 0) + 1
@@ -346,45 +464,65 @@ return function(ctx)
         return string.format(' %s %s ', self.frames[self.idx], self.text)
       end,
       hl = function() return { fg = colors.blue_light, bg = colors.base_bg } end,
-      update = { 'LspAttach', 'LspDetach', 'CursorHold', 'CursorHoldI' },
+      update = { 'LspAttach', 'LspDetach', 'CursorHold', 'CursorHoldI', 'BufEnter', 'WinEnter' },
     },
   
     git = {
-      condition = function() return c.is_git_repo() and not is_narrow() end,
-      provider = prof('git', function()
-        if vim.b.gitsigns_head == nil then return '' end
-        local head = vim.b.gitsigns_head or ''
-        if head == '' then return '' end
-        return S.branch .. head .. ' '
+      condition = function(self)
+        if is_narrow() then return false end
+        local buf = target_buf()
+        if not buf then return false end
+        local head = gitsigns_head(buf)
+        if not head then return false end
+        self._status_buf = buf
+        self.head = head
+        return true
+      end,
+      provider = prof('git', function(self)
+        return S.branch .. (self.head or '')
       end),
       hl = function() return { fg = colors.blue, bg = colors.base_bg } end,
-      update = { 'BufEnter', 'BufWritePost', 'WinResized' },
+      update = { 'BufEnter', 'BufWritePost', 'User', 'WinEnter', 'WinResized' },
       on_click = { callback = vim.schedule_wrap(function() dbg_push('click: git'); open_git_ui() end), name = 'heirline_git_ui' },
     },
-  
+
     gitdiff = {
-      condition = function() return c.is_git_repo() and not is_narrow() end,
-      init = function(self)
-        local d = vim.b.gitsigns_status_dict or {}
-        self.added = d.added or 0
-        self.changed = d.changed or 0
-        self.removed = d.removed or 0
+      condition = function(self)
+        if is_narrow() then return false end
+        local buf = target_buf()
+        if not buf then return false end
+        local dict = gitsigns_counts(buf)
+        if not dict then return false end
+        self._status_buf = buf
+        self.added = dict.added or 0
+        self.changed = dict.changed or 0
+        self.removed = dict.removed or 0
+        return true
       end,
-      update = { 'BufEnter', 'BufWritePost', 'User', 'WinResized' },
+      update = { 'BufEnter', 'BufWritePost', 'User', 'WinEnter', 'WinResized' },
       {
         condition = function(self) return (self.added or 0) > 0 end,
-        provider  = function(self) return ' ' .. S.plus .. ' ' .. self.added .. ' ' end,
-        hl        = function() return { fg = colors.diff_add, bg = colors.base_bg } end,
+        { provider = function() return S.plus end, hl = 'HeirlineDiffAddIcon' },
+        {
+          provider = function(self) return tostring(self.added) end,
+          hl = function() return { fg = colors.white, bg = colors.base_bg, italic = true } end,
+        },
       },
       {
         condition = function(self) return (self.changed or 0) > 0 end,
-        provider  = function(self) return S.tilde .. ' ' .. self.changed .. ' ' end,
-        hl        = function() return { fg = colors.diff_change, bg = colors.base_bg } end,
+        { provider = function() return S.tilde end, hl = 'HeirlineDiffChangeIcon' },
+        {
+          provider = function(self) return tostring(self.changed) end,
+          hl = function() return { fg = colors.white, bg = colors.base_bg, italic = true } end,
+        },
       },
       {
         condition = function(self) return (self.removed or 0) > 0 end,
-        provider  = function(self) return S.minus .. ' ' .. self.removed .. ' ' end,
-        hl        = function() return { fg = colors.diff_del, bg = colors.base_bg } end,
+        { provider = function() return S.minus end, hl = 'HeirlineDiffDelIcon' },
+        {
+          provider = function(self) return tostring(self.removed) end,
+          hl = function() return { fg = colors.white, bg = colors.base_bg, italic = true } end,
+        },
       },
       on_click = { callback = vim.schedule_wrap(function(_,_,_,button)
         dbg_push('click: gitdiff ('..tostring(button)..')')
@@ -443,12 +581,14 @@ return function(ctx)
   
     position = {
       provider = prof('position', function()
-        local lnum = fn.line('.'); local col = fn.virtcol('.')
-        if is_tiny() then
-          return string.format(' %d:%d ', lnum, col)
-        end
-        local last = math.max(1, fn.line('$')); local pct = math.floor(lnum * 100 / last)
-        return string.format(' %3d:%-2d %3d%% ', lnum, col, pct)
+        local win = target_win()
+        return win_call(win, function()
+          local lnum = fn.line('.'); local col = fn.virtcol('.')
+          if is_tiny() then
+            return string.format(' %d:%d ', lnum, col)
+          end
+          return string.format(' %4d:%-3d ', lnum, col)
+        end, ' 0:0 ')
       end),
       hl = function() return { fg = colors.white, bg = colors.base_bg } end,
       update = { 'CursorMoved', 'CursorMovedI', 'WinResized' },
@@ -467,7 +607,50 @@ return function(ctx)
     toggles = { ListToggle, WrapToggle },
     format_panel = FormatPanel,
   }
-  
+
+  local ModifiedFlag = {
+    condition = function()
+      local buf = target_buf()
+      return buf_option(buf, 'modified', vim.bo.modified)
+    end,
+    provider = S.modified,
+    hl = function() return { fg = colors.blue, bg = colors.base_bg } end,
+    update = { 'BufWritePost', 'TextChanged', 'TextChangedI', 'BufModifiedSet' },
+  }
+
+  local LeftComponents = {
+    condition = function() return not is_empty() end,
+    {
+      provider = function()
+        local cwd = win_cwd(get_status_win())
+        local home = fn.expand('~')
+        if cwd == home then
+          return (USE_ICONS and ' ' or '~ ')
+        end
+        return S.folder .. ' '
+      end,
+      hl = function()
+        local cwd = win_cwd(get_status_win())
+        local home = fn.expand('~')
+        local is_home = (cwd == home)
+        return { fg = (is_home and colors.green or colors.blue), bg = colors.base_bg }
+      end,
+      update = { 'DirChanged' },
+    },
+    CurrentDir,
+    { provider = S.sep, hl = function() return { fg = colors.blue, bg = colors.base_bg } end },
+    FileIcon,
+    FileNameClickable,
+    Readonly,
+    ModifiedFlag,
+    {
+      condition = components.gitdiff.condition,
+      provider = S.sep,
+      hl = function() return { fg = colors.blue, bg = colors.base_bg } end,
+    },
+    components.gitdiff,
+  }
+
   -- ── Special buffer statusline ─────────────────────────────────────────────
   local SpecialBuffer = {
     condition = function()
@@ -491,7 +674,8 @@ return function(ctx)
       provider = prof('special.filename', function() return ' ' .. adapt_fname(30) .. ' ' end),
       hl = function() return { fg = colors.white, bg = colors.base_bg } end,
       on_click = { callback = vim.schedule_wrap(function()
-        local path = fn.expand('%:p'); if path == '' then return end
+        local path = buf_full_path(get_status_buf())
+        if not path or path == '' then return end
         pcall(fn.setreg, '+', path); notify('Copied path: ' .. path); dbg_push('click: special filename -> copied path')
       end), name = 'heirline_special_copy_path' },
     },
@@ -503,27 +687,27 @@ return function(ctx)
   }
   
   -- ── Default statusline ────────────────────────────────────────────────────
+  local RightComponents = {
+    components.macro,
+    components.diag,
+    components.lsp,
+    components.lsp_progress,
+    components.encoding,
+    components.size,
+    components.position,
+    components.git,
+    components.env,
+    components.toggles,
+  }
+
   local DefaultStatusline = {
     utils.surround({ '', '' }, colors.base_bg, {
       { condition = is_empty, provider = '[N]', hl = function() return { fg = colors.white, bg = colors.base_bg } end },
       LeftComponents,
       components.search,
     }),
-    {
-      components.macro,
-      align,
-      components.diag,
-      components.lsp,
-      components.lsp_progress,
-      components.git,
-      components.gitdiff,
-      components.encoding,
-      components.size,
-      components.position,
-      components.env,
-      components.format_panel,
-      components.toggles,
-    },
+    align,
+    RightComponents,
   }
   
   -- ── Ultra-compact statusline (tiny windows) ───────────────────────────────

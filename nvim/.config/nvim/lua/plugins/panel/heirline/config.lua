@@ -136,6 +136,30 @@ return function()
           return {}
         end
         local function tohex(n) if not n then return nil end; return string.format('#%06x', n) end
+        local function hex_to_rgb(hex)
+          if type(hex) ~= 'string' then return 255, 255, 255 end
+          local clean = hex:gsub('#', '')
+          if #clean ~= 6 then return 255, 255, 255 end
+          return tonumber(clean:sub(1, 2), 16),
+            tonumber(clean:sub(3, 4), 16),
+            tonumber(clean:sub(5, 6), 16)
+        end
+        local function rgb_to_hex(r, g, b)
+          local function clamp(x)
+            x = math.floor(x + 0.5)
+            if x < 0 then return 0 elseif x > 255 then return 255 else return x end
+          end
+          return string.format('#%02x%02x%02x', clamp(r), clamp(g), clamp(b))
+        end
+        local function mix_hex(a, b, ratio)
+          ratio = math.min(math.max(ratio or 0.5, 0.0), 1.0)
+          local ar, ag, ab = hex_to_rgb(a)
+          local br, bg, bb = hex_to_rgb(b)
+          local nr = ar * (1 - ratio) + br * ratio
+          local ng = ag * (1 - ratio) + bg * ratio
+          local nb = ab * (1 - ratio) + bb * ratio
+          return rgb_to_hex(nr, ng, nb)
+        end
         local function themed_colors(fallback)
           if LOCK_THEME and type(initial_colors) == 'table' then return vim.deepcopy(initial_colors) end
           if not USE_THEME then return vim.deepcopy(fallback) end
@@ -159,7 +183,7 @@ return function()
             cyan        = tohex(id.fg)    or fallback.cyan,
             green       = tohex(str.fg)   or fallback.green,
             diff_add    = tohex(dadd.fg)  or fallback.green,
-            diff_change = tohex(dchg.fg)  or fallback.yellow,
+            diff_change = tohex(dchg.fg)  or '#a0b1c5',
             diff_del    = tohex(ddel.fg)  or fallback.red,
             blue_light  = fallback.blue_light,
             mode_ins_bg = tohex(hl_get('DiffAdd').bg)    or 'NONE',
@@ -170,6 +194,11 @@ return function()
           }
         end
         local function colors_assign(dst, src) for k, v in pairs(src) do dst[k] = v end end
+        local function adjust_diff_change_shade(palette)
+          if type(palette) ~= 'table' then return end
+          local base = palette.white or '#d6dde6'
+          palette.diff_change = mix_hex(base, '#ffffff', 0.3)
+        end
 
         local colors_fallback = {
           black = 'NONE', white = '#54667a', red = '#970d4f',
@@ -177,9 +206,18 @@ return function()
           cyan = '#6587b3', blue_light = '#517f8d', white_dim = '#3f5063',
         }
         local colors = themed_colors(colors_fallback)
+        adjust_diff_change_shade(colors)
         local initial_colors = vim.deepcopy(colors)
         local function hl(fg, bg) return { fg = fg, bg = bg } end
         local align = { provider = '%=' }
+
+        local function apply_statusline_highlights()
+          api.nvim_set_hl(0, 'StatusLine',   { fg = colors.white,     bg = colors.base_bg })
+          api.nvim_set_hl(0, 'StatusLineNC', { fg = colors.white_dim, bg = colors.nc_bg })
+          api.nvim_set_hl(0, 'HeirlineDiffAddIcon',    { fg = colors.diff_add    or colors.green,  bg = colors.base_bg, italic = true })
+          api.nvim_set_hl(0, 'HeirlineDiffChangeIcon', { fg = colors.diff_change or colors.yellow, bg = colors.base_bg, italic = true })
+          api.nvim_set_hl(0, 'HeirlineDiffDelIcon',    { fg = colors.diff_del    or colors.red,    bg = colors.base_bg, italic = true })
+        end
 
         -- Helpers
         local function buf_valid(b) return type(b)=='number' and b>0 and api.nvim_buf_is_valid(b) end
@@ -187,10 +225,66 @@ return function()
           if bufnr ~= nil and not buf_valid(bufnr) then return false end
           return c.buffer_matches(spec, bufnr)
         end
-        local function win_w() return (vim.v.evaluating == 1) and api.nvim_win_get_width(0) or vim.o.columns end
+
+        local function statusline_win()
+          local win = vim.g.statusline_winid
+          if win and api.nvim_win_is_valid(win) then return win end
+          local ok, cur = pcall(api.nvim_get_current_win)
+          if ok and cur and api.nvim_win_is_valid(cur) then return cur end
+          return nil
+        end
+        local function statusline_buf()
+          local win = statusline_win()
+          if win then
+            local ok, buf = pcall(api.nvim_win_get_buf, win)
+            if ok and buf_valid(buf) then return buf end
+          end
+          local ok, buf = pcall(api.nvim_get_current_buf)
+          if ok and buf_valid(buf) then return buf end
+          return nil
+        end
+        local function buf_name_from(buf)
+          if not buf_valid(buf) then return '' end
+          local name = api.nvim_buf_get_name(buf)
+          if not name or name == '' then return '' end
+          return fn.fnamemodify(name, ':t')
+        end
+        local function buf_path_from(buf)
+          if not buf_valid(buf) then return '' end
+          return api.nvim_buf_get_name(buf)
+        end
+        local function window_cwd(win)
+          if win and api.nvim_win_is_valid(win) then
+            local ok, cwd = pcall(fn.getcwd, -1, win)
+            if ok and type(cwd) == 'string' and cwd ~= '' then return cwd end
+          end
+          local buf = statusline_buf()
+          if buf and api.nvim_buf_is_valid(buf) then
+            local name = api.nvim_buf_get_name(buf)
+            if name and name ~= '' then
+              local dir = fn.fnamemodify(name, ':p:h')
+              if dir and dir ~= '' then return dir end
+            end
+          end
+          return fn.getcwd()
+        end
+        local function win_w()
+          local win = statusline_win()
+          if win and api.nvim_win_is_valid(win) then
+            local ok, width = pcall(api.nvim_win_get_width, win)
+            if ok and type(width) == 'number' and width > 0 then return width end
+          end
+          local ok_cur, width_cur = pcall(api.nvim_win_get_width, 0)
+          if ok_cur and type(width_cur) == 'number' and width_cur > 0 then return width_cur end
+          local columns = tonumber(vim.o.columns) or 0
+          return (columns > 0) and columns or 120
+        end
         local function is_narrow() return win_w() < 80 end
         local function is_tiny() return win_w() < 60 end
-        local function is_empty()  return fn.empty(fn.expand('%:t')) == 1 end
+        local function is_empty()
+          local buf = statusline_buf()
+          return buf == nil or buf_name_from(buf) == ''
+        end
 
         local _has = {}
         local function has_mod(name)
@@ -199,7 +293,7 @@ return function()
         end
 
         local function open_file_browser_cwd()
-          local cwd = fn.getcwd()
+          local cwd = window_cwd(statusline_win())
           if has_mod('oil') then vim.cmd('Oil ' .. fn.fnameescape(cwd)); return end
           if has_mod('telescope') then
             local ok_ext = pcall(function()
@@ -247,9 +341,9 @@ return function()
           USE_THEME = not USE_THEME
           vim.g.heirline_use_theme_colors = USE_THEME
           local fresh = themed_colors(colors_fallback)
+          adjust_diff_change_shade(fresh)
           colors_assign(colors, fresh)
-          api.nvim_set_hl(0, 'StatusLine',   { fg = colors.white,     bg = colors.base_bg })
-          api.nvim_set_hl(0, 'StatusLineNC', { fg = colors.white_dim, bg = colors.nc_bg })
+          apply_statusline_highlights()
           save_state()
           notify('Heirline: theme-colors ' .. (USE_THEME and 'ON' or 'OFF'))
           vim.cmd('redrawstatus')
@@ -260,9 +354,9 @@ return function()
           LOCK_THEME = not LOCK_THEME
           vim.g.heirline_lock_theme = LOCK_THEME
           local src = LOCK_THEME and initial_colors or themed_colors(colors_fallback)
+          if src ~= initial_colors then adjust_diff_change_shade(src) end
           colors_assign(colors, src)
-          api.nvim_set_hl(0, 'StatusLine',   { fg = colors.white,     bg = colors.base_bg })
-          api.nvim_set_hl(0, 'StatusLineNC', { fg = colors.white_dim, bg = colors.nc_bg })
+          apply_statusline_highlights()
           save_state()
           notify('Heirline: theme lock ' .. (LOCK_THEME and 'ENABLED' or 'DISABLED'))
           vim.cmd('redrawstatus')
@@ -273,8 +367,7 @@ return function()
           USE_THEME = true; vim.g.heirline_use_theme_colors = true
           LOCK_THEME = true; vim.g.heirline_lock_theme = true
           colors_assign(colors, initial_colors)
-          api.nvim_set_hl(0, 'StatusLine',   { fg = colors.white,     bg = colors.base_bg })
-          api.nvim_set_hl(0, 'StatusLineNC', { fg = colors.white_dim, bg = colors.nc_bg })
+          apply_statusline_highlights()
           save_state()
           notify('Heirline: using ORIGINAL theme (locked)')
           vim.cmd('redrawstatus')
@@ -292,6 +385,11 @@ return function()
           dbg_push = dbg_push, ok_devicons = ok_devicons, devicons = devicons,
           USE_ICONS = USE_ICONS, SHOW_ENV = SHOW_ENV,
           is_empty = is_empty, is_narrow = is_narrow, is_tiny = is_tiny,
+          statusline_win = statusline_win,
+          statusline_buf = statusline_buf,
+          buf_name = buf_name_from,
+          buf_path = buf_path_from,
+          window_cwd = window_cwd,
           open_file_browser_cwd = open_file_browser_cwd,
           open_git_ui = open_git_ui,
           open_diagnostics_list = open_diagnostics_list,
@@ -314,8 +412,7 @@ return function()
         })
 
         -- Sync HL + autos
-        api.nvim_set_hl(0, 'StatusLine',   { fg = colors.white,     bg = colors.base_bg })
-        api.nvim_set_hl(0, 'StatusLineNC', { fg = colors.white_dim, bg = colors.nc_bg })
+        apply_statusline_highlights()
 
         api.nvim_create_autocmd('ColorScheme', {
           group = AUG,
@@ -325,10 +422,10 @@ return function()
               colors_assign(colors, initial_colors)
             else
               local fresh = themed_colors(colors_fallback)
+              adjust_diff_change_shade(fresh)
               colors_assign(colors, fresh)
             end
-            api.nvim_set_hl(0, 'StatusLine',   { fg = colors.white,     bg = colors.base_bg })
-            api.nvim_set_hl(0, 'StatusLineNC', { fg = colors.white_dim, bg = colors.nc_bg })
+            apply_statusline_highlights()
             if DEBUG then dbg_notify(LOCK_THEME and 'colors reapplied (locked to original)' or 'colors refreshed from theme') end
           end,
         })
