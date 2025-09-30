@@ -696,11 +696,12 @@ return function(ctx)
           local lnum = fn.line('.')
           local col = fn.virtcol('.')
           local show_col = col ~= 1
+          local line_str = string.format('%03d', lnum)
           if is_tiny() then
-            return show_col and string.format('%d:%d', lnum, col) or string.format('%d', lnum)
+            return show_col and string.format('%s:%d', line_str, col) or line_str
           end
-          return show_col and string.format('%d:%d', lnum, col) or string.format('%d', lnum)
-        end, '0')
+          return show_col and string.format('%s:%d', line_str, col) or line_str
+        end, '000')
       end,
       update = { 'CursorMoved', 'CursorMovedI', 'WinResized' },
       {
