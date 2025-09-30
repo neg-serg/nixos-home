@@ -216,12 +216,14 @@ return function()
           palette._adjusted = true
         end
 
+        -- Hardcoded shades mirror kitty theme entries (see kitty.conf colors 247/248/243).
+        -- Update here if the kitty palette changes to keep the statusline consistent.
         local colors_fallback = {
           black = 'NONE', white = '#6d839e', red = '#970d4f',
           green = '#007a51', blue = '#005faf', yellow = '#c678dd',
           cyan = '#6587b3', blue_light = '#517f8d', white_dim = '#3f5063',
-          line_zero = '#3f5876',
-          dir_mid = '#7c90a8',
+          line_zero = '#3f5876', -- kitty color243, used for padded zeros in position
+          dir_mid = '#7c90a8',   -- kitty color248, applied on cwd mid segments
         }
         local colors = themed_colors(colors_fallback)
         apply_palette_adjustments(colors)

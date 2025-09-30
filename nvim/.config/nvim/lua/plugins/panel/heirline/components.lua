@@ -727,6 +727,7 @@ return function(ctx)
           local col = self._pos_col
           local pieces = {}
           if lead ~= '' then
+            -- Draw padded zeros with kitty color243 (via colors.line_zero).
             local start, finish = highlights.eval_hl({ fg = colors.line_zero or colors.white_dim, bg = colors.base_bg, italic = true })
             pieces[#pieces + 1] = start .. lead .. finish
           end
