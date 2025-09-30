@@ -371,7 +371,7 @@ return function(ctx)
       self._stats = visual_selection_stats()
       return self._stats ~= nil
     end,
-    update = { 'ModeChanged', 'CursorMoved', 'CursorMovedI', 'WinEnter', 'WinLeave', 'VisualEnter', 'VisualLeave', 'BufEnter' },
+    update = { 'ModeChanged', 'CursorMoved', 'CursorMovedI', 'WinEnter', 'WinLeave', 'BufEnter' },
     provider = function(self)
       local stats = self._stats
       if not stats then return '' end
