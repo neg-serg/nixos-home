@@ -166,6 +166,7 @@ return function()
           if not hex:match('^#%x%x%x%x%x%x$') then return hex end
           return mix_hex(hex, '#ffffff', ratio or 0.12)
         end
+        -- Nudged ~14% toward white to brighten the statusline background versus kitty base.
         local PANEL_LIGHTEN_RATIO = 0.14
         local function themed_colors(fallback)
           if LOCK_THEME and type(initial_colors) == 'table' then return vim.deepcopy(initial_colors) end
@@ -206,6 +207,7 @@ return function()
         local function adjust_diff_change_shade(palette)
           if type(palette) ~= 'table' then return end
           local base = palette.white or '#d6dde6'
+          -- 30% blend softens DiffChange to avoid clashing with kitty purples.
           palette.diff_change = mix_hex(base, '#ffffff', 0.3)
         end
         local function apply_palette_adjustments(palette)
@@ -219,9 +221,15 @@ return function()
         -- Hardcoded shades mirror kitty theme entries (see kitty.conf colors 247/248/243).
         -- Update here if the kitty palette changes to keep the statusline consistent.
         local colors_fallback = {
-          black = 'NONE', white = '#6d839e', red = '#970d4f',
-          green = '#007a51', blue = '#005faf', yellow = '#c678dd',
-          cyan = '#6587b3', blue_light = '#517f8d', white_dim = '#3f5063',
+          black = 'NONE',
+          white = '#6d839e',   -- kitty color247 (statusline foreground)
+          red = '#970d4f',     -- kitty accent for diagnostics
+          green = '#007a51',   -- kitty green used across widgets
+          blue = '#005faf',    -- kitty directory / separator blue
+          yellow = '#c678dd',  -- kitty magenta-ish accent (warnings/LSP)
+          cyan = '#6587b3',
+          blue_light = '#517f8d',
+          white_dim = '#3f5063',
           line_zero = '#3f5876', -- kitty color243, used for padded zeros in position
           dir_mid = '#7c90a8',   -- kitty color248, applied on cwd mid segments
         }
