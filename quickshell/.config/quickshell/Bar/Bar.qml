@@ -97,6 +97,13 @@ Scope {
                             }
                             NetworkUsage { id: net }
                         }
+                        DiagSep {
+                            Layout.alignment: Qt.AlignVCenter
+                            Layout.preferredHeight: barBackground.height + panel.sepOvershoot
+                            height: Layout.preferredHeight
+                            stripeEnabled: false
+                            visible: netCluster.visible
+                        }
                         DiagSep { visible: Settings.settings.showWeatherInBar === true; Layout.alignment: Qt.AlignVCenter }
                         LocalMods.WeatherButton { visible: Settings.settings.showWeatherInBar === true; Layout.alignment: Qt.AlignVCenter }
                         // Rightmost separator of the left section: show only if weather is visible
@@ -111,7 +118,12 @@ Scope {
                         anchors.right: barBackground.right
                         anchors.rightMargin: panel.sideMargin
                         spacing: panel.widgetSpacing
+                        DiagSep {
+                            Layout.alignment: Qt.AlignVCenter
+                            visible: mediaModule.visible
+                        }
                         Media {
+                            id: mediaModule
                             Layout.alignment: Qt.AlignVCenter
                             Layout.fillWidth: true
                             sidePanelPopup: sidebarPopup
