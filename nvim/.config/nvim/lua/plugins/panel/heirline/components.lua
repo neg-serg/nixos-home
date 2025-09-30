@@ -977,6 +977,7 @@ return function(ctx)
   else
     DefaultStatusline = {
       utils.surround({ '', '' }, colors.base_bg, {
+        VisualSelection,
         EmptyBadge,
         LeftComponents,
         components.search,
