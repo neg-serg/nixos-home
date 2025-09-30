@@ -160,6 +160,13 @@ return function()
           local nb = ab * (1 - ratio) + bb * ratio
           return rgb_to_hex(nr, ng, nb)
         end
+        local function lighten_hex(hex, ratio)
+          if type(hex) ~= 'string' then return hex end
+          if hex == 'NONE' then return hex end
+          if not hex:match('^#%x%x%x%x%x%x$') then return hex end
+          return mix_hex(hex, '#ffffff', ratio or 0.12)
+        end
+        local PANEL_LIGHTEN_RATIO = 0.14
         local function themed_colors(fallback)
           if LOCK_THEME and type(initial_colors) == 'table' then return vim.deepcopy(initial_colors) end
           if not USE_THEME then return vim.deepcopy(fallback) end
@@ -186,6 +193,7 @@ return function()
             diff_change = tohex(dchg.fg)  or '#a0b1c5',
             diff_del    = tohex(ddel.fg)  or fallback.red,
             blue_light  = fallback.blue_light,
+            dir_mid     = fallback.dir_mid,
             mode_ins_bg = tohex(hl_get('DiffAdd').bg)    or 'NONE',
             mode_vis_bg = tohex(hl_get('Visual').bg)     or 'NONE',
             mode_rep_bg = tohex(hl_get('DiffDelete').bg) or 'NONE',
@@ -199,14 +207,22 @@ return function()
           local base = palette.white or '#d6dde6'
           palette.diff_change = mix_hex(base, '#ffffff', 0.3)
         end
+        local function apply_palette_adjustments(palette)
+          if type(palette) ~= 'table' then return end
+          if palette._adjusted then return end
+          adjust_diff_change_shade(palette)
+          if palette.base_bg then palette.base_bg = lighten_hex(palette.base_bg, PANEL_LIGHTEN_RATIO) end
+          palette._adjusted = true
+        end
 
         local colors_fallback = {
-          black = 'NONE', white = '#54667a', red = '#970d4f',
+          black = 'NONE', white = '#6d839e', red = '#970d4f',
           green = '#007a51', blue = '#005faf', yellow = '#c678dd',
           cyan = '#6587b3', blue_light = '#517f8d', white_dim = '#3f5063',
+          dir_mid = '#7c90a8',
         }
         local colors = themed_colors(colors_fallback)
-        adjust_diff_change_shade(colors)
+        apply_palette_adjustments(colors)
         local initial_colors = vim.deepcopy(colors)
         local function hl(fg, bg) return { fg = fg, bg = bg } end
         local align = { provider = '%=' }
@@ -217,6 +233,10 @@ return function()
           api.nvim_set_hl(0, 'HeirlineDiffAddIcon',    { fg = colors.diff_add    or colors.green,  bg = colors.base_bg, italic = true })
           api.nvim_set_hl(0, 'HeirlineDiffChangeIcon', { fg = colors.diff_change or colors.yellow, bg = colors.base_bg, italic = true })
           api.nvim_set_hl(0, 'HeirlineDiffDelIcon',    { fg = colors.diff_del    or colors.red,    bg = colors.base_bg, italic = true })
+          api.nvim_set_hl(0, 'HeirlinePanelDivider',   { fg = colors.white_dim,  bg = colors.base_bg })
+          api.nvim_set_hl(0, 'HeirlineVisualSel',      { fg = colors.yellow,     bg = colors.base_bg, italic = true })
+          api.nvim_set_hl(0, 'HeirlineSizeIcon',       { fg = colors.blue,       bg = colors.base_bg })
+          api.nvim_set_hl(0, 'HeirlinePositionIcon',   { fg = colors.green,      bg = colors.base_bg })
         end
 
         -- Helpers
@@ -341,7 +361,7 @@ return function()
           USE_THEME = not USE_THEME
           vim.g.heirline_use_theme_colors = USE_THEME
           local fresh = themed_colors(colors_fallback)
-          adjust_diff_change_shade(fresh)
+          apply_palette_adjustments(fresh)
           colors_assign(colors, fresh)
           apply_statusline_highlights()
           save_state()
@@ -354,7 +374,7 @@ return function()
           LOCK_THEME = not LOCK_THEME
           vim.g.heirline_lock_theme = LOCK_THEME
           local src = LOCK_THEME and initial_colors or themed_colors(colors_fallback)
-          if src ~= initial_colors then adjust_diff_change_shade(src) end
+          if src ~= initial_colors then apply_palette_adjustments(src) end
           colors_assign(colors, src)
           apply_statusline_highlights()
           save_state()
@@ -422,7 +442,7 @@ return function()
               colors_assign(colors, initial_colors)
             else
               local fresh = themed_colors(colors_fallback)
-              adjust_diff_change_shade(fresh)
+              apply_palette_adjustments(fresh)
               colors_assign(colors, fresh)
             end
             apply_statusline_highlights()
