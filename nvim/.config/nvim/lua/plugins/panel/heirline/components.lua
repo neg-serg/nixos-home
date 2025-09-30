@@ -260,75 +260,115 @@ return function(ctx)
     end), name = 'heirline_copy_abs_path' },
   }
   -- ── Small toggles ─────────────────────────────────────────────────────────
+  local function panel_divider()
+    return { provider = '' }
+  end
+
+  local function visual_selection_stats()
+    local win = target_win()
+    return win_call(win, function()
+      local mode = vim.fn.mode(1)
+      if type(mode) ~= 'string' or not mode:match('[vV\022]') then return nil end
+      local vm = vim.fn.visualmode() or mode
+      local stats = vim.fn.wordcount() or {}
+      if vm == 'V' then
+        local lines = stats.visual_lines or 0
+        if lines <= 0 then return nil end
+        return { kind = 'lines', count = lines }
+      elseif vm == '\022' then
+        local start_pos = vim.fn.getpos('v')
+        local end_pos = vim.fn.getpos('.')
+        if not start_pos or not end_pos then return nil end
+        local cols = math.abs((end_pos[3] or 0) - (start_pos[3] or 0)) + 1
+        if cols <= 0 then return nil end
+        return { kind = 'cols', count = cols }
+      else
+        local chars = stats.visual_chars or 0
+        if chars <= 0 then return nil end
+        return { kind = 'cols', count = chars }
+      end
+    end, nil)
+  end
+
   local ListToggle = {
-    provider = function() return S.pilcrow end,
-    hl = function()
-      local win = target_win()
-      local show = win_option(win, 'list', vim.wo.list)
-      return { fg = (show and colors.yellow or colors.white), bg = colors.base_bg }
-    end,
     update = { 'OptionSet', 'BufWinEnter', 'WinEnter' },
-    on_click = { callback = vim.schedule_wrap(function() vim.o.list = not vim.o.list; dbg_push('toggle: list -> '..tostring(vim.o.list)) end), name = 'heirline_toggle_list' },
+    on_click = { callback = vim.schedule_wrap(function()
+      vim.o.list = not vim.o.list
+      dbg_push('toggle: list -> '..tostring(vim.o.list))
+    end), name = 'heirline_toggle_list' },
+    {
+      condition = function()
+        return win_option(target_win(), 'list', vim.wo.list) == true
+      end,
+      panel_divider(),
+      {
+        provider = function() return 'list·on ' end,
+        hl = function() return { fg = colors.yellow, bg = colors.base_bg, italic = true } end,
+      },
+    },
   }
   local WrapToggle = {
-    provider = function() return S.wrap end,
-    hl = function()
-      local win = target_win()
-      local wrap = win_option(win, 'wrap', vim.wo.wrap)
-      return { fg = (wrap and colors.yellow or colors.white), bg = colors.base_bg }
+    update = { 'OptionSet', 'BufWinEnter', 'WinEnter' },
+    on_click = { callback = vim.schedule_wrap(function()
+      vim.wo.wrap = not vim.wo.wrap
+      dbg_push('toggle: wrap -> '..tostring(vim.wo.wrap))
+    end), name = 'heirline_toggle_wrap' },
+    {
+      condition = function()
+        return win_option(target_win(), 'wrap', vim.wo.wrap) == true
+      end,
+      panel_divider(),
+      {
+        provider = function() return 'wrap·on ' end,
+        hl = function() return { fg = colors.yellow, bg = colors.base_bg, italic = true } end,
+      },
+    },
+  }
+
+  -- ── Format panel (indent mode, ts, sw) ────────────────────────────────────
+  local FormatPanel = {
+    init = function(self)
+      local buf = target_buf()
+      self.expandtab = buf_option(buf, 'expandtab', vim.bo.expandtab)
+      self.tabstop = buf_option(buf, 'tabstop', vim.bo.tabstop)
     end,
     update = { 'OptionSet', 'BufWinEnter', 'WinEnter' },
-    on_click = { callback = vim.schedule_wrap(function() vim.wo.wrap = not vim.wo.wrap; dbg_push('toggle: wrap -> '..tostring(vim.wo.wrap)) end), name = 'heirline_toggle_wrap' },
-  }
-  
-  -- ── Format panel (tabs/spaces, ts, sw) ────────────────────────────────────
-  local function fmt_mode_label()
-    local buf = target_buf()
-    local expandtab = buf_option(buf, 'expandtab', vim.bo.expandtab)
-    return expandtab and 'Spaces' or 'Tabs'
-  end
-  local FormatPanel = {
+    panel_divider(),
     {
-      provider = function() return ' ' .. fmt_mode_label() .. ' ' end,
-      hl = function() return { fg = colors.cyan, bg = colors.base_bg } end,
+      {
+        provider = function(self) return self.expandtab and '␠' or '⇥' end,
+        hl = function() return { fg = colors.cyan, bg = colors.base_bg, italic = true } end,
+      },
+      {
+        provider = function(self)
+          return string.format('×%d ', self.tabstop)
+        end,
+        hl = function() return { fg = colors.white, bg = colors.base_bg, italic = true } end,
+      },
       on_click = { callback = vim.schedule_wrap(function()
         vim.bo.expandtab = not vim.bo.expandtab
         dbg_push('toggle: expandtab -> '..tostring(vim.bo.expandtab))
       end), name = 'heirline_fmt_toggle_et' },
     },
+  }
+
+  local VisualSelection = {
+    update = { 'ModeChanged', 'CursorMoved', 'CursorMovedI', 'WinEnter', 'WinLeave' },
+    init = function(self)
+      self.stats = visual_selection_stats()
+    end,
     {
-      provider = function()
-        local buf = target_buf()
-        local ts = buf_option(buf, 'tabstop', vim.bo.tabstop)
-        return string.format(' ts=%d ', ts)
-      end,
-      hl = function() return { fg = colors.white, bg = colors.base_bg } end,
-      on_click = { callback = vim.schedule_wrap(function()
-        local ts = vim.bo.tabstop
-        local cycle = {2, 4, 8}
-        local idx = 1
-        for i,v in ipairs(cycle) do if v == ts then idx = i end end
-        idx = (idx % #cycle) + 1
-        vim.bo.tabstop = cycle[idx]
-        dbg_push('cycle: tabstop -> '..vim.bo.tabstop)
-      end), name = 'heirline_fmt_cycle_ts' },
-    },
-    {
-      provider = function()
-        local buf = target_buf()
-        local sw = buf_option(buf, 'shiftwidth', vim.bo.shiftwidth)
-        return string.format(' sw=%d ', sw)
-      end,
-      hl = function() return { fg = colors.white, bg = colors.base_bg } end,
-      on_click = { callback = vim.schedule_wrap(function()
-        local sw = vim.bo.shiftwidth
-        local cycle = {2, 4, 8}
-        local idx = 1
-        for i,v in ipairs(cycle) do if v == sw then idx = i end end
-        idx = (idx % #cycle) + 1
-        vim.bo.shiftwidth = cycle[idx]
-        dbg_push('cycle: shiftwidth -> '..vim.bo.shiftwidth)
-      end), name = 'heirline_fmt_cycle_sw' },
+      condition = function(self) return self.stats ~= nil end,
+      panel_divider(),
+      {
+        provider = function(self)
+          local stats = self.stats
+          if not stats then return '' end
+          local suffix = (stats.kind == 'lines') and 'L' or 'C'
+          return string.format('sel·%d%s ', stats.count, suffix)
+        end,
+        hl = 'HeirlineVisualSel',
+      },
     },
   }
 
