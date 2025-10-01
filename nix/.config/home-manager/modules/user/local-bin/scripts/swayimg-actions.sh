@@ -109,17 +109,14 @@ rotate() { # modifies file in-place
 }
 
 choose_dest() {
-  # Fuzzy-pick a destination dir using fasd history, limited to XDG_PICTURES_DIR
+  # Fuzzy-pick a destination dir using zoxide history, limited to XDG_PICTURES_DIR
   local prompt="$1"
-  local entries legacy_sxiv_db
-  legacy_sxiv_db="${XDG_DATA_HOME:-$HOME/.local/share}/sxiv/data"
+  local entries
 
   entries="$(
     {
-      _FASD_DATA="$z" fasd -Rdl 2>/dev/null || true
-      _FASD_DATA="$legacy_sxiv_db" fasd -Rdl 2>/dev/null || true
+      command -v zoxide >/dev/null 2>&1 && zoxide query -l 2>/dev/null || true
     } \
-    | awk '{ $1=""; sub(/^ +/, ""); print }' \
     | awk -v pic="$pics_dir" 'index($0, pic) == 1' \
     | sed "s:^$HOME:~:" \
     | awk 'NF' \
@@ -163,10 +160,8 @@ proc() { # mv/cp with remembered last dest
     while read -r line; do
       "$cmd" "$(realpath "$line")" "$dest"
     done <"$ff"
-    _FASD_DATA="$z" fasd -RA "$dest"
+    command -v zoxide >/dev/null 2>&1 && zoxide add "$dest" || true
     printf '%s %s\n' "$cmd" "$dest" >"$last_file"
-  else
-    _FASD_DATA="$z" fasd -D "$dest" || true
   fi
 }
 

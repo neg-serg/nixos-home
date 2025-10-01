@@ -59,7 +59,7 @@ with lib; let
       pkgs.diff-so-fancy # human-friendly git diff pager
       pkgs.entr # run commands on file change
       pkgs.expect # automate interactive TTY programs
-      pkgs.fasd # MRU-based CLI autojump/completion
+      # fasd removed in favor of zoxide
       pkgs.mergiraf # AST-aware git merge driver
       pkgs.zoxide # smarter cd with ranking
     ];

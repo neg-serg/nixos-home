@@ -12,7 +12,7 @@ mkIf (config.features.gui.enable or false) (lib.mkMerge [
       pkgs.imagemagick        # convert/mogrify for screenshot/swayimg-actions
       pkgs.libnotify          # notify-send for pic-notify/qr/screenshot
       pkgs.socat              # UNIX sockets (pypr-client, swayimg IPC)
-      pkgs.fasd               # directory ranking for swayimg-actions destinations
+      # fasd removed; use zoxide for ranking
       pkgs.usbutils           # lsusb (unlock Yubikey detection)
       # audio/video + helpers (mpv comes from media stack)
       pkgs.playerctl          # media control for pl bindings

@@ -15,10 +15,13 @@ proc() {
     cmd="$1"
     tee "$ff"
     if [ -z "$dest" ]; then
-        dest=$(_FASD_DATA="$z" fasd -tlR \
-            | sed 's:^'"$HOME"':~:' \
-            | $rofi_cmd -p "⟬$cmd⟭ ❯>"  \
-            | sed 's:^~:'"$HOME"':')
+        dest=$( (
+            command -v zoxide >/dev/null 2>&1 && zoxide query -l 2>/dev/null || true
+          ) \
+          | awk -v pic="${XDG_PICTURES_DIR:-$HOME/Pictures}" 'index($0, pic) == 1' \
+          | sed 's:^'"$HOME"':~:' \
+          | $rofi_cmd -p "⟬$cmd⟭ ❯>" \
+          | sed 's:^~:'"$HOME"':')
     fi
     [ -z "$dest" ] && exit 0
     old_ifs=$IFS
@@ -27,10 +30,8 @@ proc() {
         while read -r line; do
             $cmd "$(realpath "$line")" "$dest"
         done < "$(realpath "$ff")"
-        _FASD_DATA="$z" fasd -RA "$dest"
+        command -v zoxide >/dev/null 2>&1 && zoxide add "$dest" || true
         printf "%s\n" "$cmd \"$dest\"" > "$last"
-    else
-        _FASD_DATA="$z" fasd -D "$dest"
     fi
     IFS=$old_ifs
     trap finish EXIT
