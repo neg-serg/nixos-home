@@ -6,6 +6,9 @@ autoload -Uz rationalise-dot && zle -N rationalise-dot
 autoload -Uz redraw-prompt
 autoload -Uz special-accept-line && zle -N special-accept-line
 autoload -Uz zleiab && zle -N zleiab
+if (( $+commands[zoxide] )); then
+  autoload -Uz zoxide_complete && zle -N zoxide_complete
+fi
 
 _nothing(){}; zle -N _nothing
 
@@ -36,4 +39,8 @@ bindkey ",." zleiab
 bindkey . rationalise-dot
 bindkey -M isearch . self-insert # without this, typing a . aborts incremental history search
 bindkey '^xm' inplace_mk_dirs # load the lookup subsystem if it's available on the system
+if (( $+commands[zoxide] )); then
+  bindkey '^Y' zoxide_complete
+  bindkey '^@' zoxide_complete
+fi
 # vim: ft=zsh:nowrap
