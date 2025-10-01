@@ -34,7 +34,7 @@ lib.mkIf (config.features.web.enable && config.features.web.floorp.enable) (let
     #nav-bar-customization-target { padding-inline: 0 !important; }
     #urlbar-container { flex: 1 1 auto !important; min-width: 0 !important; width: 100% !important; }
     #urlbar { margin-inline: 0 !important; width: 100% !important; }
-    #urlbar-input-container { padding: 0 !important; }
+    #urlbar-input-container { padding: 0 !important; grid-template-columns: 0 1fr 0 !important; }
     #urlbar-background { margin-inline: 0 !important; }
 
     /* Keep page content above the bottom bar (use padding to avoid blank gap) */
