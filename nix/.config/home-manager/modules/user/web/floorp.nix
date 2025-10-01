@@ -83,7 +83,7 @@ lib.mkIf (config.features.web.enable && config.features.web.floorp.enable) (let
     }
     /* Place search-mode chip inside the input, not outside */
     #urlbar-input-container { position: relative !important; }
-    #urlbar .urlbar-search-mode-indicator {
+    #urlbar .urlbar-search-mode-indicator:not([hidden]) {
       position: absolute !important;
       left: 8px !important;
       top: 50% !important;
