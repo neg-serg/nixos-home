@@ -83,6 +83,7 @@ with lib; let
   settings = baseSettings // (optionalAttrs (config.features.web.prefs.fastfox.enable or false) fastfoxSettings);
 
   extraConfig = "";
+  userContent = "";
 
   userChrome = ''
     /* Hide buttons you don't use */
@@ -157,7 +158,7 @@ in {
         isDefault = true;
         extensions = { packages = (addons.common or []) ++ addonsExtra; };
         settings = mergedSettings;
-        inherit extraConfig userChrome;
+        inherit extraConfig userChrome userContent;
       };
       profile = profileBase // profileExtra;
     in {

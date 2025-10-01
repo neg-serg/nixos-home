@@ -77,6 +77,29 @@ lib.mkIf (config.features.web.enable && config.features.web.floorp.enable) (let
       display: none !important;
     }
   '';
+
+  # Remove large side gutters on GitHub by making containers fluid
+  githubWideUserContent = ''
+    @-moz-document domain("github.com"), domain("gist.github.com") {
+      /* Expand page containers to full width */
+      .container-xl, .container-lg, .container-md, .container-sm {
+        max-width: 100% !important;
+        width: 100% !important;
+      }
+      /* Reduce horizontal paddings that create big side gutters */
+      .container-xl, .container-lg, .container-md, .container-sm,
+      .px-3, .px-4, .px-5, .px-md-3, .px-md-4, .px-md-5 {
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+      }
+      /* Layout wrapper: allow main column to use available width */
+      .Layout, .Layout-main, .Layout-sidebar,
+      .application-main .d-lg-flex > .flex-auto {
+        max-width: 100% !important;
+        width: auto !important;
+      }
+    }
+  '';
 in lib.mkMerge [
   (common.mkBrowser {
     name = "floorp";
@@ -85,6 +108,7 @@ in lib.mkMerge [
     # Append Floorp-specific userChrome tweaks
     profileExtra = {
       userChrome = common.userChrome + bottomNavUserChrome;
+      userContent = (common.userContent or "") + githubWideUserContent;
     };
   })
   {
