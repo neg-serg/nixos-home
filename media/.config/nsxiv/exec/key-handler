@@ -2,7 +2,6 @@
 cache="$HOME/tmp"
 ff="$cache/sxiv.$$"
 tmp_wall="$cache/wall_sxiv.$$"
-z="$XDG_DATA_HOME/sxiv/data"
 last="$XDG_DATA_HOME/sxiv/last"
 trash="$HOME/trash/1st-level/pic"
 rofi_cmd="rofi -dmenu -sort -matching fuzzy -no-plugins -no-only-match -theme sxiv -custom"
