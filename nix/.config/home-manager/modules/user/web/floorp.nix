@@ -18,8 +18,8 @@ in lib.mkMerge [
     programs.floorp.profiles."${common.profileId}" = {
       # Force empty userChrome (override common defaults)
       userChrome = lib.mkForce "";
-      # Do not enable legacy userChrome/userContent stylesheets
-      settings."toolkit.legacyUserProfileCustomizations.stylesheets" = false;
+      # Do not enable legacy userChrome/userContent stylesheets (override common = true)
+      settings."toolkit.legacyUserProfileCustomizations.stylesheets" = lib.mkForce false;
     };
     home.sessionVariables = {
       MOZ_DBUS_REMOTE = "1";
