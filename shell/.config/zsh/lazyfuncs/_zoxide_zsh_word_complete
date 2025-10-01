@@ -1,6 +1,6 @@
 #compdef -P zoxide-complete-native
 # _zoxide_zsh_word_complete: native zsh completer backed by `zoxide query -l`
-# Suggests directories via compadd and respects the current PREFIX.
+# Suggests directories via compadd, favouring menu selection for ambiguity.
 
 _zoxide_zsh_word_complete() {
   emulate -L zsh -o no_aliases
@@ -9,23 +9,28 @@ _zoxide_zsh_word_complete() {
     return 1
   fi
 
-  local -a keywords dirs
   local query=${PREFIX:-${words[CURRENT]:-}}
   local limit=${ZSH_ZOXIDE_QUERY_LIMIT:-200}
+  local -a args results
   local output
 
   if [[ -n $query ]]; then
-    keywords=(${(z)query})
-    output=$(command zoxide query -l -- ${(@)keywords} 2>/dev/null | head -n "$limit") || return 1
+    args=(-- "$query")
   else
-    output=$(command zoxide query -l 2>/dev/null | head -n "$limit") || return 1
+    args=()
   fi
 
-  [[ -z $output ]] && return 1
-  dirs=(${(f)output})
-  (( $#dirs > 0 )) || return 1
+  output=$(command zoxide query -l "${args[@]}" 2>/dev/null) || return 1
+  [[ -n $output ]] || return 1
 
-  compadd -Q -S '' -V zoxide -- $dirs || return 1
+  results=(${(f)output})
+  (( $#results > 0 )) || return 1
+
+  if (( limit > 0 && $#results > limit )); then
+    results=(${results[1,limit]})
+  fi
+
+  compadd -Q -S '' -V zoxide -- "${results[@]}" || return 1
   compstate[insert]=menu
   return 0
 }
