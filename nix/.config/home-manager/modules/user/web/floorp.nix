@@ -30,10 +30,12 @@ lib.mkIf (config.features.web.enable && config.features.web.floorp.enable) (let
     }
 
     /* Make URL bar fill the whole width and remove side gaps */
-    #nav-bar-customization-target > :not(#urlbar-container) { display: none !important; }
+    /* Keep other nav-bar items intact; only make urlbar stretch */
     #nav-bar-customization-target { padding-inline: 0 !important; }
     #urlbar-container { flex: 1 1 auto !important; min-width: 0 !important; width: 100% !important; }
     #urlbar { margin-inline: 0 !important; width: 100% !important; }
+    #urlbar-input-container { padding: 0 !important; }
+    #urlbar-background { margin-inline: 0 !important; }
 
     /* Keep page content above the bottom bar (use padding to avoid blank gap) */
     #browser {
@@ -79,10 +81,12 @@ lib.mkIf (config.features.web.enable && config.features.web.floorp.enable) (let
     #urlbar #urlbar-results {
       z-index: 1000 !important; /* over fixed toolbar */
     }
-    /* Hide search engine chips/one-offs to avoid stray Google plank */
+    /* Hide search engine chips/one-offs and any search-mode indicators */
     #urlbar .search-one-offs,
-    #urlbar #urlbar-search-mode-switcher,
-    #urlbar .search-mode-buttons,
+    #urlbar [id*="search-mode"],
+    #urlbar [class*="search-mode"],
+    #urlbar [class*="one-off"],
+    #urlbar [id*="one-off"],
     #urlbar .urlbar-search-mode-indicator,
     #urlbar .urlbar-search-mode-indicator-title { display: none !important; }
 
