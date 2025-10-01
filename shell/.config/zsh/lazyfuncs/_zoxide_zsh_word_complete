@@ -24,10 +24,9 @@ _zoxide_zsh_word_complete() {
   # No suggestions -> let other completers try
   (( ${#dirs} > 0 )) || return 1
 
-  # Offer suggestions; suffix a space upon accept; group under `zoxide`
-  compadd -U -V zoxide -S ' ' -- $dirs
+  # Offer suggestions for current word; no forced space, let compsys handle
+  compadd -Q -V zoxide -- $dirs
   return 0
 }
 
 return 0
-
