@@ -28,12 +28,9 @@ lib.mkIf (config.features.web.enable && config.features.web.floorp.enable) (let
       height: auto !important;
     }
 
-    /* Keep page content above the bottom bar */
-    #browser,
-    #appcontent,
-    #tabbrowser-tabbox,
-    #navigator-toolbox + #browser { /* fallback selector */
-      margin-bottom: var(--uc-bottom-nav-height) !important;
+    /* Keep page content above the bottom bar (use padding to avoid blank gap) */
+    #browser {
+      padding-bottom: var(--uc-bottom-nav-height) !important;
     }
 
     /* Collapse tabs toolbar completely to avoid empty strip (when tabs are disabled) */
@@ -75,10 +72,9 @@ lib.mkIf (config.features.web.enable && config.features.web.floorp.enable) (let
     #urlbar #urlbar-results {
       z-index: 1000 !important; /* over fixed toolbar */
     }
-    /* Ensure search one-offs follow the panel upward too */
-    #urlbar .urlbarView .search-one-offs {
-      margin-top: 6px !important;
-      margin-bottom: 0 !important;
+    /* Option A: hide search one-offs to avoid stray engine icon */
+    #urlbar .search-one-offs {
+      display: none !important;
     }
   '';
 in lib.mkMerge [
