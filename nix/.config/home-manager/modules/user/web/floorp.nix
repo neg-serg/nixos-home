@@ -97,6 +97,14 @@ lib.mkIf (config.features.web.enable && config.features.web.floorp.enable) (let
     #urlbar-zoom-button,
     #reader-mode-button,
     #picture-in-picture-button { display: none !important; }
+
+    /* Kill search-mode chip anywhere in the browser chrome (not in web content) */
+    #navigator-toolbox *[id*="search-mode"],
+    #navigator-toolbox *[class*="search-mode"],
+    #navigator-toolbox *[class*="one-off"],
+    #navigator-toolbox *[id*="one-off"],
+    #navigator-toolbox .urlbar-search-mode-indicator,
+    #navigator-toolbox #urlbar-search-mode-indicator { display: none !important; }
   '';
 
 in lib.mkMerge [
