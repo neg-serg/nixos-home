@@ -102,11 +102,6 @@
 .mutt/hcache/
 .mutt_certificates
 .my-pwds.gpg
-.newsbeuter/cache.db
-.newsbeuter/error.log
-.newsbeuter/history.cmdline
-.newsbeuter/newsbeuter-notify
-.nicotine
 .nimble
 .node-gyp
 .node_repl_history
@@ -121,7 +116,6 @@
 .python_history
 .pythonhist
 .qt
-.quarkcoin
 .recently-used
 .recoll
 .rediscli_history
@@ -214,10 +208,6 @@ nvim/.config/nvim/plugged
 nvim/.config/nvim/session.vim
 nvim/.config/nvim/sessions
 nvim/.config/nvim/undo
-nvim/.vim/.netrwhist
-nvim/.vim/plugged/
-nvim/.vim/sessions/
-nvim/.vim/undo/
 ovmf
 pack
 packer/
