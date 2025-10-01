@@ -16,13 +16,16 @@ lib.mkIf (config.features.web.enable && config.features.web.floorp.enable) (let
       --uc-bottom-nav-height: calc(var(--urlbar-min-height) + 10px);
     }
 
-    /* Fix the navigation toolbar to the bottom edge */
-    #nav-bar {
+    /* Pin the whole toolbox (all browser toolbars) to the bottom */
+    #navigator-toolbox {
       position: fixed !important;
       left: 0 !important;
       right: 0 !important;
       bottom: 0 !important;
       z-index: 100 !important;
+    }
+    /* Tidy up inner toolbars */
+    #nav-bar {
       padding-block: 0 !important;
       padding-inline: 0 !important;
       min-height: var(--urlbar-min-height) !important;
@@ -31,15 +34,11 @@ lib.mkIf (config.features.web.enable && config.features.web.floorp.enable) (let
 
     /* Bookmarks toolbar (PersonalToolbar) pinned above the nav bar */
     #PersonalToolbar {
-      position: fixed !important;
-      left: 0 !important;
-      right: 0 !important;
-      bottom: var(--uc-bottom-nav-height) !important;
-      z-index: 101 !important;
       padding-block: 0 !important;
       padding-inline: 6px !important;
       min-height: 26px !important;
       height: auto !important;
+      order: -1; /* keep it above nav-bar visually */
     }
     #PersonalToolbar[collapsed="true"],
     #PersonalToolbar[hidden="true"],
@@ -57,10 +56,8 @@ lib.mkIf (config.features.web.enable && config.features.web.floorp.enable) (let
     #urlbar[searchmode] #urlbar-input-container { grid-template-columns: auto 1fr 0 !important; }
     #urlbar-background { margin-inline: 0 !important; }
 
-    /* Keep page content above the bottom bar (use padding to avoid blank gap) */
-    #browser {
-      padding-bottom: var(--uc-bottom-nav-height) !important;
-    }
+    /* Keep page content above the bottom toolbars (nav + bookmarks ~26px) */
+    #browser { padding-bottom: calc(var(--uc-bottom-nav-height) + 26px) !important; }
 
     /* Collapse tabs toolbar completely to avoid empty strip (when tabs are disabled) */
     #TabsToolbar,
@@ -73,13 +70,13 @@ lib.mkIf (config.features.web.enable && config.features.web.floorp.enable) (let
     #TabsToolbar { visibility: collapse !important; }
 
     /* Do not show in fullscreen */
-    :root[inFullscreen] #nav-bar,
-    :root[sizemode="fullscreen"] #nav-bar {
+    :root[inFullscreen] #navigator-toolbox,
+    :root[sizemode="fullscreen"] #navigator-toolbox {
       display: none !important;
     }
 
     /* While customizing, restore normal flow to avoid glitches */
-    :root[customizing] #nav-bar {
+    :root[customizing] #navigator-toolbox {
       position: static !important;
     }
     :root[customizing] #browser,
