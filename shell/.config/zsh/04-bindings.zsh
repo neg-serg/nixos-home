@@ -8,6 +8,10 @@ autoload -Uz special-accept-line && zle -N special-accept-line
 autoload -Uz zleiab && zle -N zleiab
 if (( $+commands[zoxide] )); then
   autoload -Uz zoxide_complete && zle -N zoxide_complete
+  autoload -Uz _zoxide_zsh_word_complete
+  zle -C zoxide-complete complete-word _generic
+  zstyle ':completion:zoxide-complete:*' completer _zoxide_zsh_word_complete
+  zstyle ':completion:zoxide-complete:*' menu-select
 fi
 
 _nothing(){}; zle -N _nothing
@@ -39,7 +43,9 @@ bindkey ",." zleiab
 bindkey . rationalise-dot
 bindkey -M isearch . self-insert # without this, typing a . aborts incremental history search
 bindkey '^xm' inplace_mk_dirs # load the lookup subsystem if it's available on the system
-# Use regular zsh completion on Ctrl-Y (non-fzf)
-bindkey '^Y' expand-or-complete
-# zoxide_complete remains available as an unbound widget (callable if needed)
+if (( $+commands[zoxide] )); then
+  # Bind Ctrl-Y to native zsh completion backed by zoxide results
+  bindkey '^Y' zoxide-complete
+fi
+# fzf-based zoxide_complete remains available (unbound) if you want it
 # vim: ft=zsh:nowrap
