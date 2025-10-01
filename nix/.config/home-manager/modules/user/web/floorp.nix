@@ -29,6 +29,24 @@ lib.mkIf (config.features.web.enable && config.features.web.floorp.enable) (let
       height: auto !important;
     }
 
+    /* Bookmarks toolbar (PersonalToolbar) pinned above the nav bar */
+    #PersonalToolbar {
+      position: fixed !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: var(--uc-bottom-nav-height) !important;
+      z-index: 101 !important;
+      padding-block: 0 !important;
+      padding-inline: 6px !important;
+      min-height: 26px !important;
+      height: auto !important;
+    }
+    #PersonalToolbar[collapsed="true"],
+    #PersonalToolbar[hidden="true"],
+    :root[inFullscreen] #PersonalToolbar,
+    :root[sizemode="fullscreen"] #PersonalToolbar,
+    :root[customizing] #PersonalToolbar { position: static !important; }
+
     /* Make URL bar fill the whole width and remove side gaps */
     /* Keep other nav-bar items intact; only make urlbar stretch */
     #nav-bar-customization-target { padding-inline: 0 !important; }
