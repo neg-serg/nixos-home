@@ -1,4 +1,4 @@
-#compdef -P zoxide-complete-native
+#compdef -P zoxide-complete
 # _zoxide_zsh_word_complete: native zsh completer backed by `zoxide query -l`
 # Suggests directories via compadd, favouring menu selection for ambiguity.
 
