@@ -8,7 +8,7 @@ _pwgen () {
 }
 
 _image_viewer () {
-    nsxiv -
+    swayimg -
 }
 
 fix_layout=false
