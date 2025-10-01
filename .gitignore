@@ -171,11 +171,6 @@
 .zsh/cache
 .zsh_exnhist
 .zsh_history
-/home/neg/.config/gimp-2.8
-/home/neg/.config/menus
-/home/neg/.config/z
-/home/neg/.gimp-2.8
-/home/neg/.ideaconfig/config/options/statistics.application.usages.xml
 __pycache__
 beets/.config/beets/discogs_token.json
 beets/.config/beets/state.pickle
@@ -225,11 +220,6 @@ mutt/.mutt/work.gmail/cache
 mutt/.mutt/work.gmail/cache/
 mutt/.mutt/work.gmail/hcache
 neg-dark.tdesktop-theme
-nvim/.config/nvim/nvim/.compiler_info
-nvim/.config/nvim/nvim/.netrwhist
-nvim/.config/nvim/nvim/plugged
-nvim/.config/nvim/nvim/sessions
-nvim/.config/nvim/nvim/undo
 nvim/.config/nvim/plugged
 nvim/.config/nvim/session.vim
 nvim/.config/nvim/sessions
@@ -315,7 +305,6 @@ sys/.config/systemd/user/warpd.service
 sys/.config/systemd
 sys/.config/zsh/lazyfuncs/ylock
 sys/.config/btop/btop.conf
-/home/neg/pic/shots/screenshot-2024-01-28_17-33-22.png
 negwm/.config/xinit/xsettingsd
 sys/.config/zsh/.zcompdump*
 music/.config/mpd/sticker.sql
