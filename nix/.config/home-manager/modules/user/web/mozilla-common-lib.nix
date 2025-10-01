@@ -164,6 +164,15 @@ with lib; let
       #urlbar #urlbar-search-mode-switcher,
       #urlbar .search-mode-buttons,
       #urlbar .urlbar-search-mode-indicator-title{ display: none !important; }
+      /* Hide engine icons in results/rows/actions just in case */
+      #urlbar .urlbarView-engine-icon,
+      #urlbar .urlbarView-row .urlbarView-type-icon,
+      #urlbar .urlbarView-row .urlbarView-action,
+      #urlbar .urlbarView-row .urlbarView-favicon,
+      #urlbar .searchbar-engine-one-off-item,
+      #urlbar .search-one-offs .searchbar-engine-one-off-item,
+      #urlbar [class*="engine" i],
+      #urlbar [id*="engine" i]{ display: none !important; }
       /* Also hide any stray indicator that renders at toolbox scope */
       #navigator-toolbox .urlbar-search-mode-indicator,
       #navigator-toolbox #urlbar-search-mode-indicator{ display: none !important; }
