@@ -39,8 +39,7 @@ bindkey ",." zleiab
 bindkey . rationalise-dot
 bindkey -M isearch . self-insert # without this, typing a . aborts incremental history search
 bindkey '^xm' inplace_mk_dirs # load the lookup subsystem if it's available on the system
-if (( $+commands[zoxide] )); then
-  bindkey '^Y' zoxide_complete
-  bindkey '^@' zoxide_complete
-fi
+# Use regular zsh completion on Ctrl-Y (non-fzf)
+bindkey '^Y' expand-or-complete
+# zoxide_complete remains available as an unbound widget (callable if needed)
 # vim: ft=zsh:nowrap
