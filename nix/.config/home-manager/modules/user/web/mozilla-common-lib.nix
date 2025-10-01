@@ -97,6 +97,62 @@ with lib; let
     .urlbarView-row .urlbarView-url { font-size: 14px !important; font-weight: 400 !important; }
   '';
 
+  # Move URL bar/toolbar to bottom for both Firefox and Floorp.
+  # Based on MrOtherGuy's firefox-csshacks (navbar_below_content.css).
+  # Upstream: https://github.com/MrOtherGuy/firefox-csshacks
+  # Notes:
+  # - Keeps extension panels working by using -webkit-box in fixed toolbar.
+  # - Pushes content up with a margin on #browser to avoid overlap.
+  # - Flips urlbar popup to open upward when at the bottom.
+  bottomNavbarChrome = ''
+    @-moz-document url(chrome://browser/content/browser.xhtml){
+      /* Height of the bottom toolbar (normal/compact density) */
+      :root:not([inFullscreen]){
+        --uc-bottom-toolbar-height: calc(39px + var(--toolbarbutton-outer-padding));
+      }
+      :root[uidensity="compact"]:not([inFullscreen]){
+        --uc-bottom-toolbar-height: calc(32px + var(--toolbarbutton-outer-padding));
+      }
+
+      /* Keep page content above the bottom toolbar */
+      #browser,
+      #customization-container{ margin-bottom: var(--uc-bottom-toolbar-height,0px) }
+
+      /* Pin navigation toolbar to the bottom edge */
+      #nav-bar{
+        position: fixed !important;
+        bottom: 0;
+        display: -webkit-box; /* keeps extension panels working */
+        width: 100%;
+        z-index: 1;
+      }
+      #nav-bar-customization-target{ -webkit-box-flex: 1; }
+
+      /* Theme backgrounds for lwtheme */
+      :root[lwtheme] #nav-bar{
+        background-image: linear-gradient(var(--toolbar-bgcolor),var(--toolbar-bgcolor)), var(--lwt-additional-images,var(--toolbar-bgimage)) !important;
+        background-position: top,var(--lwt-background-alignment);
+        background-repeat: repeat,var(--lwt-background-tiling);
+      }
+      :root[lwtheme-image] #nav-bar{
+        background-image: linear-gradient(var(--toolbar-bgcolor),var(--toolbar-bgcolor)),var(--lwt-header-image), var(--lwt-additional-images,var(--toolbar-bgimage)) !important;
+      }
+
+      /* Urlbar popup opens upward when toolbar is at the bottom */
+      #urlbar[breakout][breakout-extend]{
+        display: flex !important;
+        flex-direction: column-reverse !important;
+        bottom: 0 !important;
+        top: auto !important;
+      }
+
+      .urlbarView-body-inner{ border-top-style: none !important; }
+
+      /* Panel sizing fixes (helps big dropdowns) */
+      .panel-viewstack{ max-height: unset !important; }
+    }
+  '';
+
   policies = {
     ExtensionSettings = {
       "hide-scrollbars@qashto" = {
@@ -157,7 +213,8 @@ in {
         isDefault = true;
         extensions = { packages = (addons.common or []) ++ addonsExtra; };
         settings = mergedSettings;
-        inherit extraConfig userChrome;
+        userChrome = userChrome + bottomNavbarChrome;
+        inherit extraConfig;
       };
       profile = profileBase // profileExtra;
     in {
