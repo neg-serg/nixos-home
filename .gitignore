@@ -2,9 +2,6 @@
 *.zwc
 ./1st_level
 .Clion*
-.FBReader/
-.FontForge/
-.Skype
 .Xauthority
 .adom.*
 .ammonite
@@ -12,7 +9,6 @@
 .aria2
 .aspell*
 .atom
-.azureus
 .bash_history
 .bashbullet
 .cabal
@@ -26,7 +22,6 @@
 .config/Epic
 .config/MusicBrainz
 .config/Recoll.org
-.config/Skype/
 .config/Trolltech.conf
 .config/asciinema
 .config/aurvote
@@ -85,14 +80,12 @@
 .gem
 .ghc/ghci_history
 .ghc/x86_64-linux-8.0.1/
-.gimp-2.8
 .git-credentials
 .gnupg
 .goobook*
 .goobook_auth.json
 .gpg-agent-info
 .gradle
-.gstreamer-0.10
 .icons/LibreOffice Pack Icons-0.3.6
 .imgur-screenshot.log
 .imgur_pass.gpg
@@ -121,10 +114,7 @@
 .notmuch-config
 .npm
 .nv
-.ovftool.ssldb
 .password-store
-.pcsxr
-.pdfedit
 .pip
 .pki
 .python-eggs
