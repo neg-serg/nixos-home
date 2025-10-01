@@ -1,0 +1,67 @@
+# zoxide_complete: interactive directory completion widget for zoxide + zle
+# Inspired by previous fasd-complete bindings.
+zoxide_complete() {
+  emulate -L zsh -o no_aliases
+
+  if (( ! $+commands[zoxide] )); then
+    zle -M 'zoxide: command not found'
+    return 0
+  fi
+
+  local orig_lbuffer=$LBUFFER
+  local orig_rbuffer=$RBUFFER
+  local orig_cursor=$CURSOR
+  local query=""
+  local prefix
+  local word_removed=0
+  local -a match mbegin mend
+
+  if [[ -n $LBUFFER && $LBUFFER =~ '([^[:space:]]+)$' ]]; then
+    query=$match[1]
+    local start=$mbegin[1]
+    prefix=$LBUFFER[1,start-1]
+    if [[ $LBUFFER == *[[:space:]]* ]]; then
+      LBUFFER=$prefix
+      word_removed=1
+    else
+      local first_word=$orig_lbuffer
+      if [[ $first_word != (cd|z|zi) ]]; then
+        LBUFFER=$prefix
+        word_removed=1
+      else
+        query=""
+      fi
+    fi
+  fi
+
+  local dir
+  if [[ -n $query ]]; then
+    dir=$(command zoxide query -i -- "$query" 2>/dev/null)
+  else
+    dir=$(command zoxide query -i 2>/dev/null)
+  fi
+
+  if [[ -z $dir ]]; then
+    LBUFFER=$orig_lbuffer
+    CURSOR=$orig_cursor
+    zle redisplay
+    return 0
+  fi
+
+  local insert=${(q)dir}
+  if [[ -n $LBUFFER && ${LBUFFER[-1]} != ' ' ]]; then
+    LBUFFER+=' '
+  elif [[ -z $LBUFFER && $orig_lbuffer == (cd|z|zi) ]]; then
+    LBUFFER=$orig_lbuffer' '
+  fi
+
+  LBUFFER+=$insert
+
+  if [[ -z $orig_rbuffer || ${orig_rbuffer[1]} != ' ' ]]; then
+    LBUFFER+=' '
+  fi
+
+  CURSOR=${#LBUFFER}+1
+  zle redisplay
+  return 0
+}
