@@ -1,0 +1,33 @@
+#compdef -P zoxide-complete
+# _zoxide_zsh_word_complete: native zsh completion backed by zoxide query -l
+# Provides directory suggestions via compadd and respects current PREFIX.
+
+_zoxide_zsh_word_complete() {
+  emulate -L zsh -o no_aliases
+
+  # If zoxide not available, let other completers run.
+  if (( ! $+commands[zoxide] )); then
+    return 1
+  fi
+
+  local q
+  # Use current word prefix if available; fallback to empty (list all)
+  q=${PREFIX:-${words[CURRENT]:-}}
+
+  local -a dirs
+  if [[ -n $q ]]; then
+    dirs=(${(f)"$(command zoxide query -l -- "$q" 2>/dev/null)"})
+  else
+    dirs=(${(f)"$(command zoxide query -l 2>/dev/null)"})
+  fi
+
+  # No suggestions -> let other completers try
+  (( ${#dirs} > 0 )) || return 1
+
+  # Offer suggestions; suffix a space upon accept; group under `zoxide`
+  compadd -U -V zoxide -S ' ' -- $dirs
+  return 0
+}
+
+return 0
+
