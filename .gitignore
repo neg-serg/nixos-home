@@ -38,7 +38,6 @@
 .config/easytag
 .config/easytag/browser_path.history
 .config/easytag/easytagrc
-.config/fasd
 .config/fish
 .config/fonts/*
 .config/gconf
@@ -78,7 +77,6 @@
 .electron
 .elvish/
 .esd_auth
-.fasd
 .fbless_save
 .fonts/*
 .forecastrc
