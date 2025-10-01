@@ -1,6 +1,5 @@
 *.tmp
 *.zwc
-./1st_level
 .Clion*
 .Xauthority
 .adom.*
@@ -163,7 +162,6 @@ dev/.config/pylint/
 dht.dat
 doc
 dw
-./games
 ghc/.ghc/ghci_history
 gmail/client_secrets.json
 hcache
@@ -279,7 +277,6 @@ music/.config/beets/config.yaml
 misc/.config/transmission-daemon/torrents/
 shell/.config/zsh/.zcompdump
 media/.config/mpv/mpv.conf
-input.conf
 media/.config/mpv/input.conf
 misc/.config/zathura/
 media/.config/mpv/shaders/

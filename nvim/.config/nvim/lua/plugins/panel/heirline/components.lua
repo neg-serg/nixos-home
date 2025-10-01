@@ -244,7 +244,7 @@ return function(ctx)
       local modifiable = buf_option(buf, 'modifiable', vim.bo.modifiable)
       return readonly or not modifiable
     end,
-    provider = S.lock,
+    provider = function() return ' ' .. S.lock end,
     hl = function() return { fg = colors.blue, bg = colors.base_bg } end,
     update = { 'OptionSet', 'BufEnter' },
   }
@@ -499,11 +499,15 @@ return function(ctx)
       end,
       update = { 'DiagnosticChanged', 'BufEnter', 'BufNew', 'WinEnter', 'WinResized' },
       {
-        provider = prof('diag.errors', function(self) return (self.errors or 0) > 0 and (S.err .. self.errors .. ' ') or '' end),
+        provider = prof('diag.errors', function(self)
+          return (self.errors or 0) > 0 and string.format('%s %d ', S.err, self.errors) or ''
+        end),
         hl = function() return { fg = colors.red, bg = colors.base_bg } end,
       },
       {
-        provider = prof('diag.warns', function(self) return (self.warnings or 0) > 0 and (S.warn .. self.warnings .. ' ') or '' end),
+        provider = prof('diag.warns', function(self)
+          return (self.warnings or 0) > 0 and string.format('%s %d ', S.warn, self.warnings) or ''
+        end),
         hl = function() return { fg = colors.yellow, bg = colors.base_bg } end,
       },
       on_click = { callback = vim.schedule_wrap(function(_,_,_,button)
@@ -528,7 +532,7 @@ return function(ctx)
         end
         return #clients > 0
       end,
-      provider = S.gear,
+      provider = function() return ' ' .. S.gear .. ' ' end,
       hl = function() return { fg = colors.cyan, bg = colors.base_bg } end,
       on_click = { callback = vim.schedule_wrap(function() dbg_push('click: lsp'); vim.cmd('LspInfo') end), name = 'heirline_lsp_info' },
       update = { 'LspAttach', 'LspDetach', 'BufEnter', 'WinEnter' },
@@ -630,7 +634,7 @@ return function(ctx)
       update = { 'BufEnter', 'BufWritePost', 'User', 'WinEnter', 'WinResized' },
       on_click = { callback = vim.schedule_wrap(function() dbg_push('click: git'); open_git_ui() end), name = 'heirline_git_ui' },
       {
-        provider = function() return S.branch end,
+        provider = function() return ' ' .. S.branch .. ' ' end,
         hl = function() return { fg = colors.blue, bg = colors.base_bg } end,
       },
       {
@@ -745,7 +749,7 @@ return function(ctx)
         if #pattern > 15 then pattern = pattern:sub(1, 12) .. '...' end
         local cur = (s and s.current) or 0
         local tot = (s and s.total) or 0
-        local out = (tot == 0) and '' or string.format('%s%s %d/%d ', S.search, pattern, cur, tot)
+        local out = (tot == 0) and '' or string.format(' %s %s %d/%d ', S.search, pattern, cur, tot)
         last_sc.t, last_sc.out, last_sc.pat, last_sc.cur, last_sc.tot = t, out, pattern, cur, tot
         return out
       end),
@@ -848,7 +852,7 @@ return function(ctx)
       local buf = target_buf()
       return buf_option(buf, 'modified', vim.bo.modified)
     end,
-    provider = S.modified,
+    provider = function() return ' ' .. S.modified end,
     hl = function() return { fg = colors.blue, bg = colors.base_bg } end,
     update = { 'BufWritePost', 'TextChanged', 'TextChangedI', 'BufModifiedSet' },
   }
@@ -960,7 +964,10 @@ return function(ctx)
       update = { 'DirChanged' },
     },
     CurrentDir,
-    { provider = S.sep, hl = function() return { fg = colors.blue, bg = colors.base_bg } end },
+    {
+      provider = function() return S.sep .. ' ' end,
+      hl = function() return { fg = colors.blue, bg = colors.base_bg } end,
+    },
     FileIcon,
     FileNameClickable,
     Readonly,
