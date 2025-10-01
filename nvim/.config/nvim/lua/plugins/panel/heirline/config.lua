@@ -110,12 +110,12 @@ return function()
         -- Symbols
         local function I(icons, ascii) return USE_ICONS and icons or ascii end
         local S = setmetatable({
-          folder='', sep=' ¦ ', modified=I(' ',' *'), lock=I(' 🔒',' RO'),
-          search=I('  ',' / '), rec=I(' ','REC'), gear=I('  ',' [LSP] '),
-          branch=I('  ',' [git] '), close=I('  ',' [x] '),
-          err=I(' ','E:'), warn=I(' ','W:'), utf8=I('','utf8'),
+          folder='', sep='¦', modified=I('','*'), lock=I('🔒','RO'),
+          search=I('','/'), rec=I('','REC'), gear=I('','[LSP]'),
+          branch=I('','[git]'), close=I('','[x]'),
+          err=I('','E:'), warn=I('','W:'), utf8=I('','utf8'),
           latin=I('','enc'), linux=I('','unix'), mac=I('','mac'), win=I('','dos'),
-          pilcrow=I(' ¶',' ¶'), wrap=I(' ⤶',' ↩'), doc=I('','[buf]'),
+          pilcrow=I('¶','¶'), wrap=I('⤶','↩'), doc=I('','[buf]'),
           plus=I('','+'), tilde=I('󰜥','~'), minus=I('','-'),
         }, { __index = function(_, k) return '[' .. tostring(k) .. ']' end })
 
