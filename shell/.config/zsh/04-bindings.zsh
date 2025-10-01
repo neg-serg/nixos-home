@@ -8,11 +8,8 @@ autoload -Uz special-accept-line && zle -N special-accept-line
 autoload -Uz zleiab && zle -N zleiab
 if (( $+commands[zoxide] )); then
   autoload -Uz zoxide_complete && zle -N zoxide_complete
-  autoload -Uz _zoxide_zsh_word_complete
-  zle -C zoxide-complete complete-word _generic
-  # Try zoxide-backed suggestions first, then fall back to regular completion
-  zstyle ':completion:zoxide-complete:*' completer _zoxide_zsh_word_complete _complete _ignored
-  zstyle ':completion:zoxide-complete:*' menu-select
+  # Provide a dash-named alias so the widget matches the fasd precedent
+  zle -N zoxide-complete zoxide_complete
 fi
 
 _nothing(){}; zle -N _nothing
@@ -45,8 +42,9 @@ bindkey . rationalise-dot
 bindkey -M isearch . self-insert # without this, typing a . aborts incremental history search
 bindkey '^xm' inplace_mk_dirs # load the lookup subsystem if it's available on the system
 if (( $+commands[zoxide] )); then
-  # Bind Ctrl-Y to native zsh completion backed by zoxide results
+  # Bind both Ctrl-Y and Ctrl-@ just like the former fasd widget
   bindkey '^Y' zoxide-complete
+  bindkey '^@' zoxide-complete
 fi
-# fzf-based zoxide_complete remains available (unbound) if you want it
+# zoxide_complete (fzf-backed) stays callable as zle widget
 # vim: ft=zsh:nowrap
