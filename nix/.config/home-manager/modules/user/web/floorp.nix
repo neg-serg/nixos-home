@@ -24,9 +24,16 @@ lib.mkIf (config.features.web.enable && config.features.web.floorp.enable) (let
       bottom: 0 !important;
       z-index: 100 !important;
       padding-block: 0 !important;
+      padding-inline: 0 !important;
       min-height: var(--urlbar-min-height) !important;
       height: auto !important;
     }
+
+    /* Make URL bar fill the whole width and remove side gaps */
+    #nav-bar-customization-target > :not(#urlbar-container) { display: none !important; }
+    #nav-bar-customization-target { padding-inline: 0 !important; }
+    #urlbar-container { flex: 1 1 auto !important; min-width: 0 !important; width: 100% !important; }
+    #urlbar { margin-inline: 0 !important; width: 100% !important; }
 
     /* Keep page content above the bottom bar (use padding to avoid blank gap) */
     #browser {
@@ -72,10 +79,20 @@ lib.mkIf (config.features.web.enable && config.features.web.floorp.enable) (let
     #urlbar #urlbar-results {
       z-index: 1000 !important; /* over fixed toolbar */
     }
-    /* Option A: hide search one-offs to avoid stray engine icon */
-    #urlbar .search-one-offs {
-      display: none !important;
-    }
+    /* Hide search engine chips/one-offs to avoid stray Google plank */
+    #urlbar .search-one-offs,
+    #urlbar #urlbar-search-mode-switcher,
+    #urlbar .search-mode-buttons,
+    #urlbar .urlbar-search-mode-indicator,
+    #urlbar .urlbar-search-mode-indicator-title { display: none !important; }
+
+    /* Remove left/right blocks in the input (identity, tracking, page actions) */
+    #identity-box,
+    #tracking-protection-icon-container,
+    #page-action-buttons,
+    #urlbar-zoom-button,
+    #reader-mode-button,
+    #picture-in-picture-button { display: none !important; }
   '';
 
 in lib.mkMerge [
