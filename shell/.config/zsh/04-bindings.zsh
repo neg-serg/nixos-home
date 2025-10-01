@@ -8,12 +8,8 @@ autoload -Uz special-accept-line && zle -N special-accept-line
 autoload -Uz zleiab && zle -N zleiab
 if (( $+commands[zoxide] )); then
   autoload -Uz zoxide_complete
-  autoload -Uz _zoxide_zsh_word_complete
-  # Provide separate widgets for native menu and fzf variants
+  zle -N zoxide-complete zoxide_complete
   zle -N zoxide-complete-fzf zoxide_complete
-  zle -C zoxide-complete complete-word _generic
-  zstyle ':completion:zoxide-complete:*' completer _zoxide_zsh_word_complete _complete _ignored
-  zstyle ':completion:zoxide-complete:*' menu select
 fi
 
 _nothing(){}; zle -N _nothing
@@ -46,9 +42,9 @@ bindkey . rationalise-dot
 bindkey -M isearch . self-insert # without this, typing a . aborts incremental history search
 bindkey '^xm' inplace_mk_dirs # load the lookup subsystem if it's available on the system
 if (( $+commands[zoxide] )); then
-  # Bind Ctrl-Y to native zoxide completion; keep Ctrl-@ on the fzf widget
+  # Bind Ctrl-Y and Ctrl-@ to the zoxide fzf widget
   bindkey '^Y' zoxide-complete
-  bindkey '^@' zoxide-complete-fzf
+  bindkey '^@' zoxide-complete
 fi
-# zoxide_complete (fzf-backed) stays callable via zoxide-complete-fzf
+# zoxide_complete provides the fzf-backed picker
 # vim: ft=zsh:nowrap
