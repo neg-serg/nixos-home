@@ -81,14 +81,19 @@ lib.mkIf (config.features.web.enable && config.features.web.floorp.enable) (let
     #urlbar #urlbar-results {
       z-index: 1000 !important; /* over fixed toolbar */
     }
-    /* Hide search engine chips/one-offs and any search-mode indicators */
-    #urlbar .search-one-offs,
-    #urlbar [id*="search-mode"],
-    #urlbar [class*="search-mode"],
-    #urlbar [class*="one-off"],
-    #urlbar [id*="one-off"],
-    #urlbar .urlbar-search-mode-indicator,
-    #urlbar .urlbar-search-mode-indicator-title { display: none !important; }
+    /* Place search-mode chip inside the input, not outside */
+    #urlbar-input-container { position: relative !important; }
+    #urlbar .urlbar-search-mode-indicator {
+      position: absolute !important;
+      left: 8px !important;
+      top: 50% !important;
+      transform: translateY(-50%) !important;
+      margin: 0 !important;
+      z-index: 1100 !important;
+      display: flex !important;
+    }
+    /* Leave space for the chip so text doesn't overlap */
+    #urlbar-input { padding-left: 36px !important; }
 
     /* Remove left/right blocks in the input (identity, tracking, page actions) */
     #identity-box,
@@ -98,13 +103,8 @@ lib.mkIf (config.features.web.enable && config.features.web.floorp.enable) (let
     #reader-mode-button,
     #picture-in-picture-button { display: none !important; }
 
-    /* Kill search-mode chip anywhere in the browser chrome (not in web content) */
-    #navigator-toolbox *[id*="search-mode"],
-    #navigator-toolbox *[class*="search-mode"],
-    #navigator-toolbox *[class*="one-off"],
-    #navigator-toolbox *[id*="one-off"],
-    #navigator-toolbox .urlbar-search-mode-indicator,
-    #navigator-toolbox #urlbar-search-mode-indicator { display: none !important; }
+    /* Keep engine one-offs hidden in dropdown (optional); comment out if needed */
+    /* #urlbar .search-one-offs { display: none !important; } */
   '';
 
 in lib.mkMerge [
