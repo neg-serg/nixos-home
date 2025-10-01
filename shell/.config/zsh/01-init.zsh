@@ -62,6 +62,9 @@ _exists nvim && {
 }
 unfunction _exists
 
+# Initialize zoxide (smarter cd) if available
+(( $+commands[zoxide] )) && eval "$(zoxide init zsh --cmd z --hook prompt)"
+
 typeset -gx TIMEFMT="[37m[34m⟬[37m[37m%J[34m⟭[39m[34m⟬[37m%U[34m⟭[39m[34m⟬[37muser %S[34m⟭[39m[34m⟬[37msystem %P[34m⟭[39m[34m⟬[37mcpu %*E total[34m⟭[39m[34m[39m[34m⟬[37mMem: %M kb max[34m⟭[39m"
 typeset -gx WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
 typeset -gx READNULLCMD="wbat"
@@ -97,42 +100,6 @@ autoload -Uz -- history-search-end split-shell-arguments lookupinit dircolors_in
 autoload -Uz run-help ${^fpath}/run-help-*(N:t) || return
 (( $+aliases[run-help] )) && unalias run-help # make run-help more useful
 
-fasd_init() {
-    if [[ -x =fasd ]]; then
-        (( $+functions[compdef] )) && {
-            # zsh word mode completion
-            _fasd_zsh_word_complete() {
-                [ "$2" ] && local _fasd_cur="$2"
-                [ -z "$_fasd_cur" ] && local _fasd_cur="${words[CURRENT]}"
-                local fnd="${_fasd_cur//,/ }"
-                local typ=${1:-e}
-                fasd --query $typ "$fnd" 2>> "/dev/null" | \
-                sort -nr | sed 's/^[^ ]*[ ]*//' | while read -r line; do
-                    compadd -U -V fasd "$line"
-                done
-                compstate[insert]=menu # no expand
-            }
-            _fasd_zsh_word_complete_f() { _fasd_zsh_word_complete f ; }
-            _fasd_zsh_word_complete_d() { _fasd_zsh_word_complete d ; }
-            _fasd_zsh_word_complete_trigger() {
-                local _fasd_cur="${words[CURRENT]}"
-                eval $(fasd --word-complete-trigger _fasd_zsh_word_complete $_fasd_cur)
-            }
-            # define zle widgets
-            zle -C fasd-complete complete-word _generic
-            zstyle ':completion:fasd-complete:*' completer _fasd_zsh_word_complete
-            zstyle ':completion:fasd-complete:*' menu-select
-
-            zle -C fasd-complete-f complete-word _generic
-            zstyle ':completion:fasd-complete-f:*' completer _fasd_zsh_word_complete_f
-            zstyle ':completion:fasd-complete-f:*' menu-select
-
-            zle -C fasd-complete-d complete-word _generic
-            zstyle ':completion:fasd-complete-d:*' completer _fasd_zsh_word_complete_d
-            zstyle ':completion:fasd-complete-d:*' menu-select
-        }
-    fi
-}
 
 autoload -Uz url-quote-magic
 zle -N self-insert url-quote-magic
@@ -146,7 +113,6 @@ autoload -Uz zcompare
 autoload -Uz h
 zle_highlight=(region:bg=228 paste:none)
 zsh-defer _zpcompinit_custom
-zsh-defer fasd_init
 zsh-defer dircolors_init
 
 # vim: ft=zsh:nowrap
