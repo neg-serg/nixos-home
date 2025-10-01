@@ -115,11 +115,6 @@ in lib.mkMerge [
     name = "floorp";
     package = pkgs.floorp-bin;
     profileId = common.profileId;
-    # Append Floorp-specific userChrome tweaks
-    profileExtra = {
-      # Disable Floorp-specific CSS overrides for now
-      userChrome = common.userChrome;
-    };
   })
   {
     home.sessionVariables = {
