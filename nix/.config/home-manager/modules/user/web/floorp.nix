@@ -117,7 +117,8 @@ in lib.mkMerge [
     profileId = common.profileId;
     # Append Floorp-specific userChrome tweaks
     profileExtra = {
-      userChrome = common.userChrome + bottomNavUserChrome;
+      # Disable Floorp-specific CSS overrides for now
+      userChrome = common.userChrome;
     };
   })
   {
