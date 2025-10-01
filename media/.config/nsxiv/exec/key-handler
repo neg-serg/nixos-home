@@ -2,7 +2,7 @@
 cache="$HOME/tmp"
 ff="$cache/sxiv.$$"
 tmp_wall="$cache/wall_sxiv.$$"
-last="$XDG_DATA_HOME/sxiv/last"
+last_file="$XDG_DATA_HOME/sxiv/last"
 trash="$HOME/trash/1st-level/pic"
 rofi_cmd="rofi -dmenu -sort -matching fuzzy -no-plugins -no-only-match -theme sxiv -custom"
 
@@ -30,7 +30,7 @@ proc() {
             $cmd "$(realpath "$line")" "$dest"
         done < "$(realpath "$ff")"
         command -v zoxide >/dev/null 2>&1 && zoxide add "$dest" || true
-        printf "%s\n" "$cmd \"$dest\"" > "$last"
+        printf "%s\n" "$cmd \"$dest\"" > "$last_file"
     fi
     IFS=$old_ifs
     trap finish EXIT
@@ -41,9 +41,9 @@ repeat_action() {
     old_ifs=$IFS
     IFS="$(echo)"
     fname="$(realpath "$(cat "$ff")")"
-    last="$(xargs < "$last")"
-    cmd=$(echo "$last" | awk '{print $1}')
-    dest=$(echo "$last" | awk '{print $2}')
+    last_entry="$(xargs < "$last_file")"
+    cmd=$(echo "$last_entry" | awk '{print $1}')
+    dest=$(echo "$last_entry" | awk '{print $2}')
     if [ "$cmd" = 'mv' ] || [ "$cmd" = 'cp' ]; then
         $cmd "$fname" "$dest"
     fi
