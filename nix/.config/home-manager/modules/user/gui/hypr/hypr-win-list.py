@@ -78,8 +78,6 @@ def glyph(cls: str) -> str:
         "obsidian": "",
         "obs": "",
         "swayimg": "",
-        "sxiv": "",
-        "nsxiv": "",
     }
     for key, icon in table.items():
         if key in cls:

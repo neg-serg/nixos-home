@@ -76,10 +76,8 @@
 ## Просмотрщики и лаунчеры
 
 - Просмотр изображений
-  - Враппер `swayimg-first` ставится как `~/.local/bin/swayimg` и `~/.local/bin/sx`.
-    - `sx` вызывает `swayimg-first` для удобства.
+  - Враппер `swayimg-first` ставится как `~/.local/bin/swayimg`.
     - В Hypr заданы правила для `swayimg` (float/size/position) и роутинг воркспейсов.
-  - Легаси‑враппер `sxivnc` пробует `nsxiv → sxiv → swayimg` и оставлен для старых скриптов.
 
 - Лаунчер Rofi
   - `~/.local/bin/rofi` гарантирует, что `-theme <name|name.rasi>` находит тему (относительно конфига или в XDG data).

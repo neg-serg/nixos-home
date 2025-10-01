@@ -84,8 +84,7 @@ mkIf (config.features.gui.enable or false) (lib.mkMerge [
         { name = "pic-dirs-list"; src = ./scripts/pic-dirs-list.sh; }
         { name = "any"; src = ./scripts/any; }
         { name = "beet-update"; src = ./scripts/beet-update; }
-        { name = "sx"; src = ../../media/images/sx.sh; }
-        { name = "sxivnc"; src = ../../media/images/sxivnc.sh; }
+        # Legacy image wrappers removed (sx, sxivnc); use swayimg-first directly
         { name = "exorg"; src = ./scripts/exorg; }
         { name = "flacspec"; src = ./scripts/flacspec; }
         { name = "iommu-info"; src = ./scripts/iommu-info; }
