@@ -18,10 +18,6 @@
 .ccls-cache
 .cgdb/readline_history.txt
 .config/.gmail_pass.gpg
-.config/EgoSoft
-.config/Epic
-.config/MusicBrainz
-.config/Recoll.org
 .config/Trolltech.conf
 .config/asciinema
 .config/aurvote
@@ -54,11 +50,6 @@
 .config/scdl
 .config/spotify/
 .config/transmission-daemon/dht.dat
-.config/vkopt
-.config/vksetts*
-.config/yandex-disk/iid
-.config/yandex-disk/passwd
-.config/youtube-viewer/youtube-viewer.conf
 .cortex
 .cpan
 .cpanm
@@ -86,7 +77,6 @@
 .goobook_auth.json
 .gpg-agent-info
 .gradle
-.icons/LibreOffice Pack Icons-0.3.6
 .imgur-screenshot.log
 .imgur_pass.gpg
 .irb_history*
@@ -175,10 +165,7 @@ doc
 dw
 ./games
 ghc/.ghc/ghci_history
-gimp-2.8
-gimp-2.8/pluginrc
 gmail/client_secrets.json
-gtk/.config/gtk-2.0/gtkfilechooser.ini
 hcache
 home.gmail/hcache
 imgur-screenshot/
@@ -225,7 +212,6 @@ state_vim.vim
 stats.json
 surf
 sys/.config/bpytop/error.log
-sys/.config/icedtea-web/security/
 sys/.config/tmux/plugin/
 sys/.config/tmux/plugins/*
 sys/.config/zsh/.zcompdump
@@ -292,7 +278,6 @@ music/.config/mpd/mpd.db
 music/.config/beets/config.yaml
 misc/.config/transmission-daemon/torrents/
 shell/.config/zsh/.zcompdump
-misc/.config/icedtea-web/security/
 media/.config/mpv/mpv.conf
 input.conf
 media/.config/mpv/input.conf
