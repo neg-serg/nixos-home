@@ -52,8 +52,6 @@ lib.mkIf (config.features.web.enable && config.features.web.floorp.enable) (let
     #urlbar-container { flex: 1 1 auto !important; min-width: 0 !important; width: 100% !important; }
     #urlbar { margin-inline: 0 !important; width: 100% !important; }
     #urlbar-input-container { padding: 0 !important; grid-template-columns: 0 1fr 0 !important; }
-    /* When search mode is active, open the left column for the engine chip */
-    #urlbar[searchmode] #urlbar-input-container { grid-template-columns: auto 1fr 0 !important; }
     #urlbar-background { margin-inline: 0 !important; }
 
     /* Keep page content above the bottom toolbars (nav + bookmarks ~26px) */
@@ -98,9 +96,21 @@ lib.mkIf (config.features.web.enable && config.features.web.floorp.enable) (let
     #urlbar #urlbar-results {
       z-index: 1000 !important; /* over fixed toolbar */
     }
-    /* Keep chip in normal flow inside the left grid column */
-    #urlbar .urlbar-search-mode-indicator { position: static !important; margin-inline-start: 6px !important; }
-    #urlbar-input { padding-left: 0 !important; }
+    /* Anchor chip absolutely inside urlbar to avoid jumps */
+    #urlbar { position: relative !important; }
+    #urlbar .urlbar-search-mode-indicator:not([hidden]) {
+      position: absolute !important;
+      left: 8px !important;
+      top: 50% !important;
+      transform: translateY(-50%) !important;
+      margin: 0 !important;
+      z-index: 1100 !important;
+      display: flex !important;
+    }
+    /* leave space for chip */
+    #urlbar-input { padding-left: 36px !important; }
+    /* If any stray indicator renders outside urlbar (toolbox root), hide it */
+    #navigator-toolbox > .urlbar-search-mode-indicator { display: none !important; }
 
     /* Remove left/right blocks in the input (identity, tracking, page actions) */
     #identity-box,
