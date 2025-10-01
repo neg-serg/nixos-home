@@ -532,7 +532,7 @@ return function(ctx)
         end
         return #clients > 0
       end,
-      provider = function() return ' ' .. S.gear .. ' ' end,
+      provider = function() return S.gear .. ' ' end,
       hl = function() return { fg = colors.cyan, bg = colors.base_bg } end,
       on_click = { callback = vim.schedule_wrap(function() dbg_push('click: lsp'); vim.cmd('LspInfo') end), name = 'heirline_lsp_info' },
       update = { 'LspAttach', 'LspDetach', 'BufEnter', 'WinEnter' },
@@ -567,7 +567,7 @@ return function(ctx)
       end,
       provider = function(self)
         if self.text == nil or self.text == '' then return '' end
-        return string.format(' %s %s ', self.frames[self.idx], self.text)
+        return string.format('%s %s ', self.frames[self.idx], self.text)
       end,
       hl = function() return { fg = colors.blue_light, bg = colors.base_bg } end,
       update = { 'LspAttach', 'LspDetach', 'CursorHold', 'CursorHoldI', 'BufEnter', 'WinEnter' },
@@ -614,7 +614,7 @@ return function(ctx)
         local n = self._ca_count or 0
         if n <= 0 then return '' end
         local icon = (USE_ICONS and '' or 'CA')
-        return string.format(' %s %d ', icon, n)
+        return string.format('%s %d ', icon, n)
       end,
       hl = function() return { fg = colors.yellow, bg = colors.base_bg } end,
       on_click = { callback = vim.schedule_wrap(function() dbg_push('click: code actions'); pcall(function() vim.lsp.buf.code_action() end) end), name = 'heirline_code_actions' },
@@ -634,7 +634,7 @@ return function(ctx)
       update = { 'BufEnter', 'BufWritePost', 'User', 'WinEnter', 'WinResized' },
       on_click = { callback = vim.schedule_wrap(function() dbg_push('click: git'); open_git_ui() end), name = 'heirline_git_ui' },
       {
-        provider = function() return ' ' .. S.branch .. ' ' end,
+        provider = function() return S.branch .. ' ' end,
         hl = function() return { fg = colors.blue, bg = colors.base_bg } end,
       },
       {
@@ -994,7 +994,7 @@ return function(ctx)
     { provider = '%=' },
     {
       condition = function() return not is_empty() end,
-      provider = prof('special.filename', function() return ' ' .. adapt_fname(30) .. ' ' end),
+      provider = prof('special.filename', function() return ' ' .. adapt_fname(30) end),
       hl = function() return { fg = colors.white, bg = colors.base_bg } end,
       on_click = { callback = vim.schedule_wrap(function()
         local path = buf_full_path(get_status_buf())
@@ -1003,7 +1003,7 @@ return function(ctx)
       end), name = 'heirline_special_copy_path' },
     },
     {
-      provider = ' ' .. S.close .. ' ',
+      provider = S.close .. ' ',
       hl = function() return { fg = colors.red, bg = colors.base_bg } end,
       on_click = { callback = vim.schedule_wrap(function() dbg_push('click: close buffer'); vim.cmd('bd!') end), name = 'heirline_close_buf' },
     },
