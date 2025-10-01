@@ -10,7 +10,8 @@ if (( $+commands[zoxide] )); then
   autoload -Uz zoxide_complete && zle -N zoxide_complete
   autoload -Uz _zoxide_zsh_word_complete
   zle -C zoxide-complete complete-word _generic
-  zstyle ':completion:zoxide-complete:*' completer _zoxide_zsh_word_complete
+  # Try zoxide-backed suggestions first, then fall back to regular completion
+  zstyle ':completion:zoxide-complete:*' completer _zoxide_zsh_word_complete _complete _ignored
   zstyle ':completion:zoxide-complete:*' menu-select
 fi
 
