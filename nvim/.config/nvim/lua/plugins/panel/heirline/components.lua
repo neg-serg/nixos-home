@@ -407,12 +407,50 @@ return function(ctx)
   -- ── Right-side helpers ────────────────────────────────────────────────────
   local function human_size()
     local path = buf_full_path(get_status_buf())
-    if not path or path == '' then return '' end
-    local size = fn.getfsize(path); if size <= 0 then return '' end
-    local i, suffix = 1, { 'B','K','M','G','T','P' }
-    while size >= 1024 and i < #suffix do size = size/1024; i=i+1 end
-    if i == 1 then return string.format('%d%s', size, suffix[i]) end
-    return string.format((i<=3) and '%.1f%s' or '%.2f%s', size, suffix[i])
+    if not path or path == '' then return nil end
+    local size = fn.getfsize(path)
+    if size <= 0 then return nil end
+    local value, idx = size, 1
+    local suffix = { 'B', 'K', 'M', 'G', 'T', 'P' }
+    while value >= 1024 and idx < #suffix do
+      value = value / 1024
+      idx = idx + 1
+    end
+    local fmt
+    if idx == 1 then
+      fmt = string.format('%d', value)
+    elseif idx <= 3 then
+      fmt = string.format('%.1f', value)
+    else
+      fmt = string.format('%.2f', value)
+    end
+    if fmt:find('%.') then
+      fmt = fmt:gsub('0+$', '')
+      fmt = fmt:gsub('%.$', '')
+    end
+    local integer, frac = fmt:match('^(%d+)(%.%d+)$')
+    if not integer then
+      integer, frac = fmt, ''
+    end
+    local int_num = tonumber(integer)
+    if not int_num then
+      return {
+        lead = '',
+        rest = integer,
+        frac = frac,
+        suffix = suffix[idx],
+      }
+    end
+    local padded = string.format('%04d', int_num)
+    local lead = padded:match('^0+') or ''
+    local rest = padded:sub(#lead + 1)
+    if rest == '' then rest = '0' end
+    return {
+      lead = lead,
+      rest = rest,
+      frac = frac,
+      suffix = suffix[idx],
+    }
   end
   local function os_icon()
     local buf = target_buf()
@@ -713,21 +751,33 @@ return function(ctx)
         name = 'heirline_size_click',
       },
       {
-        condition = function(self) return self._size ~= '' end,
+        condition = function(self) return self._size ~= nil end,
         provider = ' ',
       },
       {
-        condition = function(self) return self._size ~= '' end,
+        condition = function(self) return self._size ~= nil end,
         provider = function() return '' end,
         hl = 'HeirlineSizeIcon',
       },
       {
-        condition = function(self) return self._size ~= '' end,
-        provider = function(self) return self._size .. ' ' end,
-        hl = function() return { fg = colors.white, bg = colors.base_bg, italic = true } end,
+        condition = function(self) return self._size ~= nil end,
+        provider = function(self)
+          local info = self._size
+          if not info then return '' end
+          local pieces = {}
+          local zero_start, zero_end = highlights.eval_hl({ fg = colors.line_zero or colors.white_dim, bg = colors.base_bg, italic = true })
+          local text_start, text_end = highlights.eval_hl({ fg = colors.white, bg = colors.base_bg, italic = true })
+          local unit_start, unit_end = highlights.eval_hl({ fg = colors.green, bg = colors.base_bg })
+          if info.lead and info.lead ~= '' then pieces[#pieces + 1] = zero_start .. info.lead .. zero_end end
+          if info.rest and info.rest ~= '' then pieces[#pieces + 1] = text_start .. info.rest .. text_end end
+          if info.frac and info.frac ~= '' then pieces[#pieces + 1] = text_start .. info.frac .. text_end end
+          if info.suffix and info.suffix ~= '' then pieces[#pieces + 1] = unit_start .. info.suffix .. unit_end end
+          if #pieces == 0 then return '' end
+          return table.concat(pieces) .. ' '
+        end,
       },
       {
-        condition = function(self) return self._size ~= '' end,
+        condition = function(self) return self._size ~= nil end,
         provider = ' ',
         hl = function() return { fg = colors.white, bg = colors.base_bg } end,
       },
