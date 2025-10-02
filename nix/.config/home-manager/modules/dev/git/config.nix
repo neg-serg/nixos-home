@@ -3,7 +3,6 @@ with lib;
 mkIf config.features.dev.enable (lib.mkMerge [
   {
     programs = {
-      gitui.enable = true;
       git = {
         enable = true;
         userName = "Sergey Miroshnichenko";
@@ -116,9 +115,5 @@ mkIf config.features.dev.enable (lib.mkMerge [
         };
       };
     };
-  }
-  {
-    xdg.configFile."gitui/key_bindings.ron".source = lib.mkForce (config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/nix/.config/home-manager/modules/dev/git/gitui/key_bindings.ron");
-    xdg.configFile."gitui/theme.ron".source = lib.mkForce (config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/nix/.config/home-manager/modules/dev/git/gitui/theme.ron");
   }
 ])
