@@ -35,6 +35,11 @@ with lib; let
     "media.autoplay.blocking_policy" = 2;
     "media.autoplay.block-webaudio" = true;
     "media.block-autoplay-until-in-foreground" = true;
+    # Address bar tweaks
+    # Do not replace URL with search terms on search result pages (prevents engine badge overlay)
+    "browser.urlbar.showSearchTerms.enabled" = false;
+    # Do not suggest alternate search engines as a dedicated row in the urlbar popup
+    "browser.urlbar.suggest.engines" = false;
   };
 
   # FastFox-like prefs: performance-leaning overrides gated by features.web.prefs.fastfox.enable.
@@ -153,6 +158,16 @@ with lib; let
     }
   '';
 
+  # Hide the URL bar search-mode chip (engine badge) in a minimal, stable way.
+  # This mirrors commonly used FirefoxCSS snippets: it targets the indicator id/class
+  # that Firefox uses across recent versions. It does not touch other urlbar layout.
+  hideSearchModeChip = ''
+    @-moz-document url(chrome://browser/content/browser.xhtml){
+      #urlbar-search-mode-indicator,
+      #urlbar .urlbar-search-mode-indicator{ display: none !important; }
+    }
+  '';
+
   # No global removal of engine badges/one-offs here — will follow upstream guidance.
 
   policies = {
@@ -215,7 +230,7 @@ in {
         isDefault = true;
         extensions = { packages = (addons.common or []) ++ addonsExtra; };
         settings = mergedSettings;
-        userChrome = userChrome + bottomNavbarChrome;
+        userChrome = userChrome + bottomNavbarChrome + hideSearchModeChip;
         inherit extraConfig;
       };
       profile = profileBase // profileExtra;
