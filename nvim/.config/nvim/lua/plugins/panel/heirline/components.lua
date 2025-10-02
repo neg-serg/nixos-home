@@ -440,6 +440,12 @@ return function(ctx)
     pieces[#pieces + 1] = start_hl .. text .. end_hl
   end
 
+  local function emit_padded_segments(pieces, parts)
+    if not parts then return end
+    append_segment(pieces, parts.lead, styles.zero)
+    append_segment(pieces, parts.rest, styles.primary)
+  end
+
   local function human_size()
     local path = buf_full_path(get_status_buf())
     if not path or path == '' then return nil end
@@ -805,8 +811,7 @@ return function(ctx)
           local info = self._size
           if not info then return '' end
           local pieces = {}
-          append_segment(pieces, info.lead, styles.zero)
-          append_segment(pieces, info.rest, styles.primary)
+          emit_padded_segments(pieces, info)
           append_segment(pieces, info.frac, styles.primary)
           append_segment(pieces, info.suffix, styles.unit)
           if #pieces == 0 then return '' end
@@ -880,15 +885,11 @@ return function(ctx)
         provider = function(self)
           local pieces = {}
           local line_parts = self._pos_line
-          if line_parts then
-            append_segment(pieces, line_parts.lead, styles.zero)
-            append_segment(pieces, line_parts.rest, styles.primary)
-          end
+          emit_padded_segments(pieces, line_parts)
           local col_parts = self._pos_col
           if col_parts then
             append_segment(pieces, ':', styles.separator)
-            append_segment(pieces, col_parts.lead, styles.zero)
-            append_segment(pieces, col_parts.rest, styles.primary)
+            emit_padded_segments(pieces, col_parts)
           end
           if #pieces == 0 and self._pos and self._pos ~= '' then
             return self._pos .. ' '
