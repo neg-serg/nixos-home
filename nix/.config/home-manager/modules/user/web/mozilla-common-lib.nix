@@ -40,6 +40,10 @@ with lib; let
     "browser.urlbar.showSearchTerms.enabled" = false;
     # Do not suggest alternate search engines as a dedicated row in the urlbar popup
     "browser.urlbar.suggest.engines" = false;
+    # Optional: do not show Top Sites in urlbar (reduces engine rows)
+    "browser.urlbar.suggest.topsites" = false;
+    # Optional: do not suggest quickactions (less badges)
+    "browser.urlbar.suggest.quickactions" = false;
   };
 
   # FastFox-like prefs: performance-leaning overrides gated by features.web.prefs.fastfox.enable.
@@ -164,7 +168,9 @@ with lib; let
   hideSearchModeChip = ''
     @-moz-document url(chrome://browser/content/browser.xhtml){
       #urlbar-search-mode-indicator,
-      #urlbar .urlbar-search-mode-indicator{ display: none !important; }
+      #urlbar .urlbar-search-mode-indicator,
+      /* Floorp/Lepton sometimes renders indicator at toolbox scope */
+      #navigator-toolbox .urlbar-search-mode-indicator{ display: none !important; }
     }
   '';
 
