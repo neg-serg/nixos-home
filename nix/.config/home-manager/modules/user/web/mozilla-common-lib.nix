@@ -168,6 +168,14 @@ with lib; let
     }
   '';
 
+  # Hide urlbar one-off engine buttons entirely (canonical pattern used widely in FirefoxCSS).
+  # This removes the Google/engine icons row in the urlbar popup.
+  hideUrlbarOneOffs = ''
+    @-moz-document url(chrome://browser/content/browser.xhtml){
+      #urlbar .search-one-offs{ display: none !important; }
+    }
+  '';
+
   # No global removal of engine badges/one-offs here — will follow upstream guidance.
 
   policies = {
@@ -230,7 +238,7 @@ in {
         isDefault = true;
         extensions = { packages = (addons.common or []) ++ addonsExtra; };
         settings = mergedSettings;
-        userChrome = userChrome + bottomNavbarChrome + hideSearchModeChip;
+        userChrome = userChrome + bottomNavbarChrome + hideSearchModeChip + hideUrlbarOneOffs;
         inherit extraConfig;
       };
       profile = profileBase // profileExtra;
