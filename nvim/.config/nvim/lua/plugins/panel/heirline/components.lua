@@ -405,6 +405,41 @@ return function(ctx)
   end
 
   -- ── Right-side helpers ────────────────────────────────────────────────────
+  local function padded_parts(value)
+    if type(value) ~= 'number' then return nil end
+    local padded = string.format('%04d', math.max(0, math.floor(value)))
+    local lead = padded:match('^0+') or ''
+    local rest = padded:sub(#lead + 1)
+    if rest == '' then rest = '0' end
+    return { padded = padded, lead = lead, rest = rest }
+  end
+
+  local styles = {
+    zero = function()
+      return { fg = colors.line_zero or colors.white_dim, bg = colors.base_bg, italic = true }
+    end,
+    primary = function()
+      return { fg = colors.white, bg = colors.base_bg, italic = true }
+    end,
+    unit = function()
+      return { fg = colors.green, bg = colors.base_bg }
+    end,
+    separator = function()
+      return { fg = colors.blue, bg = colors.base_bg, italic = true }
+    end,
+  }
+
+  local function append_segment(pieces, text, style_fn)
+    if not text or text == '' then return end
+    local spec = style_fn and style_fn()
+    if not spec then
+      pieces[#pieces + 1] = text
+      return
+    end
+    local start_hl, end_hl = highlights.eval_hl(spec)
+    pieces[#pieces + 1] = start_hl .. text .. end_hl
+  end
+
   local function human_size()
     local path = buf_full_path(get_status_buf())
     if not path or path == '' then return nil end
@@ -441,13 +476,18 @@ return function(ctx)
         suffix = suffix[idx],
       }
     end
-    local padded = string.format('%04d', int_num)
-    local lead = padded:match('^0+') or ''
-    local rest = padded:sub(#lead + 1)
-    if rest == '' then rest = '0' end
+    local parts = padded_parts(int_num)
+    if not parts then
+      return {
+        lead = '',
+        rest = integer,
+        frac = frac,
+        suffix = suffix[idx],
+      }
+    end
     return {
-      lead = lead,
-      rest = rest,
+      lead = parts.lead,
+      rest = parts.rest,
       frac = frac,
       suffix = suffix[idx],
     }
@@ -765,13 +805,10 @@ return function(ctx)
           local info = self._size
           if not info then return '' end
           local pieces = {}
-          local zero_start, zero_end = highlights.eval_hl({ fg = colors.line_zero or colors.white_dim, bg = colors.base_bg, italic = true })
-          local text_start, text_end = highlights.eval_hl({ fg = colors.white, bg = colors.base_bg, italic = true })
-          local unit_start, unit_end = highlights.eval_hl({ fg = colors.green, bg = colors.base_bg })
-          if info.lead and info.lead ~= '' then pieces[#pieces + 1] = zero_start .. info.lead .. zero_end end
-          if info.rest and info.rest ~= '' then pieces[#pieces + 1] = text_start .. info.rest .. text_end end
-          if info.frac and info.frac ~= '' then pieces[#pieces + 1] = text_start .. info.frac .. text_end end
-          if info.suffix and info.suffix ~= '' then pieces[#pieces + 1] = unit_start .. info.suffix .. unit_end end
+          append_segment(pieces, info.lead, styles.zero)
+          append_segment(pieces, info.rest, styles.primary)
+          append_segment(pieces, info.frac, styles.primary)
+          append_segment(pieces, info.suffix, styles.unit)
           if #pieces == 0 then return '' end
           return table.concat(pieces) .. ' '
         end,
@@ -815,17 +852,17 @@ return function(ctx)
           local lnum = fn.line('.')
           local col = fn.virtcol('.')
           local show_col = col ~= 1
-          local full = string.format('%04d', lnum)
-          local lead = full:match('^0+') or ''
-          local rest = full:sub(#lead + 1)
-          if rest == '' then rest = '0' end
-          self._pos_lead = lead
-          self._pos_rest = rest
-          self._pos_col = show_col and col or nil
+          local line_parts = padded_parts(lnum)
+          self._pos_line = line_parts
+          self._pos_col = nil
           if show_col then
-            return full .. ':' .. col
+            self._pos_col = padded_parts(col)
           end
-          return full
+          local base = (line_parts and line_parts.padded) or string.format('%04d', lnum)
+          if show_col and self._pos_col then
+            return base .. ':' .. col
+          end
+          return base
         end, '0000')
       end,
       update = { 'CursorMoved', 'CursorMovedI', 'WinResized' },
@@ -841,31 +878,20 @@ return function(ctx)
       {
         condition = function(self) return self._pos ~= nil and self._pos ~= '' end,
         provider = function(self)
-          local lead = self._pos_lead or ''
-          local rest = self._pos_rest or ''
-          local col = self._pos_col
           local pieces = {}
-          if lead ~= '' then
-            -- Draw padded zeros with kitty color243 (via colors.line_zero).
-            local start, finish = highlights.eval_hl({ fg = colors.line_zero or colors.white_dim, bg = colors.base_bg, italic = true })
-            pieces[#pieces + 1] = start .. lead .. finish
+          local line_parts = self._pos_line
+          if line_parts then
+            append_segment(pieces, line_parts.lead, styles.zero)
+            append_segment(pieces, line_parts.rest, styles.primary)
           end
-          if rest ~= '' then
-            local start, finish = highlights.eval_hl({ fg = colors.white, bg = colors.base_bg, italic = true })
-            pieces[#pieces + 1] = start .. rest .. finish
+          local col_parts = self._pos_col
+          if col_parts then
+            append_segment(pieces, ':', styles.separator)
+            append_segment(pieces, col_parts.lead, styles.zero)
+            append_segment(pieces, col_parts.rest, styles.primary)
           end
-          if col then
-            local start_sep, end_sep = highlights.eval_hl({ fg = colors.blue, bg = colors.base_bg, italic = true })
-            -- Zero-pad column to 4 digits and split into leading zeros and rest (like line)
-            local col_full = string.format('%04d', col)
-            local col_lead = col_full:match('^0+') or ''
-            local col_rest = col_full:sub(#col_lead + 1)
-            if col_rest == '' then col_rest = '0' end
-            local start_col_lead, end_col_lead = highlights.eval_hl({ fg = colors.line_zero or colors.white_dim, bg = colors.base_bg, italic = true })
-            local start_col_rest, end_col_rest = highlights.eval_hl({ fg = colors.white, bg = colors.base_bg, italic = true })
-            pieces[#pieces + 1] = start_sep .. ':' .. end_sep
-            if col_lead ~= '' then pieces[#pieces + 1] = start_col_lead .. col_lead .. end_col_lead end
-            if col_rest ~= '' then pieces[#pieces + 1] = start_col_rest .. col_rest .. end_col_rest end
+          if #pieces == 0 and self._pos and self._pos ~= '' then
+            return self._pos .. ' '
           end
           if #pieces == 0 then return '' end
           return table.concat(pieces) .. ' '
