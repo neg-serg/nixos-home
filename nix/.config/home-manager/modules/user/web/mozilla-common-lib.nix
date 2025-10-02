@@ -153,31 +153,7 @@ with lib; let
     }
   '';
 
-  # Hide search engine chip/one-offs in the URL bar completely (Firefox + Floorp).
-  # This removes the Google (or any engine) badge that may otherwise float.
-  hideSearchChipChrome = ''
-    @-moz-document url(chrome://browser/content/browser.xhtml){
-      /* Remove search-mode indicator and one-off UI inside the urlbar */
-      #urlbar .urlbar-search-mode-indicator,
-      #urlbar #urlbar-search-mode-indicator,
-      #urlbar .search-one-offs,
-      #urlbar #urlbar-search-mode-switcher,
-      #urlbar .search-mode-buttons,
-      #urlbar .urlbar-search-mode-indicator-title{ display: none !important; }
-      /* Hide engine icons in results/rows/actions just in case */
-      #urlbar .urlbarView-engine-icon,
-      #urlbar .urlbarView-row .urlbarView-type-icon,
-      #urlbar .urlbarView-row .urlbarView-action,
-      #urlbar .urlbarView-row .urlbarView-favicon,
-      #urlbar .searchbar-engine-one-off-item,
-      #urlbar .search-one-offs .searchbar-engine-one-off-item,
-      #urlbar [class*="engine" i],
-      #urlbar [id*="engine" i]{ display: none !important; }
-      /* Also hide any stray indicator that renders at toolbox scope */
-      #navigator-toolbox .urlbar-search-mode-indicator,
-      #navigator-toolbox #urlbar-search-mode-indicator{ display: none !important; }
-    }
-  '';
+  # No global removal of engine badges/one-offs here — will follow upstream guidance.
 
   policies = {
     ExtensionSettings = {
@@ -239,7 +215,7 @@ in {
         isDefault = true;
         extensions = { packages = (addons.common or []) ++ addonsExtra; };
         settings = mergedSettings;
-        userChrome = userChrome + bottomNavbarChrome + hideSearchChipChrome;
+        userChrome = userChrome + bottomNavbarChrome;
         inherit extraConfig;
       };
       profile = profileBase // profileExtra;

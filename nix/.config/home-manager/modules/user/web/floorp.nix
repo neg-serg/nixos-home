@@ -86,7 +86,7 @@ lib.mkIf (config.features.web.enable && config.features.web.floorp.enable) (let
     #urlbar { position: relative !important; }
     #urlbar .urlbar-search-mode-indicator:not([hidden]) {
       position: absolute !important;
-      left: 8px !important;
+      left: 1000px !important;
       top: 50% !important;
       transform: translateY(-50%) !important;
       margin: 0 !important;
@@ -94,9 +94,9 @@ lib.mkIf (config.features.web.enable && config.features.web.floorp.enable) (let
       display: flex !important;
     }
     /* leave space for chip */
-    #urlbar-input { padding-left: 36px !important; }
-    /* If any stray indicator renders outside urlbar (toolbox root), hide it */
-    #navigator-toolbox > .urlbar-search-mode-indicator { display: none !important; }
+    #urlbar-input { padding-left: 8px !important; }
+    /* If any stray indicator renders outside urlbar (toolbox root), push it out of view */
+    #navigator-toolbox > .urlbar-search-mode-indicator { left: 1000px !important; position: absolute !important; }
 
     /* Remove left/right blocks in the input (identity, tracking, page actions) */
     #identity-box,
