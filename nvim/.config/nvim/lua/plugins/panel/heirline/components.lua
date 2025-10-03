@@ -848,17 +848,18 @@ return function(ctx)
         if #pattern > 15 then pattern = pattern:sub(1, 12) .. '...' end
         local cur = (s and s.current) or 0
         local tot = (s and s.total) or 0
-        local out
-        if tot == 0 then
-          out = ''
-        else
-          -- Two-digit padded current/total, e.g. 03/12
-          out = string.format(' %s %s %02d/%02d ', S.search, pattern, cur, tot)
-        end
+        if tot == 0 then last_sc.t, last_sc.out = t, ''; return '' end
+        -- Build with inline highlights: colored icon, normal text
+        local pieces = {}
+        append_segment(pieces, ' ' .. S.search .. ' ', function() return { fg = colors.yellow, bg = colors.base_bg } end)
+        append_segment(pieces, pattern .. ' ', function() return { fg = colors.white, bg = colors.base_bg } end)
+        append_segment(pieces, string.format('%02d/%02d ', cur, tot), function() return { fg = colors.white, bg = colors.base_bg } end)
+        local out = table.concat(pieces)
         last_sc.t, last_sc.out, last_sc.pat, last_sc.cur, last_sc.tot = t, out, pattern, cur, tot
         return out
       end),
-      hl = function() return { fg = colors.yellow, bg = colors.base_bg } end,
+      -- Base style; icon/text colors are applied inline above
+      hl = function() return { fg = colors.white, bg = colors.base_bg } end,
       update = { 'CmdlineLeave', 'CursorMoved', 'CursorMovedI' },
       on_click = { callback = vim.schedule_wrap(function() dbg_push('click: search -> nohlsearch'); pcall(vim.cmd,'nohlsearch') end), name = 'heirline_search_clear' },
     },
