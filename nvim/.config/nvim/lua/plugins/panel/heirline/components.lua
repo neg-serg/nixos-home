@@ -359,10 +359,18 @@ return function(ctx)
           local ts = tonumber(self.tabstop) or 0
           if ts < 0 then ts = 0 end
           if ts > 99 then ts = 99 end
-          local parts = padded_parts(ts)
+          local lead, rest
+          if ts < 10 then
+            lead, rest = '0', tostring(ts)
+          else
+            lead, rest = '', tostring(ts)
+          end
           local pieces = {}
-          append_segment(pieces, '×', styles.primary)
-          emit_padded_segments(pieces, parts)
+          local start_primary, end_primary = highlights.eval_hl({ fg = colors.white, bg = colors.base_bg, italic = true })
+          local start_zero, end_zero       = highlights.eval_hl({ fg = colors.line_zero or colors.white_dim, bg = colors.base_bg, italic = true })
+          pieces[#pieces + 1] = start_primary .. '×' .. end_primary
+          if lead ~= '' then pieces[#pieces + 1] = start_zero .. lead .. end_zero end
+          pieces[#pieces + 1] = start_primary .. rest .. end_primary
           return table.concat(pieces) .. ' '
         end,
       },
