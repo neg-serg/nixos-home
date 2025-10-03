@@ -11,5 +11,7 @@ with lib;
   in common.mkBrowser {
     name = "firefox";
     package = pkgs.firefox;
-    profileId = common.profileId;
+    # Use a Firefox-specific managed profile id. If you already have
+    # another profile, this will create one and set it default.
+    profileId = "default-release";
   })
