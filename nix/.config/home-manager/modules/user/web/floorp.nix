@@ -48,14 +48,15 @@ lib.mkIf (config.features.web.enable && config.features.web.floorp.enable) (let
       margin-inline: auto !important;
     }
     #urlbar-container {
-      flex: 1 1 clamp(440px, 48vw, 820px) !important;
-      min-width: 320px !important;
-      max-width: clamp(440px, 48vw, 820px) !important;
-      width: 100% !important;
+      flex: 0 1 clamp(420px, 80%, 960px) !important;
+      width: clamp(420px, 80%, 960px) !important;
+      max-width: clamp(420px, 80%, 960px) !important;
+      min-width: clamp(320px, 60%, 960px) !important;
       margin-inline: 0 !important;
     }
     #urlbar {
-      width: min(100%, clamp(440px, 48vw, 820px)) !important;
+      width: 100% !important;
+      max-width: 100% !important;
     }
     /* Push trailing controls (downloads/menu/etc) to the right edge */
     #urlbar-container + * {
