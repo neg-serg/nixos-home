@@ -178,7 +178,17 @@ with lib; let
   # This removes the Google/engine icons row in the urlbar popup.
   hideUrlbarOneOffs = ''
     @-moz-document url(chrome://browser/content/browser.xhtml){
-      #urlbar .search-one-offs{ display: none !important; }
+      /* Hide urlbar one-off engine row in all common containers */
+      #urlbar .search-one-offs,
+      .urlbarView .search-one-offs,
+      #PopupAutoCompleteRichResult .search-one-offs{ display: none !important; }
+      /* Hide individual engine one-off items, including Floorp/Lepton ids */
+      #urlbar .searchbar-engine-one-off-item,
+      .search-panel-one-offs .searchbar-engine-one-off-item,
+      #urlbar-engine-one-off-item-tabs{ display: none !important; }
+      /* When in searchmode, remove any reserved left space for a chip */
+      #urlbar[searchmode] #urlbar-input-container{ padding-inline-start: 0 !important; }
+      #urlbar[searchmode] #urlbar-input{ margin-inline-start: 0 !important; }
     }
   '';
 
