@@ -355,13 +355,16 @@ return function(ctx)
       },
       {
         provider = function(self)
-          -- Two-digit padded tab width, e.g. ×04
+          -- Two-digit padded tab width with colored leading zero, e.g., ×04
           local ts = tonumber(self.tabstop) or 0
           if ts < 0 then ts = 0 end
           if ts > 99 then ts = 99 end
-          return string.format('×%02d ', ts)
+          local parts = padded_parts(ts)
+          local pieces = {}
+          append_segment(pieces, '×', styles.primary)
+          emit_padded_segments(pieces, parts)
+          return table.concat(pieces) .. ' '
         end,
-        hl = function() return { fg = colors.white, bg = colors.base_bg, italic = true } end,
       },
       on_click = { callback = vim.schedule_wrap(function()
         vim.bo.expandtab = not vim.bo.expandtab
