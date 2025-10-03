@@ -355,7 +355,11 @@ return function(ctx)
       },
       {
         provider = function(self)
-          return string.format('×%d ', self.tabstop)
+          -- Two-digit padded tab width, e.g. ×04
+          local ts = tonumber(self.tabstop) or 0
+          if ts < 0 then ts = 0 end
+          if ts > 99 then ts = 99 end
+          return string.format('×%02d ', ts)
         end,
         hl = function() return { fg = colors.white, bg = colors.base_bg, italic = true } end,
       },
@@ -841,7 +845,13 @@ return function(ctx)
         if #pattern > 15 then pattern = pattern:sub(1, 12) .. '...' end
         local cur = (s and s.current) or 0
         local tot = (s and s.total) or 0
-        local out = (tot == 0) and '' or string.format(' %s %s %d/%d ', S.search, pattern, cur, tot)
+        local out
+        if tot == 0 then
+          out = ''
+        else
+          -- Two-digit padded current/total, e.g. 03/12
+          out = string.format(' %s %s %02d/%02d ', S.search, pattern, cur, tot)
+        end
         last_sc.t, last_sc.out, last_sc.pat, last_sc.cur, last_sc.tot = t, out, pattern, cur, tot
         return out
       end),
