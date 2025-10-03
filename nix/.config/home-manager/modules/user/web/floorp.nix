@@ -28,6 +28,8 @@ lib.mkIf (config.features.web.enable && config.features.web.floorp.enable) (let
       padding-inline: 0 !important;
       min-height: var(--uc-bottom-nav-height) !important;
       height: auto !important;
+      -webkit-box-pack: center !important;
+      justify-content: center !important;
     }
 
     #browser,
@@ -38,17 +40,26 @@ lib.mkIf (config.features.web.enable && config.features.web.floorp.enable) (let
     /* Bookmarks toolbar: use default position (no pinning) */
     #PersonalToolbar { order: 0 !important; }
 
-    /* Keep urlbar centered with a reasonable width cap */
+    /* Keep urlbar centered with balanced width and leave room for buttons */
     #nav-bar-customization-target {
-      padding-inline: 0 !important;
-      gap: 8px !important;
+      display: flex !important;
+      align-items: center !important;
       justify-content: center !important;
+      padding-inline: 12px !important;
+      gap: 8px !important;
+      max-width: min(90vw, 980px) !important;
+      width: 100% !important;
+      margin-inline: auto !important;
+    }
+    #nav-bar-customization-target > * {
+      flex: 0 0 auto !important;
     }
     #urlbar-container {
-      flex: 0 1 clamp(420px, 60vw, 900px) !important;
+      flex: 1 1 720px !important;
       min-width: 320px !important;
-      max-width: clamp(420px, 60vw, 900px) !important;
+      max-width: min(80vw, 860px) !important;
       width: 100% !important;
+      margin-inline: auto !important;
     }
     #urlbar {
       width: 100% !important;
