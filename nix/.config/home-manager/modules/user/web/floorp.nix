@@ -38,22 +38,20 @@ lib.mkIf (config.features.web.enable && config.features.web.floorp.enable) (let
     /* Bookmarks toolbar: use default position (no pinning) */
     #PersonalToolbar { order: 0 !important; }
 
-    /* Keep urlbar centered with a reasonable max width */
+    /* Keep urlbar centered with a reasonable width cap */
     #nav-bar-customization-target {
       padding-inline: 0 !important;
       gap: 8px !important;
+      justify-content: center !important;
     }
     #urlbar-container {
-      flex: 1 1 720px !important;
+      flex: 0 1 clamp(420px, 60vw, 900px) !important;
       min-width: 320px !important;
-      max-width: min(85vw, 960px) !important;
-      margin-inline: auto !important;
+      max-width: clamp(420px, 60vw, 900px) !important;
       width: 100% !important;
     }
     #urlbar {
-      margin-inline: auto !important;
       width: 100% !important;
-      max-width: min(85vw, 960px) !important;
     }
     #urlbar-input-container { padding: 0 !important; grid-template-columns: 0 1fr 0 !important; }
     #urlbar-background { margin-inline: 0 !important; }
@@ -112,14 +110,6 @@ lib.mkIf (config.features.web.enable && config.features.web.floorp.enable) (let
     #urlbar-input { padding-left: 8px !important; }
     /* If any stray indicator renders outside urlbar (toolbox root), push it out of view */
     #navigator-toolbox > .urlbar-search-mode-indicator { left: 1000px !important; position: absolute !important; }
-
-    /* Remove left/right blocks in the input (identity, tracking, page actions) */
-    #identity-box,
-    #tracking-protection-icon-container,
-    #page-action-buttons,
-    #urlbar-zoom-button,
-    #reader-mode-button,
-    #picture-in-picture-button { display: none !important; }
 
     /* Keep engine one-offs hidden in dropdown (optional); comment out if needed */
     /* #urlbar .search-one-offs { display: none !important; } */
