@@ -16,7 +16,7 @@ mkIf config.features.dev.enable (lib.mkMerge [
             pager = "delta";
             whitespace = "trailing-space,cr-at-eol";
             excludesfile = "${config.xdg.configHome}/git/ignore";
-            editor = "nvr --remote-wait-silent";
+            editor = "nvim";
             untrackedCache = true;
             sshCommand = "ssh -i ~/.ssh/id_neg";
           };
