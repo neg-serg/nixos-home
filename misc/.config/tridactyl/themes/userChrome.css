@@ -42,20 +42,5 @@ See the above repository for updates as well as full license text. */
   .urlbarView-body-inner {
     border-top-style: none !important;
   }
-}
 
-/* remove gap after pinned tabs */
-#tabbrowser-tabs[haspinnedtabs]:not([positionpinnedtabs])
-  > #tabbrowser-arrowscrollbox
-  > .tabbrowser-tab[first-visible-unpinned-tab] {
-  margin-inline-start: 0 !important;
-}
-
-/* Hides the list-all-tabs button*/
-#alltabs-button {
-  display: var(--uc-show-all-tabs-button) !important;
-}
-
-#TabsToolbar {
-  visibility: collapse;
 }
