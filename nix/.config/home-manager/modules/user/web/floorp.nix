@@ -38,11 +38,23 @@ lib.mkIf (config.features.web.enable && config.features.web.floorp.enable) (let
     /* Bookmarks toolbar: use default position (no pinning) */
     #PersonalToolbar { order: 0 !important; }
 
-    /* Make URL bar fill the whole width and remove side gaps */
-    /* Keep other nav-bar items intact; only make urlbar stretch */
-    #nav-bar-customization-target { padding-inline: 0 !important; }
-    #urlbar-container { flex: 1 1 auto !important; min-width: 0 !important; width: 100% !important; }
-    #urlbar { margin-inline: 0 !important; width: 100% !important; }
+    /* Keep urlbar centered with a reasonable max width */
+    #nav-bar-customization-target {
+      padding-inline: 0 !important;
+      gap: 8px !important;
+    }
+    #urlbar-container {
+      flex: 1 1 720px !important;
+      min-width: 320px !important;
+      max-width: min(85vw, 960px) !important;
+      margin-inline: auto !important;
+      width: 100% !important;
+    }
+    #urlbar {
+      margin-inline: auto !important;
+      width: 100% !important;
+      max-width: min(85vw, 960px) !important;
+    }
     #urlbar-input-container { padding: 0 !important; grid-template-columns: 0 1fr 0 !important; }
     #urlbar-background { margin-inline: 0 !important; }
 
