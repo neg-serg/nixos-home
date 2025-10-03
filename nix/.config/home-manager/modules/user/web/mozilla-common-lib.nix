@@ -54,8 +54,8 @@ with lib; let
     "devtools.debugger.remote-enabled" = true;
     # Do not prompt when connecting Browser Toolbox
     "devtools.debugger.prompt-connection" = false;
-    # Keep popups (menus/panels) open while inspecting
-    "ui.popup.disable_autohide" = true;
+    # Keep popups open: default off; enable manually when inspecting
+    "ui.popup.disable_autohide" = false;
   };
 
   # FastFox-like prefs: performance-leaning overrides gated by features.web.prefs.fastfox.enable.
