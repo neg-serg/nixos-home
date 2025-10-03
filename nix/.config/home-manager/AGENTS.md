@@ -112,6 +112,10 @@ This repo is configured for Home Manager + flakes with a small set of helpers to
   - Use the local wrapper `rofi` from `~/.local/bin` (PATH is set so it takes precedence).
   - Do not pass `-kb-cancel` or `-no-config` unless you need custom behavior; the wrapper ensures sane defaults and Ctrl+C cancellation.
   - Themes live under `$XDG_CONFIG_HOME/rofi` and `$XDG_DATA_HOME/rofi/themes`; `-theme menu` works out of the box.
+- Floorp (browser chrome tweaks)
+  - To live-inspect toolbar nodes (bottom nav, urlbar chips, etc.) open `chrome://browser/content/browser.xhtml` in a new tab; it renders the browser chrome inside regular content so standard devtools work.
+  - With that page focused press `Ctrl+Shift+I` (or use *Tools → Browser Tools → Toggle Tools*) to launch the inspector and probe selectors before baking them into `userChrome.css`.
+  - Close the tab when finished so the embedded chrome document is not left running in the background.
 - systemd (user) presets
   - Always use `config.lib.neg.systemdUser.mkUnitFromPresets { presets = [..]; }` (recommended)
   - Typical presets:
