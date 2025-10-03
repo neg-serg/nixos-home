@@ -46,6 +46,16 @@ with lib; let
     "browser.urlbar.suggest.quickactions" = false;
     # Do not show separate Search Bar widget in toolbar
     "browser.search.widget.inNavBar" = false;
+
+    # DevTools (Browser Toolbox) and UI inspection helpers
+    # Allow inspecting browser chrome (not just web content)
+    "devtools.chrome.enabled" = true;
+    # Allow remote debugging (required by Browser Toolbox)
+    "devtools.debugger.remote-enabled" = true;
+    # Do not prompt when connecting Browser Toolbox
+    "devtools.debugger.prompt-connection" = false;
+    # Keep popups (menus/panels) open while inspecting
+    "ui.popup.disable_autohide" = true;
   };
 
   # FastFox-like prefs: performance-leaning overrides gated by features.web.prefs.fastfox.enable.
