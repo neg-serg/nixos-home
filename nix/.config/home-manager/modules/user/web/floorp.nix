@@ -120,8 +120,6 @@ lib.mkIf (config.features.web.enable && config.features.web.floorp.enable) (let
     /* If any stray indicator renders outside urlbar (toolbox root), push it out of view */
     #navigator-toolbox > .urlbar-search-mode-indicator { left: 1000px !important; position: absolute !important; }
 
-    /* Keep engine one-offs hidden in dropdown (optional); comment out if needed */
-    /* #urlbar .search-one-offs { display: none !important; } */
   '';
 
   hideSearchModeControls = ''
