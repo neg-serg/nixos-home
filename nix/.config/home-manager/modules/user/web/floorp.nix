@@ -285,44 +285,13 @@ lib.mkIf (config.features.web.enable && config.features.web.floorp.enable) (let
     }
   '';
 
-  shimmerStatusPanelUserChrome = ''
-    @-moz-document url(chrome://browser/content/browser.xhtml) {
-      #statuspanel {
-        bottom: calc(6px + (var(--uc-bottom-toolbar-height, 0px) / 10)) !important;
-        left: 14px !important;
-        z-index: 600 !important;
-        pointer-events: none !important;
-      }
-
-      #statuspanel[mirror] {
-        left: auto !important;
-        right: 14px !important;
-      }
-
-      #statuspanel-label {
-        border-radius: 10px !important;
-        padding: 4px 10px !important;
-        border: 1px solid color-mix(in srgb, var(--toolbarbutton-hover-background) 60%, transparent) !important;
-        background: color-mix(in srgb, var(--toolbar-bgcolor, var(--toolbar-non-lwt-bgcolor)) 86%, transparent) !important;
-        color: var(--lwt-text-color) !important;
-        box-shadow: 0 8px 22px rgba(0, 0, 0, 0.18);
-        backdrop-filter: blur(8px);
-      }
-
-      #statuspanel,
-      #statuspanel[type="overLink"] {
-        transition: opacity 120ms ease, visibility 120ms ease !important;
-      }
-    }
-  '';
-
 in lib.mkMerge [
   (common.mkBrowser {
     name = "floorp";
     package = pkgs.floorp-bin;
     # Floorp uses flat profile tree; keep explicit id
     profileId = "bqtlgdxw.default";
-    userChromeExtra = bottomNavUserChrome + hideSearchModeControls + shimmerFindbarUserChrome + shimmerStatusPanelUserChrome;
+    userChromeExtra = bottomNavUserChrome + hideSearchModeControls + shimmerFindbarUserChrome;
   })
   {
     home.sessionVariables = {
