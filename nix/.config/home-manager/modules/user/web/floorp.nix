@@ -28,8 +28,6 @@ lib.mkIf (config.features.web.enable && config.features.web.floorp.enable) (let
       padding-inline: 0 !important;
       min-height: var(--uc-bottom-nav-height) !important;
       height: auto !important;
-      -webkit-box-pack: center !important;
-      justify-content: center !important;
     }
 
     #browser,
@@ -40,29 +38,28 @@ lib.mkIf (config.features.web.enable && config.features.web.floorp.enable) (let
     /* Bookmarks toolbar: use default position (no pinning) */
     #PersonalToolbar { order: 0 !important; }
 
-    /* Keep urlbar centered with balanced width and leave room for buttons */
+    /* Center the whole toolbar block and keep a moderate width */
     #nav-bar-customization-target {
       display: flex !important;
       align-items: center !important;
-      justify-content: center !important;
-      padding-inline: 12px !important;
       gap: 8px !important;
-      max-width: min(90vw, 980px) !important;
-      width: 100% !important;
+      padding-inline: 12px !important;
+      width: min(88vw, 1040px) !important;
       margin-inline: auto !important;
-    }
-    #nav-bar-customization-target > * {
-      flex: 0 0 auto !important;
     }
     #urlbar-container {
-      flex: 1 1 720px !important;
+      flex: 1 1 clamp(440px, 48vw, 820px) !important;
       min-width: 320px !important;
-      max-width: min(80vw, 860px) !important;
+      max-width: clamp(440px, 48vw, 820px) !important;
       width: 100% !important;
-      margin-inline: auto !important;
+      margin-inline: 0 !important;
     }
     #urlbar {
-      width: 100% !important;
+      width: min(100%, clamp(440px, 48vw, 820px)) !important;
+    }
+    /* Push trailing controls (downloads/menu/etc) to the right edge */
+    #urlbar-container + * {
+      margin-inline-start: auto !important;
     }
     #urlbar-input-container { padding: 0 !important; grid-template-columns: 0 1fr 0 !important; }
     #urlbar-background { margin-inline: 0 !important; }
