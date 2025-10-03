@@ -10,7 +10,6 @@
     ];
   };
   home.packages = config.lib.neg.pkgsList [
-    pkgs.proton-caller # launch Proton games via proton-caller
     pkgs.protonplus # Wine/Proton manager
     pkgs.protontricks # Winetricks wrapper for Proton prefixes
     pkgs.protonup # install/update Proton-GE builds
