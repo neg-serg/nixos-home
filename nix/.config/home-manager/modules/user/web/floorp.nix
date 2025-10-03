@@ -29,6 +29,13 @@ lib.mkIf (config.features.web.enable && config.features.web.floorp.enable) (let
       height: auto !important;
     }
 
+    /* Pull surrounding chrome up so the bar sits flush with the window edge */
+    #browser,
+    #customization-container { margin-bottom: 0 !important; }
+    #browser,
+    #appcontent,
+    #tabbrowser-tabbox { padding-bottom: var(--uc-bottom-nav-height) !important; }
+
     /* Bookmarks toolbar: use default position (no pinning) */
     #PersonalToolbar { order: 0 !important; }
 
@@ -39,9 +46,6 @@ lib.mkIf (config.features.web.enable && config.features.web.floorp.enable) (let
     #urlbar { margin-inline: 0 !important; width: 100% !important; }
     #urlbar-input-container { padding: 0 !important; grid-template-columns: 0 1fr 0 !important; }
     #urlbar-background { margin-inline: 0 !important; }
-
-    /* Do not push page content down from the bottom */
-    /* (no padding/margin tweaks here) */
 
     /* Collapse tabs toolbar completely to avoid empty strip (when tabs are disabled) */
     #TabsToolbar,
