@@ -110,12 +110,22 @@ lib.mkIf (config.features.web.enable && config.features.web.floorp.enable) (let
     /* #urlbar .search-one-offs { display: none !important; } */
   '';
 
+  hideSearchModeControls = ''
+    #urlbar-searchmode-switcher,
+    .searchmode-switcher-chicklet,
+    #urlbar-search-mode-indicator,
+    #navigator-toolbox .urlbar-search-mode-indicator {
+      display: none !important;
+    }
+  '';
+
 in lib.mkMerge [
   (common.mkBrowser {
     name = "floorp";
     package = pkgs.floorp-bin;
     # Floorp uses flat profile tree; keep explicit id
     profileId = "bqtlgdxw.default";
+    userChromeExtra = bottomNavUserChrome + hideSearchModeControls;
   })
   {
     home.sessionVariables = {

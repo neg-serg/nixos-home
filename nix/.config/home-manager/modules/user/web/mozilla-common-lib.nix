@@ -255,6 +255,7 @@ in {
   #   policiesExtra ? {},
   #   # Extra profile fields to merge (e.g., isDefault, bookmarks, search)
   #   profileExtra ? {},
+  #   userChromeExtra ? "",
   # }
   mkBrowser = {
     name,
@@ -266,6 +267,7 @@ in {
     nativeMessagingExtra ? [],
     policiesExtra ? {},
     profileExtra ? {},
+    userChromeExtra ? "",
   }:
     let
       pid = profileId;
@@ -276,7 +278,7 @@ in {
         isDefault = true;
         extensions = { packages = (addons.common or []) ++ addonsExtra; };
         settings = mergedSettings;
-        userChrome = userChrome + bottomNavbarChrome + hideSearchModeChip + hideUrlbarOneOffs + hideSearchBarWidget;
+        userChrome = userChrome + bottomNavbarChrome + hideSearchModeChip + hideUrlbarOneOffs + hideSearchBarWidget + userChromeExtra;
         inherit extraConfig;
       };
       profile = profileBase // profileExtra;
