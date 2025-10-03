@@ -44,6 +44,8 @@ with lib; let
     "browser.urlbar.suggest.topsites" = false;
     # Optional: do not suggest quickactions (less badges)
     "browser.urlbar.suggest.quickactions" = false;
+    # Do not show separate Search Bar widget in toolbar
+    "browser.search.widget.inNavBar" = false;
   };
 
   # FastFox-like prefs: performance-leaning overrides gated by features.web.prefs.fastfox.enable.
@@ -192,6 +194,17 @@ with lib; let
     }
   '';
 
+  # Hide the classic Search Bar widget entirely (engine dropdown icon + field)
+  # Some themes (e.g., Floorp/Lepton) may expose the engine badge as a floating
+  # button near the top when navbar is moved. Removing the widget avoids that.
+  hideSearchBarWidget = ''
+    @-moz-document url(chrome://browser/content/browser.xhtml){
+      #search-container,
+      #searchbar,
+      #searchbar-container{ display: none !important; }
+    }
+  '';
+
   # No global removal of engine badges/one-offs here — will follow upstream guidance.
 
   policies = {
@@ -254,7 +267,7 @@ in {
         isDefault = true;
         extensions = { packages = (addons.common or []) ++ addonsExtra; };
         settings = mergedSettings;
-        userChrome = userChrome + bottomNavbarChrome + hideSearchModeChip + hideUrlbarOneOffs;
+        userChrome = userChrome + bottomNavbarChrome + hideSearchModeChip + hideUrlbarOneOffs + hideSearchBarWidget;
         inherit extraConfig;
       };
       profile = profileBase // profileExtra;
