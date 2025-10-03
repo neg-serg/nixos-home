@@ -114,7 +114,8 @@ in lib.mkMerge [
   (common.mkBrowser {
     name = "floorp";
     package = pkgs.floorp-bin;
-    profileId = common.profileId;
+    # Floorp uses flat profile tree; keep explicit id
+    profileId = "bqtlgdxw.default";
   })
   {
     home.sessionVariables = {
