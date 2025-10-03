@@ -12,8 +12,9 @@ lib.mkIf (config.features.web.enable && config.features.web.floorp.enable) (let
   bottomNavUserChrome = ''
     /* Address bar at the bottom */
     :root {
-      /* Approx nav-bar height; tweak if needed */
-      --uc-bottom-nav-height: calc(var(--urlbar-min-height) + 10px);
+      /* Match content offset to actual toolbar height so it sits flush */
+      --uc-bottom-nav-height: var(--urlbar-min-height);
+      --uc-bottom-toolbar-height: calc(var(--uc-bottom-nav-height) + 2px);
     }
 
     /* Fix only the navigation toolbar to the bottom edge */
@@ -25,16 +26,14 @@ lib.mkIf (config.features.web.enable && config.features.web.floorp.enable) (let
       z-index: 100 !important;
       padding-block: 0 !important;
       padding-inline: 0 !important;
-      min-height: var(--urlbar-min-height) !important;
+      min-height: var(--uc-bottom-nav-height) !important;
       height: auto !important;
     }
 
-    /* Pull surrounding chrome up so the bar sits flush with the window edge */
     #browser,
-    #customization-container { margin-bottom: 0 !important; }
-    #browser,
-    #appcontent,
-    #tabbrowser-tabbox { padding-bottom: var(--uc-bottom-nav-height) !important; }
+    #customization-container {
+      margin-bottom: var(--uc-bottom-toolbar-height) !important;
+    }
 
     /* Bookmarks toolbar: use default position (no pinning) */
     #PersonalToolbar { order: 0 !important; }
