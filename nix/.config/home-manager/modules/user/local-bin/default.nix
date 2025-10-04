@@ -36,16 +36,6 @@ mkIf (config.features.gui.enable or false) (lib.mkMerge [
       pkgs.exiftool           # EXIF metadata (pic-notify)
       # audio features extractor for music-index/music-similar
       pkgs.essentia-extractor # streaming_extractor_music binary
-      # Python stack for musicnn-tag (tensorflow/librosa/musicnn)
-      ((pkgs.python311.override { stripTkinter = true; }).withPackages (ps: [
-        pkgs.neg.musicnn
-        ps.tensorflow
-        ps.librosa
-        ps.numpy
-        ps.scipy
-        ps.joblib
-        ps.soundfile
-      ]))
       # shell utils for menus and translations
       pkgs.translate-shell    # trans CLI (main-menu translate)
       # ALSA fallback for volume control
@@ -116,7 +106,6 @@ mkIf (config.features.gui.enable or false) (lib.mkMerge [
         { name = "mpd_del_album"; src = ./scripts/mpd_del_album; }
         { name = "music-index"; src = ./scripts/music-index; }
         { name = "music-similar"; src = ./scripts/music-similar; }
-        { name = "musicnn-tag"; src = ./scripts/musicnn-tag; }
         { name = "cidr"; src = ./scripts/cidr; }
         { name = "punzip"; src = ./scripts/punzip; }
         { name = "pypr-client"; src = ./scripts/pypr-client.sh; }

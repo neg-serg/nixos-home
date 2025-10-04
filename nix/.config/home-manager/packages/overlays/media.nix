@@ -5,7 +5,6 @@ in {
     # Media-related tools
     mkvcleaner = call ../mkvcleaner {};
     rmpc = call ../rmpc {};
-    musicnn = call ../musicnn { python3Packages = _final.python311Packages; };
 
     # Yabridgemgr helpers (plumbing + plugins)
     yabridgemgr = rec {
