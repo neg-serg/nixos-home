@@ -48,10 +48,10 @@ lib.mkIf (config.features.web.enable && config.features.web.floorp.enable) (let
       margin-inline: auto !important;
     }
     #urlbar-container {
-      flex: 0 1 clamp(420px, 80%, 960px) !important;
-      width: clamp(420px, 80%, 960px) !important;
-      max-width: clamp(420px, 80%, 960px) !important;
-      min-width: clamp(320px, 60%, 960px) !important;
+      flex: 0 1 clamp(360px, 70%, 824px) !important;
+      width: clamp(360px, 70%, 824px) !important;
+      max-width: clamp(360px, 70%, 824px) !important;
+      min-width: clamp(270px, 50%, 824px) !important;
       margin-inline: 0 !important;
     }
     #urlbar {
