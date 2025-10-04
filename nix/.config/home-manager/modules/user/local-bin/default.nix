@@ -106,6 +106,7 @@ mkIf (config.features.gui.enable or false) (lib.mkMerge [
         { name = "mpd_del_album"; src = ./scripts/mpd_del_album; }
         { name = "music-index"; src = ./scripts/music-index; }
         { name = "music-similar"; src = ./scripts/music-similar; }
+        { name = "music-highlevel"; src = ./scripts/music-highlevel; }
         { name = "cidr"; src = ./scripts/cidr; }
         { name = "punzip"; src = ./scripts/punzip; }
         { name = "pypr-client"; src = ./scripts/pypr-client.sh; }
