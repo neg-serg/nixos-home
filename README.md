@@ -47,7 +47,7 @@ Build without switching
 
 The flake declares `nixConfig` (caches + keys) and Home Manager is set to accept it:
 - In `home.nix`: `nix.settings.accept-flake-config = true;`
-- Caches include `nix-community`, `hyprland`, `garnix`, and more (see `flake.nix`).
+- Caches include `nix-community`, `hyprland`, and more (see `flake.nix`).
 
 If your system ignores flake‑embedded configs, add them to `/etc/nix/nix.conf`.
 Check effective config: `nix show-config`.
