@@ -1,0 +1,196 @@
+#!/usr/bin/env python3
+"""Run Musicnn tagger on audio files and optionally persist embeddings."""
+import argparse
+import json
+import os
+import subprocess as sp
+import sys
+from pathlib import Path
+
+os.environ.setdefault("TF_CPP_MIN_LOG_LEVEL", "2")
+
+try:
+    import numpy as np
+except Exception as exc:  # pragma: no cover
+    print("[musicnn-tag] numpy is required", file=sys.stderr)
+    raise
+
+try:  # optional faster JSON
+    import orjson  # type: ignore
+except Exception:  # pragma: no cover
+    orjson = None
+
+AUDIO_EXTS = {".mp3", ".flac", ".wav", ".ogg", ".m4a", ".opus", ".aac", ".wma", ".aiff", ".aif"}
+MODELS = ["MSD_musicnn", "MTT_musicnn", "MSD_musicnn_big", "MTT_vgg", "MSD_vgg"]
+_EXTRACTOR = None
+
+
+def load_extractor():
+    global _EXTRACTOR
+    if _EXTRACTOR is not None:
+        return _EXTRACTOR
+    try:
+        from musicnn import extractor as musicnn_extractor  # type: ignore
+    except Exception as exc:  # pragma: no cover
+        print("[musicnn-tag] Missing python module 'musicnn'. Install it (and dependencies) first.", file=sys.stderr)
+        raise SystemExit(2)
+    _EXTRACTOR = musicnn_extractor
+    return musicnn_extractor
+
+
+def current_track_path() -> Path | None:
+    try:
+        url = sp.check_output(["playerctl", "metadata", "xesam:url"], text=True).strip()
+    except Exception:
+        return None
+    if not url or not url.startswith("file://"):
+        return None
+    from urllib.parse import urlparse, unquote
+
+    parsed = urlparse(url)
+    if not parsed.path:
+        return None
+    return Path(unquote(parsed.path))
+
+
+def walk_inputs(inputs: list[Path]) -> list[Path]:
+    files: list[Path] = []
+    for p in inputs:
+        if p.is_dir():
+            for child in sorted(p.rglob("*")):
+                if child.is_file() and child.suffix.lower() in AUDIO_EXTS:
+                    files.append(child)
+        elif p.is_file():
+            files.append(p)
+    return files
+
+
+def aggregate_tags(taggram: np.ndarray, labels: list[str], topk: int) -> list[tuple[str, float]]:
+    if taggram.ndim != 2:
+        raise ValueError("taggram must be 2D")
+    mean_scores = taggram.mean(axis=0)
+    order = np.argsort(mean_scores)[::-1]
+    out: list[tuple[str, float]] = []
+    for idx in order[:topk]:
+        out.append((labels[idx], float(mean_scores[idx])))
+    return out
+
+
+def reduce_features(features: dict[str, np.ndarray]) -> dict[str, list[float]]:
+    reduced: dict[str, list[float]] = {}
+    for key, value in features.items():
+        arr = np.asarray(value)
+        if arr.ndim == 0:
+            vec = np.asarray([arr], dtype=np.float32)
+        elif arr.ndim == 1:
+            vec = arr.astype(np.float32)
+        else:
+            vec = arr.mean(axis=0).astype(np.float32)
+        reduced[key] = vec.tolist()
+    return reduced
+
+
+def save_feature_vector(feature_dir: Path, audio_path: Path, features: dict[str, list[float]], feature_key: str) -> Path | None:
+    if feature_key not in features:
+        return None
+    feature_dir.mkdir(parents=True, exist_ok=True)
+    feature_path = feature_dir / (audio_path.stem + ".json")
+    data = {"path": str(audio_path), "feature": feature_key, "vector": features[feature_key]}
+    payload = orjson.dumps(data).decode("utf-8") if orjson else json.dumps(data)
+    feature_path.write_text(payload)
+    return feature_path
+
+
+def run_on_file(audio_path: Path, args: argparse.Namespace) -> dict:
+    overlap = args.input_overlap if args.input_overlap is not None else False
+    result: dict = {
+        "path": str(audio_path),
+        "model": args.model,
+        "top": [],
+    }
+    musicnn_extractor = load_extractor()
+    try:
+        outputs = musicnn_extractor.extractor(
+            str(audio_path),
+            model=args.model,
+            input_length=args.input_length,
+            input_overlap=overlap,
+            extract_features=not args.skip_features,
+        )
+        if args.skip_features:
+            taggram, labels = outputs
+            features = None
+        else:
+            taggram, labels, feature_dict = outputs
+            reduced = reduce_features(feature_dict)
+            result["features"] = reduced
+            features = reduced
+        result["top"] = [
+            {"tag": tag, "score": score}
+            for tag, score in aggregate_tags(taggram, labels, args.top)
+        ]
+        if args.feature_dir and features:
+            saved = save_feature_vector(args.feature_dir, audio_path, features, args.feature_key)
+            if saved:
+                result["feature_path"] = str(saved)
+    except Exception as exc:
+        result["error"] = str(exc)
+    return result
+
+
+def emit(result: dict, json_mode: bool) -> None:
+    if json_mode:
+        payload = orjson.dumps(result).decode("utf-8") if orjson else json.dumps(result, ensure_ascii=False)
+        print(payload)
+        return
+
+    print(result.get("path", "<unknown>"))
+    if "error" in result:
+        print(f"  ERROR: {result['error']}")
+        return
+    for item in result.get("top", []):
+        print(f"  {item['score']:.3f}\t{item['tag']}")
+    if "feature_path" in result:
+        print(f"  saved: {result['feature_path']}")
+
+
+def parse_args() -> argparse.Namespace:
+    ap = argparse.ArgumentParser(description="Run Musicnn tagging on audio files.")
+    ap.add_argument("paths", nargs="*", help="audio files or directories; if omitted, uses current playerctl track")
+    ap.add_argument("-k", "--top", type=int, default=8, help="number of top tags to display")
+    ap.add_argument("-m", "--model", choices=MODELS, default="MSD_musicnn", help="Musicnn model to use")
+    ap.add_argument("--input-length", type=float, default=3.0, help="spectrogram window length in seconds")
+    ap.add_argument("--input-overlap", type=float, help="spectrogram window overlap in seconds")
+    ap.add_argument("--feature-dir", type=Path, help="directory to dump reduced feature vectors (JSON)")
+    ap.add_argument("--feature-key", default="penultimate", help="feature key to persist when --feature-dir is set")
+    ap.add_argument("--skip-features", action="store_true", help="disable feature extraction for faster tagging")
+    ap.add_argument("--json", action="store_true", help="emit JSON per entry")
+    return ap.parse_args()
+
+
+def main() -> int:
+    args = parse_args()
+
+    inputs = [Path(p).expanduser() for p in args.paths]
+    if not inputs:
+        current = current_track_path()
+        if current is None:
+            print("[musicnn-tag] no inputs and no current track", file=sys.stderr)
+            return 1
+        inputs = [current]
+
+    files = walk_inputs(inputs)
+    if not files:
+        print("[musicnn-tag] no audio files found", file=sys.stderr)
+        return 1
+
+    load_extractor()
+
+    for audio_path in files:
+        result = run_on_file(audio_path, args)
+        emit(result, args.json)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
