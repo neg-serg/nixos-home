@@ -37,7 +37,7 @@ mkIf (config.features.gui.enable or false) (lib.mkMerge [
       # audio features extractor for music-index/music-similar
       pkgs.essentia-extractor # streaming_extractor_music binary
       # Python stack for musicnn-tag (tensorflow/librosa/musicnn)
-      (pkgs.python311.withPackages (ps: [
+      ((pkgs.python311.override { enableTkinter = false; }).withPackages (ps: [
         pkgs.neg.musicnn
         ps.tensorflow
         ps.librosa
