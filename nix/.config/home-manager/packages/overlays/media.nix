@@ -5,7 +5,10 @@ in {
     # Media-related tools
     mkvcleaner = call ../mkvcleaner {};
     rmpc = call ../rmpc {};
-    "laion-clap" = call ../laion-clap { python3Packages = _final.python313Packages; };
+    "laion-clap" = call ../laion-clap {
+      python3Packages = _final.python313Packages;
+      fetchurl = _final.fetchurl;
+    };
 
     # Yabridgemgr helpers (plumbing + plugins)
     yabridgemgr = rec {
