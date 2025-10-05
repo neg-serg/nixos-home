@@ -18,6 +18,7 @@ from pathlib import Path
 from typing import Iterable, List, Sequence
 
 import numpy as np
+import wget
 
 torch_available = False
 try:  # torch might fail to import if CUDA libs missing; defer error until use.
@@ -75,6 +76,34 @@ def cosine(a: np.ndarray, b: np.ndarray) -> float:
     return float(np.dot(normalize(a), normalize(b)))
 
 
+def _resolve_checkpoint(args: argparse.Namespace, enable_fusion: bool) -> Path:
+    if args.ckpt:
+        return Path(os.path.expanduser(args.ckpt)).resolve()
+
+    names = [
+        "630k-best.pt",
+        "630k-audioset-best.pt",
+        "630k-fusion-best.pt",
+        "630k-audioset-fusion-best.pt",
+    ]
+    model_id = args.model_id
+    if model_id == -1:
+        model_id = 3 if enable_fusion else 1
+    url = "https://huggingface.co/lukewys/laion_clap/resolve/main/" + names[model_id]
+    cache_root = Path(
+        os.environ.get("LAION_CLAP_CACHE")
+        or os.environ.get("XDG_CACHE_HOME")
+        or (Path.home() / ".cache")
+    ) / "laion_clap"
+    cache_root.mkdir(parents=True, exist_ok=True)
+    target = cache_root / names[model_id]
+    if not target.exists():
+        tmp = Path(wget.download(url, str(cache_root)))
+        if tmp != target:
+            tmp.replace(target)
+    return target
+
+
 def load_model(args: argparse.Namespace) -> CLAP_Module:
     if not torch_available:
         raise RuntimeError("PyTorch not available; install torch/torchaudio for laion-clap")
@@ -83,16 +112,11 @@ def load_model(args: argparse.Namespace) -> CLAP_Module:
         device = "cuda:0" if torch.cuda.is_available() else "cpu"
     enable_fusion = args.fusion
     model = CLAP_Module(enable_fusion=enable_fusion, device=device, amodel=args.amodel)
-    ckpt = args.ckpt
-    model_id = args.model_id
-    if ckpt:
-        ckpt = os.path.expanduser(ckpt)
-        if not Path(ckpt).exists():
-            print(f"[music-clap] checkpoint not found: {ckpt}", file=sys.stderr)
-            sys.exit(2)
-        model.load_ckpt(ckpt=ckpt, model_id=-1, verbose=not args.quiet)
-    else:
-        model.load_ckpt(model_id=model_id, verbose=not args.quiet)
+    ckpt = _resolve_checkpoint(args, enable_fusion)
+    if not ckpt.exists():
+        print(f"[music-clap] checkpoint not available: {ckpt}", file=sys.stderr)
+        sys.exit(2)
+    model.load_ckpt(ckpt=str(ckpt), model_id=-1, verbose=not args.quiet)
     return model
 
 
@@ -150,17 +174,22 @@ def main() -> int:
 
     model = load_model(args)
 
-    results = model.get_audio_embedding_from_filelist([str(p) for p in files], use_tensor=False)
-    if not isinstance(results, np.ndarray):
-        results = np.asarray(results)
     text_prompts = args.texts or list(DEFAULT_TEXTS)
     text_embeds = None
     if text_prompts:
         text_embeds = model.get_text_embedding(text_prompts, use_tensor=False)
         text_embeds = np.asarray(text_embeds)
 
-    for idx, audio_path in enumerate(files):
-        audio_embed = results[idx]
+    for audio_path in files:
+        try:
+            result = model.get_audio_embedding_from_filelist([str(audio_path)], use_tensor=False)
+            if isinstance(result, np.ndarray):
+                audio_embed = result[0]
+            else:
+                audio_embed = np.asarray(result)[0]
+        except Exception as exc:
+            print(f"[music-clap] failed processing {audio_path}: {exc}", file=sys.stderr)
+            continue
         entry: dict = {"path": str(audio_path)}
         if args.dump:
             target = dump_embedding(audio_path, audio_embed, args.dump)

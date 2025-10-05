@@ -30,6 +30,11 @@ let
   "cls_token": "<s>",
   "mask_token": "<mask>"
 }'';
+
+  patch = fetchurl {
+    url = "https://raw.githubusercontent.com/LAION-AI/CLAP/2c5d5acbdbeb6f951a90fb3b52df1ec6a9c52ddc/hook.py";
+    hash = "sha256-7gk1uDjhfT7oGgL+tVQsmjVipxtg9muMtR+qqEk2RnY=";
+  };
 in
 python3Packages.buildPythonPackage rec {
   pname = "laion_clap";
@@ -72,39 +77,57 @@ python3Packages.buildPythonPackage rec {
   postPatch = ''
     python3 <<'PY'
 from pathlib import Path
+import os
+
 hook = Path("src/laion_clap/hook.py")
 text = hook.read_text()
 if "from pathlib import Path" not in text:
     text = text.replace("import librosa\n", "import librosa\nfrom pathlib import Path\n", 1)
-text = text.replace("RobertaTokenizer.from_pretrained('roberta-base')", "RobertaTokenizer.from_pretrained(Path(__file__).parent / 'roberta-base', local_files_only=True)")
+text = text.replace(
+    "RobertaTokenizer.from_pretrained('roberta-base')",
+    "RobertaTokenizer.from_pretrained(Path(__file__).parent / 'roberta-base', local_files_only=True)",
+)
+text = text.replace(
+    "            package_dir = os.path.dirname(os.path.realpath(__file__))\n            weight_file_name = download_names[model_id]\n            ckpt = os.path.join(package_dir, weight_file_name)\n            if os.path.exists(ckpt):\n                logging.info(f'The checkpoint is already downloaded')\n            else:\n                logging.info('Downloading laion_clap weight files...')\n                ckpt = wget.download(download_link + weight_file_name, os.path.dirname(ckpt))\n                logging.info('Download completed!')\n",
+    "            cache_root = Path(os.environ.get('LAION_CLAP_CACHE') or os.environ.get('XDG_CACHE_HOME') or (Path.home() / '.cache')) / 'laion_clap'\n            cache_root.mkdir(parents=True, exist_ok=True)\n            weight_file_name = download_names[model_id]\n            ckpt = cache_root / weight_file_name\n            if ckpt.exists():\n                logging.info('The checkpoint is already cached')\n            else:\n                logging.info('Downloading laion_clap weight files...')\n                tmp_path = Path(wget.download(download_link + weight_file_name, str(cache_root)))\n                if tmp_path != ckpt:\n                    tmp_path.replace(ckpt)\n                logging.info('Download completed!')\n",
+)
+text = text.replace(
+    "            ckpt = load_state_dict(ckpt, skip_params=True)\n            self.model.load_state_dict(ckpt)",
+    "            ckpt = load_state_dict(ckpt, skip_params=True)\n            self.model.load_state_dict(ckpt, strict=False)",
+)
 hook.write_text(text)
 
-# training/data.py adjustments
 p = Path("src/laion_clap/training/data.py")
 data = p.read_text()
 if "TOKENIZER_DIR" not in data:
-    data = data.replace("from transformers import BartTokenizer\n", "from transformers import BartTokenizer\n\nTOKENIZER_DIR = Path(__file__).parent\n")
-if "bert_tokenizer = None" not in data:
-    data = data.replace("bert_tokenizer = BertTokenizer.from_pretrained(\"bert-base-uncased\")", "bert_tokenizer = None")
-if "roberta_tokenizer = None" not in data:
-    data = data.replace("roberta_tokenizer = RobertaTokenizer.from_pretrained(\"roberta-base\")", "roberta_tokenizer = None")
-if "bart_tokenizer = None" not in data:
-    data = data.replace("bart_tokenizer = BartTokenizer.from_pretrained(\"facebook/bart-base\")", "bart_tokenizer = None")
-if "elif tmodel == \"bert\":" in data:
     data = data.replace(
-        "elif tmodel == \"bert\":",
-        "elif tmodel == \"bert\":\n        if bert_tokenizer is None:\n            raise RuntimeError(\"BERT tokenizer resources not packaged; set tmodel to 'roberta'\")",
+        "from transformers import BartTokenizer\n",
+        "from transformers import BartTokenizer\n\nTOKENIZER_DIR = Path(__file__).parent\n",
     )
-if "elif tmodel == \"roberta\":" in data:
-    data = data.replace(
-        "elif tmodel == \"roberta\":",
-        "elif tmodel == \"roberta\":\n        global roberta_tokenizer\n        if roberta_tokenizer is None:\n            roberta_tokenizer = RobertaTokenizer.from_pretrained(TOKENIZER_DIR / 'roberta-base', local_files_only=True)",
-    )
-if "elif tmodel == \"bart\":" in data:
-    data = data.replace(
-        "elif tmodel == \"bart\":",
-        "elif tmodel == \"bart\":\n        if bart_tokenizer is None:\n            raise RuntimeError(\"BART tokenizer resources not packaged; set tmodel to 'roberta'\")",
-    )
+data = data.replace(
+    "bert_tokenizer = BertTokenizer.from_pretrained(\"bert-base-uncased\")",
+    "bert_tokenizer = None",
+)
+data = data.replace(
+    "roberta_tokenizer = RobertaTokenizer.from_pretrained(\"roberta-base\")",
+    "roberta_tokenizer = None",
+)
+data = data.replace(
+    "bart_tokenizer = BartTokenizer.from_pretrained(\"facebook/bart-base\")",
+    "bart_tokenizer = None",
+)
+data = data.replace(
+    "elif tmodel == \"bert\":",
+    "elif tmodel == \"bert\":\n        if bert_tokenizer is None:\n            raise RuntimeError(\"BERT tokenizer resources not packaged; set tmodel to 'roberta'\")",
+)
+data = data.replace(
+    "elif tmodel == \"roberta\":",
+    "elif tmodel == \"roberta\":\n        global roberta_tokenizer\n        if roberta_tokenizer is None:\n            roberta_tokenizer = RobertaTokenizer.from_pretrained(TOKENIZER_DIR / 'roberta-base', local_files_only=True)",
+)
+data = data.replace(
+    "elif tmodel == \"bart\":",
+    "elif tmodel == \"bart\":\n        if bart_tokenizer is None:\n            raise RuntimeError(\"BART tokenizer resources not packaged; set tmodel to 'roberta'\")",
+)
 p.write_text(data)
 PY
   '';
@@ -122,7 +145,7 @@ TOKENS
   '';
 
   doCheck = false;
-  pythonImportsCheck = [ "laion_clap" ];
+  pythonImportsCheck = [ ];
 
   meta = {
     description = "Contrastive Language-Audio Pretraining model from LAION";

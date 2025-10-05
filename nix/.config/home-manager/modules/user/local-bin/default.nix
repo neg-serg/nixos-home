@@ -36,20 +36,7 @@ mkIf (config.features.gui.enable or false) (lib.mkMerge [
       pkgs.exiftool           # EXIF metadata (pic-notify)
       # audio features extractor for music-index/music-similar
       pkgs.essentia-extractor # streaming_extractor_music binary
-      # Python stack for CLAP embeddings (torch + laion-clap)
-      (pkgs.python313.withPackages (ps: [
-        pkgs.neg."laion-clap"
-        ps.torch
-        ps.torchaudio
-        ps.torchvision
-        ps.soundfile
-        ps.librosa
-        ps.tqdm
-        ps.numpy
-        ps.scipy
-        ps.scikit-learn
-        ps.pandas
-      ]))
+      pkgs.neg.music_clap     # CLAP embeddings CLI (PyTorch + laion_clap)
       # shell utils for menus and translations
       pkgs.translate-shell    # trans CLI (main-menu translate)
       # ALSA fallback for volume control
@@ -121,7 +108,6 @@ mkIf (config.features.gui.enable or false) (lib.mkMerge [
         { name = "music-index"; src = ./scripts/music-index; }
         { name = "music-similar"; src = ./scripts/music-similar; }
         { name = "music-highlevel"; src = ./scripts/music-highlevel; }
-        { name = "music-clap"; src = ./scripts/music-clap; }
         { name = "cidr"; src = ./scripts/cidr; }
         { name = "punzip"; src = ./scripts/punzip; }
         { name = "pypr-client"; src = ./scripts/pypr-client.sh; }

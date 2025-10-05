@@ -1,13 +1,30 @@
 _final: prev: let
   call = prev.callPackage;
+  python313 = _final.python313Packages;
+  laion_clap_pkg = call ../laion-clap {
+    python3Packages = python313;
+    fetchurl = _final.fetchurl;
+  };
 in {
-  neg = rec {
+  neg = {
     # Media-related tools
     mkvcleaner = call ../mkvcleaner {};
     rmpc = call ../rmpc {};
-    "laion-clap" = call ../laion-clap {
-      python3Packages = _final.python313Packages;
-      fetchurl = _final.fetchurl;
+    "laion-clap" = laion_clap_pkg;
+    laion_clap = laion_clap_pkg;
+    music_clap = call ../music-clap {
+      python3Packages = python313;
+      laion_clap = laion_clap_pkg;
+      torch = python313.torch;
+      torchaudio = python313.torchaudio;
+      torchvision = python313.torchvision;
+      soundfile = python313.soundfile;
+      librosa = python313.librosa;
+      tqdm = python313.tqdm;
+      numpy = python313.numpy;
+      scipy = python313.scipy;
+      scikit-learn = python313.scikit-learn;
+      pandas = python313.pandas;
     };
 
     # Yabridgemgr helpers (plumbing + plugins)
