@@ -39,6 +39,30 @@ Each profile is a YAML graph under Essentia's `streaming_extractor_*` examples; 
 - `music-highlevel dir/ --taxonomies moods_mirex genre_dortmund`
 - `music-clap songs/ --text "dreamy shoegaze" --dump ~/.cache/music-clap`
 
+### Usage examples
+
+- **Extract tempo / BPM**
+  ```sh
+  streaming_extractor_rhythm track.wav rhythm.json
+  jq '.rhythm.bpm' rhythm.json
+  ```
+  The rhythm profile also exposes `rhythm.onset_times` and `rhythm.beats_position` for beat-tracking tasks.
+- **Grab tonal descriptors (key, scale, tuning)**
+  ```sh
+  streaming_extractor_tonal track.wav tonal.json
+  jq -r '.tonal.key_key, .tonal.key_scale, .tonal.tuning_frequency' tonal.json
+  ```
+- **Batch semantic tags for a folder**
+  ```sh
+  music-highlevel ~/music --taxonomies moods_mirex genre_dortmund --output results
+  ```
+  This writes one JSON per file; use `jq '.highlevel.moods_mirex.value' results/song.json` to inspect tag probabilities.
+- **Compare CLAP embeddings against multiple prompts**
+  ```sh
+  music-clap ~/music --text "blackened doom metal" --text "cinematic ambient" --limit 10
+  ```
+  The CLI prints cosine similarities so you can quickly surface tracks that best match each description.
+
 # Нейронные модели Essentia (Русский)
 
 В конфигурации уже есть комплект `essentia-extractor` (Essentia 2.1 beta2) и Python-обёртка CLAP. Ниже перечислены доступные модели и профили.
@@ -80,3 +104,26 @@ Each profile is a YAML graph under Essentia's `streaming_extractor_*` examples; 
 - `music-highlevel каталог/ --taxonomies moods_mirex genre_dortmund`
 - `music-clap музыка/ --text "атмосферный дум-метал" --dump ~/.cache/music-clap`
 
+### Примеры использования
+
+- **Темп / BPM**
+  ```sh
+  streaming_extractor_rhythm трек.wav ритм.json
+  jq '.rhythm.bpm' ритм.json
+  ```
+  Профиль ритма также выдаёт `rhythm.onset_times` и `rhythm.beats_position`, что удобно для трека синхронизаторов и даунбитов.
+- **Тональные признаки (тональность, лад, строй)**
+  ```sh
+  streaming_extractor_tonal трек.wav тональность.json
+  jq -r '.tonal.key_key, .tonal.key_scale, .tonal.tuning_frequency' тональность.json
+  ```
+- **Пакетное извлечение семантических тегов**
+  ```sh
+  music-highlevel ~/music --taxonomies moods_mirex genre_dortmund --output результаты
+  ```
+  На выходе будет по одному JSON на файл; см. `jq '.highlevel.moods_mirex.value' результаты/трек.json`, чтобы посмотреть вероятности тегов.
+- **Сравнение CLAP с несколькими подсказками**
+  ```sh
+  music-clap ~/music --text "blackened doom metal" --text "cinematic ambient" --limit 10
+  ```
+  CLI выводит косинусные сходства и помогает найти треки, лучше всего подходящие под каждое описание.
