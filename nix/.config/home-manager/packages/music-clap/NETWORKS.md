@@ -1,0 +1,82 @@
+# Essentia Neural Assets (English)
+
+This repository ships the full `essentia-extractor` toolset (Essentia 2.1 beta2) and a Python-based CLAP wrapper. The following machine-learning models/descriptors are readily available:
+
+## High-level classifiers in `streaming_extractor_music`
+
+The default music extractor profile bundles neural networks that return semantic tags. Common outputs include:
+
+- `genre_dortmund`, `genre_rosamerica`, `genre_tzanetakis` – multi-class genre estimators trained on Dortmund, Rosamerica and GTZAN corpora.
+- `danceability` – probability of suitability for dancing.
+- `gender`, `age_rating` – vocal gender and perceived age.
+- `voice_instrumental`, `voice_presence` – probability of prominent vocals versus instrumental tracks.
+- Mood models: `moods_mirex`, `moods_acoustic`, `moods_aggressive`, `moods_electronic`, `moods_happy`, `moods_party`, `moods_relaxed`, `moods_sad`, `moods_instrumental`, `moods_voice`, `moods_timbre`.
+- `tonal_atonal` – tonal versus atonal estimate.
+
+> **Note:** The upstream release only exposes these classifiers when the associated weight files are available. If your JSON outputs are missing the `highlevel` section, you need to supply the model bundle (Essentia provides it under a separate download).
+
+## Other extractor profiles
+
+Besides the all-in-one music extractor, the following specialised profiles are installed:
+
+- `streaming_extractor_lowlevel` – spectral, temporal and energy descriptors.
+- `streaming_extractor_tonal` – key, scale, tuning frequency, HPCP descriptors.
+- `streaming_extractor_rhythm` / `streaming_extractor_beats` – tempo, beat positions, onset descriptors.
+- `streaming_extractor_summary` – aggregate descriptors for cataloguing large folders.
+- `streaming_extractor_freesound_{general,music}` – taggers used in the Freesound content and quality estimators.
+
+Each profile is a YAML graph under Essentia's `streaming_extractor_*` examples; you can call it directly or override with a custom profile path.
+
+## CLAP integration
+
+- `pkgs.neg.laion_clap` packages the LAION-CLAP (HTSAT-tiny + Roberta) checkpoints, tokenizer, and runtime dependencies.
+- `pkgs.neg.music_clap` exposes a CLI (`music-clap`) that batches audio files, saves embeddings (`--dump`), and scores against arbitrary text prompts.
+- Checkpoints are cached under `$LAION_CLAP_CACHE` / `$XDG_CACHE_HOME` / `~/.cache/laion_clap` to avoid writes into the Nix store.
+
+## Handy entry points
+
+- `streaming_extractor_music input.wav output.json`
+- `music-highlevel dir/ --taxonomies moods_mirex genre_dortmund`
+- `music-clap songs/ --text "dreamy shoegaze" --dump ~/.cache/music-clap`
+
+# Нейронные модели Essentia (Русский)
+
+В конфигурации уже есть комплект `essentia-extractor` (Essentia 2.1 beta2) и Python-обёртка CLAP. Ниже перечислены доступные модели и профили.
+
+## Высокоуровневые классификаторы `streaming_extractor_music`
+
+В профиле Music Extractor присутствуют нейросети, которые возвращают семантические теги:
+
+- `genre_dortmund`, `genre_rosamerica`, `genre_tzanetakis` – жанровые классификаторы, обученные на разных корпусах.
+- `danceability` – пригодность трека для танцев.
+- `gender`, `age_rating` – оценка пола и возраста голоса.
+- `voice_instrumental`, `voice_presence` – насколько слышен вокал и преобладает ли инструментальное звучание.
+- Модули настроения: `moods_mirex`, `moods_acoustic`, `moods_aggressive`, `moods_electronic`, `moods_happy`, `moods_party`, `moods_relaxed`, `moods_sad`, `moods_instrumental`, `moods_voice`, `moods_timbre`.
+- `tonal_atonal` – тональность против атональности.
+
+> **Важно:** В открытой сборке Essentia эти классификаторы появляются только при наличии весов. Если в JSON нет блока `highlevel`, нужно установить пакет с моделями (Essentia распространяет его отдельно).
+
+## Другие профили извлечения признаков
+
+Помимо универсального профиля доступны специализированные инструменты:
+
+- `streaming_extractor_lowlevel` – спектральные и временные дескрипторы.
+- `streaming_extractor_tonal` – ключ, лад, расстройка, HPCP.
+- `streaming_extractor_rhythm` и `streaming_extractor_beats` – темп, доли, пики атак.
+- `streaming_extractor_summary` – агрегированные признаки для каталогов.
+- `streaming_extractor_freesound_general` и `streaming_extractor_freesound_music` – классификаторы для Freesound (сцены, качество, инструменты).
+
+Каждый профиль – это YAML-граф, лежащий в примерах Essentia. Его можно запускать напрямую или использовать в качестве шаблона для собственных сетапов.
+
+## Интеграция CLAP
+
+- Пакет `pkgs.neg.laion_clap` включает веса LAION-CLAP, токенизатор Roberta и все зависимости PyTorch.
+- Пакет `pkgs.neg.music_clap` предоставляет CLI `music-clap` (батчевое извлечение эмбеддингов, сравнение с текстовыми запросами, сохранение `.npy`).
+- Чекпоинты складываются в кэш (`$LAION_CLAP_CACHE` / `$XDG_CACHE_HOME` / `~/.cache/laion_clap`), так что Nix store остаётся неизменным.
+
+## Полезные команды
+
+- `streaming_extractor_music файл.wav результат.json`
+- `music-highlevel каталог/ --taxonomies moods_mirex genre_dortmund`
+- `music-clap музыка/ --text "атмосферный дум-метал" --dump ~/.cache/music-clap`
+
