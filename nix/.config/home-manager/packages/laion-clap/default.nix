@@ -3,7 +3,7 @@
   python3Packages,
 }:
 python3Packages.buildPythonPackage rec {
-  pname = "laion-clap";
+  pname = "laion_clap";
   version = "1.1.7";
 
   src = python3Packages.fetchPypi {
