@@ -62,6 +62,31 @@ Each profile is a YAML graph under Essentia's `streaming_extractor_*` examples; 
   music-clap ~/music --text "blackened doom metal" --text "cinematic ambient" --limit 10
   ```
   The CLI prints cosine similarities so you can quickly surface tracks that best match each description.
+- **Inspect low-level spectral stats**
+  ```sh
+  streaming_extractor_lowlevel track.wav lowlevel.json
+  jq '.lowlevel.spectral_centroid.mean' lowlevel.json
+  jq '.lowlevel.mfcc.mean' lowlevel.json
+  ```
+  Combine the resulting means/std-dev fields when you need raw features for downstream ML.
+- **Summarise an album**
+  ```sh
+  find ~/music/album -type f -name '*.flac' > files.txt
+  streaming_extractor_summary --list files.txt summary.json
+  jq '.summary.statistics.mean.bpm' summary.json
+  ```
+  The summary profile aggregates descriptors across multiple tracks for rapid library cataloguing.
+- **Dump CLAP embeddings to reuse in Python**
+  ```sh
+  music-clap ~/music --dump ~/.cache/music-clap
+  python - <<'PY'
+  import numpy as np
+  ref = np.load('$HOME/.cache/music-clap/song.npy')
+  other = np.load('$HOME/.cache/music-clap/other.npy')
+  print(ref @ other / (np.linalg.norm(ref) * np.linalg.norm(other)))
+  PY
+  ```
+  The dump directory mirrors your audio tree; load the `.npy` vectors to script custom similarity pipelines.
 
 # Нейронные модели Essentia (Русский)
 
@@ -127,3 +152,28 @@ Each profile is a YAML graph under Essentia's `streaming_extractor_*` examples; 
   music-clap ~/music --text "blackened doom metal" --text "cinematic ambient" --limit 10
   ```
   CLI выводит косинусные сходства и помогает найти треки, лучше всего подходящие под каждое описание.
+- **Низкоуровневые спектральные признаки**
+  ```sh
+  streaming_extractor_lowlevel трек.wav низкоуровневые.json
+  jq '.lowlevel.spectral_centroid.mean' низкоуровневые.json
+  jq '.lowlevel.mfcc.mean' низкоуровневые.json
+  ```
+  Средние и стандартные отклонения удобно использовать в своих ML-пайплайнах.
+- **Итоговая сводка по альбому**
+  ```sh
+  find ~/music/альбом -type f -name '*.flac' > файлы.txt
+  streaming_extractor_summary --list файлы.txt сводка.json
+  jq '.summary.statistics.mean.bpm' сводка.json
+  ```
+  Профиль summary агрегирует дескрипторы по нескольким трекам — быстрое средство для каталогизации.
+- **Выгрузка CLAP-эмбеддингов для скриптов**
+  ```sh
+  music-clap ~/music --dump ~/.cache/music-clap
+  python - <<'PY'
+  import numpy as np
+  ref = np.load('$HOME/.cache/music-clap/song.npy')
+  other = np.load('$HOME/.cache/music-clap/other.npy')
+  print(ref @ other / (np.linalg.norm(ref) * np.linalg.norm(other)))
+  PY
+  ```
+  Дамп повторяет структуру папки; `.npy` можно подхватывать из Python и считать косинусные похожести.
