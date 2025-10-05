@@ -37,7 +37,7 @@ mkIf (config.features.gui.enable or false) (lib.mkMerge [
       # audio features extractor for music-index/music-similar
       pkgs.essentia-extractor # streaming_extractor_music binary
       # Python stack for CLAP embeddings (torch + laion-clap)
-      (pkgs.python311.withPackages (ps: [
+      (pkgs.python313.withPackages (ps: [
         pkgs.neg."laion-clap"
         ps.torch
         ps.torchaudio
