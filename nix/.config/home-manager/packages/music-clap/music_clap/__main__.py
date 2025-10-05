@@ -156,6 +156,18 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--fusion", action="store_true", help="enable fusion model variant")
     ap.add_argument("--model-id", type=int, default=-1, help="pretrained checkpoint id to download (default: 3 fusion / 1 non-fusion)")
     ap.add_argument("--ckpt", type=str, help="path to a custom checkpoint (skips download)")
+    ap.add_argument(
+        "--torch-threads",
+        type=int,
+        default=None,
+        help="set torch.set_num_threads (higher values utilise more CPU cores)",
+    )
+    ap.add_argument(
+        "--torch-inter-op-threads",
+        type=int,
+        default=None,
+        help="set torch.set_num_interop_threads for inter-operator parallelism",
+    )
     ap.add_argument("--include-embedding", action="store_true", help="include embedding vector in output (JSON only)")
     ap.add_argument("--quiet", action="store_true", help="suppress model load logging")
     return ap.parse_args()
@@ -171,6 +183,12 @@ def main() -> int:
     if not files:
         print("[music-clap] no audio files found", file=sys.stderr)
         return 1
+
+    if torch_available:
+        if args.torch_threads:
+            torch.set_num_threads(max(1, args.torch_threads))
+        if args.torch_inter_op_threads:
+            torch.set_num_interop_threads(max(1, args.torch_inter_op_threads))
 
     model = load_model(args)
 

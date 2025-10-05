@@ -62,6 +62,12 @@ Each profile is a YAML graph under Essentia's `streaming_extractor_*` examples; 
   music-clap ~/music --text "blackened doom metal" --text "cinematic ambient" --limit 10
   ```
   The CLI prints cosine similarities so you can quickly surface tracks that best match each description.
+- **Persist embeddings via cache**
+  ```sh
+  music-clap ~/music --text "blackened doom metal" --dump ~/.cache/music-clap
+  ```
+  Model weights live under `$LAION_CLAP_CACHE` (falls back to `~/.cache/laion_clap`);
+  use `--dump` when you want per-track vectors written to disk.
 - **Inspect low-level spectral stats**
   ```sh
   streaming_extractor_lowlevel track.wav lowlevel.json
@@ -87,6 +93,11 @@ Each profile is a YAML graph under Essentia's `streaming_extractor_*` examples; 
   PY
   ```
   The dump directory mirrors your audio tree; load the `.npy` vectors to script custom similarity pipelines.
+- **Hint PyTorch to use more CPU cores**
+  ```sh
+  music-clap ~/music --text "blackened doom metal" --torch-threads 12
+  ```
+  Adjust `--torch-inter-op-threads` as needed when the default inter-op pool is too small.
 
 # Нейронные модели Essentia (Русский)
 
@@ -152,6 +163,12 @@ Each profile is a YAML graph under Essentia's `streaming_extractor_*` examples; 
   music-clap ~/music --text "blackened doom metal" --text "cinematic ambient" --limit 10
   ```
   CLI выводит косинусные сходства и помогает найти треки, лучше всего подходящие под каждое описание.
+- **Сохранить эмбеддинги в кэше**
+  ```sh
+  music-clap ~/music --text "blackened doom metal" --dump ~/.cache/music-clap
+  ```
+  Веса модели кладутся в `$LAION_CLAP_CACHE` (по умолчанию `~/.cache/laion_clap`);
+  флаг `--dump` сохраняет вектор для каждого трека на диск.
 - **Низкоуровневые спектральные признаки**
   ```sh
   streaming_extractor_lowlevel трек.wav низкоуровневые.json
@@ -177,3 +194,8 @@ Each profile is a YAML graph under Essentia's `streaming_extractor_*` examples; 
   PY
   ```
   Дамп повторяет структуру папки; `.npy` можно подхватывать из Python и считать косинусные похожести.
+- **Указать PyTorch использовать больше ядер**
+  ```sh
+  music-clap ~/music --text "blackened doom metal" --torch-threads 12
+  ```
+  При необходимости настройте `--torch-inter-op-threads`, если стандартного пула межоператорных потоков не хватает.
