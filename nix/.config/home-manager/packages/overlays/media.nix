@@ -5,6 +5,7 @@ in {
     # Media-related tools
     mkvcleaner = call ../mkvcleaner {};
     rmpc = call ../rmpc {};
+    "laion-clap" = call ../laion-clap {};
 
     # Yabridgemgr helpers (plumbing + plugins)
     yabridgemgr = rec {
