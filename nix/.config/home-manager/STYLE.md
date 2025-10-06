@@ -2,6 +2,22 @@
 
 See also: AGENTS.md for a short guide on helpers, activation aggregators, systemd presets, commit message format, and quick `just` commands.
 
+## Formatting (alejandra)
+
+- Run `nix fmt` (or `just fmt`) before committing. Both invoke treefmt which, in turn, runs `alejandra -q` with the repo defaults.
+- Indentation is always 2 spaces. Function arguments, `let` bindings, and attribute sets get split across lines at that depth.
+  - Skip manual column alignment; alejandra removes it.
+- Lists with non-trivial elements (attrsets, long strings, nested lists) are expanded to one item per line.
+  - Short literals may stay inline—let the formatter decide.
+- Attribute sets grow vertically as soon as they hold more than one simple binding.
+  - One-liners such as `{ name = "foo"; }` can remain inline, while multi-field sets become block-styled.
+- Comments stay attached to the expression they precede.
+  - Keep remarks above the line instead of inline to avoid awkward splits.
+- Spacing is normalised: redundant blank lines vanish, `inherit` statements tighten up, and trailing spaces disappear.
+  - If a hunk looks noisy, re-run `nix fmt` rather than tweak whitespace by hand.
+
+In short: trust the formatter. Write readable Nix, run `nix fmt`, and let alejandra settle whitespace and wrapping.
+
 - with pkgs usage
   - Prefer explicit `pkgs.*` items in lists (lint enforces: no `with pkgs; [ ... ]`).
   - It’s acceptable to use `with pkgs;` for building local attrsets (e.g., `groups = with pkgs; { a = [foo]; b = [bar]; };`),
