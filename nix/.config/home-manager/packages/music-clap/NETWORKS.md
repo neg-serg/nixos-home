@@ -67,7 +67,8 @@ Each profile is a YAML graph under Essentia's `streaming_extractor_*` examples; 
   music-clap ~/music --text "blackened doom metal" --dump ~/.cache/music-clap
   ```
   Model weights live under `$LAION_CLAP_CACHE` (falls back to `~/.cache/laion_clap`);
-  use `--dump` when you want per-track vectors written to disk.
+  use `--dump` when you want per-track vectors written to disk. Re-runs reuse
+  the cached `.npy` files automatically; add `--refresh` to force recomputation.
 - **Inspect low-level spectral stats**
   ```sh
   streaming_extractor_lowlevel track.wav lowlevel.json

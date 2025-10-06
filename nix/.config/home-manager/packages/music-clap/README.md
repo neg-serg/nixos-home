@@ -30,3 +30,6 @@ music-clap ~/music --text "doom metal" --dump ~/.cache/music-clap
 ```
 
 Without `--dump` the embeddings stay in memory and are not saved.
+
+When a dump directory is provided, subsequent runs reuse the cached `.npy`
+embeddings. Pass `--refresh` to ignore existing files and recompute vectors.
