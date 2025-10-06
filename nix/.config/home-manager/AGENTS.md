@@ -156,6 +156,7 @@ This repo is configured for Home Manager + flakes with a small set of helpers to
 - Checks: `just check` (flake checks, docs build)
 - Lint only: `just lint` (statix, deadnix, shellcheck, ruff/black if present)
 - Switch HM: `just hm-neg` (or `just hm-lite`)
+- Git hooks: `just hooks-enable` (sets repo hooks path; pre-commit auto-runs `nix fmt`, skip with `SKIP_NIX_FMT=1`)
 
 ## Guard rails
 

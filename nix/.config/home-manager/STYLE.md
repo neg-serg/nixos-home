@@ -5,6 +5,7 @@ See also: AGENTS.md for a short guide on helpers, activation aggregators, system
 ## Formatting (alejandra)
 
 - Run `nix fmt` (or `just fmt`) before committing. Both invoke treefmt which, in turn, runs `alejandra -q` with the repo defaults.
+- Enable the provided git hooks (`just hooks-enable`) so `nix fmt` runs automatically at pre-commit; export `SKIP_NIX_FMT=1` to bypass in emergencies.
 - Indentation is always 2 spaces. Function arguments, `let` bindings, and attribute sets get split across lines at that depth.
   - Skip manual column alignment; alejandra removes it.
 - Lists with non-trivial elements (attrsets, long strings, nested lists) are expanded to one item per line.
