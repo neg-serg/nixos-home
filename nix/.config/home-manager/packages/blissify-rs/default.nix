@@ -20,9 +20,9 @@ let
   version = "unstable-${lib.substring 0 7 rev}";
   builder = rustPlatform.buildRustPackage.override { stdenv = stdenv'; };
 in
-builder {
-  pname = "blissify-rs";
-  inherit version src;
+  builder {
+    pname = "blissify-rs";
+    inherit version src;
 
   nativeBuildInputs = [
     pkg-config
@@ -36,6 +36,11 @@ builder {
     sqlite
     libcxx
   ];
+
+  patches = [ ./patches/0001-ignore-zip-entries.patch ];
+  preConfigure = ''
+    patch -d ../cargo-vendor-dir -p1 --forward < ${./patches/0002-relax-cue-path-resolution.patch} || true
+  '';
 
   env = {
     LIBCLANG_PATH = "${llvmPackages.libclang.lib}/lib";
