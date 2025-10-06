@@ -1,6 +1,5 @@
 { lib
 , rustPlatform
-, fetchgit
 , clangStdenv
 , llvmPackages
 , pkg-config
@@ -14,9 +13,8 @@ let
   rev = "a0ad533d252f0a7d741496f5fbeec2f38862f795";
   stdenv' = clangStdenv;
   clang = llvmPackages.clang-unwrapped;
-  src = fetchgit {
-    url = "https://github.com/Polochon-street/blissify-rs.git";
-    inherit rev;
+  src = builtins.fetchTarball {
+    url = "https://github.com/Polochon-street/blissify-rs/archive/${rev}.tar.gz";
     sha256 = "sha256-QYm/vSMhS8sdAcN60FBbjvdiNlvf0Tmj4t1OtpsglcI=";
   };
   version = "unstable-${lib.substring 0 7 rev}";
