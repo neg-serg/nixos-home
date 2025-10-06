@@ -10,6 +10,8 @@ in {
     # Media-related tools
     mkvcleaner = call ../mkvcleaner {};
     rmpc = call ../rmpc {};
+    blissify_rs = call ../blissify-rs {};
+    "blissify-rs" = blissify_rs;
     "laion-clap" = laion_clap_pkg;
     laion_clap = laion_clap_pkg;
     music_clap = call ../music-clap {

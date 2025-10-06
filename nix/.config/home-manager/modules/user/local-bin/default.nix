@@ -37,6 +37,7 @@ mkIf (config.features.gui.enable or false) (lib.mkMerge [
       # audio features extractor for music-index/music-similar
       pkgs.essentia-extractor # streaming_extractor_music binary
       pkgs.neg.music_clap     # CLAP embeddings CLI (PyTorch + laion_clap)
+      pkgs.neg.blissify_rs    # playlist generation via audio descriptors
       # shell utils for menus and translations
       pkgs.translate-shell    # trans CLI (main-menu translate)
       # ALSA fallback for volume control
