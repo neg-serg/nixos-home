@@ -47,6 +47,9 @@ command = "dot-language-server"
 [language-server."asm-lsp"]
 command = "asm-lsp"
 
+[language-server."systemd-language-server"]
+command = "systemd-language-server"
+
 [language-server.qmlls]
 command = "qmlls"
 
@@ -169,6 +172,23 @@ name = "asm"
 scope = "source.asm"
 file-types = ["asm", "s", "S"]
 language-servers = ["asm-lsp"]
+
+[[language]]
+name = "systemd"
+scope = "source.systemd"
+file-types = [
+  "service",
+  "socket",
+  "timer",
+  "target",
+  "path",
+  "mount",
+  "automount",
+  "swap",
+  "slice",
+  "scope"
+]
+language-servers = ["systemd-language-server"]
 
 [[language]]
 name = "qml"

@@ -28,5 +28,6 @@
     pkgs.nodePackages_latest.dockerfile-language-server-nodejs # Dockerfile LSP
     pkgs.dot-language-server # Graphviz dot LSP
     pkgs.asm-lsp # Assembly (NASM/GAS) LSP
+    pkgs.systemd-language-server # systemd unit LSP
   ];
 }

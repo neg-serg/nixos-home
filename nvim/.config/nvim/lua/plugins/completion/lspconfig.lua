@@ -79,6 +79,7 @@ return {
     configure('dotls')
     configure('dockerls')
     configure('docker_compose_language_service')
+    configure('systemd_language_server')
     configure('awk_ls')
     configure('pyright', {
       settings = {
