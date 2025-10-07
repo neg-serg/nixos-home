@@ -62,6 +62,7 @@ return {
       cmd = { 'clangd', '--background-index', '--clang-tidy', '--completion-style=detailed', '--header-insertion=never' },
       init_options = { clangdFileStatus = true },
     })
+    configure('cmake')
     configure('nil_ls') -- Nix
     configure('qmlls') -- QML via qt6
     configure('ts_ls') -- TypeScript/JavaScript

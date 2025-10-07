@@ -32,6 +32,9 @@ command = "lemminx"
 command = "awk-language-server"
 args = ["--stdio"]
 
+[language-server."cmake-language-server"]
+command = "cmake-language-server"
+
 [language-server.qmlls]
 command = "qmlls"
 
@@ -122,6 +125,11 @@ language-servers = ["lemminx"]
 [[language]]
 name = "awk"
 language-servers = ["awk-language-server"]
+
+[[language]]
+name = "cmake"
+file-types = ["cmake", "CMakeLists.txt"]
+language-servers = ["cmake-language-server"]
 
 [[language]]
 name = "qml"
