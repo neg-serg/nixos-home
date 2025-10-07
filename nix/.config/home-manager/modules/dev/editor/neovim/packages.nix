@@ -5,7 +5,7 @@
     pkgs.neovim # Neovim editor
     pkgs.neovim-remote # nvr (remote control for Neovim)
     pkgs.nil # Nix language server
-    pkgs.pylyzer # Python type checker
+    pkgs.pylyzer # Python type checker / lightweight LSP
     pkgs.pyright # Python LSP
     pkgs.ruff # Python linter
     pkgs.rust-analyzer # Rust LSP

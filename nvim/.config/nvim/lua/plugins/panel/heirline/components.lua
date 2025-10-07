@@ -420,9 +420,11 @@ return function(ctx)
   end
 
   -- ── Right-side helpers ────────────────────────────────────────────────────
-  local function padded_parts(value)
+  local function padded_parts(value, width)
     if type(value) ~= 'number' then return nil end
-    local padded = string.format('%04d', math.max(0, math.floor(value)))
+    local w = math.max(1, tonumber(width) or 4)
+    local fmt = '%0' .. tostring(w) .. 'd'
+    local padded = string.format(fmt, math.max(0, math.floor(value)))
     local lead = padded:match('^0+') or ''
     local rest = padded:sub(#lead + 1)
     if rest == '' then rest = '0' end
@@ -861,7 +863,18 @@ return function(ctx)
         local pieces = {}
         append_segment(pieces, ' ' .. S.search .. ' ', function() return { fg = colors.yellow, bg = colors.base_bg } end)
         append_segment(pieces, pattern .. ' ', function() return { fg = colors.white, bg = colors.base_bg } end)
-        append_segment(pieces, string.format('%02d/%02d ', cur, tot), function() return { fg = colors.white, bg = colors.base_bg } end)
+        local function append_count(value)
+          local parts = padded_parts(value, 2)
+          if parts then
+            emit_padded_segments(pieces, parts)
+          else
+            append_segment(pieces, tostring(value), styles.primary)
+          end
+        end
+        append_count(cur)
+        append_segment(pieces, '/', styles.separator)
+        append_count(tot)
+        append_segment(pieces, ' ', function() return { fg = colors.white, bg = colors.base_bg } end)
         local out = table.concat(pieces)
         last_sc.t, last_sc.out, last_sc.pat, last_sc.cur, last_sc.tot = t, out, pattern, cur, tot
         return out
