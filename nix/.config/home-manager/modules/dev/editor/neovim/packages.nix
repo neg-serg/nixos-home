@@ -16,5 +16,7 @@
     pkgs.yaml-language-server # YAML LSP
     pkgs.taplo # TOML toolkit + LSP
     pkgs.marksman # Markdown LSP
+    pkgs.nodePackages_latest.typescript-language-server # TS/JS LSP
+    pkgs.nodePackages_latest.vscode-langservers-extracted # HTML/CSS/etc LSPs
   ];
 }

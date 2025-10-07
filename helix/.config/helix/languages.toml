@@ -1,0 +1,82 @@
+[language-server.hyprls]
+command = "hyprls"
+
+[language-server.emmet-lsp]
+command = "emmet-language-server"
+args = ["--stdio"]
+
+[language-server."typescript-language-server"]
+command = "typescript-language-server"
+args = ["--stdio"]
+
+[language-server."vscode-html-language-server"]
+command = "vscode-html-language-server"
+args = ["--stdio"]
+
+[language-server.taplo]
+command = "taplo"
+args = ["lsp", "stdio"]
+
+[language-server.rust-analyzer.config]
+checkOnSave = { command = "clippy" }
+
+[[language]]
+name = "hyprlang"
+scope = "source.hyprlang"
+comment-token = "#"
+indent = { tab-width = 4, unit = "    " }
+
+# Match common Hyprland configuration locations
+file-types = [
+  { glob = "**/hypr/*.conf" },
+  { glob = "hypr.*.conf" },
+  { glob = "hypr.conf" }
+]
+language-servers = ["hyprls"]
+
+[[language]]
+name = "rust"
+auto-format = true
+language-servers = ["rust-analyzer"]
+
+[[language]]
+name = "html"
+auto-format = true
+language-servers = ["emmet-lsp", "vscode-html-language-server"]
+
+[[language]]
+name = "javascript"
+auto-format = true
+indent = { tab-width = 4, unit = "    " }
+language-servers = ["typescript-language-server"]
+
+[[language]]
+name = "jsx"
+auto-format = true
+indent = { tab-width = 4, unit = "    " }
+language-servers = ["typescript-language-server"]
+
+[[language]]
+name = "typescript"
+auto-format = true
+indent = { tab-width = 4, unit = "    " }
+language-servers = ["typescript-language-server"]
+
+[[language]]
+name = "tsx"
+auto-format = true
+indent = { tab-width = 4, unit = "    " }
+language-servers = ["typescript-language-server"]
+
+[[language]]
+name = "config"
+scope = "source.conf"
+file-types = ["conf"]
+comment-token = "#"
+roots = []
+indent = { tab-width = 4, unit = "    " }
+
+[[language]]
+name = "toml"
+auto-format = true
+language-servers = ["taplo"]

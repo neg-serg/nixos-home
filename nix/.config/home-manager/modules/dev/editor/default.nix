@@ -5,7 +5,10 @@
   ...
 }:
 with lib; {
-  imports = [ ./neovim ];
+  imports = [
+    ./neovim
+    ./helix
+  ];
   config = lib.mkMerge [
     (mkIf config.features.dev.enable {
       # Group editor tools and AI tools; flatten via mkEnabledList
