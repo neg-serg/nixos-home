@@ -14,5 +14,6 @@
     pkgs.hyprls # Hyprland language server
     pkgs.emmet-language-server # Emmet LSP
     pkgs.yaml-language-server # YAML LSP
+    pkgs.taplo # TOML toolkit + LSP
   ];
 }
