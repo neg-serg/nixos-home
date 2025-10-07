@@ -65,16 +65,6 @@ lib.mkIf (config.features.web.enable && config.features.web.floorp.enable) (let
     #urlbar-input-container { padding: 0 !important; grid-template-columns: 0 1fr 0 !important; }
     #urlbar-background { margin-inline: 0 !important; }
 
-    /* Collapse tabs toolbar completely to avoid empty strip (when tabs are disabled) */
-    #TabsToolbar,
-    #TabsToolbar * {
-      min-height: 0 !important;
-      height: 0 !important;
-      padding: 0 !important;
-      margin: 0 !important;
-    }
-    #TabsToolbar { visibility: collapse !important; }
-
     /* Do not show in fullscreen */
     :root[inFullscreen] #nav-bar,
     :root[sizemode="fullscreen"] #nav-bar {
@@ -285,13 +275,111 @@ lib.mkIf (config.features.web.enable && config.features.web.floorp.enable) (let
     }
   '';
 
+  qutebrowserTabsUserChrome = ''
+    @-moz-document url(chrome://browser/content/browser.xhtml) {
+      :root {
+        --neg-tab-height: 18px;
+        --neg-tab-font: "Iosevka Term", "FiraCode Nerd Font", monospace;
+        --neg-tab-active-bg: color-mix(in srgb, var(--lwt-accent-color, #3b4252) 80%, transparent);
+        --neg-tab-inactive-bg: color-mix(in srgb, var(--toolbar-bgcolor, var(--toolbar-non-lwt-bgcolor)) 92%, transparent);
+        --neg-tab-active-fg: color-mix(in srgb, var(--toolbar-color, #f2f2f8) 100%, transparent);
+        --neg-tab-inactive-fg: color-mix(in srgb, var(--toolbar-color, #d2d4e0) 70%, transparent);
+        --neg-tab-inline-padding: 0.6rem;
+      }
+
+      #titlebar {
+        --proton-tab-block-margin: 0px !important;
+        --tab-block-margin: 0px !important;
+      }
+
+      #TabsToolbar {
+        min-height: var(--neg-tab-height) !important;
+        max-height: var(--neg-tab-height) !important;
+        padding-inline: 0 !important;
+        background: var(--toolbar-bgcolor, var(--toolbar-non-lwt-bgcolor)) !important;
+      }
+
+      .tabbrowser-tab {
+        font-family: var(--neg-tab-font) !important;
+        font-size: 11px !important;
+        font-weight: 600 !important;
+        letter-spacing: 0.01em;
+        margin-inline: 0 !important;
+        padding-inline: 0 !important;
+        border: none !important;
+      }
+
+      .tabbrowser-tab .tab-content {
+        min-height: var(--neg-tab-height) !important;
+        padding-inline: var(--neg-tab-inline-padding) !important;
+        border-radius: 0 !important;
+        background: transparent !important;
+        color: var(--neg-tab-inactive-fg) !important;
+      }
+
+      .tabbrowser-tab[selected] .tab-content {
+        background: var(--neg-tab-active-bg) !important;
+        color: var(--neg-tab-active-fg) !important;
+      }
+
+      .tabbrowser-tab:hover:not([selected]) .tab-content {
+        background: color-mix(in srgb, var(--neg-tab-active-bg) 55%, transparent) !important;
+        color: color-mix(in srgb, var(--neg-tab-active-fg) 80%, var(--neg-tab-inactive-fg)) !important;
+      }
+
+      .tabbrowser-tab[pinned] {
+        max-width: calc(var(--neg-tab-height) + 10px) !important;
+      }
+
+      .tabbrowser-tab::after,
+      .tabbrowser-tab::before,
+      .tabbrowser-tab .tab-line {
+        display: none !important;
+      }
+
+      .tabbrowser-tab .tab-background {
+        margin-block: 0 !important;
+        border-radius: 0 !important;
+      }
+
+      #tabbrowser-tabs {
+        --tab-min-height: var(--neg-tab-height) !important;
+        min-height: var(--neg-tab-height) !important;
+      }
+
+      #scrollbutton-up,
+      #scrollbutton-down,
+      #tabs-newtab-button,
+      #alltabs-button {
+        display: none !important;
+      }
+
+      #tabbrowser-tabs .tab-close-button {
+        display: none !important;
+      }
+
+      .tabbrowser-tab .tab-secondary-label {
+        display: none !important;
+      }
+
+      .tabbrowser-tab .tab-icon-overlay,
+      .tabbrowser-tab .tab-throbber {
+        margin-inline-end: 4px !important;
+      }
+    }
+  '';
+
 in lib.mkMerge [
   (common.mkBrowser {
     name = "floorp";
     package = pkgs.floorp-bin;
     # Floorp uses flat profile tree; keep explicit id
     profileId = "bqtlgdxw.default";
-    userChromeExtra = bottomNavUserChrome + hideSearchModeControls + shimmerFindbarUserChrome;
+    userChromeExtra =
+      bottomNavUserChrome
+      + hideSearchModeControls
+      + shimmerFindbarUserChrome
+      + qutebrowserTabsUserChrome;
   })
   {
     home.sessionVariables = {
