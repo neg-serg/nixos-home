@@ -15,6 +15,7 @@
       pkgs.ruff # Python linter
       pkgs.shellcheck # shell linter
       pkgs.mypy # optional static typing checker for Python
+      pkgs.codeql # CodeQL CLI for code analysis
     ];
     codecount = [
       pkgs.cloc # count lines of code
@@ -70,4 +71,9 @@ in
       in config.lib.neg.pkgsList (
         config.lib.neg.mkEnabledList flags groups
       );
+
+    features.allowUnfree.extra =
+      lib.optionals (config.features.dev.pkgs.analyzers or false) [
+        "codeql"
+      ];
   }
