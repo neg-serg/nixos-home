@@ -8,6 +8,8 @@ This repo is configured for Home Manager + flakes with a small set of helpers to
   - Core helpers: `modules/lib/neg.nix`
   - XDG file helpers: `modules/lib/xdg-helpers.nix`
   - Features/options: `modules/features.nix`
+- Package availability
+  - Before suggesting or adding any `pkgs.*`/`nodePackages_*` dependency, confirm the attribute exists with `nix search` (or an equivalent eval) against the repo’s flake. Only move forward when the package is present in the current channel.
 - XDG helpers (preferred)
   - Config text/link: `xdg.mkXdgText`, `xdg.mkXdgSource`
   - Data text/link: `xdg.mkXdgDataText`, `xdg.mkXdgDataSource`
