@@ -35,6 +35,9 @@ args = ["--stdio"]
 [language-server."cmake-language-server"]
 command = "cmake-language-server"
 
+[language-server."dhall-lsp-server"]
+command = "dhall-lsp-server"
+
 [language-server.qmlls]
 command = "qmlls"
 
@@ -130,6 +133,11 @@ language-servers = ["awk-language-server"]
 name = "cmake"
 file-types = ["cmake", "CMakeLists.txt"]
 language-servers = ["cmake-language-server"]
+
+[[language]]
+name = "dhall"
+file-types = ["dhall"]
+language-servers = ["dhall-lsp-server"]
 
 [[language]]
 name = "qml"

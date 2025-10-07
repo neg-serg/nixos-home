@@ -23,5 +23,6 @@
     pkgs.lemminx # XML LSP
     pkgs.awk-language-server # AWK LSP
     pkgs.cmake-language-server # CMake LSP
+    pkgs.dhall-lsp-server # Dhall LSP
   ];
 }

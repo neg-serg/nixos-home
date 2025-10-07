@@ -72,6 +72,7 @@ return {
     configure('yamlls')
     configure('taplo')
     configure('lemminx')
+    configure('dhall_lsp_server')
     configure('awk_ls')
     configure('pyright', {
       settings = {
