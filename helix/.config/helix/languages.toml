@@ -50,6 +50,12 @@ command = "asm-lsp"
 [language-server."systemd-language-server"]
 command = "systemd-language-server"
 
+[language-server."nginx-language-server"]
+command = "nginx-language-server"
+
+[language-server.svls]
+command = "svls"
+
 [language-server.qmlls]
 command = "qmlls"
 
@@ -189,6 +195,18 @@ file-types = [
   "scope"
 ]
 language-servers = ["systemd-language-server"]
+
+[[language]]
+name = "nginx"
+scope = "source.nginx"
+file-types = ["nginx", "nginx.conf"]
+language-servers = ["nginx-language-server"]
+
+[[language]]
+name = "verilog"
+scope = "source.verilog"
+file-types = ["v", "sv", "svh", "vh"]
+language-servers = ["svls"]
 
 [[language]]
 name = "qml"

@@ -29,5 +29,7 @@
     pkgs.dot-language-server # Graphviz dot LSP
     pkgs.asm-lsp # Assembly (NASM/GAS) LSP
     pkgs.systemd-language-server # systemd unit LSP
+    pkgs.nginx-language-server # Nginx config LSP
+    pkgs.svls # SystemVerilog/Verilog LSP
   ];
 }

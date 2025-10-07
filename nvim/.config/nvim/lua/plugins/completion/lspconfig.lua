@@ -80,6 +80,8 @@ return {
     configure('dockerls')
     configure('docker_compose_language_service')
     configure('systemd_language_server')
+    configure('nginx_language_server')
+    configure('svls')
     configure('awk_ls')
     configure('pyright', {
       settings = {
