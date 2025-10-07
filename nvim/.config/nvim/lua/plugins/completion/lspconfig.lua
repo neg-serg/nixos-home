@@ -73,6 +73,7 @@ return {
     configure('taplo')
     configure('lemminx')
     configure('dhall_lsp_server')
+    configure('dockerls')
     configure('docker_compose_language_service')
     configure('awk_ls')
     configure('pyright', {
