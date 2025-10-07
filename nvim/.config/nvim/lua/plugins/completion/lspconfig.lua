@@ -63,6 +63,13 @@ return {
       init_options = { clangdFileStatus = true },
     })
     configure('nil_ls') -- Nix
+    configure('qmlls') -- QML via qt6
+    configure('ts_ls') -- TypeScript/JavaScript
+    configure('cssls')
+    configure('jsonls')
+    configure('html')
+    configure('yamlls')
+    configure('taplo')
     configure('pyright', {
       settings = {
         python = {
@@ -73,5 +80,7 @@ return {
         },
       },
     })
+    configure('just')
+    configure('marksman')
   end,
 }
