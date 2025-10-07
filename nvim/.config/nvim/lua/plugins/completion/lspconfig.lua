@@ -67,7 +67,9 @@ return {
     configure('qmlls') -- QML via qt6
     configure('ts_ls') -- TypeScript/JavaScript
     configure('cssls')
-    configure('jsonls')
+    configure('jsonls', {
+      filetypes = { 'json', 'jsonc', 'json5' },
+    })
     configure('html')
     configure('yamlls')
     configure('taplo')

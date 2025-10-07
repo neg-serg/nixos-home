@@ -130,6 +130,12 @@ file-types = ["json", "jsonc"]
 language-servers = ["vscode-json-language-server"]
 
 [[language]]
+name = "json5"
+auto-format = true
+file-types = ["json5"]
+language-servers = ["vscode-json-language-server"]
+
+[[language]]
 name = "xml"
 auto-format = true
 language-servers = ["lemminx"]
