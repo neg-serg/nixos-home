@@ -22,14 +22,19 @@
     pkgs.just-lsp # Justfile LSP
     pkgs.lemminx # XML LSP
     pkgs.awk-language-server # AWK LSP
+    pkgs.autotools-language-server # Autotools (Autoconf/Automake) LSP
+    pkgs.gopls # Go LSP
+    pkgs.sqls # SQL LSP
     pkgs.cmake-language-server # CMake LSP
     pkgs.dhall-lsp-server # Dhall LSP
     pkgs.docker-compose-language-service # Docker Compose LSP
-    pkgs.nodePackages_latest.dockerfile-language-server-nodejs # Dockerfile LSP
+    pkgs.dockerfile-language-server # Dockerfile LSP
     pkgs.dot-language-server # Graphviz dot LSP
     pkgs.asm-lsp # Assembly (NASM/GAS) LSP
     pkgs.systemd-language-server # systemd unit LSP
     pkgs.nginx-language-server # Nginx config LSP
     pkgs.svls # SystemVerilog/Verilog LSP
+    pkgs.vhdl-ls # VHDL LSP
+    pkgs.zls # Zig LSP
   ];
 }

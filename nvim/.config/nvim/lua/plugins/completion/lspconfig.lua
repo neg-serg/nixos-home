@@ -76,12 +76,17 @@ return {
     configure('lemminx')
     configure('dhall_lsp_server')
     configure('asm_lsp')
+    configure('autotools_ls')
     configure('dotls')
+    configure('gopls')
+    configure('sqls')
     configure('dockerls')
     configure('docker_compose_language_service')
     configure('systemd_language_server')
     configure('nginx_language_server')
     configure('svls')
+    configure('vhdl_ls')
+    configure('zls')
     configure('awk_ls')
     configure('pyright', {
       settings = {

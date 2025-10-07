@@ -44,6 +44,15 @@ command = "docker-compose-langserver"
 [language-server."dot-language-server"]
 command = "dot-language-server"
 
+[language-server."autotools-language-server"]
+command = "autotools-language-server"
+
+[language-server.gopls]
+command = "gopls"
+
+[language-server.sqls]
+command = "sqls"
+
 [language-server."asm-lsp"]
 command = "asm-lsp"
 
@@ -55,6 +64,12 @@ command = "nginx-language-server"
 
 [language-server.svls]
 command = "svls"
+
+[language-server."vhdl-ls"]
+command = "vhdl_ls"
+
+[language-server.zls]
+command = "zls"
 
 [language-server.qmlls]
 command = "qmlls"
@@ -154,6 +169,27 @@ name = "awk"
 language-servers = ["awk-language-server"]
 
 [[language]]
+name = "autoconf"
+file-types = ["ac", "in"]
+language-servers = ["autotools-language-server"]
+
+[[language]]
+name = "make"
+language-servers = ["autotools-language-server"]
+
+[[language]]
+name = "go"
+auto-format = true
+file-types = ["go"]
+language-servers = ["gopls"]
+
+[[language]]
+name = "sql"
+auto-format = true
+file-types = ["sql"]
+language-servers = ["sqls"]
+
+[[language]]
 name = "cmake"
 file-types = ["cmake", "CMakeLists.txt"]
 language-servers = ["cmake-language-server"]
@@ -207,6 +243,18 @@ name = "verilog"
 scope = "source.verilog"
 file-types = ["v", "sv", "svh", "vh"]
 language-servers = ["svls"]
+
+[[language]]
+name = "vhdl"
+scope = "source.vhdl"
+file-types = ["vhd", "vhdl"]
+language-servers = ["vhdl-ls"]
+
+[[language]]
+name = "zig"
+auto-format = true
+file-types = ["zig"]
+language-servers = ["zls"]
 
 [[language]]
 name = "qml"
