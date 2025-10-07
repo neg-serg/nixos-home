@@ -13,5 +13,6 @@
     pkgs.lua-language-server # Lua LSP
     pkgs.hyprls # Hyprland language server
     pkgs.emmet-language-server # Emmet LSP
+    pkgs.yaml-language-server # YAML LSP
   ];
 }
