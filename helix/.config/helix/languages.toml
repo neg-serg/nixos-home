@@ -28,6 +28,10 @@ args = ["--stdio"]
 [language-server.lemminx]
 command = "lemminx"
 
+[language-server."awk-language-server"]
+command = "awk-language-server"
+args = ["--stdio"]
+
 [language-server.qmlls]
 command = "qmlls"
 
@@ -114,6 +118,10 @@ language-servers = ["vscode-json-language-server"]
 name = "xml"
 auto-format = true
 language-servers = ["lemminx"]
+
+[[language]]
+name = "awk"
+language-servers = ["awk-language-server"]
 
 [[language]]
 name = "qml"

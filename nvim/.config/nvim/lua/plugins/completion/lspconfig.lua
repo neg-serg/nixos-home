@@ -71,6 +71,7 @@ return {
     configure('yamlls')
     configure('taplo')
     configure('lemminx')
+    configure('awk_ls')
     configure('pyright', {
       settings = {
         python = {

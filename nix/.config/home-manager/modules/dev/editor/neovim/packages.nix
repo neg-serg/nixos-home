@@ -21,5 +21,6 @@
     pkgs.qt6.qtdeclarative # Provides qmlls
     pkgs.just-lsp # Justfile LSP
     pkgs.lemminx # XML LSP
+    pkgs.awk-language-server # AWK LSP
   ];
 }
