@@ -44,6 +44,9 @@ command = "docker-compose-langserver"
 [language-server."dot-language-server"]
 command = "dot-language-server"
 
+[language-server."asm-lsp"]
+command = "asm-lsp"
+
 [language-server.qmlls]
 command = "qmlls"
 
@@ -154,6 +157,12 @@ language-servers = ["docker-compose-language-service"]
 name = "dot"
 file-types = ["dot"]
 language-servers = ["dot-language-server"]
+
+[[language]]
+name = "asm"
+scope = "source.asm"
+file-types = ["asm", "s", "S"]
+language-servers = ["asm-lsp"]
 
 [[language]]
 name = "qml"
