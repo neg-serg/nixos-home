@@ -70,6 +70,7 @@ return {
     configure('html')
     configure('yamlls')
     configure('taplo')
+    configure('lemminx')
     configure('pyright', {
       settings = {
         python = {

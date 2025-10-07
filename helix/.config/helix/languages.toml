@@ -17,6 +17,17 @@ args = ["--stdio"]
 command = "taplo"
 args = ["lsp", "stdio"]
 
+[language-server."vscode-css-language-server"]
+command = "vscode-css-language-server"
+args = ["--stdio"]
+
+[language-server."vscode-json-language-server"]
+command = "vscode-json-language-server"
+args = ["--stdio"]
+
+[language-server.lemminx]
+command = "lemminx"
+
 [language-server.qmlls]
 command = "qmlls"
 
@@ -54,6 +65,7 @@ language-servers = ["emmet-lsp", "vscode-html-language-server"]
 name = "javascript"
 auto-format = true
 indent = { tab-width = 4, unit = "    " }
+file-types = ["js", "mjs", "cjs", "jsx"]
 language-servers = ["typescript-language-server"]
 
 [[language]]
@@ -86,6 +98,22 @@ indent = { tab-width = 4, unit = "    " }
 name = "toml"
 auto-format = true
 language-servers = ["taplo"]
+
+[[language]]
+name = "css"
+auto-format = true
+language-servers = ["vscode-css-language-server"]
+
+[[language]]
+name = "json"
+auto-format = true
+file-types = ["json", "jsonc"]
+language-servers = ["vscode-json-language-server"]
+
+[[language]]
+name = "xml"
+auto-format = true
+language-servers = ["lemminx"]
 
 [[language]]
 name = "qml"
