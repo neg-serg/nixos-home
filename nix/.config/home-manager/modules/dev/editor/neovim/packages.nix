@@ -24,5 +24,6 @@
     pkgs.awk-language-server # AWK LSP
     pkgs.cmake-language-server # CMake LSP
     pkgs.dhall-lsp-server # Dhall LSP
+    pkgs.docker-compose-language-service # Docker Compose LSP
   ];
 }

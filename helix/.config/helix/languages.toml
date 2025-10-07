@@ -38,6 +38,9 @@ command = "cmake-language-server"
 [language-server."dhall-lsp-server"]
 command = "dhall-lsp-server"
 
+[language-server."docker-compose-language-service"]
+command = "docker-compose-langserver"
+
 [language-server.qmlls]
 command = "qmlls"
 
@@ -138,6 +141,11 @@ language-servers = ["cmake-language-server"]
 name = "dhall"
 file-types = ["dhall"]
 language-servers = ["dhall-lsp-server"]
+
+[[language]]
+name = "docker-compose"
+file-types = ["docker-compose.yml", "docker-compose.yaml"]
+language-servers = ["docker-compose-language-service"]
 
 [[language]]
 name = "qml"
