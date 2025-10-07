@@ -26,5 +26,6 @@
     pkgs.dhall-lsp-server # Dhall LSP
     pkgs.docker-compose-language-service # Docker Compose LSP
     pkgs.nodePackages_latest.dockerfile-language-server-nodejs # Dockerfile LSP
+    pkgs.dot-language-server # Graphviz dot LSP
   ];
 }

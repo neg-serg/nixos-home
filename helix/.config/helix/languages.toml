@@ -41,6 +41,9 @@ command = "dhall-lsp-server"
 [language-server."docker-compose-language-service"]
 command = "docker-compose-langserver"
 
+[language-server."dot-language-server"]
+command = "dot-language-server"
+
 [language-server.qmlls]
 command = "qmlls"
 
@@ -146,6 +149,11 @@ language-servers = ["dhall-lsp-server"]
 name = "docker-compose"
 file-types = ["docker-compose.yml", "docker-compose.yaml"]
 language-servers = ["docker-compose-language-service"]
+
+[[language]]
+name = "dot"
+file-types = ["dot"]
+language-servers = ["dot-language-server"]
 
 [[language]]
 name = "qml"
