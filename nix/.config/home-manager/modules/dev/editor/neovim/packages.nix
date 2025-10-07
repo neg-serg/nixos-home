@@ -9,5 +9,9 @@
     pkgs.pyright # Python LSP
     pkgs.ruff # Python linter
     pkgs.rust-analyzer # Rust LSP
+    pkgs.clang-tools # Clangd + friends
+    pkgs.lua-language-server # Lua LSP
+    pkgs.hyprls # Hyprland language server
+    pkgs.emmet-language-server # Emmet LSP
   ];
 }
