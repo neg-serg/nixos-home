@@ -170,7 +170,10 @@ git -C "$root" lfs pull
 
           features.allowUnfree.extra =
             [ (getName pkgs.dotnet-sdk_8) ]
-            ++ optionals useSteamRun [ (getName pkgs.steam-run) ];
+            ++ optionals useSteamRun [
+              (getName pkgs.steam-run)
+              (getName pkgs.steam-unwrapped)
+            ];
 
           warnings = [
             "ue5-sync requires GitHub access to EpicGames/UnrealEngine (link Epic and GitHub accounts)."

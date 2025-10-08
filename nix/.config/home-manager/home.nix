@@ -36,6 +36,9 @@ in {
   # Enable GPG stack (gpg + gpg-agent)
   features.gpg.enable = true;
 
+  # Enable Unreal Engine tooling (ue5-sync/build/editor wrappers)
+  features.dev.unreal.enable = true;
+
   # XDG aggregated fixups were removed; rely on per‑file `force = true` when needed.
 
   # Unfree policy centralized in modules/misc/unfree.nix (features.allowUnfree.allowed)
