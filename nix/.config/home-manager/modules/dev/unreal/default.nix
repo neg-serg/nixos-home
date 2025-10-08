@@ -1,7 +1,7 @@
 { lib, pkgs, config, ... }:
 let
   cfg = config.features.dev.unreal;
-  inherit (lib) mkOption mkEnableOption types mkIf mkMerge escapeShellArg getExe optionals getName;
+  inherit (lib) mkOption mkEnableOption types mkIf mkMerge escapeShellArg getExe optionals getName mkAfter;
   defaultRoot = "${config.home.homeDirectory}/Games/UnrealEngine";
 in {
   options.features.dev.unreal = {
@@ -41,6 +41,11 @@ in {
       editorBinary = "${root}/Engine/Binaries/Linux/UnrealEditor";
       editorEsc = escapeShellArg editorBinary;
       steamRunExe = getExe pkgs.steam-run;
+      clangSuite = pkgs.buildEnv {
+        name = "ue-clang-suite";
+        paths = [ pkgs.llvmPackages_21.clang pkgs.llvmPackages_21.clang-tools ];
+        ignoreCollisions = true;
+      };
 
       editorScript = ''
 #!/usr/bin/env bash
@@ -143,7 +148,7 @@ git -C "$root" lfs pull
         pkgs.cmake
         pkgs.ninja
         pkgs.python311
-        pkgs.llvmPackages_21.clang
+        clangSuite
         pkgs.llvmPackages_21.lld
         pkgs.llvmPackages_21.libclang
         pkgs.dotnet-sdk_8
@@ -174,6 +179,8 @@ git -C "$root" lfs pull
               (getName pkgs.steam-run)
               (getName pkgs.steam-unwrapped)
             ];
+
+          features.excludePkgs = mkAfter [ "clang-tools" ];
 
           warnings = [
             "ue5-sync requires GitHub access to EpicGames/UnrealEngine (link Epic and GitHub accounts)."
