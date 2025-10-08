@@ -53,6 +53,23 @@ lib.mkMerge [
               (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["graphical"]; })
             ];
 
+          ydotoold =
+            lib.mkMerge [
+              {
+                Unit.Description = "ydotool virtual input daemon";
+                Service = {
+                  ExecStart = lib.getExe' pkgs.ydotool "ydotoold";
+                  Restart = "on-failure";
+                  RestartSec = "2";
+                  Slice = "background-graphical.slice";
+                  CapabilityBoundingSet = "CAP_SYS_ADMIN CAP_SYS_TTY_CONFIG CAP_SYS_NICE";
+                  AmbientCapabilities = "CAP_SYS_ADMIN CAP_SYS_TTY_CONFIG CAP_SYS_NICE";
+                  NoNewPrivileges = false;
+                };
+              }
+              (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["defaultWanted"]; })
+            ];
+
           # Pic dirs notifier
           "pic-dirs" =
             lib.mkMerge [
