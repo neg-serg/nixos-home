@@ -1,7 +1,18 @@
 { lib, pkgs, config, ... }:
 let
   cfg = config.features.dev.unreal;
-  inherit (lib) mkOption mkEnableOption types mkIf mkMerge escapeShellArg getExe optionals getName mkAfter;
+  inherit (lib)
+    mkOption
+    mkEnableOption
+    types
+    mkIf
+    mkMerge
+    escapeShellArg
+    getExe
+    optionals
+    getName
+    mkAfter
+    lowPrio;
   defaultRoot = "${config.home.homeDirectory}/Games/UnrealEngine";
 in {
   options.features.dev.unreal = {
@@ -147,7 +158,7 @@ git -C "$root" lfs pull
         pkgs.mono
         pkgs.cmake
         pkgs.ninja
-        pkgs.python3Minimal
+        (lowPrio pkgs.python3)
         clangSuite
         pkgs.llvmPackages_21.lld
         pkgs.llvmPackages_21.libclang.lib
