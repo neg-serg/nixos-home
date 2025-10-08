@@ -39,6 +39,7 @@ with lib; let
       pkgs.urlscan # extract URLs from text
       pkgs.urlwatch # watch pages for changes
       pkgs.zfxtop # Cloudflare/ZFX top-like monitor
+      pkgs.newsraft # terminal RSS/Atom feed reader
     ];
 
     # System info and observability
