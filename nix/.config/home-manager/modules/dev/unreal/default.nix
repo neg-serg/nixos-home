@@ -150,7 +150,7 @@ git -C "$root" lfs pull
         pkgs.python311
         clangSuite
         pkgs.llvmPackages_21.lld
-        pkgs.llvmPackages_21.libclang
+        pkgs.llvmPackages_21.libclang.lib
         pkgs.dotnet-sdk_8
         pkgs.unzip
         pkgs.p7zip
