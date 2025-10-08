@@ -45,6 +45,7 @@ with lib; let
     # System info and observability
     obs = [
       pkgs.below # BPF-based system history
+      pkgs.bpftrace # high-level eBPF tracer
       pkgs.lnav # log file navigator
       pkgs.viddy # modern watch with history
     ];
