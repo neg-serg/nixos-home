@@ -7,6 +7,7 @@
     ./fonts
     ./fun
     ./games
+    ./autoclick.nix
     ./gui
     ./im
     ./mail

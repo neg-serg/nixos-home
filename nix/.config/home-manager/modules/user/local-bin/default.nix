@@ -23,7 +23,6 @@ mkIf (config.features.gui.enable or false) (lib.mkMerge [
       pkgs.grim               # screenshots (qr/screenshot)
       pkgs.slurp              # region selection (qr/screenshot)
       pkgs.wtype              # fake keypress (clip pipe/paste)
-      pkgs.ydotool            # Wayland-compatible automation (autoclick-toggle)
       # archive/utils for se (prefer free tools)
       pkgs.unar               # extract .rar (se)
       pkgs.p7zip              # 7z extraction (se)
@@ -86,7 +85,6 @@ mkIf (config.features.gui.enable or false) (lib.mkMerge [
         { name = "pic-notify"; src = ./scripts/pic-notify.sh; }
         { name = "pic-dirs-list"; src = ./scripts/pic-dirs-list.sh; }
         { name = "any"; src = ./scripts/any; }
-        { name = "autoclick-toggle"; src = ./scripts/autoclick-toggle; }
         { name = "beet-update"; src = ./scripts/beet-update; }
         # Legacy image wrappers removed (sx, sxivnc); use swayimg-first directly
         { name = "exorg"; src = ./scripts/exorg; }

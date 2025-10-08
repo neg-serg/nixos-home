@@ -2,7 +2,7 @@
 set -euo pipefail
 
 PIDFILE="${XDG_RUNTIME_DIR:-/tmp}/autoclick.pid"
-DELAY_MS="${1:-65}"
+DELAY_MS="${1:-16}"
 
 stop() {
   if [[ -f "$PIDFILE" ]]; then
