@@ -1,6 +1,9 @@
 reloaddead
 colors neg
 
+set newtab about:newtab
+set home about:home
+
 set searchengine @google
 set allowautofocus true
 set visualenterauto false
