@@ -23,8 +23,35 @@ sel=$(printf '%s\n' "${entries[@]}" \
 
 [ -n "${sel:-}" ] || exit 0
 
-# Copy password (first line of pass show) to clipboard
+# Prefer OTP codes when present to avoid pasting otpauth URIs
+if otp_raw=$(pass otp code -- "$sel" 2>/dev/null); then
+  otp_code=$(printf '%s' "$otp_raw" | head -n1 | tr -d '\r\n')
+  if [ -n "$otp_code" ]; then
+    if command -v wl-copy >/dev/null 2>&1; then
+      printf '%s' "$otp_code" | wl-copy
+    else
+      # Fallback to pass otp -c (handles clipboard expiration)
+      pass otp -c -- "$sel" >/dev/null 2>&1 || true
+    fi
+    command -v notify-send >/dev/null 2>&1 && notify-send "pass" "OTP copied: $sel" || true
+    exit 0
+  fi
+fi
+
+# Capture first line for password fallback and to detect raw otpauth secrets
 pw=$(pass show -- "$sel" 2>/dev/null | head -n1 || true)
+pw=$(printf '%s' "$pw" | tr -d '\r\n')
+
+# Guard against leaking otpauth URIs if pass-otp is unavailable
+if [ -n "$pw" ] && [[ "$pw" == otpauth://* ]]; then
+  # Try clipboard fallback via pass otp -c, otherwise fail quietly
+  if ! pass otp -c -- "$sel" >/dev/null 2>&1; then
+    command -v notify-send >/dev/null 2>&1 && notify-send "pass" "OTP entry needs pass-otp: $sel" || true
+  fi
+  exit 0
+fi
+
+# Copy password (first line of pass show) to clipboard
 if [ -n "$pw" ]; then
   if command -v wl-copy >/dev/null 2>&1; then
     printf '%s' "$pw" | wl-copy
