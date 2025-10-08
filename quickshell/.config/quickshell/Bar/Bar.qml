@@ -150,6 +150,10 @@ Scope {
                             trayMenu: externalTrayMenu
                         }
                         CustomTrayMenu { id: externalTrayMenu }
+                        Microphone {
+                            id: widgetsMicrophone
+                            Layout.alignment: Qt.AlignVCenter
+                        }
                         Volume {
                             id: widgetsVolume
                             Layout.alignment: Qt.AlignVCenter
