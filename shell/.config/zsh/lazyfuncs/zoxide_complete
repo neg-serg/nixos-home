@@ -35,10 +35,53 @@ zoxide_complete() {
   fi
 
   local dir
+  local auto_dir=""
+  local auto_pick=0
+  local listing
+
   if [[ -n $query ]]; then
-    dir=$(command zoxide query -i -- "$query" 2>/dev/null)
+    listing=$(command zoxide query -ls -- "$query" 2>/dev/null)
   else
-    dir=$(command zoxide query -i 2>/dev/null)
+    listing=$(command zoxide query -ls 2>/dev/null)
+  fi
+
+  if [[ -n $listing ]]; then
+    local -a lines
+    lines=(${(f)listing})
+
+    if (( ${#lines} >= 1 )); then
+      local first_line=${lines[1]}
+      first_line=${first_line#"${first_line%%[![:space:]]*}"}
+      local first_score=${first_line%%[[:space:]]*}
+      auto_dir=${first_line#${first_score}}
+      auto_dir=${auto_dir#"${auto_dir%%[![:space:]]*}"}
+
+      if (( ${#lines} == 1 )); then
+        auto_pick=1
+      else
+        local second_line=${lines[2]}
+        second_line=${second_line#"${second_line%%[![:space:]]*}"}
+        local second_score=${second_line%%[[:space:]]*}
+
+        if [[ -z $second_score ]]; then
+          auto_pick=1
+        elif (( second_score == 0 )); then
+          auto_pick=1
+        elif (( first_score >= 10 * second_score )); then
+          auto_pick=1
+        fi
+      fi
+    fi
+  fi
+
+  if (( auto_pick )) && [[ -n $auto_dir ]]; then
+    dir=$auto_dir
+  else
+    if [[ -n $query ]]; then
+      dir=$(command zoxide query -i -- "$query" 2>/dev/null)
+    else
+      dir=$(command zoxide query -i 2>/dev/null)
+    fi
   fi
 
   if [[ -z $dir ]]; then
