@@ -147,7 +147,7 @@ git -C "$root" lfs pull
         pkgs.mono
         pkgs.cmake
         pkgs.ninja
-        pkgs.python311
+        pkgs.python3Minimal
         clangSuite
         pkgs.llvmPackages_21.lld
         pkgs.llvmPackages_21.libclang.lib
