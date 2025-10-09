@@ -408,23 +408,8 @@
       '';
 
     # Create a local wrapper script under ~/.local/bin with activation-time guard.
-    # Usage:
-    #   config.lib.neg.mkLocalBin "rofi" ''#!/usr/bin/env bash
-    #     set -euo pipefail
-    #     exec /nix/store/.../bin/rofi "$@"
-    #   ''
-    # This ensures any pre-existing path (regular file/dir/symlink) is removed before linking,
-    # avoiding conflicts across refactors.
-    mkLocalBin = name: text: {
-      # Avoid referencing config.home.homeDirectory here to prevent eager
-      # evaluation cycles during module fixpoint; resolve $HOME at activation/runtime.
-      home.activation."cleanBin_${name}" =
-        mkEnsureAbsent "$HOME/.local/bin/${name}";
-      home.file.".local/bin/${name}" = {
-        executable = true;
-        inherit text;
-      };
-    };
+    # See packages/lib/local-bin.nix for implementation details.
+    mkLocalBin = import ../../packages/lib/local-bin.nix { inherit lib; };
 
     # XDG file helpers were split into a dedicated pure helper module
     # to avoid config/lib coupling in regular modules. Prefer importing
