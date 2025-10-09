@@ -29,6 +29,7 @@ let
     url = "https://codeberg.org/chaten/zg/archive/749197a3f9d25e211615960c02380a3d659b20f9.tar.gz";
     hash = "sha256-wzGMfN9Qa3bQRK50p12pdxsSBEVtp2K0gFQFJm7wYMo=";
   };
+  zigUtils = import ../lib/zig.nix { inherit lib; };
 in
 stdenv.mkDerivation rec {
   pname = "fancy-cat";
@@ -73,30 +74,18 @@ path.write_text(text)
 PY
   '';
 
-  buildPhase = ''
-    runHook preBuild
-    export ZIG_GLOBAL_CACHE_DIR="$TMPDIR/zig-cache"
-    mkdir -p "$ZIG_GLOBAL_CACHE_DIR/p"
-
-    cache_put() {
-      local src=$1
-      local hash=$2
-      local dest="$ZIG_GLOBAL_CACHE_DIR/p/$hash"
-      rm -rf "$dest"
-      mkdir -p "$dest"
-      cp -R "$src"/. "$dest"/
-      chmod -R u+w "$dest"
-    }
-
-    cache_put ${vaxis} vaxis-0.5.1-BWNV_PsXCQBfK1HPvsVxbPLRcxr7YmAwQ_xJhzX9HxFn
-    cache_put ${fzwatch} fzwatch-0.2.2-6qM2OKsxAACglM0hQhABi_wAJoz6jqXvQunk1yV_xAIO
-    cache_put ${fastb64z} fastb64z-1.0.0-x5LyQZ2gAAAYQrdQBKuqfNOY0beaxhunrksEtUOmIjhq
-    cache_put ${zigimg} zigimg-0.1.0-8_eo2vHnEwCIVW34Q14Ec-xUlzIoVg86-7FU2ypPtxms
-    cache_put ${zg} zg-0.15.1-oGqU3M0-tALZCy7boQS86znlBloyKx6--JriGlY0Paa9
-
-    zig build --release=small --cache-dir "$TMPDIR/zig-cache" --global-cache-dir "$ZIG_GLOBAL_CACHE_DIR"
-    runHook postBuild
-  '';
+  buildPhase = zigUtils.mkCachePrimingBuildPhase {
+    deps = [
+      { src = vaxis; hash = "vaxis-0.5.1-BWNV_PsXCQBfK1HPvsVxbPLRcxr7YmAwQ_xJhzX9HxFn"; }
+      { src = fzwatch; hash = "fzwatch-0.2.2-6qM2OKsxAACglM0hQhABi_wAJoz6jqXvQunk1yV_xAIO"; }
+      { src = fastb64z; hash = "fastb64z-1.0.0-x5LyQZ2gAAAYQrdQBKuqfNOY0beaxhunrksEtUOmIjhq"; }
+      { src = zigimg; hash = "zigimg-0.1.0-8_eo2vHnEwCIVW34Q14Ec-xUlzIoVg86-7FU2ypPtxms"; }
+      { src = zg; hash = "zg-0.15.1-oGqU3M0-tALZCy7boQS86znlBloyKx6--JriGlY0Paa9"; }
+    ];
+    buildCmd = ''
+      zig build --release=small --cache-dir "$TMPDIR/zig-cache" --global-cache-dir "$ZIG_GLOBAL_CACHE_DIR"
+    '';
+  };
 
   installPhase = ''
     runHook preInstall
