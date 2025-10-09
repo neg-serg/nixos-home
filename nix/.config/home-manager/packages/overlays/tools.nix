@@ -7,6 +7,7 @@ in {
     "bpf-host-latency" = bpf_host_latency;
     # CLI/util packages
     a2ln = call ../a2ln {};
+    awrit = call ../awrit {};
     bt_migrate = call ../bt-migrate {};
     "bt-migrate" = bt_migrate;
     cxxmatrix = call ../cxxmatrix {};
