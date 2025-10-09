@@ -13,7 +13,7 @@ let
     getName
     mkAfter
     lowPrio;
-  defaultRoot = "${config.home.homeDirectory}/Games/UnrealEngine";
+  defaultRoot = "${config.home.homeDirectory}/games/UnrealEngine";
 in {
   options.features.dev.unreal = {
     enable = (mkEnableOption "enable Unreal Engine 5 tooling") // { default = false; };
