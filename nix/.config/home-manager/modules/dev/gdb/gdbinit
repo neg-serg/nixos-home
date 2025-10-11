@@ -43,6 +43,24 @@ set tui border-kind ascii
 set tui compact-source on
 set tui mouse-events off
 
+# Load Unreal Engine pretty printers when the bundled scripts are present.
+python
+import os
+import sys
+
+config_home = os.environ.get('XDG_CONFIG_HOME', os.path.join(os.path.expanduser('~'), '.config'))
+printers_dir = os.path.join(config_home, 'Epic', 'GDBPrinters')
+if os.path.isdir(printers_dir):
+    if printers_dir not in sys.path:
+        sys.path.append(printers_dir)
+    try:
+        from UEPrinters import register_ue_printers
+        register_ue_printers(None)
+        print('Registered UE pretty printers')
+    except Exception as exc:  # noqa: BLE001
+        print(f'Failed to register UE pretty printers: {exc}')
+end
+
 if $COLOUREDPROMPT == 1
 	set prompt \033[31mgdb$ \033[0m
 end
