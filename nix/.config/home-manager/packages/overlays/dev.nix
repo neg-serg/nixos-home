@@ -12,6 +12,9 @@ _final: prev: {
     cmakeFlags = (old.cmakeFlags or []) ++ [ "-DCMAKE_POLICY_VERSION_MINIMUM=3.5" ];
   });
 
+  # bpftrace 0.23.x does not support LLVM 21 yet; pin to LLVM 20
+  bpftrace = prev.bpftrace.override { llvmPackages = prev.llvmPackages_20; };
+
   # retdec: removed from profile; drop overrides to avoid unnecessary patching
 
   # Reserved for development/toolchain overlays
