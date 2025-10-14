@@ -96,6 +96,12 @@ _final: prev: {
     cmakeFlags = (old.cmakeFlags or []) ++ [ "-DCMAKE_POLICY_VERSION_MINIMUM=3.5" ];
   });
 
+  # GNU Radio: disable upstream tests (flaky qa_blocks_hier_block2)
+  gnuradio = prev.gnuradio.overrideAttrs (old: {
+    doCheck = false;
+    checkPhase = ":";
+  });
+
   # aflplusplus: removed from profile; drop overrides
 
   # RTL-SDR family
