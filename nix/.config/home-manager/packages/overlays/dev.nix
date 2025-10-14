@@ -20,6 +20,14 @@ _final: prev: {
     cmakeFlags = (old.cmakeFlags or []) ++ [ "-DCMAKE_POLICY_VERSION_MINIMUM=3.5" ];
   });
 
+  # Airspy family: set CMake policy floor for modern CMake
+  airspy = prev.airspy.overrideAttrs (old: {
+    cmakeFlags = (old.cmakeFlags or []) ++ [ "-DCMAKE_POLICY_VERSION_MINIMUM=3.5" ];
+  });
+  airspyhf = prev.airspyhf.overrideAttrs (old: {
+    cmakeFlags = (old.cmakeFlags or []) ++ [ "-DCMAKE_POLICY_VERSION_MINIMUM=3.5" ];
+  });
+
   # retdec: removed from profile; drop overrides to avoid unnecessary patching
 
   # Reserved for development/toolchain overlays
