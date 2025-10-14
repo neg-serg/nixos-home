@@ -19,8 +19,8 @@ _final: prev: {
     postPatch = (old.postPatch or "") + ''
       for f in deps/keystone/CMakeLists.txt deps/llvm/CMakeLists.txt deps/yaramod/CMakeLists.txt; do
         if [ -f "$f" ]; then
-          substituteInPlace "$f" \
-            --replace "CMAKE_ARGS\n\t\t-DCMAKE_INSTALL_PREFIX=" "CMAKE_ARGS\n\t\t-DCMAKE_POLICY_VERSION_MINIMUM=3.5\n\t\t-DCMAKE_INSTALL_PREFIX="
+          # Insert policy floor right after CMAKE_ARGS to avoid brittle tab/newline matching.
+          substituteInPlace "$f" --replace "CMAKE_ARGS" "CMAKE_ARGS\n\t\t-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
         fi
       done
       # Avoid forcing stdc++fs on GCC when the library is absent (GCC >= 13).
