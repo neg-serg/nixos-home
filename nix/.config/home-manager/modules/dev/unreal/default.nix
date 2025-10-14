@@ -272,9 +272,7 @@ git -C "$root" lfs pull
 
           features.excludePkgs = mkAfter [ "clang-tools" ];
 
-          warnings = [
-            "ue5-sync requires GitHub access to EpicGames/UnrealEngine (link Epic and GitHub accounts)."
-          ];
+          # Removed obsolete ue5-sync GitHub access warning.
         }
         {
           home.file = {
