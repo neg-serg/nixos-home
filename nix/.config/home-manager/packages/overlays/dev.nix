@@ -64,6 +64,14 @@ _final: prev: {
     cmakeFlags = (old.cmakeFlags or []) ++ [ "-DCMAKE_POLICY_VERSION_MINIMUM=3.5" ];
   });
 
+  # Analog Devices libs used by Soapy/GR
+  libad9361 = prev.libad9361.overrideAttrs (old: {
+    cmakeFlags = (old.cmakeFlags or []) ++ [ "-DCMAKE_POLICY_VERSION_MINIMUM=3.5" ];
+  });
+  libiio = prev.libiio.overrideAttrs (old: {
+    cmakeFlags = (old.cmakeFlags or []) ++ [ "-DCMAKE_POLICY_VERSION_MINIMUM=3.5" ];
+  });
+
   # RTL-SDR family
   "rtl-sdr" = prev."rtl-sdr".overrideAttrs (old: {
     cmakeFlags = (old.cmakeFlags or []) ++ [ "-DCMAKE_POLICY_VERSION_MINIMUM=3.5" ];
