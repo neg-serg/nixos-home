@@ -52,6 +52,14 @@ _final: prev: {
               prev.gettext
             ];
         });
+
+      # CMake: enforce a minimum policy version to keep older projects
+      # working with newer CMake releases.
+      # Appends -DCMAKE_POLICY_VERSION_MINIMUM=3.5 to cmakeFlags.
+      withCMakePolicyFloor = drv:
+        drv.overrideAttrs (old: {
+          cmakeFlags = (old.cmakeFlags or []) ++ [ "-DCMAKE_POLICY_VERSION_MINIMUM=3.5" ];
+        });
     };
   };
 }
