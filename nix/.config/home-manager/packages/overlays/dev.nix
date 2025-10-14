@@ -79,7 +79,7 @@ _final: prev: {
       # Fix invalid add_dependencies on non-target "X11" and link using found libs
       substituteInPlace CMakeLists.txt \
         --replace 'add_dependencies(OIS X11)' '' \
-        --replace 'target_link_libraries(OIS X11)' 'target_link_libraries(OIS ${X11_LIBRARIES})'
+        --replace 'target_link_libraries(OIS X11)' 'target_link_libraries(OIS \${X11_LIBRARIES})'
     '';
   });
   mygui = prev.mygui.overrideAttrs (old: {
