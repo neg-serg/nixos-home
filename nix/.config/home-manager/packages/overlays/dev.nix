@@ -12,24 +12,7 @@ _final: prev: {
     cmakeFlags = (old.cmakeFlags or []) ++ [ "-DCMAKE_POLICY_VERSION_MINIMUM=3.5" ];
   });
 
-  # RetDec builds several ExternalProject_* deps (llvm, keystone, yaramod)
-  # that individually fail to configure under newer CMake unless the
-  # policy floor is specified. Inject it into their CMAKE_ARGS.
-  retdec = prev.retdec.overrideAttrs (old: {
-    postPatch = (old.postPatch or "") + ''
-      for f in deps/keystone/CMakeLists.txt deps/llvm/CMakeLists.txt deps/yaramod/CMakeLists.txt; do
-        if [ -f "$f" ]; then
-          # Insert policy floor right after CMAKE_ARGS to avoid brittle tab/newline matching.
-          substituteInPlace "$f" --replace "CMAKE_ARGS" "CMAKE_ARGS\n\t\t-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
-        fi
-      done
-      # Avoid forcing stdc++fs on GCC when the library is absent (GCC >= 13).
-      if [ -f src/utils/CMakeLists.txt ]; then
-        substituteInPlace src/utils/CMakeLists.txt \
-          --replace 'elseif(UNIX AND (NOT APPLE) AND CMAKE_CXX_COMPILER_ID STREQUAL "GNU")' 'elseif(FALSE)'
-      fi
-    '';
-  });
+  # retdec: removed from profile; drop overrides to avoid unnecessary patching
 
   # Reserved for development/toolchain overlays
   neg = {};
