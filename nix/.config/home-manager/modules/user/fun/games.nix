@@ -7,7 +7,7 @@
     pkgs.abuse # classic side-scrolling shooter customizable with LISP
     pkgs.airshipper # for veloren voxel game
     pkgs.angband # roguelike
-    pkgs.brogue # roguelike
+    pkgs.brogue-ce # roguelike (community edition)
     pkgs.crawl # roguelike
     pkgs.crawlTiles # roguelike
     pkgs.endless-sky # space exploration game
