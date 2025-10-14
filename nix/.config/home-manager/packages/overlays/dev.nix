@@ -78,7 +78,7 @@ _final: prev: {
     postPatch = (old.postPatch or "") + ''
       # Fix invalid add_dependencies on non-target "X11" and link using found libs
       substituteInPlace CMakeLists.txt \
-        --replace 'add_dependencies(OIS X11)' '' \
+        --replace 'add_dependencies(OIS X11)' "" \
         --replace 'target_link_libraries(OIS X11)' 'target_link_libraries(OIS \${X11_LIBRARIES})'
     '';
   });
