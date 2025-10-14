@@ -82,18 +82,7 @@ _final: prev: {
     cmakeFlags = (old.cmakeFlags or []) ++ [ "-DCMAKE_POLICY_VERSION_MINIMUM=3.5" ];
   });
 
-  # Fuzzing toolchain compat: force LLVM 20 and point LLVM_CONFIG
-  aflplusplus = prev.aflplusplus.overrideAttrs (old: {
-    nativeBuildInputs = (old.nativeBuildInputs or []) ++ [
-      prev.llvmPackages_20.llvm
-      prev.llvmPackages_20.clang
-    ];
-    makeFlags = (old.makeFlags or []) ++ [
-      "LLVM_CONFIG=${prev.llvmPackages_20.llvm}/bin/llvm-config"
-    ];
-    doCheck = false;
-    checkPhase = ":";
-  });
+  # aflplusplus: removed from profile; drop overrides
 
   # RTL-SDR family
   "rtl-sdr" = prev."rtl-sdr".overrideAttrs (old: {
