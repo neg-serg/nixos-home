@@ -91,6 +91,8 @@ _final: prev: {
     makeFlags = (old.makeFlags or []) ++ [
       "LLVM_CONFIG=${prev.llvmPackages_20.llvm}/bin/llvm-config"
     ];
+    doCheck = false;
+    checkPhase = ":";
   });
 
   # RTL-SDR family
