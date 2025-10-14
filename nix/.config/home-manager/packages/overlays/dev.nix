@@ -23,6 +23,11 @@ _final: prev: {
             --replace "CMAKE_ARGS\n\t\t-DCMAKE_INSTALL_PREFIX=" "CMAKE_ARGS\n\t\t-DCMAKE_POLICY_VERSION_MINIMUM=3.5\n\t\t-DCMAKE_INSTALL_PREFIX="
         fi
       done
+      # Avoid forcing stdc++fs on GCC when the library is absent (GCC >= 13).
+      if [ -f src/utils/CMakeLists.txt ]; then
+        substituteInPlace src/utils/CMakeLists.txt \
+          --replace 'elseif(UNIX AND (NOT APPLE) AND CMAKE_CXX_COMPILER_ID STREQUAL "GNU")' 'elseif(FALSE)'
+      fi
     '';
   });
 
