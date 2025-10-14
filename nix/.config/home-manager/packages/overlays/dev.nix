@@ -79,6 +79,9 @@ _final: prev: {
 
   # snowman removed upstream (do not reference)
 
+  # Security: avoid insecure Mbed TLS 2 by aliasing to v3
+  mbedtls_2 = prev.mbedtls;
+
   # SDR apps: proactively set policy floor
   inspectrum = prev.inspectrum.overrideAttrs (old: {
     cmakeFlags = (old.cmakeFlags or []) ++ [ "-DCMAKE_POLICY_VERSION_MINIMUM=3.5" ];
