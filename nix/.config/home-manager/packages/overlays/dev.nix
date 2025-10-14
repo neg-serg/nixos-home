@@ -82,6 +82,9 @@ _final: prev: {
     cmakeFlags = (old.cmakeFlags or []) ++ [ "-DCMAKE_POLICY_VERSION_MINIMUM=3.5" ];
   });
 
+  # Fuzzing toolchain compat
+  aflplusplus = prev.aflplusplus.override { llvmPackages = prev.llvmPackages_20; };
+
   # RTL-SDR family
   "rtl-sdr" = prev."rtl-sdr".overrideAttrs (old: {
     cmakeFlags = (old.cmakeFlags or []) ++ [ "-DCMAKE_POLICY_VERSION_MINIMUM=3.5" ];
