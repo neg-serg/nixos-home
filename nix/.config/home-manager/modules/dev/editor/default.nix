@@ -18,7 +18,7 @@ with lib; {
             groups = {
               core = [
                 pkgs.code-cursor-fhs # AI-powered code editor built on VS Code
-                pkgs.lapce # fast code editor in Rust
+                # pkgs.lapce # fast code editor in Rust
               ];
               ai = [ pkgs.lmstudio ]; # desktop app for local/open LLMs
             };
