@@ -58,6 +58,7 @@ mkIf (config.features.gui.enable or false) (lib.mkMerge [
       pkgs.cliphist           # Wayland clipboard history
       pkgs.clipcat            # alternative clipboard history (clipcat-menu)
       pkgs.neg.bpf_host_latency # trace DNS lookup latency via BCC/eBPF (root)
+      pkgs.neg.albumdetails   # album metadata extractor for music-rename
     ];
   }
   # Generate ~/.local/bin scripts via a compact list (avoid config.lib recursion)
