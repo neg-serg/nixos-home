@@ -184,6 +184,25 @@ steamvr-fix:
         mv "$VRT.tmp" "$VRT" && chmod +x "$VRT"
         echo "[patch] vrstartup.sh -> export QT_QPA_PLATFORM=xcb"
       fi
+
+      # Prefer dGPU for Vulkan (multi-GPU: fix DRM lease mismatch)
+      VRENV="$VR/bin/vrenv.sh"
+      if [ -f "$VRENV" ] && ! grep -q '^export DRI_PRIME=1' "$VRENV"; then
+        TS=$(date +%s)
+        cp -a "$VRENV" "$VRENV.bak.$TS"
+        awk '
+          BEGIN{ins=0}
+          { print $0 }
+          /^export VRCOMPOSITOR_LD_LIBRARY_PATH=/ && ins==0 {
+            print "# Prefer discrete GPU for Vulkan (helps DRM lease on multi-GPU)";
+            print "export DRI_PRIME=1";
+            # Do not force VK_ICD_FILENAMES blindly; users can set it manually if needed
+            ins=1
+          }
+        ' "$VRENV.bak.$TS" > "$VRENV.tmp"
+        mv "$VRENV.tmp" "$VRENV" && chmod +x "$VRENV"
+        echo "[patch] vrenv.sh -> export DRI_PRIME=1"
+      fi
     done
 
     echo "Done. Restart Steam, then launch SteamVR."
