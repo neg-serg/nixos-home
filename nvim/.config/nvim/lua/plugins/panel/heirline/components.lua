@@ -891,18 +891,12 @@ return function(ctx)
         self._pos = win_call(win, function()
           local lnum = fn.line('.')
           local col = fn.virtcol('.')
-          local show_col = col ~= 1
           local line_parts = padded_parts(lnum)
           self._pos_line = line_parts
-          self._pos_col = nil
-          if show_col then
-            self._pos_col = padded_parts(col)
-          end
+          -- Always show column, even when it equals 1
+          self._pos_col = padded_parts(col)
           local base = (line_parts and line_parts.padded) or string.format('%04d', lnum)
-          if show_col and self._pos_col then
-            return base .. ':' .. col
-          end
-          return base
+          return base .. ':' .. col
         end, '0000')
       end,
       update = { 'CursorMoved', 'CursorMovedI', 'WinResized' },
