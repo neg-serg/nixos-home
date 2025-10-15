@@ -49,6 +49,8 @@ in {
     settings = {
       # Trust flake-provided nixConfig (substituters, keys, features)
       accept-flake-config = true;
+      # Use XDG paths so Home Manager uses modern v2 profile (nix profile)
+      use-xdg-base-directories = true;
       # Speed + safety: keep eval cache on and forbid IFD during eval
       eval-cache = true;
       allow-import-from-derivation = false;
