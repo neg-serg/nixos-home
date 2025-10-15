@@ -1,5 +1,6 @@
+set shell := ["bash", "-eu", "-o", "pipefail", "-c"]
+
 steamvr-fix:
-    bash -eu -o pipefail <<'BASH'
     bases=( "$HOME/.local/share/Steam" "$HOME/.steam/steam" "$HOME/.steam/root" "$HOME/Steam" )
     found=()
     for b in "${bases[@]}"; do
@@ -20,14 +21,12 @@ steamvr-fix:
         echo "Warning: setcap failed, continuing" >&2
       }
       getcap -v "$L64/vrcompositor" "$L64/vrserver" || true
-      # Patch launcher to call vrcompositor directly (avoid pkexec path)
       if [ -f "$L64/vrcompositor-launcher.sh" ] \
          && grep -q 'exec "$ROOT/vrcompositor-launcher"' "$L64/vrcompositor-launcher.sh"; then
         cp -a "$L64/vrcompositor-launcher.sh" "$L64/vrcompositor-launcher.sh.bak.$(date +%s)"
         sed -i 's|exec "$ROOT/vrcompositor-launcher" "$@"|exec "$ROOT/vrcompositor" "$@"|' "$L64/vrcompositor-launcher.sh"
         echo "[patch] vrcompositor-launcher.sh -> direct vrcompositor"
       fi
-      # Patch vrsetup.sh to skip pkexec when vrcompositor already has caps
       VRS="$BIN/vrsetup.sh"
       if [ -f "$VRS" ] && ! grep -q 'skipping launcher setcap' "$VRS"; then
         TS=$(date +%s)
@@ -49,7 +48,6 @@ steamvr-fix:
         mv "$VRS.tmp" "$VRS" && chmod +x "$VRS"
         echo "[patch] vrsetup.sh -> short-circuit pkexec path"
       fi
-      # Patch vrstartup.sh to use XCB platform (Wayland plugin missing in logs)
       VRT="$BIN/vrstartup.sh"
       if [ -f "$VRT" ] && ! grep -q '^export QT_QPA_PLATFORM=xcb' "$VRT"; then
         TS=$(date +%s)
@@ -68,7 +66,6 @@ steamvr-fix:
         mv "$VRT.tmp" "$VRT" && chmod +x "$VRT"
         echo "[patch] vrstartup.sh -> export QT_QPA_PLATFORM=xcb"
       fi
-      # Prefer dGPU for Vulkan (multi-GPU: fix DRM lease mismatch)
       VRENV="$VR/bin/vrenv.sh"
       if [ -f "$VRENV" ] && ! grep -q '^export DRI_PRIME=1' "$VRENV"; then
         TS=$(date +%s)
@@ -87,10 +84,8 @@ steamvr-fix:
       fi
     done
     echo "Done. Restart Steam, then launch SteamVR."
-BASH
 
 steamvr-restore-launcher:
-    bash -eu -o pipefail <<'BASH'
     bases=( "$HOME/.local/share/Steam" "$HOME/.steam/steam" "$HOME/.steam/root" "$HOME/Steam" )
     restored=0
     for b in "${bases[@]}"; do
@@ -107,10 +102,7 @@ steamvr-restore-launcher:
       fi
     done
     if [ "$restored" -eq 0 ]; then echo "No backups found to restore"; fi
-BASH
 
 steamvr-run:
-    bash -eu -o pipefail <<'BASH'
     export MANGOHUD=0 ENABLE_VKBASALT=0 VK_INSTANCE_LAYERS="" VK_LAYER_PATH=""
     exec steam
-BASH
