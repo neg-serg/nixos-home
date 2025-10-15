@@ -57,7 +57,7 @@ with lib; let
     # Dev helpers, diffs, automation, navigation
     dev = [
       pkgs.babashka # native Clojure scripting runtime
-      pkgs.diffoscope # deep diff for many formats
+      # pkgs.diffoscope # deep diff for many formats
       pkgs.diff-so-fancy # human-friendly git diff pager
       pkgs.entr # run commands on file change
       pkgs.expect # automate interactive TTY programs
@@ -107,6 +107,9 @@ in {
       config.lib.neg.pkgsList (config.lib.neg.mkEnabledList config.features.cli groups)
       ++ [
         pkgs.tealdeer # tldr replacement written in Rust
+        pkgs.neg.comma # run commands from nixpkgs by name (",") — local variant from overlay
+        pkgs.kubectl # Kubernetes CLI
+        pkgs.kubernetes-helm # Helm package manager
       ];
   };
 }
