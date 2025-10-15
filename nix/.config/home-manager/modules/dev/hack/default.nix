@@ -11,7 +11,7 @@ with lib; let
       pkgs.git-secrets # prevent committing secrets to git
     ];
     reverse = [
-      pkgs.binwalk # analyze binaries for embedded files
+      # pkgs.binwalk # analyze binaries for embedded files
       pkgs.capstone # disassembly framework
     ];
     crawl = [
