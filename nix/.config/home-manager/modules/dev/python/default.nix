@@ -8,6 +8,7 @@
     with ps; [
       colored # terminal colors utilities
       docopt # simple CLI argument parser
+      beautifulsoup4 # HTML/XML parser (bs4)
       numpy # numerical computing
       annoy # approximate nearest neighbors
       orjson # fast JSON parser/serializer
