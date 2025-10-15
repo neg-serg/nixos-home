@@ -210,10 +210,10 @@ hm-bench-fast:
 
 # SteamVR helpers (proxy to repo root justfile)
 steamvr-fix:
-    just --justfile ../../../justfile --working-directory ../../.. steamvr-fix
+    just --justfile ../../../steamvr.just --working-directory ../../.. steamvr-fix
 
 steamvr-restore-launcher:
-    just --justfile ../../../justfile --working-directory ../../.. steamvr-restore-launcher
+    just --justfile ../../../steamvr.just --working-directory ../../.. steamvr-restore-launcher
 
 steamvr-run:
-    just --justfile ../../../justfile --working-directory ../../.. steamvr-run
+    just --justfile ../../../steamvr.just --working-directory ../../.. steamvr-run
