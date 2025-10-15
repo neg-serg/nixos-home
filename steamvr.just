@@ -1,6 +1,6 @@
-set shell := ["bash", "-eu", "-o", "pipefail", "-c"]
-
 steamvr-fix:
+    #!/usr/bin/env bash
+    set -euo pipefail
     bases=( "$HOME/.local/share/Steam" "$HOME/.steam/steam" "$HOME/.steam/root" "$HOME/Steam" )
     found=()
     for b in "${bases[@]}"; do
@@ -14,12 +14,22 @@ steamvr-fix:
     for VR in "${found[@]}"; do
       L64="$VR/bin/linux64"
       BIN="$VR/bin"
-      echo "[caps] Granting CAP_SYS_NICE to vrcompositor/vrserver in: $L64"
+      echo "[caps] Ensuring CAP_SYS_NICE on vrcompositor/vrserver in: $L64"
       if ! command -v setcap >/dev/null 2>&1; then echo "setcap not found" >&2; exit 1; fi
       sudo -n true 2>/dev/null || true
-      sudo setcap 'cap_sys_nice+ep' "$L64/vrcompositor" "$L64/vrserver" || {
-        echo "Warning: setcap failed, continuing" >&2
-      }
+      for bin in vrcompositor vrserver; do
+        f="$L64/$bin"
+        if [ ! -f "$f" ] || [ -L "$f" ]; then
+          echo "skip setcap (not a regular file): $f" >&2; continue
+        fi
+        if getcap -v "$f" 2>/dev/null | grep -q 'cap_sys_nice'; then
+          echo "already has cap_sys_nice: $bin"
+        else
+          if ! sudo setcap 'cap_sys_nice+ep' "$f"; then
+            echo "Warning: setcap failed for $bin, continuing" >&2
+          fi
+        fi
+      done
       getcap -v "$L64/vrcompositor" "$L64/vrserver" || true
       if [ -f "$L64/vrcompositor-launcher.sh" ] \
          && grep -q 'exec "$ROOT/vrcompositor-launcher"' "$L64/vrcompositor-launcher.sh"; then
@@ -47,6 +57,13 @@ steamvr-fix:
         ' "$VRS.bak.$TS" > "$VRS.tmp"
         mv "$VRS.tmp" "$VRS" && chmod +x "$VRS"
         echo "[patch] vrsetup.sh -> short-circuit pkexec path"
+      fi
+      # Additionally, neuter pkexec invocation if present (avoid GUI prompt entirely)
+      if [ -f "$VRS" ] && grep -q 'pkexec setcap' "$VRS"; then
+        TS=$(date +%s)
+        cp -a "$VRS" "$VRS.bak.pkexec.$TS"
+        sed -i 's/^\([[:space:]]*\)pkexec setcap /\1: pkexec setcap (disabled) /' "$VRS" || true
+        echo "[patch] vrsetup.sh -> disable pkexec setcap line"
       fi
       VRT="$BIN/vrstartup.sh"
       if [ -f "$VRT" ] && ! grep -q '^export QT_QPA_PLATFORM=xcb' "$VRT"; then
@@ -79,13 +96,16 @@ steamvr-fix:
             ins=1
           }
         ' "$VRENV.bak.$TS" > "$VRENV.tmp"
-        mv "$VRENV.tmp" "$VRENV" && chmod +x "$VRENV"
+        mv "$VRENV.tmp" "$VRENV"
+        chmod +x "$VRENV"
         echo "[patch] vrenv.sh -> export DRI_PRIME=1"
       fi
     done
     echo "Done. Restart Steam, then launch SteamVR."
 
 steamvr-restore-launcher:
+    #!/usr/bin/env bash
+    set -euo pipefail
     bases=( "$HOME/.local/share/Steam" "$HOME/.steam/steam" "$HOME/.steam/root" "$HOME/Steam" )
     restored=0
     for b in "${bases[@]}"; do
@@ -104,5 +124,22 @@ steamvr-restore-launcher:
     if [ "$restored" -eq 0 ]; then echo "No backups found to restore"; fi
 
 steamvr-run:
+    #!/usr/bin/env bash
+    set -euo pipefail
     export MANGOHUD=0 ENABLE_VKBASALT=0 VK_INSTANCE_LAYERS="" VK_LAYER_PATH=""
+    exec steam
+
+# Helpers to run Steam with explicit DRM device ordering (if lease picks wrong card)
+steamvr-run-card0:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    export MANGOHUD=0 ENABLE_VKBASALT=0 VK_INSTANCE_LAYERS="" VK_LAYER_PATH=""
+    export WLR_DRM_DEVICES="/dev/dri/card0"
+    exec steam
+
+steamvr-run-card1:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    export MANGOHUD=0 ENABLE_VKBASALT=0 VK_INSTANCE_LAYERS="" VK_LAYER_PATH=""
+    export WLR_DRM_DEVICES="/dev/dri/card1:/dev/dri/card0"
     exec steam
