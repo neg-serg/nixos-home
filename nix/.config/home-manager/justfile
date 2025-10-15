@@ -207,3 +207,13 @@ hm-bench-fast:
       NIX_SHOW_STATS=1 nix build --no-link ".#checks.${sys}.${name}" -L || true; \
       echo; \
     done
+
+# SteamVR helpers (proxy to repo root justfile)
+steamvr-fix:
+    just --justfile ../../../justfile --working-directory ../../.. steamvr-fix
+
+steamvr-restore-launcher:
+    just --justfile ../../../justfile --working-directory ../../.. steamvr-restore-launcher
+
+steamvr-run:
+    just --justfile ../../../justfile --working-directory ../../.. steamvr-run
