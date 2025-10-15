@@ -104,3 +104,87 @@ nvim-lint:
 bin-lint:
     just shebang-lint
     just zsh-syntax
+
+# Prepare SteamVR for non-root use under Nix/Wayland
+# - Grants CAP_SYS_NICE to vrcompositor and vrserver
+# - Bypasses pkexec path in vrsetup.sh if vrcompositor already has caps
+# - Forces Qt xcb platform for vrmonitor to avoid Wayland plugin crash
+steamvr-fix:
+    bash -eu -o pipefail -c '
+    bases=( "$HOME/.local/share/Steam" "$HOME/.steam/steam" "$HOME/.steam/root" "$HOME/Steam" )
+    found=()
+    for b in "${bases[@]}"; do
+      vr="$b/steamapps/common/SteamVR"
+      if [ -x "$vr/bin/linux64/vrcompositor" ]; then found+=("$vr"); fi
+    done
+    if [ "${#found[@]}" -eq 0 ]; then
+      echo "SteamVR not found under: ${bases[*]}" >&2; exit 1
+    fi
+    echo "SteamVR locations: ${found[*]}"
+
+    for VR in "${found[@]}"; do
+      L64="$VR/bin/linux64"
+      BIN="$VR/bin"
+
+      echo "[caps] Granting CAP_SYS_NICE to vrcompositor/vrserver in: $L64"
+      if ! command -v setcap >/dev/null 2>&1; then echo "setcap not found" >&2; exit 1; fi
+      sudo -n true 2>/dev/null || true
+      sudo setcap 'cap_sys_nice+ep' "$L64/vrcompositor" "$L64/vrserver" || {
+        echo "Warning: setcap failed, continuing" >&2
+      }
+      getcap -v "$L64/vrcompositor" "$L64/vrserver" || true
+
+      # Patch launcher to call vrcompositor directly (avoid pkexec path)
+      if [ -f "$L64/vrcompositor-launcher.sh" ] \
+         && grep -q 'exec "$ROOT/vrcompositor-launcher"' "$L64/vrcompositor-launcher.sh"; then
+        cp -a "$L64/vrcompositor-launcher.sh" "$L64/vrcompositor-launcher.sh.bak.$(date +%s)"
+        sed -i 's|exec "$ROOT/vrcompositor-launcher" "$@"|exec "$ROOT/vrcompositor" "$@"|' "$L64/vrcompositor-launcher.sh"
+        echo "[patch] vrcompositor-launcher.sh -> direct vrcompositor"
+      fi
+
+      # Patch vrsetup.sh to skip pkexec when vrcompositor already has caps
+      VRS="$BIN/vrsetup.sh"
+      if [ -f "$VRS" ] && ! grep -q 'skipping launcher setcap' "$VRS"; then
+        TS=$(date +%s)
+        cp -a "$VRS" "$VRS.bak.$TS"
+        awk '
+          BEGIN{inf=0}
+          $0 ~ /^function SteamVRLauncherSetup\(\)/ { print; inf=1; next }
+          inf==1 && $0 ~ /^\{/ {
+            print;
+            print "\t# Short-circuit: if vrcompositor already has CAP_SYS_NICE, skip pkexec/setcap on launcher";
+            print "\tif [[ \"$(getcap $STEAMVR_TOOLSDIR/bin/linux64/vrcompositor 2>/dev/null)\" == *\"cap_sys_nice\"* ]]; then";
+            print "\t\tlog \"vrcompositor has cap_sys_nice; skipping launcher setcap.\"";
+            print "\t\treturn 0";
+            print "\tfi";
+            inf=2; next
+          }
+          { print }
+        ' "$VRS.bak.$TS" > "$VRS.tmp"
+        mv "$VRS.tmp" "$VRS" && chmod +x "$VRS"
+        echo "[patch] vrsetup.sh -> short-circuit pkexec path"
+      fi
+
+      # Patch vrstartup.sh to use XCB platform (Wayland plugin missing in logs)
+      VRT="$BIN/vrstartup.sh"
+      if [ -f "$VRT" ] && ! grep -q '^export QT_QPA_PLATFORM=xcb' "$VRT"; then
+        TS=$(date +%s)
+        cp -a "$VRT" "$VRT.bak.$TS"
+        awk '
+          BEGIN{ins=0}
+          {
+            print $0
+            if (ins==0 && $0 ~ /^VRBINDIR=/) {
+              print "\n# Force Qt to use X11 (xcb) to avoid Wayland plugin issues";
+              print "export QT_QPA_PLATFORM=xcb";
+              ins=1
+            }
+          }
+        ' "$VRT.bak.$TS" > "$VRT.tmp"
+        mv "$VRT.tmp" "$VRT" && chmod +x "$VRT"
+        echo "[patch] vrstartup.sh -> export QT_QPA_PLATFORM=xcb"
+      fi
+    done
+
+    echo "Done. Restart Steam, then launch SteamVR."
+    '
