@@ -207,3 +207,35 @@ steamvr-fix:
 
     echo "Done. Restart Steam, then launch SteamVR."
     '
+
+# Restore original vrcompositor-launcher.sh if needed
+steamvr-restore-launcher:
+    bash -eu -o pipefail -c '
+    bases=( "$HOME/.local/share/Steam" "$HOME/.steam/steam" "$HOME/.steam/root" "$HOME/Steam" )
+    restored=0
+    for b in "${bases[@]}"; do
+      L64="$b/steamapps/common/SteamVR/bin/linux64"
+      f="$L64/vrcompositor-launcher.sh"
+      if [ -f "$f" ]; then
+        bak=$(ls -1t "$f".bak.* 2>/dev/null | head -n1 || true)
+        if [ -n "$bak" ] && [ -f "$bak" ]; then
+          cp -a "$bak" "$f"
+          chmod +x "$f"
+          echo "Restored: $f from $bak"
+          restored=1
+        fi
+      fi
+    done
+    if [ "$restored" -eq 0 ]; then echo "No backups found to restore"; fi
+    '
+
+# Run Steam with a clean Vulkan env for VR (disables overlays)
+steamvr-run:
+    bash -eu -o pipefail -c '
+    export MANGOHUD=0 ENABLE_VKBASALT=0 VK_INSTANCE_LAYERS="" VK_LAYER_PATH=""
+    # Prefer X11 for SDL mirror windows if needed; comment out to keep Wayland
+    # export SDL_VIDEODRIVER=x11
+    # If you have multiple DRM cards and HMD on card1, consider:
+    # export WLR_DRM_DEVICES="/dev/dri/card1:/dev/dri/card0"
+    exec steam
+    '
