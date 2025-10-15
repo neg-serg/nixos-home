@@ -19,7 +19,6 @@
     ];
     analysis = [
       pkgs.ghidra-bin # reverse engineering suite
-      pkgs.binwalk # scan binaries for embedded files
       pkgs.capstone # multi-arch disassembly engine
       pkgs.volatility3 # memory forensics framework
       pkgs.pdf-parser # analyze/parse PDF documents
