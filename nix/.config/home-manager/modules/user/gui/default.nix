@@ -1,5 +1,6 @@
 {
   imports = [
+    ./wezterm.nix
     ./apps.nix
     ./flameshot.nix
     ./hyprland.nix
