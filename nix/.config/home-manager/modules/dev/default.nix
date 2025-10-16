@@ -51,6 +51,7 @@ in {
     ./hack
     ./pkgs
     ./python
+    ./openxr
     ./unreal
   ];
 }
