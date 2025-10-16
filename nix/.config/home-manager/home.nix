@@ -39,6 +39,9 @@ in {
   # Enable Unreal Engine tooling (ue5-sync/build/editor wrappers)
   features.dev.unreal.enable = true;
 
+  # Enable OpenXR dev stack (installs Envision UI)
+  features.dev.openxr.enable = true;
+
   # XDG aggregated fixups were removed; rely on per‑file `force = true` when needed.
 
   # Unfree policy centralized in modules/misc/unfree.nix (features.allowUnfree.allowed)
