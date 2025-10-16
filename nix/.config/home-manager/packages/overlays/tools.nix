@@ -8,8 +8,6 @@ in {
     # CLI/util packages
     a2ln = call ../a2ln {};
     awrit = call ../awrit {};
-    fancy_cat = call ../fancy-cat {};
-    "fancy-cat" = fancy_cat;
     bt_migrate = call ../bt-migrate {};
     "bt-migrate" = bt_migrate;
     cxxmatrix = call ../cxxmatrix {};
