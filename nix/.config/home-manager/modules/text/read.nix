@@ -4,7 +4,6 @@
   home.packages = config.lib.neg.pkgsList [
     pkgs.amfora # terminal browser for gemini
     pkgs.antiword # convert ms word to text or ps
-    pkgs.neg.fancy-cat # kitty graphics PDF viewer
     pkgs.epr # cli epub reader
     pkgs.glow # markdown viewer
     pkgs.lowdown # cat for markdown
