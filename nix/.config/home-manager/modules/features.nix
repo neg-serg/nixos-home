@@ -100,6 +100,8 @@ in {
           enable = mkDefault false;
           ai.enable = mkDefault false;
         };
+        # Explicitly disable Unreal tooling in lite to avoid asserts
+        dev.unreal.enable = mkForce false;
         media.audio = {
           core.enable = mkDefault false;
           apps.enable = mkDefault false;
