@@ -52,7 +52,6 @@
     rust =
       [
         pkgs.rustup # flexible Rust toolchain manager (stable/nightly components)
-        pkgs.rust-analyzer # Rust LSP for IDEs/editors
       ];
 
     # C/C++ toolchain and common build tools
