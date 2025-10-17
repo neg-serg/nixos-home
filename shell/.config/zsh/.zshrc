@@ -26,7 +26,6 @@ source "${ZDOTDIR}/01-init.zsh"
 for file in {02-cmds,03-completion,04-fzf,04-bindings,05-neg-cd}; do
   zsh-defer source "${ZDOTDIR}/$file.zsh"
 done
-command -v zoxide >/dev/null && eval "$(zoxide init zsh)"
 command -v direnv >/dev/null && eval "$(direnv hook zsh)"
 [[ $NEOVIM_TERMINAL ]] && source "${ZDOTDIR}/08-neovim-cd.zsh"
 # vim: ft=zsh:nowrap
