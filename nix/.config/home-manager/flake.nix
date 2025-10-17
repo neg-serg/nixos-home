@@ -212,11 +212,26 @@
           pkgs.cargo # Rust build tool
           pkgs.rustc # Rust compiler
         ];
-        rustExtraTools = [
-          pkgs.hyperfine # CLI benchmarking
-          pkgs.kitty # terminal (for graphics/testing)
-          pkgs.wl-clipboard # Wayland clipboard helpers
-        ];
+        rustExtraTools =
+          [
+            pkgs.hyperfine # CLI benchmarking
+            pkgs.kitty # terminal (for graphics/testing)
+            pkgs.wl-clipboard # Wayland clipboard helpers
+          ]
+          # Cross-building support for cargo-zigbuild
+          ++ (lib.optionals (pkgs ? zig) [ pkgs.zig ])
+          # Common native deps helpers
+          ++ (lib.optionals (pkgs ? pkg-config) [ pkgs.pkg-config ])
+          ++ (lib.optionals (pkgs ? openssl) [ pkgs.openssl pkgs.openssl.dev ])
+          # Useful cargo subcommands (guarded by availability on this pin)
+          ++ (lib.optionals (pkgs ? cargo-nextest) [ pkgs.cargo-nextest ])
+          ++ (lib.optionals (pkgs ? cargo-audit) [ pkgs.cargo-audit ])
+          ++ (lib.optionals (pkgs ? cargo-deny) [ pkgs.cargo-deny ])
+          ++ (lib.optionals (pkgs ? cargo-outdated) [ pkgs.cargo-outdated ])
+          ++ (lib.optionals (pkgs ? cargo-bloat) [ pkgs.cargo-bloat ])
+          ++ (lib.optionals (pkgs ? cargo-modules) [ pkgs.cargo-modules ])
+          ++ (lib.optionals (pkgs ? cargo-zigbuild) [ pkgs.cargo-zigbuild ])
+          ++ (lib.optionals (pkgs ? bacon) [ pkgs.bacon ]);
       in {
         inherit pkgs iosevkaNeg;
 
@@ -472,6 +487,14 @@
       inherit (perSystem.${defaultSystem}) pkgs;
       extraSpecialArgs = mkHMArgs defaultSystem;
       modules = hmBaseModules {profile = "lite";};
+    };
+
+    # Reusable project templates
+    templates = {
+      rust-crane = {
+        path = ./templates/rust-crane;
+        description = "Rust project scaffold: crane, unified rust-toolchain, checks, devShell";
+      };
     };
   };
 }
