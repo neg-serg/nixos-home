@@ -12,22 +12,15 @@ mkIf config.features.gui.enable (
       ];
       text = rendered;
     };
+    mkLocalBin = import ../../../../packages/lib/local-bin.nix { inherit lib; };
   in
-    {
-      home.file.".local/bin/rofi" = {
-        executable = true;
-        force = true;
-        text = ''#!/usr/bin/env bash
-          set -euo pipefail
-          exec ${rofiWrapper}/bin/rofi-wrapper "$@"'';
-      };
+    lib.mkMerge [
+      (mkLocalBin "rofi" ''#!/usr/bin/env bash
+        set -euo pipefail
+        exec ${rofiWrapper}/bin/rofi-wrapper "$@"'')
       # Optional helper to try pass in two columns without overriding system rofi-pass
-      home.file.".local/bin/rofi-pass-2col" = {
-        executable = true;
-        force = true;
-        text = ''#!/usr/bin/env bash
-          set -euo pipefail
-          exec ${config.home.homeDirectory}/.local/bin/pass-2col "$@"'';
-      };
-    }
+      (mkLocalBin "rofi-pass-2col" ''#!/usr/bin/env bash
+        set -euo pipefail
+        exec ${config.home.homeDirectory}/.local/bin/pass-2col "$@"'')
+    ]
 )
