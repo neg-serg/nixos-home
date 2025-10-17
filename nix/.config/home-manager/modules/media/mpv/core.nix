@@ -6,9 +6,9 @@
   programs.mpv = {
     enable = true;
     config = {
-      input-ipc-server = "${config.xdg.configHome}/mpv/socket";
+      input-ipc-server = "~/.config/mpv/socket";
       cache = "no";
-      gpu-shader-cache-dir = "${config.xdg.cacheHome}/mpv/";
+      gpu-shader-cache-dir = "${config.home.homeDirectory}/tmp/";
       hwdec = "auto-safe";
       profile = "gpu-hq";
       vd-lavc-dr = true;

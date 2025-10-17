@@ -9,7 +9,6 @@ let
       text = lib.replaceStrings ["@SWAYIMG_BIN@" "@SOCAT_BIN@"] [ (lib.getExe pkgs.swayimg) (lib.getExe pkgs.socat) ] tpl;
     in text
   );
-  mkLocalBin = import ../../../packages/lib/local-bin.nix { inherit lib; };
 in lib.mkMerge [
   {
   home.packages = config.lib.neg.pkgsList [
@@ -40,9 +39,15 @@ in lib.mkMerge [
   ];
   }
   # Replace ad-hoc ~/.local/bin files with guarded wrappers
-  (mkLocalBin "swayimg" ''#!/usr/bin/env bash
-    set -euo pipefail
-    exec ${swayimg-first}/bin/swayimg-first "$@"'')
+  {
+    home.file.".local/bin/swayimg" = {
+      executable = true;
+      force = true;
+      text = ''#!/usr/bin/env bash
+        set -euo pipefail
+        exec ${swayimg-first}/bin/swayimg-first "$@"'';
+    };
+  }
   # Live-editable Swayimg config via helper (guards parent dir and target)
   (xdg.mkXdgSource "swayimg" {
     source = config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/nix/.config/home-manager/modules/media/images/swayimg/conf";
