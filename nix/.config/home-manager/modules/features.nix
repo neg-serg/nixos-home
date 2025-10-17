@@ -37,6 +37,12 @@ in {
       ai = {
         enable = mkBool "enable AI tools (e.g., LM Studio)" true;
       };
+      rust = {
+        enable = mkBool "enable Rust tooling (rustup, rust-analyzer)" true;
+      };
+      cpp = {
+        enable = mkBool "enable C/C++ tooling (gcc/clang, cmake, ninja, lldb)" true;
+      };
       haskell = {
         enable = mkBool "enable Haskell tooling (ghc, cabal, stack, HLS)" true;
       };
@@ -182,6 +188,8 @@ in {
     # When a parent feature is disabled, force-disable children to avoid priority conflicts
     (mkIf (! cfg.dev.enable) {
       features.dev.ai.enable = mkForce false;
+      features.dev.rust.enable = mkForce false;
+      features.dev.cpp.enable = mkForce false;
     })
     (mkIf (! cfg.dev.haskell.enable) {
       # When Haskell tooling is disabled, proactively exclude common Haskell tool pnames
@@ -197,6 +205,32 @@ in {
           "fourmolu"
           "hindent"
           "ghcid"
+        ];
+    })
+    (mkIf (! cfg.dev.rust.enable) {
+      # When Rust tooling is disabled, exclude common Rust tool pnames
+      features.excludePkgs =
+        mkAfter [
+          "rustup"
+          "rust-analyzer"
+          "cargo"
+          "rustc"
+          "clippy"
+          "rustfmt"
+        ];
+    })
+    (mkIf (! cfg.dev.cpp.enable) {
+      # When C/C++ tooling is disabled, exclude typical C/C++ tool pnames
+      features.excludePkgs =
+        mkAfter [
+          "gcc"
+          "clang"
+          "clang-tools"
+          "cmake"
+          "ninja"
+          "bear"
+          "ccache"
+          "lldb"
         ];
     })
     (mkIf (! cfg.gui.enable) {
