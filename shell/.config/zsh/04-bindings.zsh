@@ -8,7 +8,6 @@ autoload -Uz special-accept-line && zle -N special-accept-line
 autoload -Uz zleiab && zle -N zleiab
 if (( $+commands[zoxide] )); then
   autoload -Uz zoxide_complete
-  autoload -Uz _zoxide_zsh_word_complete
   zle -C zoxide-complete complete-word _zoxide_zsh_word_complete
   zle -N zoxide-complete-fzf zoxide_complete
   zstyle ':completion:zoxide-complete:' menu select
