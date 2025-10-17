@@ -48,6 +48,26 @@
       ++ (lib.optionals (pkgs ? fourmolu) [ pkgs.fourmolu ]) # alt formatter
       ++ (lib.optionals (pkgs ? hindent) [ pkgs.hindent ]); # alt formatter
 
+    # Rust toolchain and helpers
+    rust =
+      [
+        pkgs.rustup # flexible Rust toolchain manager (stable/nightly components)
+        pkgs.rust-analyzer # Rust LSP for IDEs/editors
+      ];
+
+    # C/C++ toolchain and common build tools
+    cpp =
+      [
+        pkgs.gcc # GCC toolchain
+        pkgs.clang # Clang/LLVM C/C++ compiler
+        pkgs.clang-tools # clangd + clang-tidy + extras
+        pkgs.cmake # CMake build system
+        pkgs.ninja # Ninja build tool
+        pkgs.bear # compilation database generator (compile_commands.json)
+        pkgs.ccache # compiler cache
+        pkgs.lldb # LLVM debugger
+      ];
+
     # IaC backend package (Terraform or OpenTofu) controlled by
     # features.dev.iac.backend (default: "terraform").
     iac = let
@@ -67,6 +87,8 @@ in
       let
         flags = (config.features.dev.pkgs or {}) // {
           haskell = config.features.dev.haskell.enable or false;
+          rust = config.features.dev.rust.enable or false;
+          cpp = config.features.dev.cpp.enable or false;
         };
       in config.lib.neg.pkgsList (
         config.lib.neg.mkEnabledList flags groups
