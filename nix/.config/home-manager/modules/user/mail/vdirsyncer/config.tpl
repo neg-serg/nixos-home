@@ -11,7 +11,7 @@ metadata = ["color", "displayname"]
 
 [storage calendars_local]
 type = "filesystem"
-path = "@HOME@/.config/vdirsyncer/calendars"
+path = "@XDG_CONFIG@/vdirsyncer/calendars"
 fileext = ".ics"
 
 [storage calendars_remote]
@@ -32,7 +32,7 @@ conflict_resolution = "b wins"
 
 [storage contacts_local]
 type = "filesystem"
-path = "@HOME@/.config/vdirsyncer/contacts"
+path = "@XDG_CONFIG@/vdirsyncer/contacts"
 fileext = ".vcf"
 
 [storage contacts_remote]
