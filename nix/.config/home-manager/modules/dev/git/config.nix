@@ -100,7 +100,7 @@ mkIf config.features.dev.enable (lib.mkMerge [
           rerere = { enabled = true; autoupdate = true; };
           merge.tool = "nvimdiff";
           mergetool.prompt = true;
-          credential.helper = "!${pkgs.pass-git-helper}/bin/pass-git-helper --file ~/.config/git/pass.yml";
+          credential.helper = "!${pkgs.pass-git-helper}/bin/pass-git-helper --file ${config.xdg.configHome}/git/pass.yml";
           difftool.nwim.cmd = "nvim -d $LOCAL $REMOTE";
           mergetool.nwim.cmd = "nvim -d $LOCAL $BASE $REMOTE $MERGED -c 'wincmd J | wincmd ='";
           mergetool.delta = {
