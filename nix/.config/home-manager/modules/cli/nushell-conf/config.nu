@@ -1,7 +1,7 @@
-source ~/.config/nushell/aliases.nu
-source ~/.config/nushell/git.nu
-source ~/.config/nushell/broot.nu
-use ~/.config/nushell/git-completion.nu *
+source $"($env.XDG_CONFIG_HOME)/nushell/aliases.nu"
+source $"($env.XDG_CONFIG_HOME)/nushell/git.nu"
+source $"($env.XDG_CONFIG_HOME)/nushell/broot.nu"
+use $"($env.XDG_CONFIG_HOME)/nushell/git-completion.nu" *
 
 # Add bebexpand plugin only if installed locally
 let _bexpand_path = ("~/.local/share/cargo/bin/nu_plugin_bexpand" | path expand)
