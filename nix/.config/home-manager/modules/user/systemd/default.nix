@@ -59,7 +59,7 @@ lib.mkMerge [
               {
                 Unit = { Description = "Pic dirs notification"; StartLimitIntervalSec = "0"; };
                 Service = {
-                  ExecStart = let exe = "${picDirsRunner}/bin/pic-dirs-runner"; in "${exe}";
+                  ExecStart = let exe = lib.getExe' picDirsRunner "pic-dirs-runner"; in "${exe}";
                   PassEnvironment = ["XDG_PICTURES_DIR" "XDG_DATA_HOME"];
                   Restart = "on-failure";
                   RestartSec = "1";

@@ -67,7 +67,7 @@ in
           systemd.user.services.monado-service = lib.mkMerge [
             {
               Unit = { Description = "Monado OpenXR Runtime Service"; };
-              Service.ExecStart = "${pkgs.monado}/bin/monado-service";
+              Service.ExecStart = let exe = lib.getExe' pkgs.monado "monado-service"; in "${exe}";
             }
             (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["graphical"]; })
           ];
