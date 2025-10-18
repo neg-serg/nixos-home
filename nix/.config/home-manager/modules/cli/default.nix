@@ -104,12 +104,14 @@ in {
       visidata = {enable = true;}; # interactive multitool for tabular data
     };
     home.packages =
-      config.lib.neg.pkgsList (config.lib.neg.mkEnabledList config.features.cli groups)
-      ++ [
-        pkgs.tealdeer # tldr replacement written in Rust
-        pkgs.neg.comma # run commands from nixpkgs by name (",") — local variant from overlay
-        pkgs.kubectl # Kubernetes CLI
-        pkgs.kubernetes-helm # Helm package manager
-      ];
+      config.lib.neg.pkgsList (
+        (config.lib.neg.mkEnabledList config.features.cli groups)
+        ++ [
+          pkgs.tealdeer # tldr replacement written in Rust
+          pkgs.neg.comma # run commands from nixpkgs by name (",") — local variant from overlay
+          pkgs.kubectl # Kubernetes CLI
+          pkgs.kubernetes-helm # Helm package manager
+        ]
+      );
   };
 }
