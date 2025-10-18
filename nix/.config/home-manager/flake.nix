@@ -126,15 +126,18 @@
     ...
   }: let
     inherit (nixpkgs) lib;
+    # Helpers for environment parsing (DRY)
+    boolEnv = name: let v = builtins.getEnv name; in v == "1" || v == "true" || v == "yes";
+    splitEnvList = name: let v = builtins.getEnv name; in
+      if v == "" then [] else (lib.filter (s: s != "") (lib.splitString "," v));
     docs = import ./flake/features-docs.nix {inherit lib;};
     # Prefer evaluating only one system by default to speed up local eval.
     # You can override the systems list for CI or cross builds by setting
     # HM_SYSTEMS to a comma-separated list (e.g., "x86_64-linux,aarch64-linux").
     defaultSystem = "x86_64-linux";
     systems = let
-      fromEnv = builtins.getEnv "HM_SYSTEMS";
-      raw = if fromEnv == "" then [] else (lib.splitString "," fromEnv);
-      cleaned = lib.unique (lib.filter (s: s != "") raw);
+      fromEnv = splitEnvList "HM_SYSTEMS";
+      cleaned = lib.unique fromEnv;
     in if cleaned == [] then [ defaultSystem ] else cleaned;
 
     # Pass only minimal inputs required by HM modules (hyprland for asserts, nupm for Nushell).
@@ -241,8 +244,7 @@
 
         packages =
           let
-            extrasEnv = builtins.getEnv "HM_EXTRAS";
-            extras = extrasEnv == "1" || extrasEnv == "true" || extrasEnv == "yes";
+            extras = boolEnv "HM_EXTRAS";
           in {
             default = pkgs.zsh;
           } // lib.optionalAttrs extras {
@@ -312,23 +314,20 @@
     # This reduces multi-system eval noise in CI unless explicitly requested.
     devShells =
       let
-        extrasEnv = builtins.getEnv "HM_EXTRAS";
-        extras = extrasEnv == "1" || extrasEnv == "true" || extrasEnv == "yes";
+        extras = boolEnv "HM_EXTRAS";
         sysList = if extras then systems else [ defaultSystem ];
       in lib.genAttrs sysList (s: perSystem.${s}.devShells);
     packages = lib.genAttrs systems (s: perSystem.${s}.packages);
     formatter =
       let
-        extrasEnv = builtins.getEnv "HM_EXTRAS";
-        extras = extrasEnv == "1" || extrasEnv == "true" || extrasEnv == "yes";
+        extras = boolEnv "HM_EXTRAS";
         sysList = if extras then systems else [ defaultSystem ];
       in lib.genAttrs sysList (s: perSystem.${s}.formatter);
     # Docs outputs are gated by HM_DOCS env; heavy HM evals are skipped by default.
     docs = lib.genAttrs systems (
       s: let
         pkgs = perSystem.${s}.pkgs;
-        docEnv = builtins.getEnv "HM_DOCS";
-        docsEnabled = docEnv == "1" || docEnv == "true" || docEnv == "yes";
+        docsEnabled = boolEnv "HM_DOCS";
         featureOptionsItems = docs.getFeatureOptionsItems ./modules/features.nix;
       in
         if docsEnabled then {
@@ -379,8 +378,7 @@
     checks = lib.genAttrs systems (
       s:
         let
-          fullChecksEnv = builtins.getEnv "HM_CHECKS_FULL";
-          fullChecks = fullChecksEnv == "1" || fullChecksEnv == "true" || fullChecksEnv == "yes";
+          fullChecks = boolEnv "HM_CHECKS_FULL";
           evalWith = profile: retroFlag: let
             hmCfg = homeManagerInput.lib.homeManagerConfiguration {
               inherit (perSystem.${s}) pkgs;
