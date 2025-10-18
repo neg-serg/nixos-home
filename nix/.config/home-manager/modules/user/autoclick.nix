@@ -13,7 +13,7 @@ mkIf (config.features.gui.enable or false) (lib.mkMerge [
         {
           Unit.Description = "ydotool virtual input daemon";
           Service = {
-            ExecStart = lib.getExe' pkgs.ydotool "ydotoold";
+            ExecStart = let exe = lib.getExe' pkgs.ydotool "ydotoold"; in "${exe}";
             Restart = "on-failure";
             RestartSec = "2";
             Slice = "background-graphical.slice";
