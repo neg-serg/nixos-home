@@ -22,6 +22,8 @@ in
         };
       };
     }
+    # Ensure the session file exists under XDG data (no activation DAG noise)
+    (xdg.mkXdgDataText "aria2/session" "")
     # Simple user service: read only from the generated config
     {
       systemd.user.services.aria2 = lib.mkMerge [
@@ -31,24 +33,5 @@ in
         }
         (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["graphical"]; })
       ];
-    }
-    # Keep the session file writable and avoid activation noise when it already exists
-    {
-      home.activation.ensureAria2SessionParent =
-        config.lib.neg.mkEnsureRealParent sessionFile;
-      home.activation.ensureAria2SessionFile =
-        lib.hm.dag.entryAfter ["writeBoundary"] ''
-          set -eu
-          session_path="${sessionFile}"
-          if [ -L "$session_path" ]; then
-            tmp="$(mktemp)"
-            cp "$session_path" "$tmp"
-            rm -f "$session_path"
-            install -Dm600 "$tmp" "$session_path"
-            rm -f "$tmp"
-          elif [ ! -e "$session_path" ]; then
-            install -Dm600 /dev/null "$session_path"
-          fi
-        '';
     }
   ])
