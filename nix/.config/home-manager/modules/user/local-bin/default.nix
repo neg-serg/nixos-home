@@ -61,7 +61,7 @@ mkIf (config.features.gui.enable or false) (lib.mkMerge [
       pkgs.neg.albumdetails   # album metadata extractor for music-rename
     ];
   }
-  # Generate ~/.local/bin scripts via a compact list (avoid config.lib recursion)
+  # Generate ~/.local/bin scripts using mkLocalBin (pre-clean + exec + force)
   {
     home.file = let
       mkEnt = e: {
