@@ -2,9 +2,9 @@
 let
   cfgDev = config.features.dev;
   enableIac = cfgDev.enable && (config.features.dev.pkgs.iac or false);
-  XDG_CFG = config.home.sessionVariables.XDG_CONFIG_HOME or "${config.home.homeDirectory}/.config";
-  XDG_DATA = config.home.sessionVariables.XDG_DATA_HOME or "${config.home.homeDirectory}/.local/share";
-  XDG_CACHE = config.home.sessionVariables.XDG_CACHE_HOME or "${config.home.homeDirectory}/.cache";
+  XDG_CFG = config.xdg.configHome;
+  XDG_DATA = config.xdg.dataHome;
+  XDG_CACHE = config.xdg.cacheHome;
   
 in
   lib.mkIf enableIac (lib.mkMerge [
