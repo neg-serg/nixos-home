@@ -3,8 +3,8 @@ with lib;
 mkIf (config.features.mail.enable && config.features.mail.vdirsyncer.enable) {
   # Ensure local storage directories exist
   home.activation.vdirsyncerDirs = config.lib.neg.mkEnsureDirsAfterWrite [
-    "$HOME/.config/vdirsyncer/calendars"
-    "$HOME/.config/vdirsyncer/contacts"
+    "${config.xdg.configHome}/vdirsyncer/calendars"
+    "${config.xdg.configHome}/vdirsyncer/contacts"
   ];
 
   # Ensure status path under XDG state exists to avoid first-run hiccups
@@ -13,4 +13,3 @@ mkIf (config.features.mail.enable && config.features.mail.vdirsyncer.enable) {
       "${config.xdg.stateHome or "$HOME/.local/state"}/vdirsyncer"
     ];
 }
-
