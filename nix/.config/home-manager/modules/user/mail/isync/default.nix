@@ -1,11 +1,6 @@
-{
-  lib,
-  pkgs,
-  config,
-  ...
-}:
+{ lib, pkgs, config, xdg, ... }:
 with lib;
-  mkIf config.features.mail.enable (let xdg = import ../../../lib/xdg-helpers.nix { }; in lib.mkMerge [
+  mkIf config.features.mail.enable (lib.mkMerge [
     {
     # Install isync/mbsync and keep using the XDG config at ~/.config/isync/mbsyncrc
     programs.mbsync.enable = true;
@@ -34,8 +29,10 @@ with lib;
           Service = {
             Type = "simple";
             TimeoutStartSec = "30min";
-            # Keep %h unquoted to let systemd expand it; avoid escapeShellArgs here.
-            ExecStart = let exe = lib.getExe pkgs.isync; args = [ "-Va" "-c" "%h/.config/isync/mbsyncrc" ]; in lib.concatStringsSep " " ([ exe ] ++ args);
+            ExecStart = let
+              exe = lib.getExe pkgs.isync;
+              args = [ "-Va" "-c" "${config.xdg.configHome}/isync/mbsyncrc" ];
+            in "${exe} ${lib.escapeShellArgs args}";
           };
         }
         (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["netOnline"]; })

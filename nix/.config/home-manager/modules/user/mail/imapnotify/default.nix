@@ -1,4 +1,4 @@
-{
+{ 
   lib,
   config,
   ...
@@ -17,7 +17,7 @@ with lib;
           tlsOptions = {
             "rejectUnauthorized" = false;
           };
-          onNewMail = "~/.config/mutt/scripts/sync_mail";
+          onNewMail = "${config.xdg.configHome}/mutt/scripts/sync_mail";
           onNewMailPost = "";
         };
       };
