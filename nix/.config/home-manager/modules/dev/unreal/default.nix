@@ -274,25 +274,14 @@ git -C "$root" lfs pull
 
           # Removed obsolete ue5-sync GitHub access warning.
         }
-        {
-          home.file = {
-            ".local/bin/ue5-editor" = {
-              executable = true;
-              force = true;
-              text = editorScript;
-            };
-            ".local/bin/ue5-build" = {
-              executable = true;
-              force = true;
-              text = buildScript;
-            };
-            ".local/bin/ue5-sync" = {
-              executable = true;
-              force = true;
-              text = syncScript;
-            };
-          };
-        }
+        (
+          let mkLocalBin = import ../../../packages/lib/local-bin.nix { inherit lib; }; in
+          lib.mkMerge [
+            (mkLocalBin "ue5-editor" editorScript)
+            (mkLocalBin "ue5-build" buildScript)
+            (mkLocalBin "ue5-sync" syncScript)
+          ]
+        )
       ]
   );
 }
