@@ -236,7 +236,7 @@ in
     docs = import ./flake/docs.nix {
       inherit lib perSystem systems homeManagerInput mkHMArgs hmBaseModules boolEnv;
     };
-    checks = import ./flake/checks.nix {
+    checks = import ./flake/checks-outputs.nix {
       inherit lib systems defaultSystem perSystem splitEnvList boolEnv homeManagerInput mkHMArgs hmBaseModules self;
     };
 
