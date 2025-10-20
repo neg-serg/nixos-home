@@ -122,8 +122,12 @@ mkIf (config.features.gui.enable or false) (lib.mkMerge [
       libcolored = "${pkgs.python3Packages.colored}/${sp}";
       tpl = builtins.readFile ./scripts/vid-info.py;
       vidInfoText = lib.replaceStrings ["@LIBPP@" "@LIBCOLORED@"] [ libpp libcolored ] tpl;
+      # Special case: ren needs path substitution for libs as well
+      renTpl = builtins.readFile ./scripts/ren;
+      renText = lib.replaceStrings ["@LIBPP@" "@LIBCOLORED@"] [ libpp libcolored ] renTpl;
     in base // {
       ".local/bin/vid-info" = { executable = true; force = true; text = vidInfoText; };
+      ".local/bin/ren" = { executable = true; force = true; text = renText; };
     };
   }
 ])
