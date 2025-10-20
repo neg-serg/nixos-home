@@ -5,9 +5,11 @@ mkIf config.features.dev.enable (lib.mkMerge [
     programs = {
       git = {
         enable = true;
-        userName = "Sergey Miroshnichenko";
-        userEmail = "serg.zorg@gmail.com";
-        extraConfig = {
+        settings = {
+          user = {
+            name = "Sergey Miroshnichenko";
+            email = "serg.zorg@gmail.com";
+          };
           commit.verbose = true;
           log.decorate = "short";
           fetch.shallow = true;
