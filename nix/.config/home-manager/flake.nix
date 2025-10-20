@@ -1,40 +1,44 @@
+let
+  extraSubstituters = [
+    "https://nix-community.cachix.org"
+    "https://hyprland.cachix.org"
+    # Additional popular caches
+    "https://numtide.cachix.org"
+    "https://nixpkgs-wayland.cachix.org"
+    "https://hercules-ci.cachix.org"
+    "https://cuda-maintainers.cachix.org"
+    "https://nix-gaming.cachix.org"
+    # Personal cache
+    "https://neg-serg.cachix.org"
+  ];
+  extraTrustedKeys = [
+    # nix-community
+    "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+    # Hyprland
+    "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
+    # numtide
+    "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE="
+    # nixpkgs-wayland
+    "nixpkgs-wayland.cachix.org-1:3lwxaILxMRkVhehr5StQprHdEo4IrE8sRho9R9HOLYA="
+    # hercules-ci
+    "hercules-ci.cachix.org-1:ZZeDl9Va+xe9j+KqdzoBZMFJHVQ42Uu/c/1/KMC5Lw0="
+    # cuda-maintainers
+    "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
+    # nix-gaming
+    "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
+    # personal cache
+    "neg-serg.cachix.org-1:MZ+xYOrDj1Uhq8GTJAg//KrS4fAPpnIvaWU/w3Qz/wo="
+  ];
+in
 {
   description = "Home Manager configuration of neg";
   # Global Nix configuration for this flake (affects local and CI when respected)
+  # Single source of truth for caches; Home Manager modules receive these via mkHMArgs.caches
   nixConfig = {
     experimental-features = ["nix-command" "flakes"];
-    # Note: nixConfig cannot import files here (requires literal lists)
-    # Keep in sync with caches/substituters.nix and caches/trusted-public-keys.nix
-    extra-substituters = [
-      "https://nix-community.cachix.org"
-      "https://hyprland.cachix.org"
-      # Additional popular caches
-      "https://numtide.cachix.org"
-      "https://nixpkgs-wayland.cachix.org"
-      "https://hercules-ci.cachix.org"
-      "https://cuda-maintainers.cachix.org"
-      "https://nix-gaming.cachix.org"
-      # Personal cache
-      "https://neg-serg.cachix.org"
-    ];
-    extra-trusted-public-keys = [
-      # nix-community
-      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-      # Hyprland
-      "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
-      # numtide
-      "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE="
-      # nixpkgs-wayland
-      "nixpkgs-wayland.cachix.org-1:3lwxaILxMRkVhehr5StQprHdEo4IrE8sRho9R9HOLYA="
-      # hercules-ci
-      "hercules-ci.cachix.org-1:ZZeDl9Va+xe9j+KqdzoBZMFJHVQ42Uu/c/1/KMC5Lw0="
-      # cuda-maintainers
-      "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
-      # nix-gaming
-      "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
-      # personal cache
-      "neg-serg.cachix.org-1:MZ+xYOrDj1Uhq8GTJAg//KrS4fAPpnIvaWU/w3Qz/wo="
-    ];
+    # Keep literal lists here to avoid early-import pitfalls; modules reuse these values via mkHMArgs
+    extra-substituters = extraSubstituters;
+    extra-trusted-public-keys = extraTrustedKeys;
   };
   inputs = {
     bzmenu = {
@@ -169,6 +173,11 @@
       inputs = hmInputs;
       inherit hy3;
       inherit (perSystem.${system}) iosevkaNeg;
+      # Flake cache settings for reuse in modules (single source of truth)
+      caches = {
+        substituters = extraSubstituters;
+        trustedPublicKeys = extraTrustedKeys;
+      };
       # Provide lazy providers to avoid evaluating inputs unless features enable them
       # Firefox addons via NUR
       faProvider = (pkgs: (pkgs.extend nur.overlays.default).nur.repos.rycee.firefox-addons);
@@ -284,34 +293,7 @@
           (import ./flake/checks.nix {
             inherit pkgs self system;
           })
-          // {
-            caches-consistency = pkgs.runCommand "caches-consistency" {} ''
-              set -eu
-              root=${./.}
-              subf="$root/caches/substituters.nix"
-              keysf="$root/caches/trusted-public-keys.nix"
-              # Ensure every entry listed in these files appears in flake.nix nixConfig
-              fail=0
-              sanitize() {
-                sed -e 's/#.*$//' -e 's/[",]//g' -e 's/^\s*//' -e 's/\s*$//' \
-                    -e '/^$/d' -e '/^\[/d' -e '/^\]/d'
-              }
-              while IFS= read -r s; do
-                if ! grep -q -- "\"$s\"" "$root/flake.nix"; then
-                  echo "Missing in flake.nix nixConfig.extra-substituters: $s" >&2
-                  fail=1
-                fi
-              done < <(sanitize < "$subf")
-              while IFS= read -r s; do
-                if ! grep -q -- "\"$s\"" "$root/flake.nix"; then
-                  echo "Missing in flake.nix nixConfig.extra-trusted-public-keys: $s" >&2
-                  fail=1
-                fi
-              done < <(sanitize < "$keysf")
-              [ $fail -eq 0 ]
-              touch $out
-            '';
-          };
+          ;
       }
     );
 
