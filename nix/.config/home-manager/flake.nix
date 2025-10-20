@@ -410,23 +410,13 @@ in
           // lib.optionalAttrs fullChecks heavy
     );
 
-    homeConfigurations =
-      let
-        defs = [
-          { name = "neg"; profile = null; }
-          { name = "neg-lite"; profile = "lite"; }
-        ];
-        mkModules = profile:
-          if profile == null then hmBaseModules {} else hmBaseModules { profile = profile; };
-      in
-        builtins.listToAttrs (map (d: {
-          name = d.name;
-          value = homeManagerInput.lib.homeManagerConfiguration {
-            inherit (perSystem.${defaultSystem}) pkgs;
-            extraSpecialArgs = mkHMArgs defaultSystem;
-            modules = mkModules d.profile;
-          };
-        }) defs);
+    homeConfigurations = lib.genAttrs [ "neg" "neg-lite" ] (n:
+      homeManagerInput.lib.homeManagerConfiguration {
+        inherit (perSystem.${defaultSystem}) pkgs;
+        extraSpecialArgs = mkHMArgs defaultSystem;
+        modules = hmBaseModules (lib.optionalAttrs (n == "neg-lite") { profile = "lite"; });
+      }
+    );
 
     # Reusable project templates
     templates = {
