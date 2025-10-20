@@ -406,7 +406,12 @@ in
                 { label = "neg"; value = null; }
                 { label = "lite"; value = "lite"; }
               ];
-              modes = [ "default" "nogui" "noweb" ];
+              # Allow filtering mode families via HM_CHECKS_MODES=default,nogui,noweb
+              modesSel = let
+                requested = splitEnvList "HM_CHECKS_MODES";
+                allowed = [ "default" "nogui" "noweb" ];
+                filtered = lib.filter (m: lib.elem m allowed) requested;
+              in if filtered == [] then allowed else filtered;
               retros = [
                 { label = "on"; value = true; }
                 { label = "off"; value = false; }
@@ -423,13 +428,20 @@ in
                 lib.concatMap (profile:
                   lib.concatMap (mode:
                     lib.concatMap (retro: [ (mkEntry profile mode retro) ]) retros
-                  ) modes
+                  ) modesSel
                 ) profiles
               );
-          heavy = lib.optionalAttrs (s == defaultSystem) {
-            hm = self.homeConfigurations."neg".activationPackage;
-            hm-lite = self.homeConfigurations."neg-lite".activationPackage;
-          };
+          heavy =
+            lib.optionalAttrs (s == defaultSystem)
+              (let
+                profs = [
+                  { out = "hm"; cfg = "neg"; }
+                  { out = "hm-lite"; cfg = "neg-lite"; }
+                ];
+              in lib.listToAttrs (map (p: {
+                name = p.out;
+                value = self.homeConfigurations."${p.cfg}".activationPackage;
+              }) profs));
         in
           base
           // fast
