@@ -169,49 +169,8 @@ in
         # NUR is accessed lazily via faProvider in mkHMArgs only when needed.
 
         # Common toolsets for devShells to avoid duplication
-        devNixTools = [
-          pkgs.alejandra # Nix formatter
-          pkgs.age # modern encryption tool (for sops)
-          pkgs.deadnix # find dead Nix code
-          pkgs.git-absorb # autosquash fixups into commits
-          pkgs.gitoxide # fast Rust Git tools
-          pkgs.just # task runner
-          pkgs.nil # Nix language server
-          pkgs.sops # secrets management
-          pkgs.statix # Nix linter
-          pkgs.treefmt # formatter orchestrator
-        ];
-        rustBaseTools = [
-          pkgs.cargo # Rust build tool
-          pkgs.rustc # Rust compiler
-        ];
-        rustExtraTools =
-          with pkgs; [
-            hyperfine # CLI benchmarking
-            kitty # terminal (for graphics/testing)
-            wl-clipboard # Wayland clipboard helpers
-          ]
-          # Optional tools/utilities guarded by availability on this pin
-          # Keep semantics identical to previous code via a tiny helper
-          ++ (
-            let opt = path: items: lib.optionals (lib.hasAttrByPath path pkgs) items; in
-            lib.concatLists [
-              # Cross-building support for cargo-zigbuild
-              (opt ["zig"] [ zig ])
-              # Common native deps helpers
-              (opt ["pkg-config"] [ pkg-config ])
-              (opt ["openssl"] [ openssl openssl.dev ])
-              # Useful cargo subcommands
-              (opt ["cargo-nextest"] [ cargo-nextest ])
-              (opt ["cargo-audit"] [ cargo-audit ])
-              (opt ["cargo-deny"] [ cargo-deny ])
-              (opt ["cargo-outdated"] [ cargo-outdated ])
-              (opt ["cargo-bloat"] [ cargo-bloat ])
-              (opt ["cargo-modules"] [ cargo-modules ])
-              (opt ["cargo-zigbuild"] [ cargo-zigbuild ])
-              (opt ["bacon"] [ bacon ])
-            ]
-          );
+        devTools = import ./flake/devtools.nix { inherit lib pkgs; };
+        inherit (devTools) devNixTools rustBaseTools rustExtraTools;
       in {
         inherit pkgs iosevkaNeg;
 
@@ -277,89 +236,9 @@ in
     docs = import ./flake/docs.nix {
       inherit lib perSystem systems homeManagerInput mkHMArgs hmBaseModules boolEnv;
     };
-    checks = lib.genAttrs systems (
-      s:
-        let
-          fullChecks = boolEnv "HM_CHECKS_FULL";
-          # Generic eval with a selectable mode (default | nogui | noweb)
-          evalWithMode = profile: retroFlag: mode: let
-            mkExtras = m:
-              let base = { features.emulators.retroarch.full = retroFlag; };
-              in [
-                (_:
-                  base
-                  // (if m == "nogui" then {
-                    features.gui.enable = false;
-                    features.gui.qt.enable = false;
-                    features.web.enable = false;
-                  } else if m == "noweb" then {
-                    features.web.enable = false;
-                  } else {})
-                )
-              ];
-            hmCfg = homeManagerInput.lib.homeManagerConfiguration {
-              inherit (perSystem.${s}) pkgs;
-              extraSpecialArgs = mkHMArgs s;
-              modules = hmBaseModules {
-                inherit profile;
-                extra = mkExtras mode;
-              };
-            };
-            nameProfile = if profile == "lite" then "lite" else "neg";
-            nameMode = if mode == "default" then "" else "${mode}-";
-            nameRetro = if retroFlag then "on" else "off";
-          in
-            perSystem.${s}.pkgs.writeText
-              "hm-eval-${nameProfile}-${nameMode}retro-${nameRetro}.json"
-              (builtins.toJSON hmCfg.config.features);
-          base = perSystem.${s}.checks;
-          fast =
-            let
-              profiles = [
-                { label = "neg"; value = null; }
-                { label = "lite"; value = "lite"; }
-              ];
-              # Allow filtering mode families via HM_CHECKS_MODES=default,nogui,noweb
-              modesSel = let
-                requested = splitEnvList "HM_CHECKS_MODES";
-                allowed = [ "default" "nogui" "noweb" ];
-                filtered = lib.filter (m: lib.elem m allowed) requested;
-              in if filtered == [] then allowed else filtered;
-              retros = [
-                { label = "on"; value = true; }
-                { label = "off"; value = false; }
-              ];
-              mkName = profileLabel: mode: retroLabel:
-                let nameMode = if mode == "default" then "" else "${mode}-"; in
-                "hm-eval-${profileLabel}-${nameMode}retro-${retroLabel}";
-              mkEntry = profile: mode: retro: {
-                name = mkName profile.label mode retro.label;
-                value = evalWithMode profile.value retro.value mode;
-              };
-            in
-              lib.listToAttrs (
-                lib.concatMap (profile:
-                  lib.concatMap (mode:
-                    lib.concatMap (retro: [ (mkEntry profile mode retro) ]) retros
-                  ) modesSel
-                ) profiles
-              );
-          heavy =
-            lib.optionalAttrs (s == defaultSystem)
-              (let
-                profs = [
-                  { out = "hm"; cfg = "neg"; }
-                  { out = "hm-lite"; cfg = "neg-lite"; }
-                ];
-              in lib.listToAttrs (map (p: {
-                name = p.out;
-                value = self.homeConfigurations."${p.cfg}".activationPackage;
-              }) profs));
-        in
-          base
-          // fast
-          // lib.optionalAttrs fullChecks heavy
-    );
+    checks = import ./flake/checks.nix {
+      inherit lib systems defaultSystem perSystem splitEnvList boolEnv homeManagerInput mkHMArgs hmBaseModules self;
+    };
 
     homeConfigurations = lib.genAttrs [ "neg" "neg-lite" ] (n:
       homeManagerInput.lib.homeManagerConfiguration {
