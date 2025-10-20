@@ -5,7 +5,7 @@
     extra ? [],
   }: let
     base = [
-      ./home.nix
+      ../home.nix
       stylixInput.homeModules.stylix
       chaotic.homeManagerModules.default
       sopsNixInput.homeManagerModules.sops
@@ -14,4 +14,3 @@
   in
     profMod ++ base ++ extra;
 }
-
