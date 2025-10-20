@@ -216,25 +216,32 @@
           pkgs.rustc # Rust compiler
         ];
         rustExtraTools =
-          [
-            pkgs.hyperfine # CLI benchmarking
-            pkgs.kitty # terminal (for graphics/testing)
-            pkgs.wl-clipboard # Wayland clipboard helpers
+          with pkgs; [
+            hyperfine # CLI benchmarking
+            kitty # terminal (for graphics/testing)
+            wl-clipboard # Wayland clipboard helpers
           ]
-          # Cross-building support for cargo-zigbuild
-          ++ (lib.optionals (pkgs ? zig) [ pkgs.zig ])
-          # Common native deps helpers
-          ++ (lib.optionals (pkgs ? pkg-config) [ pkgs.pkg-config ])
-          ++ (lib.optionals (pkgs ? openssl) [ pkgs.openssl pkgs.openssl.dev ])
-          # Useful cargo subcommands (guarded by availability on this pin)
-          ++ (lib.optionals (pkgs ? cargo-nextest) [ pkgs.cargo-nextest ])
-          ++ (lib.optionals (pkgs ? cargo-audit) [ pkgs.cargo-audit ])
-          ++ (lib.optionals (pkgs ? cargo-deny) [ pkgs.cargo-deny ])
-          ++ (lib.optionals (pkgs ? cargo-outdated) [ pkgs.cargo-outdated ])
-          ++ (lib.optionals (pkgs ? cargo-bloat) [ pkgs.cargo-bloat ])
-          ++ (lib.optionals (pkgs ? cargo-modules) [ pkgs.cargo-modules ])
-          ++ (lib.optionals (pkgs ? cargo-zigbuild) [ pkgs.cargo-zigbuild ])
-          ++ (lib.optionals (pkgs ? bacon) [ pkgs.bacon ]);
+          # Optional tools/utilities guarded by availability on this pin
+          # Keep semantics identical to previous code via a tiny helper
+          ++ (
+            let opt = path: items: lib.optionals (lib.hasAttrByPath path pkgs) items; in
+            lib.concatLists [
+              # Cross-building support for cargo-zigbuild
+              (opt ["zig"] [ zig ])
+              # Common native deps helpers
+              (opt ["pkg-config"] [ pkg-config ])
+              (opt ["openssl"] [ openssl openssl.dev ])
+              # Useful cargo subcommands
+              (opt ["cargo-nextest"] [ cargo-nextest ])
+              (opt ["cargo-audit"] [ cargo-audit ])
+              (opt ["cargo-deny"] [ cargo-deny ])
+              (opt ["cargo-outdated"] [ cargo-outdated ])
+              (opt ["cargo-bloat"] [ cargo-bloat ])
+              (opt ["cargo-modules"] [ cargo-modules ])
+              (opt ["cargo-zigbuild"] [ cargo-zigbuild ])
+              (opt ["bacon"] [ bacon ])
+            ]
+          );
       in {
         inherit pkgs iosevkaNeg;
 
@@ -256,14 +263,14 @@
         formatter = pkgs.writeShellApplication {
           name = "fmt";
           runtimeInputs = [
-            pkgs.treefmt # tree-wide formatter orchestrator
             pkgs.alejandra # Nix formatter
-            pkgs.statix # Nix linter
-            pkgs.deadnix # find dead Nix code
-            pkgs.shfmt # shell formatter
-            pkgs.shellcheck # shell linter
             pkgs.black # Python formatter
+            pkgs.deadnix # find dead Nix code
             pkgs.ruff # Python linter/fixer
+            pkgs.shellcheck # shell linter
+            pkgs.shfmt # shell formatter
+            pkgs.statix # Nix linter
+            pkgs.treefmt # tree-wide formatter orchestrator
           ];
           text = ''
             set -euo pipefail
