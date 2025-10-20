@@ -14,10 +14,23 @@ email :: <serg.zorg@gmail.com>
 year :: 2021
 """
 
+# Ensure packaged libraries are on sys.path (no env required)
+import sys
+sys.path.insert(0, '@LIBPP@')
+sys.path.insert(0, '@LIBCOLORED@')
+
 import os
 import re
-from docopt import docopt
-import pretty_printer
+
+# Prefer neg_pretty_printer; fall back to legacy pretty_printer if present.
+try:
+    from neg_pretty_printer import PrettyPrinter  # type: ignore
+except Exception:
+    try:
+        import pretty_printer as _pp  # type: ignore
+        PrettyPrinter = _pp.PrettyPrinter  # type: ignore
+    except Exception:
+        PrettyPrinter = None  # library unavailable; print plain mapping
 
 def fancy_name(filename, file=False):
     """ Some magic to return beautiful filename """
@@ -42,10 +55,22 @@ def fancy_name(filename, file=False):
 
 def main():
     """ Pretty-printing autorenamer """
-    cmd_args = docopt(__doc__, version='1.0')
-
-    files =  cmd_args['FILES']
-    file_rename = cmd_args['-i']
+    # Prefer docopt, but allow argparse fallback to avoid hard dependency
+    files = []
+    file_rename = False
+    try:
+        from docopt import docopt  # type: ignore
+        cmd_args = docopt(__doc__, version='1.0')
+        files = cmd_args['FILES']
+        file_rename = cmd_args['-i']
+    except Exception:
+        import argparse
+        p = argparse.ArgumentParser(prog='ren', description='Pretty file renamer')
+        p.add_argument('-i', action='store_true', help='apply changes in-place')
+        p.add_argument('FILES', nargs='+', help='input files')
+        args = p.parse_args()
+        files = args.FILES
+        file_rename = args.i
     for fname in files:
         if not os.path.exists(fname):
             break
@@ -62,10 +87,15 @@ def main():
             if dir_name:
                 pref = dir_name + '/'
             os.rename(pref + input_name, pref + output_name)
-        pp = pretty_printer.PrettyPrinter
-        print(f'{pp.prefix()}{pp.fancy_file(dir_name)}'
-            f'{pp.fancy_file(input_name)} -> {pp.fancy_file(output_name)}'
-        )
+        if PrettyPrinter:
+            pp = PrettyPrinter
+            dir_out = pp.fancy_file(dir_name) if dir_name else ''
+            print(
+                f"{pp.prefix()}{dir_out}"
+                f"{pp.fancy_file(input_name)} -> {pp.fancy_file(output_name)}"
+            )
+        else:
+            pref = (dir_name + '/') if dir_name else ''
+            print(f"{pref}{input_name} -> {output_name}")
 
 main()
-
