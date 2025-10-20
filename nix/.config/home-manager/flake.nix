@@ -42,18 +42,9 @@ in
     extra-trusted-public-keys = extraTrustedKeys;
   };
   inputs = {
-    bzmenu = {
-      url = "github:e-tho/bzmenu";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    chaotic = {
-      url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    bzmenu = { url = "github:e-tho/bzmenu"; inputs.nixpkgs.follows = "nixpkgs"; };
+    chaotic = { url = "github:chaotic-cx/nyx/nyxpkgs-unstable"; inputs.nixpkgs.follows = "nixpkgs"; };
+    home-manager = { url = "github:nix-community/home-manager"; inputs.nixpkgs.follows = "nixpkgs"; };
     # CamelCase alias for convenience in code
     homeManagerInput.follows = "home-manager";
     # Pin hy3 to a commit compatible with Hyprland v0.50.1 (GitHub archive available)
@@ -65,54 +56,24 @@ in
       inputs.hyprland.follows = "hyprland";
     };
     # Pin Hyprland to a stable release to reduce API churn with hy3
-    hyprland = {
-      url = "github:hyprwm/Hyprland?ref=v0.50.1";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    iosevka-neg = {
-      url = "git+ssh://git@github.com/neg-serg/iosevka-neg";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    hyprland = { url = "github:hyprwm/Hyprland?ref=v0.50.1"; inputs.nixpkgs.follows = "nixpkgs"; };
+    iosevka-neg = { url = "git+ssh://git@github.com/neg-serg/iosevka-neg"; inputs.nixpkgs.follows = "nixpkgs"; };
     # CamelCase alias for convenience in code
     iosevkaNegInput.follows = "iosevka-neg";
-    iwmenu = {
-      url = "github:e-tho/iwmenu";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    iwmenu = { url = "github:e-tho/iwmenu"; inputs.nixpkgs.follows = "nixpkgs"; };
     # Nushell package manager (non-flake repo) to avoid vendoring sources
-    nupm = {
-      url = "github:nushell/nupm";
-      flake = false;
-    };
+    nupm = { url = "github:nushell/nupm"; flake = false; };
     nixpkgs = { url = "github:NixOS/nixpkgs/nixos-unstable"; };
-    quickshell = {
-      url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    rsmetrx = {
-      url = "github:neg-serg/rsmetrx";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    sops-nix = {
-      url = "github:Mic92/sops-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    quickshell = { url = "git+https://git.outfoxxed.me/outfoxxed/quickshell"; inputs.nixpkgs.follows = "nixpkgs"; };
+    rsmetrx = { url = "github:neg-serg/rsmetrx"; inputs.nixpkgs.follows = "nixpkgs"; };
+    sops-nix = { url = "github:Mic92/sops-nix"; inputs.nixpkgs.follows = "nixpkgs"; };
     # CamelCase alias for convenience in code
     sopsNixInput.follows = "sops-nix";
-    stylix = {
-      url = "github:danth/stylix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    stylix = { url = "github:danth/stylix"; inputs.nixpkgs.follows = "nixpkgs"; };
     # CamelCase alias for convenience in code
     stylixInput.follows = "stylix";
-    nur = {
-      url = "github:nix-community/NUR";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    yandex-browser = {
-      url = "github:miuirussia/yandex-browser.nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    nur = { url = "github:nix-community/NUR"; inputs.nixpkgs.follows = "nixpkgs"; };
+    yandex-browser = { url = "github:miuirussia/yandex-browser.nix"; inputs.nixpkgs.follows = "nixpkgs"; };
     # CamelCase alias for convenience in code
     yandexBrowserInput.follows = "yandex-browser";
   };
