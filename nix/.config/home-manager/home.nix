@@ -2,10 +2,12 @@
   lib,
   config,
   pkgs,
+  caches,
   ...
 }: let
-  cachixSubstituters = import ./caches/substituters.nix;
-  cachixTrustedKeys = import ./caches/trusted-public-keys.nix;
+  # Reuse flake-provided caches passed via mkHMArgs (single source of truth)
+  cachixSubstituters = (caches.substituters or []);
+  cachixTrustedKeys = (caches.trustedPublicKeys or []);
 in {
   # Profile presets (full | lite). Full is default; set to "lite" for headless/minimal.
   features.profile = lib.mkDefault "full";
@@ -59,9 +61,9 @@ in {
       allow-import-from-derivation = false;
       # Use the sops-managed GitHub netrc for authenticated fetches
       netrc-file = config.sops.secrets."github-netrc".path;
-      # Ensure features are available; caches and keys come from imports below
+      # Ensure features are available; caches and keys come from flake nixConfig (via mkHMArgs)
       experimental-features = ["nix-command" "flakes"];
-      # Make caches visible in `nix show-config` via imported lists
+      # Make caches visible in `nix show-config` via flake-provided lists
       # Keep cache.nixos.org first to retain the official cache
       substituters = ["https://cache.nixos.org/"] ++ cachixSubstituters;
       trusted-public-keys =
