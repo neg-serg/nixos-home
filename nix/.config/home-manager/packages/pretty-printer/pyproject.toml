@@ -17,5 +17,4 @@ ppinfo = "neg_pretty_printer.cli:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
-packages = ["neg_pretty_printer"]
-
+packages = ["neg_pretty_printer", "pretty_printer"]
