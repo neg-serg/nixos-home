@@ -400,23 +400,32 @@ in
               "hm-eval-${nameProfile}-${nameMode}retro-${nameRetro}.json"
               (builtins.toJSON hmCfg.config.features);
           base = perSystem.${s}.checks;
-          fast = {
-            # Default
-            hm-eval-neg-retro-on = evalWithMode null true "default";
-            hm-eval-neg-retro-off = evalWithMode null false "default";
-            hm-eval-lite-retro-on = evalWithMode "lite" true "default";
-            hm-eval-lite-retro-off = evalWithMode "lite" false "default";
-            # No-GUI fast path (GUI + Web disabled)
-            hm-eval-neg-nogui-retro-on = evalWithMode null true "nogui";
-            hm-eval-neg-nogui-retro-off = evalWithMode null false "nogui";
-            hm-eval-lite-nogui-retro-on = evalWithMode "lite" true "nogui";
-            hm-eval-lite-nogui-retro-off = evalWithMode "lite" false "nogui";
-            # No-Web fast path (Web disabled, GUI intact)
-            hm-eval-neg-noweb-retro-on = evalWithMode null true "noweb";
-            hm-eval-neg-noweb-retro-off = evalWithMode null false "noweb";
-            hm-eval-lite-noweb-retro-on = evalWithMode "lite" true "noweb";
-            hm-eval-lite-noweb-retro-off = evalWithMode "lite" false "noweb";
-          };
+          fast =
+            let
+              profiles = [
+                { label = "neg"; value = null; }
+                { label = "lite"; value = "lite"; }
+              ];
+              modes = [ "default" "nogui" "noweb" ];
+              retros = [
+                { label = "on"; value = true; }
+                { label = "off"; value = false; }
+              ];
+              mkName = profileLabel: mode: retroLabel:
+                let nameMode = if mode == "default" then "" else "${mode}-"; in
+                "hm-eval-${profileLabel}-${nameMode}retro-${retroLabel}";
+              mkEntry = profile: mode: retro: {
+                name = mkName profile.label mode retro.label;
+                value = evalWithMode profile.value retro.value mode;
+              };
+            in
+              lib.listToAttrs (
+                lib.concatMap (profile:
+                  lib.concatMap (mode:
+                    lib.concatMap (retro: [ (mkEntry profile mode retro) ]) retros
+                  ) modes
+                ) profiles
+              );
           heavy = lib.optionalAttrs (s == defaultSystem) {
             hm = self.homeConfigurations."neg".activationPackage;
             hm-lite = self.homeConfigurations."neg-lite".activationPackage;
