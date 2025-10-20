@@ -96,7 +96,6 @@ in
     boolEnv = name: let v = builtins.getEnv name; in v == "1" || v == "true" || v == "yes";
     splitEnvList = name: let v = builtins.getEnv name; in
       if v == "" then [] else (lib.filter (s: s != "") (lib.splitString "," v));
-    docs = import ./flake/features-docs.nix {inherit lib;};
     # Prefer evaluating only one system by default to speed up local eval.
     # You can override the systems list for CI or cross builds by setting
     # HM_SYSTEMS to a comma-separated list (e.g., "x86_64-linux,aarch64-linux").
@@ -275,57 +274,9 @@ in
         sysList = if extras then systems else [ defaultSystem ];
       in lib.genAttrs sysList (s: perSystem.${s}.formatter);
     # Docs outputs are gated by HM_DOCS env; heavy HM evals are skipped by default.
-    docs = lib.genAttrs systems (
-      s: let
-        pkgs = perSystem.${s}.pkgs;
-        docsEnabled = boolEnv "HM_DOCS";
-        featureOptionsItems = docs.getFeatureOptionsItems ./modules/features.nix;
-      in
-        if docsEnabled then {
-          options-md = pkgs.writeText "OPTIONS.md" (
-            let
-              evalCfg = mods:
-                homeManagerInput.lib.homeManagerConfiguration {
-                  inherit (perSystem.${s}) pkgs;
-                  extraSpecialArgs = mkHMArgs s;
-                  modules = mods;
-                };
-              hmFeaturesFor = profile:
-                (evalCfg (hmBaseModules {inherit profile;})).config.features;
-              fNeg = hmFeaturesFor null;
-              fLite = hmFeaturesFor "lite";
-              toFlat = set: prefix:
-                lib.foldl' (
-                  acc: name: let
-                    cur = lib.optionalString (prefix != "") (prefix + ".") + name;
-                    v = set.${name};
-                  in
-                    acc
-                    // (
-                      if builtins.isAttrs v
-                      then toFlat v cur
-                      else if builtins.isBool v
-                      then {${cur} = v;}
-                      else {}
-                    )
-                ) {} (builtins.attrNames set);
-              flatNeg = toFlat fNeg "features";
-              flatLite = toFlat fLite "features";
-              deltas = docs.renderDeltasMd {inherit flatNeg flatLite;};
-            in
-              (builtins.readFile ./OPTIONS.md)
-              + "\n\n"
-              + deltas
-          );
-          features-options-md = pkgs.writeText "features-options.md" (docs.renderFeaturesOptionsMd featureOptionsItems);
-          features-options-json = pkgs.writeText "features-options.json" (docs.renderFeaturesOptionsJson featureOptionsItems);
-        } else {
-          options-md = pkgs.writeText "OPTIONS.md" ''
-            Docs generation is disabled.
-            Set HM_DOCS=1 to enable heavy docs evaluation.
-          '';
-        }
-    );
+    docs = import ./flake/docs.nix {
+      inherit lib perSystem systems homeManagerInput mkHMArgs hmBaseModules boolEnv;
+    };
     checks = lib.genAttrs systems (
       s:
         let
