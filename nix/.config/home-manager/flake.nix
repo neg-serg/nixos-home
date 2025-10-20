@@ -1,4 +1,5 @@
 let
+  # Keep these literal to satisfy flake nixConfig (cannot be thunks)
   extraSubstituters = [
     "https://nix-community.cachix.org"
     "https://hyprland.cachix.org"
