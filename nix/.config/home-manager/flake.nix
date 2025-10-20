@@ -153,13 +153,14 @@ in
 
         packages =
           let
-            extras = boolEnv "HM_EXTRAS";
+            extrasFlag = boolEnv "HM_EXTRAS";
+            extrasSet = import ./flake/pkgs-extras.nix {
+              inherit hy3 pkgs;
+              system = system;
+            };
           in {
             default = pkgs.zsh;
-          } // lib.optionalAttrs extras {
-            hy3Plugin = hy3.packages.${system}.hy3;
-            bpf-host-latency = pkgs.neg.bpf_host_latency;
-          };
+          } // lib.optionalAttrs extrasFlag extrasSet;
 
         # Formatter: treefmt wrapper pinned to repo config
         formatter = import ./flake/formatter.nix { inherit pkgs; };
