@@ -30,6 +30,9 @@ with {
       XCURSOR_PATH = "${alkano-aio}/share/icons";
       XCURSOR_SIZE = 23;
       XCURSOR_THEME = "alkano-aio";
+      # Keep Hyprland cursor in sync with the system cursor
+      HYPRCURSOR_THEME = "Alkano-aio";
+      HYPRCURSOR_SIZE = 23;
     };
   };
 
