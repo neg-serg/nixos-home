@@ -120,28 +120,10 @@ in
     };
     inherit (hmHelpers) hmBaseModules;
 
-    mkHMArgs = system: {
-      # Pass inputs mapped for Nilla raw-loader and common extras
-      inputs = hmInputs;
-      inherit hy3;
-      inherit (perSystem.${system}) iosevkaNeg;
-      # Flake cache settings for reuse in modules (single source of truth)
-      caches = {
-        substituters = extraSubstituters;
-        trustedPublicKeys = extraTrustedKeys;
-      };
-      # Provide lazy providers to avoid evaluating inputs unless features enable them
-      # Firefox addons via NUR
-      faProvider = (pkgs: (pkgs.extend nur.overlays.default).nur.repos.rycee.firefox-addons);
-      # Lazy Yandex Browser provider
-      yandexBrowserProvider = (pkgs: yandexBrowserInput.packages.${pkgs.system});
-      # GUI helpers
-      qsProvider = (pkgs: inputs.quickshell.packages.${pkgs.system}.default);
-      iwmenuProvider = (pkgs: inputs.iwmenu.packages.${pkgs.system}.default);
-      bzmenuProvider = (pkgs: inputs.bzmenu.packages.${pkgs.system}.default);
-      rsmetrxProvider = (pkgs: inputs.rsmetrx.packages.${pkgs.system}.default);
-      # Provide xdg helpers directly to avoid _module.args fallback recursion
-      xdg = import ./modules/lib/xdg-helpers.nix { inherit lib; pkgs = perSystem.${system}.pkgs; };
+    # mkHMArgs moved to a helper; keep semantics identical
+    mkHMArgs = import ./flake/mkHMArgs.nix {
+      inherit lib perSystem hy3 yandexBrowserInput nur inputs;
+      inherit hmInputs extraSubstituters extraTrustedKeys;
     };
 
     # Build per-system attributes in one place
@@ -223,19 +205,6 @@ in
     );
 
     # Reusable project templates
-    templates = {
-      rust-crane = {
-        path = ./templates/rust-crane;
-        description = "Rust project scaffold: crane, unified rust-toolchain, checks, devShell";
-      };
-      shell-app = {
-        path = ./templates/shell-app;
-        description = "Shell CLI packaged via writeShellApplication + devShell";
-      };
-      python-cli = {
-        path = ./templates/python-cli;
-        description = "Python CLI with ruff/black/pytest devShell";
-      };
-    };
+    templates = import ./flake/templates.nix;
   };
 }
