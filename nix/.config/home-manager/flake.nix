@@ -115,19 +115,10 @@ in
     in builtins.mapAttrs (_: input: input // { type = "derivation"; }) selected;
 
     # Common Home Manager building blocks
-    hmBaseModules = {
-      profile ? null,
-      extra ? [],
-    }: let
-      base = [
-        ./home.nix
-        stylixInput.homeModules.stylix
-        chaotic.homeManagerModules.default
-        sopsNixInput.homeManagerModules.sops
-      ];
-      profMod = lib.optional (profile == "lite") (_: {features.profile = "lite";});
-    in
-      profMod ++ base ++ extra;
+    hmHelpers = import ./flake/hm-helpers.nix {
+      inherit lib stylixInput chaotic sopsNixInput;
+    };
+    inherit (hmHelpers) hmBaseModules;
 
     mkHMArgs = system: {
       # Pass inputs mapped for Nilla raw-loader and common extras
@@ -189,24 +180,7 @@ in
           };
 
         # Formatter: treefmt wrapper pinned to repo config
-        formatter = pkgs.writeShellApplication {
-          name = "fmt";
-          runtimeInputs = [
-            pkgs.alejandra # Nix formatter
-            pkgs.black # Python formatter
-            pkgs.deadnix # find dead Nix code
-            pkgs.ruff # Python linter/fixer
-            pkgs.shellcheck # shell linter
-            pkgs.shfmt # shell formatter
-            pkgs.statix # Nix linter
-            pkgs.treefmt # tree-wide formatter orchestrator
-          ];
-          text = ''
-            set -euo pipefail
-            # Use project-local config to keep path inside tree root for treefmt
-            exec treefmt -c treefmt.toml "$@"
-          '';
-        };
+        formatter = import ./flake/formatter.nix { inherit pkgs; };
 
         # Checks: fail if formatting or linters would change files
         checks =
