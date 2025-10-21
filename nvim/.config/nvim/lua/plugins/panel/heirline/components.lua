@@ -953,7 +953,7 @@ return function(ctx)
     visual_selection = VisualSelection,
 
     -- Typing speed from Hashino/speed.nvim, rendered in the statusline.
-    -- The plugin emits User autocommands with pattern "SpeedUpdate".
+    -- The plugin emits User autocommands (e.g. "SpeedUpdate").
     speed = {
       condition = function()
         local ok, mod = pcall(require, 'speed')
@@ -967,7 +967,8 @@ return function(ctx)
         return ' ' .. (mod.current() or '') .. ' '
       end,
       hl = function() return { fg = colors.cyan, bg = colors.base_bg } end,
-      update = { 'User', pattern = 'SpeedUpdate' },
+      -- Heirline doesn't filter by pattern, refresh on any User event.
+      update = { 'User' },
     },
   }
 
