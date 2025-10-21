@@ -1071,7 +1071,7 @@ return function(ctx)
     },
     CurrentDir,
     {
-      provider = function() return S.sep .. ' ' end,
+      provider = function() return ' ' .. S.sep .. ' ' end,
       hl = function() return { fg = colors.blue, bg = colors.base_bg } end,
     },
     FileIcon,
