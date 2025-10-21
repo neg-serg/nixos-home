@@ -1,13 +1,22 @@
 -- ┌───────────────────────────────────────────────────────────────────────────────────┐
--- │ █▓▒░ chrisgrieser/nvim-rip-substitute                                             │
+-- │ █▓▒░ cshuaimin/ssr.nvim                                                          │
 -- └───────────────────────────────────────────────────────────────────────────────────┘
 return {
-    'chrisgrieser/nvim-rip-substitute',
-	cmd = 'RipSubstitute',
-	opts = {}, keys = {
-		{'<leader>fs', function() require('rip-substitute').sub() end,
-			mode = { 'n', 'x' },
-			desc = ' rip substitute',
-		},
-	},
+  'cshuaimin/ssr.nvim',
+  keys = {
+    {
+      '<leader>fr',
+      function() require('ssr').open() end,
+      mode = { 'n', 'x' },
+      desc = '[F]ind [R]eplace (structural)',
+    },
+  },
+  opts = {
+    border = 'rounded',
+    min_width = 50,
+    min_height = 5,
+    max_width = 120,
+    max_height = 25,
+  },
 }
+
