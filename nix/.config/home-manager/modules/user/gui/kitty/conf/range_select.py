@@ -101,7 +101,7 @@ def copy_to_clipboard(text: str) -> None:
         sys.stdout.buffer.write(data)
 
 
-def main() -> None:
+def main(args=None) -> None:
     buf = get_scrollback()
     # Represent as a list of lines preserving trailing spaces
     # Ensure trailing newline so nl counts the last line as well
@@ -122,4 +122,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
