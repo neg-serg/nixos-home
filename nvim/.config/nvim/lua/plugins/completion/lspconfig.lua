@@ -100,5 +100,29 @@ return {
     })
     configure('just')
     configure('marksman')
+
+    -- Global LSP/Help keymaps (replace vim-ref behavior)
+    Map('n', 'K', function()
+      local clients = {}
+      if vim.lsp and vim.lsp.get_clients then
+        clients = vim.lsp.get_clients({ bufnr = 0 })
+      end
+      if clients and #clients > 0 then
+        return vim.lsp.buf.hover()
+      end
+      vim.cmd('help ' .. vim.fn.expand('<cword>'))
+    end, { desc = 'Hover or :help cword' })
+
+    Map('n', 'gd', function()
+      local clients = {}
+      if vim.lsp and vim.lsp.get_clients then
+        clients = vim.lsp.get_clients({ bufnr = 0 })
+      end
+      if clients and #clients > 0 then
+        return vim.lsp.buf.definition()
+      end
+      local ok_tb, tb = pcall(require, 'telescope.builtin')
+      if ok_tb and tb.lsp_definitions then return tb.lsp_definitions({}) end
+    end, { desc = 'Go to definition (LSP/Telescope)' })
   end,
 }
