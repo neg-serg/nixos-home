@@ -951,6 +951,24 @@ return function(ctx)
     toggles = { ListToggle, WrapToggle },
     format_panel = FormatPanel,
     visual_selection = VisualSelection,
+
+    -- Typing speed from Hashino/speed.nvim, rendered in the statusline.
+    -- The plugin emits User autocommands with pattern "SpeedUpdate".
+    speed = {
+      condition = function()
+        local ok, mod = pcall(require, 'speed')
+        if not ok or type(mod.current) ~= 'function' then return false end
+        local v = mod.current()
+        return v ~= nil and v ~= ''
+      end,
+      provider = function()
+        local ok, mod = pcall(require, 'speed')
+        if not ok then return '' end
+        return ' ' .. (mod.current() or '') .. ' '
+      end,
+      hl = function() return { fg = colors.cyan, bg = colors.base_bg } end,
+      update = { 'User', pattern = 'SpeedUpdate' },
+    },
   }
 
   local ModifiedFlag = {
@@ -1126,6 +1144,7 @@ return function(ctx)
     components.git,
     components.gitdiff,
     components.size,
+    components.speed,
     components.env,
     components.format_panel,
     components.toggles,
