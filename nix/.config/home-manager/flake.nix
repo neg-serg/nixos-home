@@ -47,16 +47,15 @@ in
     home-manager = { url = "github:nix-community/home-manager"; inputs.nixpkgs.follows = "nixpkgs"; };
     # CamelCase alias for convenience in code
     homeManagerInput.follows = "home-manager";
-    # Pin hy3 to a commit compatible with Hyprland v0.50.1 (GitHub archive available)
+    # Pin hy3 to tag compatible with Hyprland v0.51.0
     hy3 = {
-      # Pin to the last commit before hy3 switched to the new render API (CHyprColor)
-      # to stay compatible with Hyprland v0.50.1 which expects a float alpha
-      url = "github:outfoxxed/hy3?rev=1fdc0a291f8c23b22d27d6dabb466d018757243c"; # 2025-08-03^ commit
+      # hy3 tags track Hyprland compatibility (hlX.Y.Z)
+      url = "github:outfoxxed/hy3?rev=e317a4cf89486f33c0e09364fbb6949e9f4f5624"; # hl0.51.0
       # Ensure hy3 uses the same Hyprland input we pin below
       inputs.hyprland.follows = "hyprland";
     };
-    # Pin Hyprland to a stable release to reduce API churn with hy3
-    hyprland = { url = "github:hyprwm/Hyprland?ref=v0.50.1"; inputs.nixpkgs.follows = "nixpkgs"; };
+    # Pin Hyprland to v0.51.0 to match hy3
+    hyprland = { url = "github:hyprwm/Hyprland?ref=v0.51.0"; inputs.nixpkgs.follows = "nixpkgs"; };
     iosevka-neg = { url = "git+ssh://git@github.com/neg-serg/iosevka-neg"; inputs.nixpkgs.follows = "nixpkgs"; };
     # CamelCase alias for convenience in code
     iosevkaNegInput.follows = "iosevka-neg";
