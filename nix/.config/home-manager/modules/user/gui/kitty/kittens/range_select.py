@@ -1,0 +1,125 @@
+#!/usr/bin/env python3
+# Keyboard-only range selection from kitty scrollback and screen.
+# Picks start and end lines via fzf and copies the range to clipboard.
+
+import os
+import shutil
+import subprocess
+import sys
+
+
+def have(cmd: str) -> bool:
+    return shutil.which(cmd) is not None
+
+
+def get_scrollback() -> str:
+    # Use kitty remote control to get the full visible text + scrollback
+    # Keep ANSI so that word-wrapping stays visible if needed; strip later if desired.
+    try:
+        out = subprocess.check_output(
+            ["kitty", "@", "get-text", "--extent=all"],
+            stderr=subprocess.DEVNULL,
+        )
+        return out.decode("utf-8", "replace")
+    except Exception as e:
+        print(f"Failed to get scrollback: {e}", file=sys.stderr)
+        sys.exit(1)
+
+
+def pick_line(lines, prompt: str) -> int:
+    # Present numbered lines in fzf and return the chosen line number (1-based)
+    # To avoid huge pipes, stream via a subprocess and add numbers with `nl`.
+    env = os.environ.copy()
+    env.setdefault("FZF_DEFAULT_OPTS", "--no-sort --ansi --height=90%")
+
+    try:
+        nl = subprocess.Popen(
+            ["nl", "-ba", "-w1", "-s\t"],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+        )
+    except FileNotFoundError:
+        print("nl not found (coreutils). Please install it.", file=sys.stderr)
+        sys.exit(1)
+
+    try:
+        fzf = subprocess.Popen(
+            [
+                "fzf",
+                "--ansi",
+                "--prompt", prompt,
+                "--tabstop=4",
+                "--bind", "home:first,end:last",
+                "--layout=reverse",
+            ],
+            stdin=nl.stdout,
+            stdout=subprocess.PIPE,
+            env=env,
+        )
+    except FileNotFoundError:
+        print("fzf not found. Please install fzf.", file=sys.stderr)
+        sys.exit(1)
+
+    # Feed content to `nl`
+    try:
+        nl.stdin.write("".join(lines).encode("utf-8", "replace"))
+        nl.stdin.close()
+    except BrokenPipeError:
+        pass
+
+    sel = fzf.communicate()[0] or b""
+    if not sel:
+        print("Selection cancelled", file=sys.stderr)
+        sys.exit(1)
+    # Expect lines like: "123\t...."
+    try:
+        head = sel.decode("utf-8", "replace").splitlines()[0]
+        num = int(head.split("\t", 1)[0].strip())
+        return num
+    except Exception:
+        print("Could not parse selected line number", file=sys.stderr)
+        sys.exit(1)
+
+
+def copy_to_clipboard(text: str) -> None:
+    # Prefer wl-copy, then xclip, then pbcopy; fallback to kitty kitten clipboard
+    data = text.encode("utf-8", "replace")
+    if have("wl-copy"):
+        subprocess.run(["wl-copy", "-n"], input=data)
+        return
+    if have("xclip"):
+        subprocess.run(["xclip", "-selection", "clipboard"], input=data)
+        return
+    if have("pbcopy"):
+        subprocess.run(["pbcopy"], input=data)
+        return
+    # Fallback: kitty clipboard kitten
+    try:
+        subprocess.run(["kitty", "+kitten", "clipboard"], input=data)
+    except Exception:
+        # Last resort: print to stdout
+        sys.stdout.buffer.write(data)
+
+
+def main() -> None:
+    buf = get_scrollback()
+    # Represent as a list of lines preserving trailing spaces
+    # Ensure trailing newline so nl counts the last line as well
+    if not buf.endswith("\n"):
+        buf += "\n"
+    lines = buf.splitlines(keepends=True)
+
+    start = pick_line(lines, "start> ")
+    end = pick_line(lines, "end> ")
+    if end < start:
+        start, end = end, start
+    # Slice inclusive
+    start_idx = max(0, start - 1)
+    end_idx = min(len(lines), end)
+    chunk = "".join(lines[start_idx:end_idx])
+    copy_to_clipboard(chunk)
+
+
+if __name__ == "__main__":
+    main()
+
