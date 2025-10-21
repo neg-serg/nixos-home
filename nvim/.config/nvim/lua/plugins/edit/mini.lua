@@ -20,5 +20,12 @@ return {
       -- Optional manual trim command example (kept commented to match previous behavior):
       -- Map('n', '<leader>tw', function() trail.trim() end, { desc = 'Trim trailing whitespace' })
     end
+
+    -- Split/Join (replaces treesj): simple toggle on <leader>a
+    local ok_sj, sj = pcall(require, 'mini.splitjoin')
+    if ok_sj then
+      sj.setup()
+      Map('n', '<leader>a', function() sj.toggle() end, { desc = 'Split/Join toggle' })
+    end
   end,
 }
