@@ -259,6 +259,7 @@ in {
             hy3Rev = lib.attrByPath ["rev"] null hy3;
             compatible = [
               { hv = "0.50.1"; rev = "1fdc0a291f8c23b22d27d6dabb466d018757243c"; }
+              { hv = "0.51.0"; rev = "e317a4cf89486f33c0e09364fbb6949e9f4f5624"; }
             ];
             matches = c: (hyprlandVersion == null || hyprlandVersion == c.hv) && (hy3Rev == null || hy3Rev == c.rev);
             ok = lib.any matches compatible;
