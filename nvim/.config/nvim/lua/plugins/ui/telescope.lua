@@ -512,6 +512,11 @@ return {
 
     -- ---------- Keymaps ----------
     local opts = { silent = true, noremap = true }
+    -- Help / grep word (replace deprecated vim-ref)
+    vim.keymap.set('n', '<leader>sh', builtin('help_tags'), opts)
+    vim.keymap.set('n', '<leader>sg', function()
+      require('telescope.builtin').grep_string({ search = vim.fn.expand('<cword>') })
+    end, opts)
     -- zoxide (note: consider <leader>cd if 'cd' conflicts)
     vim.keymap.set('n', 'cd', function()
       local t = require('telescope')
