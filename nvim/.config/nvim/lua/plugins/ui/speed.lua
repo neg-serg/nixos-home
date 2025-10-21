@@ -7,8 +7,7 @@ return {
   lazy = true,
   cmd = { "Speed" },
   opts = {
-    -- Default config; keep float buffer on unless you plan to integrate with statusline
-    -- float_buffer = false,
+    -- Integrate with Heirline: disable floating buffer and use statusline component.
+    float_buffer = false,
   },
 }
-
