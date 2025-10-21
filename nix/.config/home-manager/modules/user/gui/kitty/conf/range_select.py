@@ -3,6 +3,7 @@
 # Picks start and end lines via fzf and copies the range to clipboard.
 
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -13,17 +14,44 @@ def have(cmd: str) -> bool:
 
 
 def get_scrollback() -> str:
-    # Use kitty remote control to get the full visible text + scrollback
-    # Keep ANSI so that word-wrapping stays visible if needed; strip later if desired.
+    """Fetch the current window's screen + scrollback text via kitty remote control.
+
+    Uses KITTY_LISTEN_ON and KITTY_WINDOW_ID for precise targeting.
+    Strips ANSI/OSC escape sequences so fzf displays plain text instead of control codes.
+    """
+    base = ["kitty", "@"]
+    to = os.environ.get("KITTY_LISTEN_ON")
+    if to:
+        base += ["--to", to]
+    win_id = os.environ.get("KITTY_WINDOW_ID")
+    cmd = base + ["get-text", "--extent=all"]
+    if win_id:
+        cmd = base + ["get-text", "--match", f"id:{win_id}", "--extent=all"]
     try:
-        out = subprocess.check_output(
-            ["kitty", "@", "get-text", "--extent=all"],
-            stderr=subprocess.DEVNULL,
-        )
-        return out.decode("utf-8", "replace")
-    except Exception as e:
-        print(f"Failed to get scrollback: {e}", file=sys.stderr)
-        sys.exit(1)
+        out = subprocess.check_output(cmd, stderr=subprocess.DEVNULL)
+    except Exception:
+        # Fallback to just the screen if "all" fails for any reason
+        try:
+            out = subprocess.check_output(base + ["get-text", "--extent=screen"], stderr=subprocess.DEVNULL)
+        except Exception as e:
+            print(f"Failed to get scrollback: {e}", file=sys.stderr)
+            sys.exit(1)
+    text = out.decode("utf-8", "replace")
+    return strip_escapes(text)
+
+
+# Regexes to strip ANSI (CSI), OSC and other escapes so fzf renders content
+_re_csi = re.compile(r"\x1b\[[0-9;?]*[ -/]*[@-~]")
+_re_osc = re.compile(r"\x1b\][^\x07\x1b]*(\x07|\x1b\\)")
+_re_ss3 = re.compile(r"\x1bO.")
+_re_misc= re.compile(r"\x1b[@-Z\-_]")
+
+def strip_escapes(s: str) -> str:
+    s = _re_osc.sub("", s)
+    s = _re_csi.sub("", s)
+    s = _re_ss3.sub("", s)
+    s = _re_misc.sub("", s)
+    return s
 
 
 def pick_line(lines, prompt: str) -> int:
