@@ -1,1 +1,0 @@
-../kittens/extrakto_kitty.py
