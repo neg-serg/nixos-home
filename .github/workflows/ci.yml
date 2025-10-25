@@ -1,0 +1,78 @@
+# Nix CI: runs flake checks and uses fast caches
+name: nix-ci
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  flake-check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: nix/.config/home-manager
+    env:
+      # Make secret available via env (so `if:` can use env context)
+      CACHIX_AUTH_TOKEN: ${{ secrets.CACHIX_AUTH_TOKEN }}
+      # Keep CI evaluation light and avoid private inputs
+      HM_DEV_SPEED: "1"
+      HM_DOCS: "0"
+      HM_EXTRAS: "0"
+      HM_CHECKS_MODES: "nogui"
+      HM_USE_IOSEVKA_NEG: "0"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v12
+        with:
+          extra-conf: |
+            experimental-features = nix-command flakes
+
+      - name: Magic Nix Cache
+        uses: DeterminateSystems/magic-nix-cache-action@v7
+
+      # Optional: enable Cachix if you have a cache and token
+      - name: Enable Cachix (optional)
+        if: ${{ env.CACHIX_AUTH_TOKEN != '' }}
+        uses: cachix/cachix-action@v14
+        with:
+          name: neg-serg
+          authToken: ${{ env.CACHIX_AUTH_TOKEN }}
+
+      - name: Env for checks
+        run: printenv | sort | grep -E '^(HM_|CACHIX_)' || true
+
+      - name: Build check - lint
+        run: |
+          nix shell --accept-flake-config \
+            nixpkgs#statix nixpkgs#deadnix nixpkgs#findutils nixpkgs#gnugrep nixpkgs#shellcheck \
+            -c bash -lc '
+              set -euo pipefail
+              # In monorepo context, narrow scope to this flake dir if present
+              if [ -d ./nix/.config/home-manager ]; then cd ./nix/.config/home-manager; fi
+
+              if [ -f ./statix.toml ]; then
+                statix check --config ./statix.toml -- . || true
+              else
+                statix check -- . || true
+              fi
+
+              deadnix . || true
+
+              if find . -type f \( -name "*.sh" -o -name "*.bash" \) -print -quit | grep -q .; then
+                find . -type f \( -name "*.sh" -o -name "*.bash" \) -print0 \
+                  | xargs -0 shellcheck -S style -x || true
+              fi
+            '
+
