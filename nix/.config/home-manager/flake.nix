@@ -137,7 +137,22 @@ in
             allowAliases = false;
           };
         };
-        iosevkaNeg = iosevkaNegInput.packages.${system};
+        # Avoid fetching private iosevka-neg on CI providers (GitHub Actions, Garnix).
+        # Policy:
+        #   - If HM_USE_IOSEVKA_NEG is truthy => always use private.
+        #   - Else if we're in CI (CI/GITHUB_ACTIONS/GARNIX/GARNIX_CI set) => use public fallback.
+        #   - Else (local dev) => use private.
+        # Modules access `iosevkaNeg.nerd-font`, so mirror that shape when falling back.
+        iosevkaNeg =
+          let
+            boolEnv = name: let v = builtins.getEnv name; in v == "1" || v == "true" || v == "yes";
+            hmUse = boolEnv "HM_USE_IOSEVKA_NEG";
+            g = builtins.getEnv;
+            isCI = (g "CI" != "") || (g "GITHUB_ACTIONS" != "") || (g "GARNIX" != "") || (g "GARNIX_CI" != "");
+            usePrivate = if hmUse then true else if isCI then false else true;
+          in if usePrivate
+            then iosevkaNegInput.packages.${system}
+            else { nerd-font = pkgs.nerd-fonts.iosevka; };
         # NUR is accessed lazily via faProvider in mkHMArgs only when needed.
 
         # Common toolsets for devShells to avoid duplication
