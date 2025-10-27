@@ -62,7 +62,8 @@ in
     iwmenu = { url = "github:e-tho/iwmenu"; inputs.nixpkgs.follows = "nixpkgs"; };
     # Nushell package manager (non-flake repo) to avoid vendoring sources
     nupm = { url = "github:nushell/nupm"; flake = false; };
-    nixpkgs = { url = "github:NixOS/nixpkgs/nixos-unstable"; };
+    # Pin nixpkgs to a known-good revision where openmw builds
+    nixpkgs = { url = "github:NixOS/nixpkgs?rev=5e2a59a5b1a82f89f2c7e598302a9cacebb72a67"; };
     quickshell = { url = "git+https://git.outfoxxed.me/outfoxxed/quickshell"; inputs.nixpkgs.follows = "nixpkgs"; };
     rsmetrx = { url = "github:neg-serg/rsmetrx"; inputs.nixpkgs.follows = "nixpkgs"; };
     sops-nix = { url = "github:Mic92/sops-nix"; inputs.nixpkgs.follows = "nixpkgs"; };
