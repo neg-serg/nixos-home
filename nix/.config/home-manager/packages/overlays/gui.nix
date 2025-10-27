@@ -12,7 +12,9 @@ _final: prev: {
     };
     # Work around CMake error: Qt6::WaylandClientPrivate target not found
     prePatch = (old.prePatch or "") + ''
-      sed -i 's/Qt6::WaylandClientPrivate/Qt6::WaylandClient/g' utils/donate-screen/CMakeLists.txt
+      for f in $(grep -RIl "Qt6::WaylandClientPrivate" utils || true); do
+        sed -i 's/Qt6::WaylandClientPrivate/Qt6::WaylandClient/g' "$f"
+      done
     '';
   });
 
