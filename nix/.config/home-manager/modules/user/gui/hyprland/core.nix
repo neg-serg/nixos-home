@@ -4,13 +4,12 @@ with lib; let
     name = "hypr-win-list";
     runtimeInputs = [
       pkgs.python3
-      pkgs.hyprland
       pkgs.wl-clipboard
     ];
     text = let tpl = builtins.readFile ../hypr/hypr-win-list.py;
            in ''
              exec python3 <<'PY'
-${lib.replaceStrings ["@HYPRCTL@"] [ (lib.getExe' pkgs.hyprland "hyprctl") ] tpl}
+${tpl}
 PY
            '';
   };
