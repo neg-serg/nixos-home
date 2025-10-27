@@ -56,7 +56,6 @@ in mkIf config.features.gui.enable (lib.mkMerge [
             ];
             qt = [
               pkgs.hyprland-qt-support # Qt integration fixes
-              pkgs.hyprland-qtutils # Hyprland Qt helpers
               pkgs.kdePackages.qt6ct # Qt6 config tool
             ];
             tools = [ hyprWinList ]; # helper: list windows from Hyprctl JSON
