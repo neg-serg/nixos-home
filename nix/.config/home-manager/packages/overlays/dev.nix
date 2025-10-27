@@ -120,22 +120,7 @@ _final: prev: {
     cmakeFlags = (old.cmakeFlags or []) ++ [ "-DCMAKE_POLICY_VERSION_MINIMUM=3.5" ];
   });
 
-  # OpenMW deps that still use older cmake_minimum_required
-  ois = prev.ois.overrideAttrs (old: let x11Var = "$" + "{X11_LIBRARIES}"; in {
-    cmakeFlags = (old.cmakeFlags or []) ++ [ "-DCMAKE_POLICY_VERSION_MINIMUM=3.5" ];
-    postPatch = (old.postPatch or "") + ''
-      # Fix invalid add_dependencies on non-target "X11" and link using found libs
-      substituteInPlace CMakeLists.txt \
-        --replace 'add_dependencies(OIS X11)' "" \
-        --replace 'target_link_libraries(OIS X11)' 'target_link_libraries(OIS ${x11Var})'
-    '';
-  });
-  mygui = prev.mygui.overrideAttrs (old: {
-    cmakeFlags = (old.cmakeFlags or []) ++ [ "-DCMAKE_POLICY_VERSION_MINIMUM=3.5" ];
-  });
-  openmw = prev.openmw.overrideAttrs (old: {
-    cmakeFlags = (old.cmakeFlags or []) ++ [ "-DCMAKE_POLICY_VERSION_MINIMUM=3.5" ];
-  });
+  # OpenMW: no local override — use upstream packaging for cache hits
 
   # retdec: removed from profile; drop overrides to avoid unnecessary patching
 

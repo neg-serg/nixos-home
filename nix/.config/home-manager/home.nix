@@ -30,6 +30,7 @@ in {
     "veil"
     "webacoo"
     "weevely"
+    # OpenMW now uses upstream packaging; not excluded
   ];
 
   # Temporarily disable Vdirsyncer units/timer until credentials are configured
