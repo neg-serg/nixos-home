@@ -3,7 +3,8 @@ with lib;
 mkIf config.features.gui.enable (
   let
     tpl = builtins.readFile ../rofi/rofi-wrapper.sh;
-    rendered = lib.replaceStrings ["@ROFI_BIN@" "@JQ_BIN@" "@HYPRCTL_BIN@"] [ (lib.getExe config.neg.rofi.package) (lib.getExe pkgs.jq) (lib.getExe' pkgs.hyprland "hyprctl") ] tpl;
+    # Do not embed hyprctl path to avoid pulling Hyprland into the build closure; wrapper falls back to plain 'hyprctl'.
+    rendered = lib.replaceStrings ["@ROFI_BIN@" "@JQ_BIN@"] [ (lib.getExe config.neg.rofi.package) (lib.getExe pkgs.jq) ] tpl;
     rofiWrapper = pkgs.writeShellApplication {
       name = "rofi-wrapper";
       runtimeInputs = [

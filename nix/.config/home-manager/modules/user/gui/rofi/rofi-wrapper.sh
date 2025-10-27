@@ -3,6 +3,10 @@ set -euo pipefail
 rofi_bin="@ROFI_BIN@"
 jq_bin="@JQ_BIN@"
 hyprctl_bin="@HYPRCTL_BIN@"
+# Fallback to PATH if not substituted by Nix
+if [ "$hyprctl_bin" = "@HYPRCTL_BIN@" ] || [ -z "$hyprctl_bin" ]; then
+  hyprctl_bin="${ROFI_WRAPPER_HYPRCTL:-hyprctl}"
+fi
 xdg_data="${XDG_DATA_HOME:-$HOME/.local/share}"
 xdg_conf="${XDG_CONFIG_HOME:-$HOME/.config}"
 themes_dir="$xdg_data/rofi/themes"
