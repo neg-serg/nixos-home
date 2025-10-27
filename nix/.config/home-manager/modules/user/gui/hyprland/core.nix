@@ -1,4 +1,4 @@
-{ lib, config, pkgs, xdg, ... }:
+{ lib, config, pkgs, xdg, hy3, ... }:
 with lib; let
   hyprWinList = pkgs.writeShellApplication {
     name = "hypr-win-list";
@@ -33,6 +33,8 @@ in mkIf config.features.gui.enable (lib.mkMerge [
       portalPackage = null;
       settings = {
         source = [
+          # Load plugins (hy3) before the rest of the config
+          "${config.xdg.configHome}/hypr/plugins.conf"
           "${config.xdg.configHome}/hypr/permissions.conf"
           "${config.xdg.configHome}/hypr/init.conf"
         ];
@@ -70,4 +72,13 @@ in mkIf config.features.gui.enable (lib.mkMerge [
   }
   # Core config files from repo
   (lib.mkMerge (map mkHyprSource coreFiles))
+  # Dynamically generated plugin loader (pin to flake hy3 package)
+  (xdg.mkXdgText "hypr/plugins.conf" (
+    let
+      pluginPath = "${hy3.packages.${pkgs.system}.hy3}/lib/libhy3.so";
+    in ''
+      # Hyprland plugins
+      plugin = ${pluginPath}
+    ''
+  ))
 ])
