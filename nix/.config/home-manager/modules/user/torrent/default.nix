@@ -65,21 +65,18 @@ in lib.mkIf config.features.torrent.enable (lib.mkMerge [
     (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["net" "defaultWanted"]; })
   ];
 }
-{
-  # Periodic job to add/update public trackers on existing torrents
-  # Wrapper installed to ~/.local/bin to decouple systemd unit from repo internals
-  # Uses trackers_best.txt from $HOME/src/trackerslist
-  #
-  # Run manually: transmission-trackers-update (service) or timer start
-  #   systemctl --user start transmission-trackers-update.service
-  #   systemctl --user start transmission-trackers-update.timer
-  #
-  # Local bin wrapper
-  ${(import ../../../packages/lib/local-bin.nix { inherit lib; }) "transmission-add-trackers" ''#!/usr/bin/env bash
+  # Local bin wrapper installed to ~/.local/bin (avoid config.* to prevent recursion)
+  (let mkLocalBin = import ../../../packages/lib/local-bin.nix { inherit lib; }; in mkLocalBin "transmission-add-trackers" ''#!/usr/bin/env bash
     set -euo pipefail
     cd "$HOME/src/trackerslist"
     exec bash tools/add_transmission_trackers.sh trackers_best.txt
-  ''}
+  '')
+
+{
+  # Periodic job to add/update public trackers on existing torrents
+  # Run manually: transmission-trackers-update (service) or timer start
+  #   systemctl --user start transmission-trackers-update.service
+  #   systemctl --user start transmission-trackers-update.timer
 
   # One-shot service that runs the wrapper
   systemd.user.services."transmission-trackers-update" = lib.mkMerge [
