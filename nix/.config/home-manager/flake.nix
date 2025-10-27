@@ -55,7 +55,14 @@ in
       inputs.hyprland.follows = "hyprland";
     };
     # Pin Hyprland to v0.51.0 to match hy3
-    hyprland = { url = "github:hyprwm/Hyprland?ref=v0.51.0"; inputs.nixpkgs.follows = "nixpkgs"; };
+    hyprland = {
+      url = "github:hyprwm/Hyprland?ref=v0.51.0";
+      inputs.nixpkgs.follows = "nixpkgs";
+      # Force Hyprland's embedded qtutils to follow our pin below
+      inputs.hyprland-qtutils.follows = "hyprland-qtutils";
+    };
+    # Pin hyprland-qtutils to a known-good release
+    hyprland-qtutils = { url = "github:hyprwm/hyprland-qtutils?ref=v0.1.5"; };
     iosevka-neg = { url = "git+ssh://git@github.com/neg-serg/iosevka-neg"; inputs.nixpkgs.follows = "nixpkgs"; };
     # CamelCase alias for convenience in code
     iosevkaNegInput.follows = "iosevka-neg";
