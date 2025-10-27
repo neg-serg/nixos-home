@@ -10,6 +10,10 @@ _final: prev: {
       tag = "v${version}";
       hash = "sha256-bTYedtQFqqVBAh42scgX7+S3O6XKLnT6FTC6rpmyCCc=";
     };
+    # Work around CMake error: Qt6::WaylandClientPrivate target not found
+    prePatch = (old.prePatch or "") + ''
+      sed -i 's/Qt6::WaylandClientPrivate/Qt6::WaylandClient/g' utils/donate-screen/CMakeLists.txt
+    '';
   });
 
   # Avoid pulling hyprland-qtutils into Hyprland runtime closure
