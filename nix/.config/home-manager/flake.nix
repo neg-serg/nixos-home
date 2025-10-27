@@ -54,8 +54,8 @@ in
       # Ensure hy3 uses the same Hyprland input we pin below
       inputs.hyprland.follows = "hyprland";
     };
-    # Pin Hyprland to v0.51.0 to match hy3
-    hyprland = { url = "github:hyprwm/Hyprland?ref=v0.51.0"; inputs.nixpkgs.follows = "nixpkgs"; };
+    # Pin Hyprland to v0.51.1 (latest stable)
+    hyprland = { url = "github:hyprwm/Hyprland?ref=v0.51.1"; inputs.nixpkgs.follows = "nixpkgs"; };
     iosevka-neg = { url = "git+ssh://git@github.com/neg-serg/iosevka-neg"; inputs.nixpkgs.follows = "nixpkgs"; };
     # CamelCase alias for convenience in code
     iosevkaNegInput.follows = "iosevka-neg";
