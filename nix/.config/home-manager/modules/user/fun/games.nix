@@ -17,7 +17,7 @@
     pkgs.gzdoom # open-source doom
     pkgs.jazz2 # open source reimplementation of classic Jazz Jackrabbit 2 game
     pkgs.nethack # roguelike
-    # pkgs.openmw # Unofficial open source engine reimplementation of the game Morrowind (disabled: heavy build, flaky)
+    pkgs.openmw # Unofficial open source engine reimplementation of the game Morrowind
     pkgs.shattered-pixel-dungeon # roguelike
     # pkgs.unnethack # roguelike
     pkgs.xaos # smooth fractal explorer
