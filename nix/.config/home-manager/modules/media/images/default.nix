@@ -16,8 +16,11 @@ in lib.mkMerge [
     pkgs.exiftool # read/write EXIF metadata
     pkgs.exiv2 # manage image metadata (EXIF/IPTC/XMP)
     pkgs.mediainfo # show media file metadata (audio/video/images)
+    # recovery
+    pkgs.testdisk-qt # PhotoRec GUI (qphotorec)
     # editors
     pkgs.gimp # raster image editor
+    pkgs.darktable # digital darkroom (RAW workflow)
     pkgs.rawtherapee # RAW photo editor
     pkgs.graphviz # graph visualization (render dot files)
     # optimizers
