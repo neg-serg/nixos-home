@@ -33,9 +33,10 @@ in mkIf config.features.gui.enable (lib.mkMerge [
       portalPackage = null;
       settings = {
         source = [
+          # Apply permissions first so plugin load is allowed
+          "${config.xdg.configHome}/hypr/permissions.conf"
           # Load plugins (hy3) before the rest of the config
           "${config.xdg.configHome}/hypr/plugins.conf"
-          "${config.xdg.configHome}/hypr/permissions.conf"
           "${config.xdg.configHome}/hypr/init.conf"
         ];
       };
@@ -75,7 +76,7 @@ in mkIf config.features.gui.enable (lib.mkMerge [
   # Dynamically generated plugin loader (pin to flake hy3 package)
   (xdg.mkXdgText "hypr/plugins.conf" (
     let
-      pluginPath = "${hy3.packages.${pkgs.system}.hy3}/lib/libhy3.so";
+      pluginPath = "/etc/hypr/libhy3.so";
     in ''
       # Hyprland plugins
       plugin = ${pluginPath}
