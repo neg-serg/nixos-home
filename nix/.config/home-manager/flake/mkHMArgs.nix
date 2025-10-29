@@ -19,15 +19,14 @@ system: {
   };
   # Provide lazy providers to avoid evaluating inputs unless features enable them
   # Firefox addons via NUR
-  faProvider = (pkgs: (pkgs.extend nur.overlays.default).nur.repos.rycee.firefox-addons);
+  faProvider = pkgs: (pkgs.extend nur.overlays.default).nur.repos.rycee.firefox-addons;
   # Lazy Yandex Browser provider
-  yandexBrowserProvider = (pkgs: yandexBrowserInput.packages.${pkgs.system});
+  yandexBrowserProvider = pkgs: yandexBrowserInput.packages.${pkgs.system};
   # GUI helpers
-  qsProvider = (pkgs: inputs.quickshell.packages.${pkgs.system}.default);
-  iwmenuProvider = (pkgs: inputs.iwmenu.packages.${pkgs.system}.default);
-  bzmenuProvider = (pkgs: inputs.bzmenu.packages.${pkgs.system}.default);
-  rsmetrxProvider = (pkgs: inputs.rsmetrx.packages.${pkgs.system}.default);
+  qsProvider = pkgs: inputs.quickshell.packages.${pkgs.system}.default;
+  iwmenuProvider = pkgs: inputs.iwmenu.packages.${pkgs.system}.default;
+  bzmenuProvider = pkgs: inputs.bzmenu.packages.${pkgs.system}.default;
+  rsmetrxProvider = pkgs: inputs.rsmetrx.packages.${pkgs.system}.default;
   # Provide xdg helpers directly to avoid _module.args fallback recursion
-  xdg = import ../modules/lib/xdg-helpers.nix { inherit lib; pkgs = perSystem.${system}.pkgs; };
+  xdg = import ../modules/lib/xdg-helpers.nix { inherit lib; inherit (perSystem.${system}) pkgs; };
 }
-

@@ -73,8 +73,8 @@ nvim-health:
     bash -eu -o pipefail -c '
     if ! command -v nvim >/dev/null 2>&1; then echo "Neovim not found (nvim)" >&2; exit 1; fi
     if [ "${USE_REPO_NVIM:-0}" = 1 ]; then
-      export XDG_CONFIG_HOME="$PWD/nvim/.config"
-      echo "Using repo Neovim config: $XDG_CONFIG_HOME"
+    export XDG_CONFIG_HOME="$PWD/nvim/.config"
+    echo "Using repo Neovim config: $XDG_CONFIG_HOME"
     fi
     nvim --headless "+checkhealth" +qa
     '

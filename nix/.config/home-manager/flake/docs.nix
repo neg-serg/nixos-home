@@ -4,7 +4,7 @@ let
 in
 lib.genAttrs systems (
   s: let
-    pkgs = perSystem.${s}.pkgs;
+    inherit (perSystem.${s}) pkgs;
     docsEnabled = boolEnv "HM_DOCS";
   in
     if docsEnabled then let
