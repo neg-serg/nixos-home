@@ -8,8 +8,14 @@
 with lib; let
   dlDir = "${config.home.homeDirectory}/dw";
   useNurAddons = config.features.web.addonsFromNUR.enable or false;
-  fa = if useNurAddons && faProvider != null then faProvider pkgs else null;
-  addons = if fa != null then config.lib.neg.browserAddons fa else { common = []; };
+  fa =
+    if useNurAddons && faProvider != null
+    then faProvider pkgs
+    else null;
+  addons =
+    if fa != null
+    then config.lib.neg.browserAddons fa
+    else {common = [];};
   nativeMessagingHosts = [
     pkgs.pywalfox-native # native host for Pywalfox (theme colors)
     pkgs.tridactyl-native # native host for Tridactyl extension
@@ -232,9 +238,12 @@ with lib; let
         install_url = "https://addons.mozilla.org/firefox/downloads/latest/%D1%81%D0%BA%D0%B0%D1%87%D0%B0%D1%82%D1%8C-%D0%BC%D1%83%D0%B7%D1%8B%D0%BA%D1%83-%D1%81-%D0%B2%D0%BA-vkd/latest.xpi";
       };
       # Explicitly block Tampermonkey userscript manager
-      "firefox@tampermonkey.net" = { installation_mode = "blocked"; };
+      "firefox@tampermonkey.net" = {installation_mode = "blocked";};
     };
-    Extensions = { Install = true; Updates = true; };
+    Extensions = {
+      Install = true;
+      Updates = true;
+    };
   };
 in {
   inherit nativeMessagingHosts settings extraConfig userChrome policies addons;
@@ -268,31 +277,30 @@ in {
     policiesExtra ? {},
     profileExtra ? {},
     userChromeExtra ? "",
-  }:
-    let
-      pid = profileId;
-      mergedSettings = settings // defaults // settingsExtra;
-      mergedNMH = nativeMessagingHosts ++ nativeMessagingExtra;
-      mergedPolicies = policies // policiesExtra;
-      profileBase = {
-        isDefault = true;
-        extensions = { packages = (addons.common or []) ++ addonsExtra; };
-        settings = mergedSettings;
-        userChrome = userChrome + bottomNavbarChrome + hideSearchModeChip + hideUrlbarOneOffs + hideSearchBarWidget + userChromeExtra;
-        inherit extraConfig;
-      };
-      profile = profileBase // profileExtra;
-    in {
-      programs = {
-        "${name}" = {
-          enable = true;
-          inherit package;
-          nativeMessagingHosts = mergedNMH;
-          profiles = {
-            "${pid}" = profile;
-          };
-          policies = mergedPolicies;
+  }: let
+    pid = profileId;
+    mergedSettings = settings // defaults // settingsExtra;
+    mergedNMH = nativeMessagingHosts ++ nativeMessagingExtra;
+    mergedPolicies = policies // policiesExtra;
+    profileBase = {
+      isDefault = true;
+      extensions = {packages = (addons.common or []) ++ addonsExtra;};
+      settings = mergedSettings;
+      userChrome = userChrome + bottomNavbarChrome + hideSearchModeChip + hideUrlbarOneOffs + hideSearchBarWidget + userChromeExtra;
+      inherit extraConfig;
+    };
+    profile = profileBase // profileExtra;
+  in {
+    programs = {
+      "${name}" = {
+        enable = true;
+        inherit package;
+        nativeMessagingHosts = mergedNMH;
+        profiles = {
+          "${pid}" = profile;
         };
+        policies = mergedPolicies;
       };
     };
+  };
 }

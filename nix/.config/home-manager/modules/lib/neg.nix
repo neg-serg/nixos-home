@@ -180,15 +180,15 @@
       }: {
         systemd.user.services."${name}" =
           lib.recursiveUpdate
-            {
-              Unit =
-                (lib.optionalAttrs (description != null) {Description = description;})
-                // unitExtra;
-              Service = ({ExecStart = execStart;} // serviceExtra);
-            }
-            (mkUnitFromPresets {
-              inherit presets after wants partOf wantedBy;
-            });
+          {
+            Unit =
+              (lib.optionalAttrs (description != null) {Description = description;})
+              // unitExtra;
+            Service = {ExecStart = execStart;} // serviceExtra;
+          }
+          (mkUnitFromPresets {
+            inherit presets after wants partOf wantedBy;
+          });
       };
 
       # Minimal sugar to declare a simple Timer unit with presets.
@@ -214,25 +214,27 @@
       }: let
         # Default WantedBy to timers.target if not explicitly provided and timers preset is used
         finalWantedBy =
-          if wantedBy != null then wantedBy else (lib.optional (lib.elem "timers" presets) "timers.target");
+          if wantedBy != null
+          then wantedBy
+          else (lib.optional (lib.elem "timers" presets) "timers.target");
       in {
         systemd.user.timers."${name}" =
           lib.recursiveUpdate
-            {
-              Unit =
-                (lib.optionalAttrs (description != null) {Description = description;})
-                // unitExtra;
-              Timer =
-                ({ }
-                 // lib.optionalAttrs (onCalendar != null) { OnCalendar = onCalendar; }
-                 // lib.optionalAttrs (accuracySec != null) { AccuracySec = accuracySec; }
-                 // lib.optionalAttrs (persistent != null) { Persistent = persistent; }
-                 // timerExtra);
-            }
-            (mkUnitFromPresets {
-              inherit presets after wants partOf;
-              wantedBy = finalWantedBy;
-            });
+          {
+            Unit =
+              (lib.optionalAttrs (description != null) {Description = description;})
+              // unitExtra;
+            Timer =
+              {}
+              // lib.optionalAttrs (onCalendar != null) {OnCalendar = onCalendar;}
+              // lib.optionalAttrs (accuracySec != null) {AccuracySec = accuracySec;}
+              // lib.optionalAttrs (persistent != null) {Persistent = persistent;}
+              // timerExtra;
+          }
+          (mkUnitFromPresets {
+            inherit presets after wants partOf;
+            wantedBy = finalWantedBy;
+          });
       };
 
       # Minimal sugar to declare a simple Socket unit with presets.
@@ -257,25 +259,27 @@
         wantedBy ? null,
       }: let
         finalWantedBy =
-          if wantedBy != null then wantedBy else (lib.optional (lib.elem "socketsTarget" presets) "sockets.target");
+          if wantedBy != null
+          then wantedBy
+          else (lib.optional (lib.elem "socketsTarget" presets) "sockets.target");
       in {
         systemd.user.sockets."${name}" =
           lib.recursiveUpdate
-            {
-              Unit =
-                (lib.optionalAttrs (description != null) {Description = description;})
-                // unitExtra;
-              Socket =
-                ({ }
-                 // lib.optionalAttrs (listenStream != null) { ListenStream = listenStream; }
-                 // lib.optionalAttrs (listenDatagram != null) { ListenDatagram = listenDatagram; }
-                 // lib.optionalAttrs (listenFIFO != null) { ListenFIFO = listenFIFO; }
-                 // socketExtra);
-            }
-            (mkUnitFromPresets {
-              inherit presets after wants partOf;
-              wantedBy = finalWantedBy;
-            });
+          {
+            Unit =
+              (lib.optionalAttrs (description != null) {Description = description;})
+              // unitExtra;
+            Socket =
+              {}
+              // lib.optionalAttrs (listenStream != null) {ListenStream = listenStream;}
+              // lib.optionalAttrs (listenDatagram != null) {ListenDatagram = listenDatagram;}
+              // lib.optionalAttrs (listenFIFO != null) {ListenFIFO = listenFIFO;}
+              // socketExtra;
+          }
+          (mkUnitFromPresets {
+            inherit presets after wants partOf;
+            wantedBy = finalWantedBy;
+          });
       };
     };
 
@@ -409,7 +413,7 @@
 
     # Create a local wrapper script under ~/.local/bin with activation-time guard.
     # See packages/lib/local-bin.nix for implementation details.
-    mkLocalBin = import ../../packages/lib/local-bin.nix { inherit lib; };
+    mkLocalBin = import ../../packages/lib/local-bin.nix {inherit lib;};
 
     # XDG file helpers were split into a dedicated pure helper module
     # to avoid config/lib coupling in regular modules. Prefer importing
@@ -444,7 +448,7 @@
       default = pkgs.rofi.override {
         plugins = [
           pkgs.rofi-file-browser # file browser mode for rofi
-          pkgs.neg.rofi_games    # custom games menu plugin
+          pkgs.neg.rofi_games # custom games menu plugin
         ];
       };
       description = "Rofi build with required plugins (file-browser, rofi-games).";

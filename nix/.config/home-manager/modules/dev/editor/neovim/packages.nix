@@ -1,5 +1,8 @@
-{ config, pkgs, ... }:
 {
+  config,
+  pkgs,
+  ...
+}: {
   home.packages = config.lib.neg.pkgsList [
     pkgs.bash-language-server # Bash LSP
     pkgs.neovim # Neovim editor

@@ -4,7 +4,7 @@ _: {
     enableZshIntegration = true;
     settings = {
       # Yazi 0.3+: [manager] -> [mgr]
-      mgr = { show_hidden = true; };
+      mgr = {show_hidden = true;};
       opener.edit = [
         {
           run = ''nvim "$@"'';

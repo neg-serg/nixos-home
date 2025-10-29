@@ -45,27 +45,25 @@
         pkgs.ghcid # fast GHCi-based reloader
       ]
       # Some Haskell tools may be unavailable on a given nixpkgs pin — include conditionally.
-      ++ (lib.optionals (pkgs ? fourmolu) [ pkgs.fourmolu ]) # alt formatter
-      ++ (lib.optionals (pkgs ? hindent) [ pkgs.hindent ]); # alt formatter
+      ++ (lib.optionals (pkgs ? fourmolu) [pkgs.fourmolu]) # alt formatter
+      ++ (lib.optionals (pkgs ? hindent) [pkgs.hindent]); # alt formatter
 
     # Rust toolchain and helpers
-    rust =
-      [
-        pkgs.rustup # flexible Rust toolchain manager (stable/nightly components)
-      ];
+    rust = [
+      pkgs.rustup # flexible Rust toolchain manager (stable/nightly components)
+    ];
 
     # C/C++ toolchain and common build tools
-    cpp =
-      [
-        pkgs.gcc # GCC toolchain
-        pkgs.clang # Clang/LLVM C/C++ compiler
-        pkgs.clang-tools # clangd + clang-tidy + extras
-        pkgs.cmake # CMake build system
-        pkgs.ninja # Ninja build tool
-        pkgs.bear # compilation database generator (compile_commands.json)
-        pkgs.ccache # compiler cache
-        pkgs.lldb # LLVM debugger
-      ];
+    cpp = [
+      pkgs.gcc # GCC toolchain
+      pkgs.clang # Clang/LLVM C/C++ compiler
+      pkgs.clang-tools # clangd + clang-tidy + extras
+      pkgs.cmake # CMake build system
+      pkgs.ninja # Ninja build tool
+      pkgs.bear # compilation database generator (compile_commands.json)
+      pkgs.ccache # compiler cache
+      pkgs.lldb # LLVM debugger
+    ];
 
     # IaC backend package (Terraform or OpenTofu) controlled by
     # features.dev.iac.backend (default: "terraform").
@@ -82,19 +80,20 @@
   };
 in
   lib.mkIf config.features.dev.enable {
-    home.packages =
-      let
-        flags = (config.features.dev.pkgs or {}) // {
+    home.packages = let
+      flags =
+        (config.features.dev.pkgs or {})
+        // {
           haskell = config.features.dev.haskell.enable or false;
           rust = config.features.dev.rust.enable or false;
           cpp = config.features.dev.cpp.enable or false;
         };
-      in config.lib.neg.pkgsList (
+    in
+      config.lib.neg.pkgsList (
         config.lib.neg.mkEnabledList flags groups
       );
 
-    features.allowUnfree.extra =
-      lib.optionals (config.features.dev.pkgs.analyzers or false) [
-        "codeql"
-      ];
+    features.allowUnfree.extra = lib.optionals (config.features.dev.pkgs.analyzers or false) [
+      "codeql"
+    ];
   }

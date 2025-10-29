@@ -1,4 +1,4 @@
-{ 
+{
   lib,
   config,
   pkgs,
@@ -93,19 +93,17 @@ with rec {
   };
   # Replace ad-hoc ensure/clean steps with lib.neg helpers
   # Ensure common runtime/config dirs exist as real directories
-  home.activation.ensureCommonDirs =
-    config.lib.neg.mkEnsureRealDirsMany [
-      "${config.xdg.configHome}/mpv"
-      "${config.xdg.stateHome}/zsh"
-      "${config.home.homeDirectory}/.local/bin"
-    ];
+  home.activation.ensureCommonDirs = config.lib.neg.mkEnsureRealDirsMany [
+    "${config.xdg.configHome}/mpv"
+    "${config.xdg.stateHome}/zsh"
+    "${config.home.homeDirectory}/.local/bin"
+  ];
 
   # Ensure Gmail Maildir tree exists (INBOX, Sent, Drafts, All Mail)
-  home.activation.ensureGmailMaildirs =
-    config.lib.neg.mkEnsureMaildirs "${config.home.homeDirectory}/.local/mail/gmail" [
-      "INBOX"
-      "[Gmail]/Sent Mail"
-      "[Gmail]/Drafts"
-      "[Gmail]/All Mail"
-    ];
+  home.activation.ensureGmailMaildirs = config.lib.neg.mkEnsureMaildirs "${config.home.homeDirectory}/.local/mail/gmail" [
+    "INBOX"
+    "[Gmail]/Sent Mail"
+    "[Gmail]/Drafts"
+    "[Gmail]/All Mail"
+  ];
 }

@@ -7,4 +7,3 @@
     ./bindings.nix
   ];
 }
-

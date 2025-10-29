@@ -1,1 +1,1 @@
-{ ... }: { imports = [ ./wezterm ]; }
+{...}: {imports = [./wezterm];}

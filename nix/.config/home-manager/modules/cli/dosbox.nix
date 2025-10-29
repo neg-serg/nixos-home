@@ -1,4 +1,10 @@
-{ pkgs, lib, config, xdg, ... }:
+{
+  pkgs,
+  lib,
+  config,
+  xdg,
+  ...
+}:
 lib.mkMerge [
   {
     # Install dosbox-staging and ship config via XDG
@@ -6,5 +12,5 @@ lib.mkMerge [
       pkgs.dosbox-staging # DOS/retro games emulator (staging fork)
     ];
   }
-  (xdg.mkXdgSource "dosbox" { source = ./dosbox-conf; })
+  (xdg.mkXdgSource "dosbox" {source = ./dosbox-conf;})
 ]

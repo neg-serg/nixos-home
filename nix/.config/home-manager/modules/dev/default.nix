@@ -1,8 +1,6 @@
-{
-  lib,
-  ...
-}:
-with lib; let mkBool = desc: default: (lib.mkEnableOption desc) // { inherit default; };
+{lib, ...}:
+with lib; let
+  mkBool = desc: default: (lib.mkEnableOption desc) // {inherit default;};
 in {
   options.features.dev = {
     iac = {

@@ -1,5 +1,9 @@
-{ lib, python3Packages, coreutils, ... }:
-
+{
+  lib,
+  python3Packages,
+  coreutils,
+  ...
+}:
 python3Packages.buildPythonApplication rec {
   pname = "neg-pretty-printer";
   version = "0.1.0";
@@ -7,12 +11,15 @@ python3Packages.buildPythonApplication rec {
   format = "pyproject";
   src = ./.;
 
-  nativeBuildInputs = with python3Packages; [ setuptools wheel ];
-  propagatedBuildInputs = with python3Packages; [ colored ];
+  nativeBuildInputs = with python3Packages; [setuptools wheel];
+  propagatedBuildInputs = with python3Packages; [colored];
 
   # Ensure external tools used by CLI are available (wc from coreutils)
   makeWrapperArgs = [
-    "--prefix" "PATH" ":" (lib.makeBinPath [ coreutils ])
+    "--prefix"
+    "PATH"
+    ":"
+    (lib.makeBinPath [coreutils])
   ];
 
   meta = with lib; {
@@ -23,4 +30,3 @@ python3Packages.buildPythonApplication rec {
     mainProgram = "ppinfo";
   };
 }
-

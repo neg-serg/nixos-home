@@ -1,4 +1,10 @@
-{ lib, config, pkgs, xdg, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  xdg,
+  ...
+}:
 with lib;
   mkIf config.features.gui.enable (lib.mkMerge [
     {

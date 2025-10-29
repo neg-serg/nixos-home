@@ -8,11 +8,12 @@
 with lib; let
   cfg = config.features;
   # Use a local mkBool to avoid early dependency on config.lib.neg during option evaluation
-  mkBool = (desc: default: (lib.mkEnableOption desc) // {inherit default;});
+  mkBool = desc: default: (lib.mkEnableOption desc) // {inherit default;};
   # Read dev-speed mode from environment (HM_DEV_SPEED=1|true|yes)
-  devSpeedEnv =
-    let v = builtins.getEnv "HM_DEV_SPEED";
-    in v == "1" || v == "true" || v == "yes";
+  devSpeedEnv = let
+    v = builtins.getEnv "HM_DEV_SPEED";
+  in
+    v == "1" || v == "true" || v == "yes";
 in {
   options.features = {
     # Global package exclusions for curated lists in modules that adopt this filter.
@@ -90,7 +91,6 @@ in {
 
     # Development-speed mode: aggressively trim heavy features/inputs for faster local iteration
     devSpeed.enable = mkBool "enable dev-speed mode (trim heavy features for faster eval)" false;
-
   };
 
   # Apply profile defaults. Users can still override flags after this.
@@ -194,44 +194,41 @@ in {
     (mkIf (! cfg.dev.haskell.enable) {
       # When Haskell tooling is disabled, proactively exclude common Haskell tool pnames
       # from curated package lists that honor features.excludePkgs via config.lib.neg.pkgsList.
-      features.excludePkgs =
-        mkAfter [
-          "ghc"
-          "cabal-install"
-          "stack"
-          "haskell-language-server"
-          "hlint"
-          "ormolu"
-          "fourmolu"
-          "hindent"
-          "ghcid"
-        ];
+      features.excludePkgs = mkAfter [
+        "ghc"
+        "cabal-install"
+        "stack"
+        "haskell-language-server"
+        "hlint"
+        "ormolu"
+        "fourmolu"
+        "hindent"
+        "ghcid"
+      ];
     })
     (mkIf (! cfg.dev.rust.enable) {
       # When Rust tooling is disabled, exclude common Rust tool pnames
-      features.excludePkgs =
-        mkAfter [
-          "rustup"
-          "rust-analyzer"
-          "cargo"
-          "rustc"
-          "clippy"
-          "rustfmt"
-        ];
+      features.excludePkgs = mkAfter [
+        "rustup"
+        "rust-analyzer"
+        "cargo"
+        "rustc"
+        "clippy"
+        "rustfmt"
+      ];
     })
     (mkIf (! cfg.dev.cpp.enable) {
       # When C/C++ tooling is disabled, exclude typical C/C++ tool pnames
-      features.excludePkgs =
-        mkAfter [
-          "gcc"
-          "clang"
-          "clang-tools"
-          "cmake"
-          "ninja"
-          "bear"
-          "ccache"
-          "lldb"
-        ];
+      features.excludePkgs = mkAfter [
+        "gcc"
+        "clang"
+        "clang-tools"
+        "cmake"
+        "ninja"
+        "bear"
+        "ccache"
+        "lldb"
+      ];
     })
     (mkIf (! cfg.gui.enable) {
       features.gui.qt.enable = mkForce false;
@@ -253,14 +250,31 @@ in {
             hyprlandVersion = let
               # Fallback: strip leading 'v' from ref like "v0.50.1"
               refNorm =
-                if hyprlandRef == null then null else
-                (let s = toString hyprlandRef; in if lib.hasPrefix "v" s then builtins.substring 1 (builtins.stringLength s - 1) s else s);
-            in refNorm;
+                if hyprlandRef == null
+                then null
+                else
+                  (let
+                    s = toString hyprlandRef;
+                  in
+                    if lib.hasPrefix "v" s
+                    then builtins.substring 1 (builtins.stringLength s - 1) s
+                    else s);
+            in
+              refNorm;
             hy3Rev = lib.attrByPath ["rev"] null hy3;
             compatible = [
-              { hv = "0.50.1"; rev = "1fdc0a291f8c23b22d27d6dabb466d018757243c"; }
-              { hv = "0.51.0"; rev = "e317a4cf89486f33c0e09364fbb6949e9f4f5624"; }
-              { hv = "0.51.1"; rev = "e317a4cf89486f33c0e09364fbb6949e9f4f5624"; }
+              {
+                hv = "0.50.1";
+                rev = "1fdc0a291f8c23b22d27d6dabb466d018757243c";
+              }
+              {
+                hv = "0.51.0";
+                rev = "e317a4cf89486f33c0e09364fbb6949e9f4f5624";
+              }
+              {
+                hv = "0.51.1";
+                rev = "e317a4cf89486f33c0e09364fbb6949e9f4f5624";
+              }
             ];
             matches = c: (hyprlandVersion == null || hyprlandVersion == c.hv) && (hy3Rev == null || hy3Rev == c.rev);
             ok = lib.any matches compatible;
@@ -269,7 +283,15 @@ in {
             message = ''
               Incompatible Hyprland/hy3 pins detected.
               Expected one of: ${builtins.concatStringsSep ", " (map (c: "Hyprland " + c.hv + " + hy3 " + builtins.substring 0 7 c.rev) compatible)}
-              Got: Hyprland ${toString (if hyprlandVersion == null then "<unknown>" else hyprlandVersion)} + hy3 ${toString (if hy3Rev == null then "<unknown>" else builtins.substring 0 7 hy3Rev)}
+              Got: Hyprland ${toString (
+                if hyprlandVersion == null
+                then "<unknown>"
+                else hyprlandVersion
+              )} + hy3 ${toString (
+                if hy3Rev == null
+                then "<unknown>"
+                else builtins.substring 0 7 hy3Rev
+              )}
               Update flake.nix pins or extend the compatibility matrix in modules/features.nix.
             '';
           })
@@ -294,6 +316,6 @@ in {
         ];
     }
     # Auto-enable dev-speed by env var
-    (mkIf devSpeedEnv { features.devSpeed.enable = mkDefault true; })
+    (mkIf devSpeedEnv {features.devSpeed.enable = mkDefault true;})
   ];
 }

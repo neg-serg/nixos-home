@@ -1,4 +1,11 @@
-{ lib, config, pkgs, inputs, xdg, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  inputs,
+  xdg,
+  ...
+}:
 lib.mkMerge [
   {
     # Ensure Nushell is available

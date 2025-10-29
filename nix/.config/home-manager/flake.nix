@@ -30,8 +30,7 @@ let
     # personal cache
     "neg-serg.cachix.org-1:MZ+xYOrDj1Uhq8GTJAg//KrS4fAPpnIvaWU/w3Qz/wo="
   ];
-in
-{
+in {
   description = "Home Manager configuration of neg";
   # Global Nix configuration for this flake (affects local and CI when respected)
   # Single source of truth for caches; Home Manager modules receive these via mkHMArgs.caches
@@ -42,9 +41,18 @@ in
     extra-trusted-public-keys = extraTrustedKeys;
   };
   inputs = {
-    bzmenu = { url = "github:e-tho/bzmenu"; inputs.nixpkgs.follows = "nixpkgs"; };
-    chaotic = { url = "github:chaotic-cx/nyx/nyxpkgs-unstable"; inputs.nixpkgs.follows = "nixpkgs"; };
-    home-manager = { url = "github:nix-community/home-manager"; inputs.nixpkgs.follows = "nixpkgs"; };
+    bzmenu = {
+      url = "github:e-tho/bzmenu";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    chaotic = {
+      url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     # CamelCase alias for convenience in code
     homeManagerInput.follows = "home-manager";
     # Pin hy3 to tag compatible with Hyprland v0.51.0
@@ -55,25 +63,55 @@ in
       inputs.hyprland.follows = "hyprland";
     };
     # Pin Hyprland to v0.51.1 (latest stable)
-    hyprland = { url = "github:hyprwm/Hyprland?ref=v0.51.1"; inputs.nixpkgs.follows = "nixpkgs"; };
-    iosevka-neg = { url = "git+ssh://git@github.com/neg-serg/iosevka-neg"; inputs.nixpkgs.follows = "nixpkgs"; };
+    hyprland = {
+      url = "github:hyprwm/Hyprland?ref=v0.51.1";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    iosevka-neg = {
+      url = "git+ssh://git@github.com/neg-serg/iosevka-neg";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     # CamelCase alias for convenience in code
     iosevkaNegInput.follows = "iosevka-neg";
-    iwmenu = { url = "github:e-tho/iwmenu"; inputs.nixpkgs.follows = "nixpkgs"; };
+    iwmenu = {
+      url = "github:e-tho/iwmenu";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     # Nushell package manager (non-flake repo) to avoid vendoring sources
-    nupm = { url = "github:nushell/nupm"; flake = false; };
+    nupm = {
+      url = "github:nushell/nupm";
+      flake = false;
+    };
     # Pin nixpkgs to a known-good revision where openmw builds
-    nixpkgs = { url = "github:NixOS/nixpkgs?rev=5e2a59a5b1a82f89f2c7e598302a9cacebb72a67"; };
-    quickshell = { url = "git+https://git.outfoxxed.me/outfoxxed/quickshell"; inputs.nixpkgs.follows = "nixpkgs"; };
-    rsmetrx = { url = "github:neg-serg/rsmetrx"; inputs.nixpkgs.follows = "nixpkgs"; };
-    sops-nix = { url = "github:Mic92/sops-nix"; inputs.nixpkgs.follows = "nixpkgs"; };
+    nixpkgs = {url = "github:NixOS/nixpkgs?rev=5e2a59a5b1a82f89f2c7e598302a9cacebb72a67";};
+    quickshell = {
+      url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    rsmetrx = {
+      url = "github:neg-serg/rsmetrx";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     # CamelCase alias for convenience in code
     sopsNixInput.follows = "sops-nix";
-    stylix = { url = "github:danth/stylix"; inputs.nixpkgs.follows = "nixpkgs"; };
+    stylix = {
+      url = "github:danth/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     # CamelCase alias for convenience in code
     stylixInput.follows = "stylix";
-    nur = { url = "github:nix-community/NUR"; inputs.nixpkgs.follows = "nixpkgs"; };
-    yandex-browser = { url = "github:miuirussia/yandex-browser.nix"; inputs.nixpkgs.follows = "nixpkgs"; };
+    nur = {
+      url = "github:nix-community/NUR";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    yandex-browser = {
+      url = "github:miuirussia/yandex-browser.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     # CamelCase alias for convenience in code
     yandexBrowserInput.follows = "yandex-browser";
   };
@@ -94,8 +132,12 @@ in
     inherit (nixpkgs) lib;
     # Helpers for environment parsing (DRY)
     boolEnv = name: let v = builtins.getEnv name; in v == "1" || v == "true" || v == "yes";
-    splitEnvList = name: let v = builtins.getEnv name; in
-      if v == "" then [] else (lib.filter (s: s != "") (lib.splitString "," v));
+    splitEnvList = name: let
+      v = builtins.getEnv name;
+    in
+      if v == ""
+      then []
+      else (lib.filter (s: s != "") (lib.splitString "," v));
     # Prefer evaluating only one system by default to speed up local eval.
     # You can override the systems list for CI or cross builds by setting
     # HM_SYSTEMS to a comma-separated list (e.g., "x86_64-linux,aarch64-linux").
@@ -103,7 +145,10 @@ in
     systems = let
       fromEnv = splitEnvList "HM_SYSTEMS";
       cleaned = lib.unique fromEnv;
-    in if cleaned == [] then [ defaultSystem ] else cleaned;
+    in
+      if cleaned == []
+      then [defaultSystem]
+      else cleaned;
 
     # Pass only minimal inputs required by HM modules (hyprland for asserts, nupm for Nushell).
     # Nilla raw-loader compatibility: add a synthetic type to each selected input.
@@ -112,7 +157,8 @@ in
         inherit (inputs) hyprland;
         inherit (inputs) nupm;
       };
-    in builtins.mapAttrs (_: input: input // { type = "derivation"; }) selected;
+    in
+      builtins.mapAttrs (_: input: input // {type = "derivation";}) selected;
 
     # Common Home Manager building blocks
     hmHelpers = import ./flake/hm-helpers.nix {
@@ -144,20 +190,25 @@ in
         #   - Else if we're in CI (CI/GITHUB_ACTIONS/GARNIX/GARNIX_CI set) => use public fallback.
         #   - Else (local dev) => use private.
         # Modules access `iosevkaNeg.nerd-font`, so mirror that shape when falling back.
-        iosevkaNeg =
-          let
-            boolEnv = name: let v = builtins.getEnv name; in v == "1" || v == "true" || v == "yes";
-            hmUse = boolEnv "HM_USE_IOSEVKA_NEG";
-            g = builtins.getEnv;
-            isCI = (g "CI" != "") || (g "GITHUB_ACTIONS" != "") || (g "GARNIX" != "") || (g "GARNIX_CI" != "");
-            usePrivate = if hmUse then true else if isCI then false else true;
-          in if usePrivate
-            then iosevkaNegInput.packages.${system}
-            else { nerd-font = pkgs.nerd-fonts.iosevka; };
+        iosevkaNeg = let
+          boolEnv = name: let v = builtins.getEnv name; in v == "1" || v == "true" || v == "yes";
+          hmUse = boolEnv "HM_USE_IOSEVKA_NEG";
+          g = builtins.getEnv;
+          isCI = (g "CI" != "") || (g "GITHUB_ACTIONS" != "") || (g "GARNIX" != "") || (g "GARNIX_CI" != "");
+          usePrivate =
+            if hmUse
+            then true
+            else if isCI
+            then false
+            else true;
+        in
+          if usePrivate
+          then iosevkaNegInput.packages.${system}
+          else {nerd-font = pkgs.nerd-fonts.iosevka;};
         # NUR is accessed lazily via faProvider in mkHMArgs only when needed.
 
         # Common toolsets for devShells to avoid duplication
-        devTools = import ./flake/devtools.nix { inherit lib pkgs; };
+        devTools = import ./flake/devtools.nix {inherit lib pkgs;};
         inherit (devTools) devNixTools rustBaseTools rustExtraTools;
       in {
         inherit pkgs iosevkaNeg;
@@ -166,44 +217,48 @@ in
           inherit pkgs rustBaseTools rustExtraTools devNixTools;
         };
 
-        packages =
-          let
-            extrasFlag = boolEnv "HM_EXTRAS";
-            extrasSet = import ./flake/pkgs-extras.nix {
-              inherit hy3 pkgs;
-              system = system;
-            };
-          in {
+        packages = let
+          extrasFlag = boolEnv "HM_EXTRAS";
+          extrasSet = import ./flake/pkgs-extras.nix {
+            inherit hy3 pkgs;
+            system = system;
+          };
+        in
+          {
             default = pkgs.zsh;
-          } // lib.optionalAttrs extrasFlag extrasSet;
+          }
+          // lib.optionalAttrs extrasFlag extrasSet;
 
         # Formatter: treefmt wrapper pinned to repo config
-        formatter = import ./flake/formatter.nix { inherit pkgs; };
+        formatter = import ./flake/formatter.nix {inherit pkgs;};
 
         # Checks: fail if formatting or linters would change files
-        checks =
-          (import ./flake/checks.nix {
-            inherit pkgs self system;
-          })
-          ;
+        checks = import ./flake/checks.nix {
+          inherit pkgs self system;
+        };
       }
     );
-
     # Use defaultSystem for user HM configs
   in {
     # Gate devShells/formatter under HM_EXTRAS; always keep defaultSystem for local dev.
     # This reduces multi-system eval noise in CI unless explicitly requested.
-    devShells =
-      let
-        extras = boolEnv "HM_EXTRAS";
-        sysList = if extras then systems else [ defaultSystem ];
-      in lib.genAttrs sysList (s: perSystem.${s}.devShells);
+    devShells = let
+      extras = boolEnv "HM_EXTRAS";
+      sysList =
+        if extras
+        then systems
+        else [defaultSystem];
+    in
+      lib.genAttrs sysList (s: perSystem.${s}.devShells);
     packages = lib.genAttrs systems (s: perSystem.${s}.packages);
-    formatter =
-      let
-        extras = boolEnv "HM_EXTRAS";
-        sysList = if extras then systems else [ defaultSystem ];
-      in lib.genAttrs sysList (s: perSystem.${s}.formatter);
+    formatter = let
+      extras = boolEnv "HM_EXTRAS";
+      sysList =
+        if extras
+        then systems
+        else [defaultSystem];
+    in
+      lib.genAttrs sysList (s: perSystem.${s}.formatter);
     # Docs outputs are gated by HM_DOCS env; heavy HM evals are skipped by default.
     docs = import ./flake/docs.nix {
       inherit lib perSystem systems homeManagerInput mkHMArgs hmBaseModules boolEnv;
@@ -212,12 +267,13 @@ in
       inherit lib systems defaultSystem perSystem splitEnvList boolEnv homeManagerInput mkHMArgs hmBaseModules self;
     };
 
-    homeConfigurations = lib.genAttrs [ "neg" "neg-lite" ] (n:
-      homeManagerInput.lib.homeManagerConfiguration {
-        inherit (perSystem.${defaultSystem}) pkgs;
-        extraSpecialArgs = mkHMArgs defaultSystem;
-        modules = hmBaseModules (lib.optionalAttrs (n == "neg-lite") { profile = "lite"; });
-      }
+    homeConfigurations = lib.genAttrs ["neg" "neg-lite"] (
+      n:
+        homeManagerInput.lib.homeManagerConfiguration {
+          inherit (perSystem.${defaultSystem}) pkgs;
+          extraSpecialArgs = mkHMArgs defaultSystem;
+          modules = hmBaseModules (lib.optionalAttrs (n == "neg-lite") {profile = "lite";});
+        }
     );
 
     # Reusable project templates

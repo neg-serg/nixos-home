@@ -1,5 +1,10 @@
-{ config, lib, pkgs, xdg, ... }:
-let
+{
+  config,
+  lib,
+  pkgs,
+  xdg,
+  ...
+}: let
   inherit (lib) getExe';
   inherit (config.xdg) configHome dataHome;
   aria2Bin = getExe' pkgs.aria2 "aria2c";
@@ -28,10 +33,13 @@ in
     {
       systemd.user.services.aria2 = lib.mkMerge [
         {
-          Unit = { Description = "aria2 download manager"; };
-          Service.ExecStart = let exe = aria2Bin; args = [ "--conf-path=${configHome}/aria2/aria2.conf" ]; in "${exe} ${lib.escapeShellArgs args}";
+          Unit = {Description = "aria2 download manager";};
+          Service.ExecStart = let
+            exe = aria2Bin;
+            args = ["--conf-path=${configHome}/aria2/aria2.conf"];
+          in "${exe} ${lib.escapeShellArgs args}";
         }
-        (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["graphical"]; })
+        (config.lib.neg.systemdUser.mkUnitFromPresets {presets = ["graphical"];})
       ];
     }
   ])

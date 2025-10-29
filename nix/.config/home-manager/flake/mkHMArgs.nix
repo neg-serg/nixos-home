@@ -1,14 +1,14 @@
-{ lib
-, perSystem
-, hy3
-, yandexBrowserInput
-, nur
-, inputs
-, hmInputs
-, extraSubstituters
-, extraTrustedKeys
-}:
-system: {
+{
+  lib,
+  perSystem,
+  hy3,
+  yandexBrowserInput,
+  nur,
+  inputs,
+  hmInputs,
+  extraSubstituters,
+  extraTrustedKeys,
+}: system: {
   inputs = hmInputs;
   inherit hy3;
   inherit (perSystem.${system}) iosevkaNeg;
@@ -28,5 +28,8 @@ system: {
   bzmenuProvider = pkgs: inputs.bzmenu.packages.${pkgs.system}.default;
   rsmetrxProvider = pkgs: inputs.rsmetrx.packages.${pkgs.system}.default;
   # Provide xdg helpers directly to avoid _module.args fallback recursion
-  xdg = import ../modules/lib/xdg-helpers.nix { inherit lib; inherit (perSystem.${system}) pkgs; };
+  xdg = import ../modules/lib/xdg-helpers.nix {
+    inherit lib;
+    inherit (perSystem.${system}) pkgs;
+  };
 }

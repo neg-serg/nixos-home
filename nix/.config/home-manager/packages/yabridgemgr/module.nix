@@ -14,7 +14,7 @@ with lib;
     mkBool =
       if (config ? lib) && (config.lib ? neg) && (config.lib.neg ? mkBool)
       then config.lib.neg.mkBool
-      else (desc: default: (lib.mkEnableOption desc) // { inherit default; });
+      else (desc: default: (lib.mkEnableOption desc) // {inherit default;});
     # Minimal local presets helper for systemd user units
     presets = {
       defaultWanted = {
@@ -33,12 +33,19 @@ with lib;
     mkUnitFromPresets = args: let
       # args: { presets = ["defaultWanted" ...]; after ? [], wants ? [], partOf ? [], wantedBy ? [] }
       names = args.presets or [];
-      accum = lib.foldl' (acc: n: {
-        after = acc.after ++ (presets.${n}.after or []);
-        wants = acc.wants ++ (presets.${n}.wants or []);
-        partOf = acc.partOf ++ (presets.${n}.partOf or []);
-        wantedBy = acc.wantedBy ++ (presets.${n}.wantedBy or []);
-      }) { after = []; wants = []; partOf = []; wantedBy = []; } names;
+      accum =
+        lib.foldl' (acc: n: {
+          after = acc.after ++ (presets.${n}.after or []);
+          wants = acc.wants ++ (presets.${n}.wants or []);
+          partOf = acc.partOf ++ (presets.${n}.partOf or []);
+          wantedBy = acc.wantedBy ++ (presets.${n}.wantedBy or []);
+        }) {
+          after = [];
+          wants = [];
+          partOf = [];
+          wantedBy = [];
+        }
+        names;
       merged = {
         after = lib.unique (accum.after ++ (args.after or []));
         wants = lib.unique (accum.wants ++ (args.wants or []));
@@ -47,10 +54,10 @@ with lib;
       };
     in {
       Unit =
-        lib.optionalAttrs (merged.after != []) { After = merged.after; }
-        // lib.optionalAttrs (merged.wants != []) { Wants = merged.wants; }
-        // lib.optionalAttrs (merged.partOf != []) { PartOf = merged.partOf; };
-      Install = lib.optionalAttrs (merged.wantedBy != []) { WantedBy = merged.wantedBy; };
+        lib.optionalAttrs (merged.after != []) {After = merged.after;}
+        // lib.optionalAttrs (merged.wants != []) {Wants = merged.wants;}
+        // lib.optionalAttrs (merged.partOf != []) {PartOf = merged.partOf;};
+      Install = lib.optionalAttrs (merged.wantedBy != []) {WantedBy = merged.wantedBy;};
     };
   in {
     options.modules.audio-nix.yabridgemgr = {
@@ -109,20 +116,27 @@ with lib;
             RemainAfterExit = "yes";
           };
           Unit.ConditionUser = "${cfg.user}";
-        } (mkUnitFromPresets { presets = ["tmpfiles" "defaultWanted"]; }))
-        ;
+        } (mkUnitFromPresets {presets = ["tmpfiles" "defaultWanted"];}));
         yabridgemgr_sync =
-          (lib.recursiveUpdate {
+          lib.recursiveUpdate {
             Unit.Description = "yabridgectl sync";
             Service = {
-              ExecStart = let exe = lib.getExe pkgs.yabridgectl; args = [ "sync" ]; in "${exe} ${lib.escapeShellArgs args}";
-              ExecStartPre = let exe = lib.getExe' pkgs.coreutils "sleep"; args = [ "5" ]; in "${exe} ${lib.escapeShellArgs args}";
+              ExecStart = let
+                exe = lib.getExe pkgs.yabridgectl;
+                args = ["sync"];
+              in "${exe} ${lib.escapeShellArgs args}";
+              ExecStartPre = let
+                exe = lib.getExe' pkgs.coreutils "sleep";
+                args = ["5"];
+              in "${exe} ${lib.escapeShellArgs args}";
               Environment = "NIX_PROFILES=/run/current-system/sw";
               RemainAfterExit = "yes";
             };
             Unit.ConditionUser = "${cfg.user}";
-          } (mkUnitFromPresets { presets = ["defaultWanted"]; after = ["yabridgemgr_mountprefix.service"]; }))
-        ;
+          } (mkUnitFromPresets {
+            presets = ["defaultWanted"];
+            after = ["yabridgemgr_mountprefix.service"];
+          });
       };
     };
   }

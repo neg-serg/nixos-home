@@ -1,4 +1,9 @@
-{ lib, config, xdg, ... }:
+{
+  lib,
+  config,
+  xdg,
+  ...
+}:
 lib.mkMerge [
   # Live-editable out-of-store symlink via helper (guards parent dir and target)
   (xdg.mkXdgSource "rustmission" {

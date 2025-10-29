@@ -1,4 +1,10 @@
-{ lib, config, pkgs, xdg, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  xdg,
+  ...
+}:
 lib.mkIf (config.features.gui.enable or false) (lib.mkMerge [
   # Link entire wezterm config dir under XDG config
   (xdg.mkXdgSource "wezterm" {

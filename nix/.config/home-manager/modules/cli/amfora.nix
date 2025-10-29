@@ -1,4 +1,10 @@
-{ pkgs, lib, config, xdg, ... }:
+{
+  pkgs,
+  lib,
+  config,
+  xdg,
+  ...
+}:
 lib.mkMerge [
   {
     # Install amfora and provide its config via XDG
@@ -6,5 +12,5 @@ lib.mkMerge [
       pkgs.amfora # terminal browser for Gemini
     ];
   }
-  (xdg.mkXdgSource "amfora" { source = ./amfora-conf; })
+  (xdg.mkXdgSource "amfora" {source = ./amfora-conf;})
 ]

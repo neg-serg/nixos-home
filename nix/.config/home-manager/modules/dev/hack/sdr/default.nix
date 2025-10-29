@@ -5,7 +5,6 @@
   ...
 }: let
   notBroken = p: !(((p.meta or {}).broken or false));
-
 in {
   home.packages = lib.filter notBroken (config.lib.neg.pkgsList [
     pkgs.chirp # Configuration tool for amateur radios

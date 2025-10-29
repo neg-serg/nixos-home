@@ -1,5 +1,9 @@
-{ lib, stylixInput, chaotic, sopsNixInput }:
 {
+  lib,
+  stylixInput,
+  chaotic,
+  sopsNixInput,
+}: {
   hmBaseModules = {
     profile ? null,
     extra ? [],
@@ -10,7 +14,7 @@
       chaotic.homeManagerModules.default
       sopsNixInput.homeManagerModules.sops
     ];
-    profMod = lib.optional (profile == "lite") (_: { features.profile = "lite"; });
+    profMod = lib.optional (profile == "lite") (_: {features.profile = "lite";});
   in
     profMod ++ base ++ extra;
 }

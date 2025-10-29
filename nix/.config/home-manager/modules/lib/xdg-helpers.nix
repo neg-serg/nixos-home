@@ -1,5 +1,4 @@
-{ pkgs ? null, ... }:
-{
+{pkgs ? null, ...}: {
   mkXdgText = relPath: text: {
     # Declare the file; use force=true on the caller side if overwriting is needed.
     xdg.configFile."${relPath}".text = text;
@@ -47,11 +46,11 @@
   # Requires passing `pkgs` when importing this helper module:
   #   let xdg = import ../../lib/xdg-helpers.nix { inherit lib pkgs; };
   mkXdgConfigToml = relPath: attrs: {
-    xdg.configFile."${relPath}".source = (pkgs.formats.toml { }).generate relPath attrs;
+    xdg.configFile."${relPath}".source = (pkgs.formats.toml {}).generate relPath attrs;
   };
 
   # Convenience: write TOML to an XDG data file using nixpkgs' TOML formatter.
   mkXdgDataToml = relPath: attrs: {
-    xdg.dataFile."${relPath}".source = (pkgs.formats.toml { }).generate relPath attrs;
+    xdg.dataFile."${relPath}".source = (pkgs.formats.toml {}).generate relPath attrs;
   };
 }

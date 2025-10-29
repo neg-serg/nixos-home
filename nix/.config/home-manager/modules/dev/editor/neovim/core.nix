@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   programs.neovim = {
     plugins = [
       pkgs.vimPlugins.clangd_extensions-nvim # extra clangd LSP features (inlay hints, etc.)
@@ -16,7 +15,7 @@
       vim.opt.runtimepath:prepend(parser_dir)
       vim.g.ts_install_dir = parser_dir
     '';
-    extraLuaPackages = [ pkgs.luajitPackages.magick ]; # LuaJIT bindings for ImageMagick
-    extraPackages = [ pkgs.imagemagick ]; # external tool used by some plugins
+    extraLuaPackages = [pkgs.luajitPackages.magick]; # LuaJIT bindings for ImageMagick
+    extraPackages = [pkgs.imagemagick]; # external tool used by some plugins
   };
 }

@@ -1,4 +1,4 @@
-{ ... }: {
+{...}: {
   imports = [
     ./ignore.nix
     ./hooks.nix

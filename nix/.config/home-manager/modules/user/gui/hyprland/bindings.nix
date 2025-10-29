@@ -1,4 +1,9 @@
-{ lib, config, xdg, ... }:
+{
+  lib,
+  config,
+  xdg,
+  ...
+}:
 with lib; let
   bindingFiles = [
     "resize.conf"
@@ -12,10 +17,12 @@ with lib; let
     "misc.conf"
     "_resets.conf"
   ];
-  mkHyprSource = rel: xdg.mkXdgSource ("hypr/" + rel) {
-    source = config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/nix/.config/home-manager/modules/user/gui/hypr/conf/${rel}";
-    recursive = false;
-  };
-in mkIf config.features.gui.enable (
-  lib.mkMerge (map (f: mkHyprSource ("bindings/" + f)) bindingFiles)
-)
+  mkHyprSource = rel:
+    xdg.mkXdgSource ("hypr/" + rel) {
+      source = config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/nix/.config/home-manager/modules/user/gui/hypr/conf/${rel}";
+      recursive = false;
+    };
+in
+  mkIf config.features.gui.enable (
+    lib.mkMerge (map (f: mkHyprSource ("bindings/" + f)) bindingFiles)
+  )

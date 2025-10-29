@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 lib.mkIf (config.features.gui.enable or false) {
   programs.mpv.scripts = [
     pkgs.mpvScripts.cutter # cut and automatically concat videos

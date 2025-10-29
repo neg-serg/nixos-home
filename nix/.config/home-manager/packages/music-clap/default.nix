@@ -19,8 +19,8 @@ python3Packages.buildPythonApplication {
   format = "pyproject";
   src = ./.;
 
-  build-system = [ python3Packages.setuptools ];
-  propagatedBuildInputs = [ laion_clap ];
+  build-system = [python3Packages.setuptools];
+  propagatedBuildInputs = [laion_clap];
 
   doCheck = false;
   meta = {

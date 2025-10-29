@@ -2,7 +2,8 @@
   config,
   lib,
   ...
-}: lib.mkIf (config.features.gui.enable or false) {
+}:
+lib.mkIf (config.features.gui.enable or false) {
   programs.mpv = {
     enable = true;
     config = {

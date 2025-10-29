@@ -12,4 +12,3 @@
     description = "Python CLI with ruff/black/pytest devShell";
   };
 }
-

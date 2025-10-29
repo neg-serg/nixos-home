@@ -1,4 +1,4 @@
-{ ... }: {
+{...}: {
   imports = [
     ./core.nix
     ./profiles.nix
@@ -7,4 +7,3 @@
     ./bindings.nix
   ];
 }
-

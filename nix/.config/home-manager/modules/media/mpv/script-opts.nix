@@ -1,4 +1,8 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  ...
+}:
 lib.mkIf (config.features.gui.enable or false) {
   programs.mpv.scriptOpts = {
     osc = {
@@ -28,4 +32,3 @@ lib.mkIf (config.features.gui.enable or false) {
     };
   };
 }
-

@@ -1,6 +1,9 @@
-{ lib, xdg, ... }:
-with lib;
-let
+{
+  lib,
+  xdg,
+  ...
+}:
+with lib; let
   disable = name:
     xdg.mkXdgText "autostart/${name}" ''
       [Desktop Entry]
@@ -8,8 +11,7 @@ let
       Name=${name} (disabled)
       Hidden=true
     '';
-in
-{
+in {
   # Disable GNOME Keyring autostart entries to avoid conflicts with
   # gpg-agent and ssh-agent managed by Home Manager.
   # This prevents systemd's XDG autostart generator from creating
@@ -22,4 +24,3 @@ in
     (disable "gnome-keyring-daemon.desktop")
   ];
 }
-

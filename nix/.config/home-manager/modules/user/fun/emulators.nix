@@ -16,10 +16,11 @@ with lib; {
       [
         pkgs.pcem # emulator for ibm pc and clones
         pkgs.pcsx2 # ps2 emulator
-      ] ++ (
+      ]
+      ++ (
         if config.features.emulators.retroarch.full
-        then [ pkgs.retroarchFull ] # RetroArch with full core set
-        else [ pkgs.retroarch ] # RetroArch with free cores only
+        then [pkgs.retroarchFull] # RetroArch with full core set
+        else [pkgs.retroarch] # RetroArch with free cores only
       )
     ); # frontend (full|free cores)
   };

@@ -1,15 +1,40 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  ...
+}:
 lib.mkIf (config.features.gui.enable or false) {
   programs.mpv.profiles = {
-    "extension.ape" = { term-osd-bar-chars = "──╼ ·"; term-osd-bar = true; };
-    "extension.alac" = { term-osd-bar-chars = "──╼ ·"; term-osd-bar = true; };
-    "extension.flac" = { term-osd-bar-chars = "──╼ ·"; term-osd-bar = true; };
-    "extension.mp3" = { term-osd-bar-chars = "──╼ ·"; term-osd-bar = true; };
-    "extension.wav" = { term-osd-bar-chars = "──╼ ·"; term-osd-bar = true; };
-    "extension.gif" = { loop-file = true; osc = "no"; };
-    "protocol.http" = { cache-pause = false; cache = true; };
-    "protocol.https" = { profile = "protocol.http"; };
-    "protocol.ytdl" = { profile = "protocol.http"; };
+    "extension.ape" = {
+      term-osd-bar-chars = "──╼ ·";
+      term-osd-bar = true;
+    };
+    "extension.alac" = {
+      term-osd-bar-chars = "──╼ ·";
+      term-osd-bar = true;
+    };
+    "extension.flac" = {
+      term-osd-bar-chars = "──╼ ·";
+      term-osd-bar = true;
+    };
+    "extension.mp3" = {
+      term-osd-bar-chars = "──╼ ·";
+      term-osd-bar = true;
+    };
+    "extension.wav" = {
+      term-osd-bar-chars = "──╼ ·";
+      term-osd-bar = true;
+    };
+    "extension.gif" = {
+      loop-file = true;
+      osc = "no";
+    };
+    "protocol.http" = {
+      cache-pause = false;
+      cache = true;
+    };
+    "protocol.https" = {profile = "protocol.http";};
+    "protocol.ytdl" = {profile = "protocol.http";};
 
     "4k60" = {
       profile-desc = "4k60";
@@ -37,4 +62,3 @@ lib.mkIf (config.features.gui.enable or false) {
     };
   };
 }
-

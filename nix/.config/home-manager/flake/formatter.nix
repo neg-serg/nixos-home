@@ -1,4 +1,4 @@
-{ pkgs }:
+{pkgs}:
 pkgs.writeShellApplication {
   name = "fmt";
   runtimeInputs = [
@@ -17,4 +17,3 @@ pkgs.writeShellApplication {
     exec treefmt -c treefmt.toml "$@"
   '';
 }
-

@@ -11,14 +11,16 @@ _final: prev: {
       hash = "sha256-bTYedtQFqqVBAh42scgX7+S3O6XKLnT6FTC6rpmyCCc=";
     };
     # Work around CMake error: Qt6::WaylandClientPrivate target not found
-    prePatch = (old.prePatch or "") + ''
-      for f in $(grep -RIl "Qt6::WaylandClientPrivate" utils || true); do
-        sed -i 's/Qt6::WaylandClientPrivate/Qt6::WaylandClient/g' "$f"
-      done
-    '';
+    prePatch =
+      (old.prePatch or "")
+      + ''
+        for f in $(grep -RIl "Qt6::WaylandClientPrivate" utils || true); do
+          sed -i 's/Qt6::WaylandClientPrivate/Qt6::WaylandClient/g' "$f"
+        done
+      '';
   });
 
   # Avoid pulling hyprland-qtutils into Hyprland runtime closure
   # Some downstream overlays add qtutils to PATH wrapping; disable that.
-  hyprland = prev.hyprland.override { wrapRuntimeDeps = false; };
+  hyprland = prev.hyprland.override {wrapRuntimeDeps = false;};
 }

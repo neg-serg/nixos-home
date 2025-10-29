@@ -7,7 +7,7 @@
   cfg = config.services.cachix.watchStore;
 in {
   options.services.cachix.watchStore = {
-    enable = (lib.mkEnableOption "Run cachix watch-store as a user service") // { default = false; };
+    enable = (lib.mkEnableOption "Run cachix watch-store as a user service") // {default = false;};
 
     cacheName = lib.mkOption {
       type = lib.types.str;
@@ -32,7 +32,7 @@ in {
     };
 
     ownCache = {
-      enable = (lib.mkEnableOption "Add this cache to Nix substituters and trusted keys") // { default = false; };
+      enable = (lib.mkEnableOption "Add this cache to Nix substituters and trusted keys") // {default = false;};
       name = lib.mkOption {
         type = lib.types.str;
         default = "";
@@ -48,7 +48,7 @@ in {
     };
 
     hardening = {
-      enable = (lib.mkEnableOption "Apply systemd hardening options to the service") // { default = true; };
+      enable = (lib.mkEnableOption "Apply systemd hardening options to the service") // {default = true;};
     };
 
     extraArgs = lib.mkOption {
@@ -61,15 +61,14 @@ in {
 
   config = lib.mkIf config.features.dev.enable (lib.mkMerge [
     {
-    home.packages = lib.mkIf (cfg.enable || cfg.ownCache.enable) [
-      pkgs.cachix # binary cache hosting/CLI
-    ];
+      home.packages = lib.mkIf (cfg.enable || cfg.ownCache.enable) [
+        pkgs.cachix # binary cache hosting/CLI
+      ];
 
-    nix.settings = lib.mkIf cfg.ownCache.enable {
-      substituters = [("https://" + cfg.ownCache.name + ".cachix.org")];
-      trusted-public-keys = [cfg.ownCache.publicKey];
-    };
-
+      nix.settings = lib.mkIf cfg.ownCache.enable {
+        substituters = [("https://" + cfg.ownCache.name + ".cachix.org")];
+        trusted-public-keys = [cfg.ownCache.publicKey];
+      };
     }
     (lib.mkIf cfg.enable {
       systemd.user.services."cachix-watch-store" = lib.mkMerge [
@@ -79,41 +78,45 @@ in {
             # On non-NixOS systems /run/current-system is absent; avoid spurious errors
             ConditionPathExists = "/run/current-system";
           };
-          Service =
-            let envFile =
-                  lib.mkIf (cfg.authTokenFile != null)
-                  (if cfg.requireAuthFile then cfg.authTokenFile else ("-" + cfg.authTokenFile));
-            in {
-              Type = "simple";
-              EnvironmentFile = envFile;
-              ExecStartPre = lib.mkIf (cfg.authTokenFile != null && cfg.requireAuthFile) ''
-                ${lib.getExe' pkgs.bash "bash"} -c 'if ! ${lib.getExe' pkgs.gnugrep "grep"} -q "^CACHIX_AUTH_TOKEN=" ${cfg.authTokenFile}; then echo "CACHIX_AUTH_TOKEN not set in ${cfg.authTokenFile}"; exit 1; fi'
-              '';
-              ExecStart = let
-                exe = lib.getExe pkgs.cachix;
-                args = [ "watch-store" cfg.cacheName ] ++ cfg.extraArgs;
-              in "${exe} ${lib.escapeShellArgs args}";
-              Restart = "always";
-              RestartSec = 10;
-              # Optional hardening
-              NoNewPrivileges = lib.mkIf cfg.hardening.enable true;
-              PrivateTmp = lib.mkIf cfg.hardening.enable true;
-              PrivateDevices = lib.mkIf cfg.hardening.enable true;
-              ProtectControlGroups = lib.mkIf cfg.hardening.enable true;
-              # Need read access to $HOME because the secret path is a symlink into ~/.config/sops-nix
-              ProtectHome = lib.mkIf cfg.hardening.enable "read-only";
-              ProtectKernelModules = lib.mkIf cfg.hardening.enable true;
-              ProtectKernelTunables = lib.mkIf cfg.hardening.enable true;
-              ProtectSystem = lib.mkIf cfg.hardening.enable "strict";
-              RestrictNamespaces = lib.mkIf cfg.hardening.enable true;
-              RestrictSUIDSGID = lib.mkIf cfg.hardening.enable true;
-              LockPersonality = lib.mkIf cfg.hardening.enable true;
-              MemoryDenyWriteExecute = lib.mkIf cfg.hardening.enable true;
-              CapabilityBoundingSet = lib.mkIf cfg.hardening.enable [""];
-              RestrictAddressFamilies = lib.mkIf cfg.hardening.enable ["AF_INET" "AF_INET6"];
-            };
+          Service = let
+            envFile =
+              lib.mkIf (cfg.authTokenFile != null)
+              (
+                if cfg.requireAuthFile
+                then cfg.authTokenFile
+                else ("-" + cfg.authTokenFile)
+              );
+          in {
+            Type = "simple";
+            EnvironmentFile = envFile;
+            ExecStartPre = lib.mkIf (cfg.authTokenFile != null && cfg.requireAuthFile) ''
+              ${lib.getExe' pkgs.bash "bash"} -c 'if ! ${lib.getExe' pkgs.gnugrep "grep"} -q "^CACHIX_AUTH_TOKEN=" ${cfg.authTokenFile}; then echo "CACHIX_AUTH_TOKEN not set in ${cfg.authTokenFile}"; exit 1; fi'
+            '';
+            ExecStart = let
+              exe = lib.getExe pkgs.cachix;
+              args = ["watch-store" cfg.cacheName] ++ cfg.extraArgs;
+            in "${exe} ${lib.escapeShellArgs args}";
+            Restart = "always";
+            RestartSec = 10;
+            # Optional hardening
+            NoNewPrivileges = lib.mkIf cfg.hardening.enable true;
+            PrivateTmp = lib.mkIf cfg.hardening.enable true;
+            PrivateDevices = lib.mkIf cfg.hardening.enable true;
+            ProtectControlGroups = lib.mkIf cfg.hardening.enable true;
+            # Need read access to $HOME because the secret path is a symlink into ~/.config/sops-nix
+            ProtectHome = lib.mkIf cfg.hardening.enable "read-only";
+            ProtectKernelModules = lib.mkIf cfg.hardening.enable true;
+            ProtectKernelTunables = lib.mkIf cfg.hardening.enable true;
+            ProtectSystem = lib.mkIf cfg.hardening.enable "strict";
+            RestrictNamespaces = lib.mkIf cfg.hardening.enable true;
+            RestrictSUIDSGID = lib.mkIf cfg.hardening.enable true;
+            LockPersonality = lib.mkIf cfg.hardening.enable true;
+            MemoryDenyWriteExecute = lib.mkIf cfg.hardening.enable true;
+            CapabilityBoundingSet = lib.mkIf cfg.hardening.enable [""];
+            RestrictAddressFamilies = lib.mkIf cfg.hardening.enable ["AF_INET" "AF_INET6"];
+          };
         }
-        (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["netOnline" "sops" "defaultWanted"]; })
+        (config.lib.neg.systemdUser.mkUnitFromPresets {presets = ["netOnline" "sops" "defaultWanted"];})
       ];
     })
   ]);

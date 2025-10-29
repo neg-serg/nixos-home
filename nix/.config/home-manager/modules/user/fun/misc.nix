@@ -6,11 +6,11 @@
 }: let
   # Fix older CMake policy expectations in alure to avoid build failure with newer CMake
   alureFixed = pkgs.alure.overrideAttrs (prev: {
-    cmakeFlags = (prev.cmakeFlags or []) ++ [ "-DCMAKE_POLICY_VERSION_MINIMUM=3.5" ];
+    cmakeFlags = (prev.cmakeFlags or []) ++ ["-DCMAKE_POLICY_VERSION_MINIMUM=3.5"];
   });
   # Rebuild bucklespring against the fixed alure
   bucklespringFixed = pkgs.bucklespring.overrideAttrs (prev: {
-    buildInputs = let bi = (prev.buildInputs or []); in lib.unique ((lib.remove pkgs.alure bi) ++ [ alureFixed ]);
+    buildInputs = let bi = prev.buildInputs or []; in lib.unique ((lib.remove pkgs.alure bi) ++ [alureFixed]);
   });
 in {
   home.packages = config.lib.neg.pkgsList [

@@ -1,1 +1,1 @@
-{ ... }: { imports = [ ./quickshell ]; }
+{...}: {imports = [./quickshell];}

@@ -4,7 +4,8 @@
   ...
 }: {
   home.packages = config.lib.neg.pkgsList [
-    (pkgs.qutebrowser.overrideAttrs (oldAttrs: { # Qutebrowser with Wayland/Vulkan flags
+    (pkgs.qutebrowser.overrideAttrs (oldAttrs: {
+      # Qutebrowser with Wayland/Vulkan flags
       qtWrapperArgs =
         (oldAttrs.qtWrapperArgs or [])
         ++ [

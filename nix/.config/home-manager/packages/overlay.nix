@@ -8,6 +8,7 @@ _final: prev: let
 in
   # Merge all top-level overrides from overlays (functions/tools/media/dev), and also
   # provide a combined pkgs.neg namespace aggregating their custom packages and helpers.
-  (functions // tools // media // dev // gui) // {
+  (functions // tools // media // dev // gui)
+  // {
     neg = (functions.neg or {}) // (tools.neg or {}) // (media.neg or {}) // (dev.neg or {});
   }

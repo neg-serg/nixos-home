@@ -6,8 +6,8 @@
   ...
 }: let
   # Reuse flake-provided caches passed via mkHMArgs (single source of truth)
-  cachixSubstituters = (caches.substituters or []);
-  cachixTrustedKeys = (caches.trustedPublicKeys or []);
+  cachixSubstituters = caches.substituters or [];
+  cachixTrustedKeys = caches.trustedPublicKeys or [];
 in {
   # Profile presets (full | lite). Full is default; set to "lite" for headless/minimal.
   features.profile = lib.mkDefault "full";

@@ -1,4 +1,4 @@
-{ ... }: {
+{...}: {
   # fd, ripgrep, direnv, shell helpers (nix-your-shell), posh toggle
   programs.fd = {
     enable = true;

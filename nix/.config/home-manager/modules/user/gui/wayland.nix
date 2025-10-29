@@ -1,1 +1,1 @@
-{ ... }: { imports = [ ./wayland ]; }
+{...}: {imports = [./wayland];}

@@ -1,4 +1,8 @@
-{ lib, config, ... }:
+{
+  lib,
+  config,
+  ...
+}:
 lib.mkIf (config.features.media.audio.core.enable or false) {
   xdg.configFile = {
     "wireplumber" = {

@@ -1,4 +1,10 @@
-{ pkgs, lib, config, xdg, ... }:
+{
+  pkgs,
+  lib,
+  config,
+  xdg,
+  ...
+}:
 lib.mkMerge [
   {
     home.packages = config.lib.neg.pkgsList [

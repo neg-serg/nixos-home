@@ -368,23 +368,23 @@ lib.mkIf (config.features.web.enable && config.features.web.floorp.enable) (let
       }
     }
   '';
-
-in lib.mkMerge [
-  (common.mkBrowser {
-    name = "floorp";
-    package = pkgs.floorp-bin;
-    # Floorp uses flat profile tree; keep explicit id
-    profileId = "bqtlgdxw.default";
-    userChromeExtra =
-      bottomNavUserChrome
-      + hideSearchModeControls
-      + shimmerFindbarUserChrome
-      + qutebrowserTabsUserChrome;
-  })
-  {
-    home.sessionVariables = {
-      MOZ_DBUS_REMOTE = "1";
-      MOZ_ENABLE_WAYLAND = "1";
-    };
-  }
-])
+in
+  lib.mkMerge [
+    (common.mkBrowser {
+      name = "floorp";
+      package = pkgs.floorp-bin;
+      # Floorp uses flat profile tree; keep explicit id
+      profileId = "bqtlgdxw.default";
+      userChromeExtra =
+        bottomNavUserChrome
+        + hideSearchModeControls
+        + shimmerFindbarUserChrome
+        + qutebrowserTabsUserChrome;
+    })
+    {
+      home.sessionVariables = {
+        MOZ_DBUS_REMOTE = "1";
+        MOZ_ENABLE_WAYLAND = "1";
+      };
+    }
+  ])

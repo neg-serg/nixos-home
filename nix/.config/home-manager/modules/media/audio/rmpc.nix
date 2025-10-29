@@ -1,4 +1,10 @@
-{ lib, config, pkgs, xdg, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  xdg,
+  ...
+}:
 lib.mkMerge [
   {
     # Ensure rmpc is installed

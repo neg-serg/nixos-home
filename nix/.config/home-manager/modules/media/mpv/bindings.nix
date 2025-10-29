@@ -1,4 +1,8 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  ...
+}:
 lib.mkIf (config.features.gui.enable or false) {
   programs.mpv.bindings = lib.mkMerge [
     {
@@ -41,4 +45,3 @@ lib.mkIf (config.features.gui.enable or false) {
     }
   ];
 }
-
