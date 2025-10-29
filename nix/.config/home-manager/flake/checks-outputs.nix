@@ -6,18 +6,20 @@ lib.genAttrs systems (
       # Generic eval with a selectable mode (default | nogui | noweb)
       evalWithMode = profile: retroFlag: mode: let
         mkExtras = m:
-          let base = { features.emulators.retroarch.full = retroFlag; };
-          in [
-            (_:
-              base
-              // (if m == "nogui" then {
-                features.gui.enable = false;
-                features.gui.qt.enable = false;
-                features.web.enable = false;
-              } else if m == "noweb" then {
-                features.web.enable = false;
-              } else {})
-            )
+          [
+            (_: {
+              features =
+                # Always set retroarch flag
+                { emulators.retroarch.full = retroFlag; }
+                # Mode-specific overrides
+                // (if m == "nogui" then {
+                  gui.enable = false;
+                  gui.qt.enable = false;
+                  web.enable = false;
+                } else if m == "noweb" then {
+                  web.enable = false;
+                } else {});
+            })
           ];
         hmCfg = homeManagerInput.lib.homeManagerConfiguration {
           inherit (perSystem.${s}) pkgs;
@@ -82,4 +84,3 @@ lib.genAttrs systems (
       // fast
       // lib.optionalAttrs fullChecks heavy
 )
-
