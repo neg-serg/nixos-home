@@ -51,6 +51,8 @@ end
 -- Direct clipboard yank on Shift+Y and Enter without any UI
 vim.keymap.set('v', 'Y', _ksb_yank_and_maybe_quit, { noremap = true, silent = true })
 vim.keymap.set('v', '<CR>', _ksb_yank_and_maybe_quit, { noremap = true, silent = true })
+-- And on Ctrl-C to unify behavior
+vim.keymap.set('v', '<C-c>', _ksb_yank_and_maybe_quit, { noremap = true, silent = true })
 
 vim.api.nvim_create_autocmd('User', {
   pattern = 'KittyScrollbackLaunch',
