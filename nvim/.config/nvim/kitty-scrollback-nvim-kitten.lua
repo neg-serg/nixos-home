@@ -36,7 +36,8 @@ local function _ksb_should_quit_after_yank()
 end
 
 local function _ksb_yank_and_maybe_quit()
-  vim.cmd('silent! normal! \"+y')
+  local keys = vim.api.nvim_replace_termcodes('"+y', true, false, true)
+  vim.api.nvim_feedkeys(keys, 'x', false)
   if _ksb_should_quit_after_yank() then
     local ok, api = pcall(require, 'kitty-scrollback.api')
     if ok then
