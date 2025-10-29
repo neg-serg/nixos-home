@@ -22,10 +22,34 @@ pcall(function()
   pcall(vim.cmd.colorscheme, 'neg')
 end)
 
--- Direct clipboard yank on Shift+Y without any UI
-vim.keymap.set('v', 'Y', '"+y', { noremap = true, silent = true })
--- And on Enter as well
-vim.keymap.set('v', '<CR>', '"+y', { noremap = true, silent = true })
+-- Yank helpers: copy selection to system clipboard and optionally close overlay
+local function _ksb_should_quit_after_yank()
+  if vim.g.kitty_scrollback_quit_after_yank ~= nil then
+    return not (vim.g.kitty_scrollback_quit_after_yank == false or vim.g.kitty_scrollback_quit_after_yank == 0)
+  end
+  local v = vim.env.KITTY_SCROLLBACK_QUIT_AFTER_YANK
+  if v ~= nil then
+    v = tostring(v):lower()
+    return not (v == '0' or v == 'false' or v == 'no')
+  end
+  return true -- default: enabled
+end
+
+local function _ksb_yank_and_maybe_quit()
+  vim.cmd('silent! normal! \"+y')
+  if _ksb_should_quit_after_yank() then
+    local ok, api = pcall(require, 'kitty-scrollback.api')
+    if ok then
+      api.quit_all()
+    else
+      pcall(vim.cmd, 'qa!')
+    end
+  end
+end
+
+-- Direct clipboard yank on Shift+Y and Enter without any UI
+vim.keymap.set('v', 'Y', _ksb_yank_and_maybe_quit, { noremap = true, silent = true })
+vim.keymap.set('v', '<CR>', _ksb_yank_and_maybe_quit, { noremap = true, silent = true })
 
 vim.api.nvim_create_autocmd('User', {
   pattern = 'KittyScrollbackLaunch',
