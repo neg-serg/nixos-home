@@ -9,7 +9,8 @@
     if nyxt4 != null
     then nyxt4
     else pkgs.nyxt;
-  floorpPkg = pkgs.floorp-bin;
+  # Prefer source package when available; fall back to binary.
+  floorpPkg = if pkgs ? floorp then pkgs.floorp else pkgs.floorp-bin;
 in
   {
     firefox = {

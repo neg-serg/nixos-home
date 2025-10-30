@@ -7,6 +7,8 @@
 }:
 lib.mkIf (config.features.web.enable && config.features.web.floorp.enable) (let
   common = import ./mozilla-common-lib.nix {inherit lib pkgs config faProvider;};
+  # Prefer source package when available; fall back to binary.
+  floorpPkg = if pkgs ? floorp then pkgs.floorp else pkgs.floorp-bin;
 
   # Address bar at the bottom via userChrome.css (Floorp only)
   bottomNavUserChrome = ''
@@ -372,7 +374,7 @@ in
   lib.mkMerge [
     (common.mkBrowser {
       name = "floorp";
-      package = pkgs.floorp-bin;
+      package = floorpPkg;
       # Floorp uses flat profile tree; keep explicit id
       profileId = "bqtlgdxw.default";
       userChromeExtra =
