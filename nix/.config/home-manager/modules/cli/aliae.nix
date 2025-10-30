@@ -29,84 +29,59 @@ lib.mkMerge [
       hasMpvc = pkgs ? mpvc;
       hasYtDlp = pkgs ? yt-dlp;
       hasKhal = pkgs ? khal;
+      content = lib.concatStrings [
+        "# Aliae aliases (cross-shell)\n"
+        "# Edit and reload your shell to apply changes.\n"
+        "aliases:\n"
+        "  l:   \"eza --icons=auto --hyperlink\"\n"
+        "  ll:  \"eza --icons=auto --hyperlink -l\"\n"
+        "  lsd: \"eza --icons=auto --hyperlink -alD --sort=created --color=always\"\n"
+        "  cat: \"bat -pp\"\n"
+        "  g:   \"git\"\n"
+        "  gs:  \"git status -sb\"\n"
+        "  mp:  \"mpv\"\n"
+        (lib.optionalString hasHandlr "  e:    \"handlr open\"\n")
+        (lib.optionalString hasUg (
+          "  grep:  \"ug -G\"\n"
+          + "  egrep: \"ug -E\"\n"
+          + "  epgrep: \"ug -P\"\n"
+          + "  fgrep: \"ug -F\"\n"
+          + "  xgrep: \"ug -W\"\n"
+          + "  zgrep: \"ug -zG\"\n"
+          + "  zegrep: \"ug -zE\"\n"
+          + "  zfgrep: \"ug -zF\"\n"
+          + "  zpgrep: \"ug -zP\"\n"
+          + "  zxgrep: \"ug -zW\"\n"
+        ))
+        (lib.optionalString hasErd "  tree: \"erd\"\n")
+        "  dd:   \"dd status=progress\"\n"
+        "  ip:   \"ip -c\"\n"
+        "  readelf: \"readelf -W\"\n"
+        "  objdump: \"objdump -M intel -d\"\n"
+        "  strace:  \"strace -yy\"\n"
+        (lib.optionalString hasPrettyping "  ping: \"prettyping\"\n")
+        (lib.optionalString hasDuf "  df:   \"duf -theme ansi -hide special -hide-mp \$HOME/* /nix/store /var/lib/*\"\n")
+        (lib.optionalString hasDust "  sp:   \"dust -r\"\n")
+        (lib.optionalString hasKhal "  cal:  \"khal calendar\"\n")
+        (lib.optionalString hasHxd "  hexdump: \"hxd\"\n")
+        (lib.optionalString hasPigz "  gzip: \"pigz\"\n")
+        (lib.optionalString hasPbzip2 "  bzip2: \"pbzip2\"\n")
+        (lib.optionalString hasPlocate "  locate: \"plocate\"\n")
+        "  xz:   \"xz --threads=0\"\n"
+        "  zstd: \"zstd --threads=0\"\n"
+        (lib.optionalString hasMpvc "  mpvc: \"mpvc -S \$XDG_CONFIG_HOME/mpv/socket\"\n")
+        (lib.optionalString hasWget2 "  wget: \"wget2 --hsts-file \$XDG_DATA_HOME/wget-hsts\"\n")
+        (lib.optionalString hasYtDlp "  yt:   \"yt-dlp --downloader aria2c --embed-metadata --embed-thumbnail --embed-subs --sub-langs=all\"\n")
+        "  ctl: \"systemctl\"\n"
+        "  stl: \"sudo systemctl\"\n"
+        "  utl: \"systemctl --user\"\n"
+        "  ut:  \"systemctl --user start\"\n"
+        "  un:  \"systemctl --user stop\"\n"
+        "  up:  \"sudo systemctl start\"\n"
+        "  dn:  \"sudo systemctl stop\"\n"
+      ];
     in
-      xdg.mkXdgText "aliae/config.yaml" (
-        lib.concatStrings [
-          ''# Aliae aliases (cross-shell)
-            # Edit and reload your shell to apply changes.
-            aliases:
-              l:   "eza --icons=auto --hyperlink"
-              ll:  "eza --icons=auto --hyperlink -l"
-              lsd: "eza --icons=auto --hyperlink -alD --sort=created --color=always"
-              cat: "bat -pp"
-              g:   "git"
-              gs:  "git status -sb"
-              mp:  "mpv"\n''
-          # File preview/open
-          (lib.optionalString hasHandlr ''  
-              e:    "handlr open"\n'')
-          # Grep family via ugrep
-          (lib.optionalString hasUg ''  
-              grep:  "ug -G"
-              egrep: "ug -E"
-              epgrep: "ug -P"
-              fgrep: "ug -F"
-              xgrep: "ug -W"
-              zgrep: "ug -zG"
-              zegrep: "ug -zE"
-              zfgrep: "ug -zF"
-              zpgrep: "ug -zP"
-              zxgrep: "ug -zW"\n'')
-          # Tree
-          (lib.optionalString hasErd ''  
-              tree: "erd"\n'')
-          # System info + IO/network tools
-          ''  
-              dd:   "dd status=progress"
-              ip:   "ip -c"
-              readelf: "readelf -W"
-              objdump: "objdump -M intel -d"
-              strace:  "strace -yy"\n''
-          (lib.optionalString hasPrettyping ''  
-              ping: "prettyping"\n'')
-          (lib.optionalString hasDuf ''  
-              df:   "duf -theme ansi -hide special -hide-mp \"$HOME/*\" /nix/store /var/lib/*"\n'')
-          (lib.optionalString hasDust ''  
-              sp:   "dust -r"\n'')
-          (lib.optionalString hasKhal ''  
-              cal:  "khal calendar"\n'')
-          (lib.optionalString hasHxd ''  
-              hexdump: "hxd"\n'')
-          # Compression/locate
-          (lib.optionalString hasPigz ''  
-              gzip: "pigz"\n'')
-          (lib.optionalString hasPbzip2 ''  
-              bzip2: "pbzip2"\n'')
-          (lib.optionalString hasPlocate ''  
-              locate: "plocate"\n'')
-          # Parallel/threaded tools
-          ''  
-              xz:   "xz --threads=0"
-              zstd: "zstd --threads=0"\n''
-          # MPV helpers
-          (lib.optionalString hasMpvc ''  
-              mpvc: "mpvc -S \"$XDG_CONFIG_HOME/mpv/socket\""\n'')
-          # Web utils
-          (lib.optionalString hasWget2 ''  
-              wget: "wget2 --hsts-file \"$XDG_DATA_HOME/wget-hsts\""\n'')
-          (lib.optionalString (hasYtDlp) ''  
-              yt:   "yt-dlp --downloader aria2c --embed-metadata --embed-thumbnail --embed-subs --sub-langs=all"\n'')
-          # systemd shortcuts (always available)
-          ''  
-              ctl: "systemctl"
-              stl: "sudo systemctl"
-              utl: "systemctl --user"
-              ut:  "systemctl --user start"
-              un:  "systemctl --user stop"
-              up:  "sudo systemctl start"
-              dn:  "sudo systemctl stop"\n''
-        ]
-      )
+      xdg.mkXdgText "aliae/config.yaml" content
     )
   ]))
 
