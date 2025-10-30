@@ -33,8 +33,8 @@ lib.mkMerge [
   {
     home.file.".bashrc".text = ''
       # Forward to XDG bashrc managed by Home Manager
-      if [ -r "${XDG_CONFIG_HOME:-$HOME/.config}/bash/bashrc" ]; then
-        . "${XDG_CONFIG_HOME:-$HOME/.config}/bash/bashrc"
+      if [ -r "''${XDG_CONFIG_HOME:-$HOME/.config}/bash/bashrc" ]; then
+        . "''${XDG_CONFIG_HOME:-$HOME/.config}/bash/bashrc"
       fi
     '';
   }
