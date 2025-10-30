@@ -7,8 +7,8 @@
 }:
 lib.mkIf (config.features.web.enable && config.features.web.floorp.enable) (let
   common = import ./mozilla-common-lib.nix {inherit lib pkgs config faProvider;};
-  # Prefer source package when available; fall back to binary.
-  floorpPkg = if pkgs ? floorp then pkgs.floorp else pkgs.floorp-bin;
+  # Floorp upstream source package is deprecated in nixpkgs >= 12.x; always use floorp-bin.
+  floorpPkg = pkgs.floorp-bin;
 
   # Address bar at the bottom via userChrome.css (Floorp only)
   bottomNavUserChrome = ''

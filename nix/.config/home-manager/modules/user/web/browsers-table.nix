@@ -9,8 +9,8 @@
     if nyxt4 != null
     then nyxt4
     else pkgs.nyxt;
-  # Prefer source package when available; fall back to binary.
-  floorpPkg = if pkgs ? floorp then pkgs.floorp else pkgs.floorp-bin;
+  # Floorp upstream source package is deprecated in nixpkgs >= 12.x; always use floorp-bin.
+  floorpPkg = pkgs.floorp-bin;
 in
   {
     firefox = {
