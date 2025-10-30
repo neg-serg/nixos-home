@@ -52,8 +52,8 @@ in {
       # Terminal on workspace 1 (term)
       {
         name = "term";
-        exec = "${lib.getExe pkgs.kitty} --class term";
-        package = pkgs.kitty;
+        # Launch exactly like Win+X binding (apps.conf): kitty --class term
+        exec = "kitty --class term";
         class = "term";
         workspaceId = 1;
         noAnim = true;
