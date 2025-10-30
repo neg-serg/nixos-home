@@ -73,6 +73,7 @@ in {
         name = "slsk";
         exec = "raise --class 'org.nicotine_plus.Nicotine' --launch 'nicotine'";
         class = "org.nicotine_plus.Nicotine";
+        workspaceId = 15;
         noAnim = true;
       }
       # Notes (Obsidian): focus existing or launch
