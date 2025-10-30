@@ -73,10 +73,13 @@
         if backend == "tofu"
         then pkgs.opentofu
         else pkgs.terraform;
-    in [
-      main # IaC backend (Terraform/OpenTofu)
-      pkgs.ansible # configuration management tool
-    ];
+    in
+      [
+        main # IaC backend (Terraform/OpenTofu)
+        pkgs.ansible # configuration management tool
+      ]
+      # AI-assisted IaC generator (Firefly's aiac), only if available in pinned nixpkgs
+      ++ (lib.optionals (pkgs ? aiac) [pkgs.aiac]);
   };
 in
   lib.mkIf config.features.dev.enable {

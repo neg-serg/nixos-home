@@ -10,7 +10,7 @@ let
 in
 lib.mkMerge [
   # Enable Aliae when available in current nixpkgs
-  (config.lib.neg.mkWhen hasAliae (lib.mkMerge [
+  (lib.mkIf hasAliae (lib.mkMerge [
     { programs.aliae.enable = true; }
     # Provide a minimal, cross-shell alias set via XDG config.
     # Format: YAML (aliases mapping). Safe defaults mirror Nushell aliases.
@@ -29,7 +29,7 @@ lib.mkMerge [
   ]))
 
   # Soft warning if package is missing
-  (config.lib.neg.mkUnless hasAliae {
+  (lib.mkIf (! hasAliae) {
     warnings = [
       "Aliae is not available in the pinned nixpkgs; skip enabling programs.aliae."
     ];
