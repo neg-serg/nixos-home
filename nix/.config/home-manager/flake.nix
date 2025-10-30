@@ -82,8 +82,8 @@ in {
       url = "github:nushell/nupm";
       flake = false;
     };
-    # Pin nixpkgs to a known-good revision where openmw builds
-    nixpkgs = {url = "github:NixOS/nixpkgs?rev=5e2a59a5b1a82f89f2c7e598302a9cacebb72a67";};
+    # Track nixos-unstable to receive latest packages (Floorp, etc.)
+    nixpkgs = {url = "github:NixOS/nixpkgs/nixos-unstable";};
     quickshell = {
       url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
       inputs.nixpkgs.follows = "nixpkgs";
