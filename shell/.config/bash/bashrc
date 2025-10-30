@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Aliae integration for bash
+if command -v aliae >/dev/null 2>&1; then
+  cfg="${XDG_CONFIG_HOME:-$HOME/.config}/aliae/config.yaml"
+  eval "$(aliae init bash --config "$cfg" --print)"
+fi
+

@@ -19,4 +19,23 @@ lib.mkMerge [
     source = config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/shell/.config/zsh";
     recursive = true;
   })
+  # Fish config (conf.d drop-ins)
+  (xdg.mkXdgSource "fish" {
+    source = config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/shell/.config/fish";
+    recursive = true;
+  })
+  # Bash XDG config directory
+  (xdg.mkXdgSource "bash" {
+    source = config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/shell/.config/bash";
+    recursive = true;
+  })
+  # Ensure classic ~/.bashrc sources XDG bashrc
+  {
+    home.file.".bashrc".text = ''
+      # Forward to XDG bashrc managed by Home Manager
+      if [ -r "${XDG_CONFIG_HOME:-$HOME/.config}/bash/bashrc" ]; then
+        . "${XDG_CONFIG_HOME:-$HOME/.config}/bash/bashrc"
+      fi
+    '';
+  }
 ]
