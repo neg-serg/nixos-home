@@ -14,7 +14,6 @@
     pkgs.recoll # full-text search tool
     pkgs.sioyek # nice zathura alternative
     pkgs.tesseract # ocr
-    pkgs.zotero # tool to organize cites
   ];
   programs.zathura = {
     enable = true;
