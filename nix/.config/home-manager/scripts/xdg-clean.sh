@@ -2,14 +2,17 @@
 set -euo pipefail
 
 # XDG cleanup helper
-# - Removes old cache entries (> RETENTION_DAYS) under $XDG_CACHE_HOME
-# - Removes known-orphan data for Zotero under share/state/flatpak
+# - Default mode: remove old cache entries (> RETENTION_DAYS) under $XDG_CACHE_HOME
+# - Also purges known-orphan Zotero data under share/state/cache/flatpak
+# - Subcommand "delete": remove explicit paths (args or env), guarded to $HOME
 #
 # Env:
 #   RETENTION_DAYS: number of days for age threshold (default 60)
 #   DRY_RUN: 1 for report-only, 0 to actually delete (default 0)
 #   KEEP_CACHE_NAMES: whitespace-separated basenames to keep in cache (globs ok). Default: "floorp"
 #   SKIP_PATHS: whitespace-separated absolute paths to skip entirely
+#   TARGETS: whitespace-separated paths for "delete" subcommand
+#   TARGETS_FILE: file with newline-separated paths for "delete" subcommand
 
 RETENTION_DAYS="${RETENTION_DAYS:-60}"
 DRY_RUN="${DRY_RUN:-0}"
@@ -39,8 +42,26 @@ du_h() {
 log "Retention: ${RETENTION_DAYS}d | Dry-run: ${DRY_RUN}"
 log "Keep cache names: ${KEEP_CACHE_NAMES:-<none>}"
 
+usage() {
+  cat <<EOF
+Usage:
+  $0                # Clean caches older than RETENTION_DAYS and purge Zotero remnants
+  $0 delete [PATH..]|[--from-file FILE]
+                    # Delete explicit paths (under \$HOME only)
+
+Env:
+  RETENTION_DAYS (default 60), DRY_RUN (0/1), KEEP_CACHE_NAMES, SKIP_PATHS,
+  TARGETS (space-separated paths), TARGETS_FILE (newline-separated paths)
+EOF
+}
+
+subcmd=${1:-}
+if [[ "$subcmd" = "-h" || "$subcmd" = "--help" ]]; then
+  usage; exit 0
+fi
+
 # 1) Clean caches older than retention at top-level of XDG cache
-if [[ -d "$XDG_CACHE_HOME" ]]; then
+if [[ -z "$subcmd" && -d "$XDG_CACHE_HOME" ]]; then
   log "Scanning cache: $XDG_CACHE_HOME"
   # list candidates with size
   mapfile -d '' cache_candidates < <(find "$XDG_CACHE_HOME" -mindepth 1 -maxdepth 1 \( -type d -o -type f \) -mtime +"$RETENTION_DAYS" -print0)
@@ -96,6 +117,47 @@ if (( z_found > 0 )); then
   done
 else
   log "No Zotero paths found."
+fi
+
+# 3) Subcommand: delete explicit targets (guard to $HOME)
+if [[ "$subcmd" = "delete" ]]; then
+  shift || true
+  declare -a del_targets=()
+  if [[ "${1:-}" = "--from-file" ]]; then
+    [[ -n "${2:-}" ]] || { echo "--from-file requires a path" >&2; exit 2; }
+    mapfile -t from_file < <(grep -v '^\s*$' "${2}")
+    del_targets+=("${from_file[@]}")
+    shift 2 || true
+  fi
+  if (( $# > 0 )); then
+    del_targets+=("$@")
+  fi
+  if [[ -n "${TARGETS:-}" ]]; then
+    # shellcheck disable=SC2206
+    del_targets+=( ${TARGETS} )
+  fi
+  if [[ -n "${TARGETS_FILE:-}" && -z "${from_file+x}" ]]; then
+    mapfile -t from_env_file < <(grep -v '^\s*$' "${TARGETS_FILE}")
+    del_targets+=("${from_env_file[@]}")
+  fi
+  if (( ${#del_targets[@]} == 0 )); then
+    log "No delete targets provided."
+  else
+    log "Explicit delete targets (guarded to \$HOME):"
+    for p in "${del_targets[@]}"; do
+      # Resolve to absolute path
+      ap=$(readlink -f -- "$p" 2>/dev/null || echo "$p")
+      case "$ap" in
+        "$HOME"/*)
+          du_h "$ap" | sed 's/^/  - /' || true
+          rm_path "$ap"
+          ;;
+        *)
+          log "SKIP (outside HOME): $ap"
+          ;;
+      esac
+    done
+  fi
 fi
 
 log "Done."
