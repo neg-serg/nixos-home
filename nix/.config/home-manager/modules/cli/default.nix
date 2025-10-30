@@ -117,6 +117,8 @@ in {
         pkgs.erdtree # modern tree
         pkgs.pigz # parallel gzip backend
         pkgs.pbzip2 # parallel bzip2 backend
+        pkgs.fish # alternative shell
+        pkgs.powershell # pwsh
       ]
     );
   };
