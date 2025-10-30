@@ -95,6 +95,8 @@ in {
   ];
   config = {
     programs = {
+      "fabric-ai".enable = true; # Fabric AI CLI
+      "fabric-ai".enableYtAlias = false; # disable default yt alias to avoid conflicts
       hwatch = {enable = true;}; # better watch with history
       kubecolor = {enable = true;}; # kubectl colorizer
       nix-search-tv = {enable = true;}; # fast search for nix packages
