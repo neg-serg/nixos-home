@@ -12,7 +12,7 @@
   home.packages = config.lib.neg.pkgsList [
     pkgs.protonplus # Wine/Proton manager
     pkgs.protontricks # Winetricks wrapper for Proton prefixes
-    pkgs.protonup # install/update Proton-GE builds
+    pkgs.protonup-ng # install/update Proton-GE builds (renamed)
     pkgs.vkbasalt # Vulkan post-processing layer
     pkgs.vkbasalt-cli # CLI for vkBasalt
   ];
