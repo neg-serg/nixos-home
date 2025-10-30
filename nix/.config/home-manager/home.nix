@@ -68,6 +68,13 @@ in {
         workspaceId = 2;
         noAnim = true;
       }
+      # Soulseek client (Nicotine+): focus existing or launch once
+      {
+        name = "slsk";
+        exec = "raise --class 'org.nicotine_plus.Nicotine' --launch 'nicotine'";
+        class = "org.nicotine_plus.Nicotine";
+        noAnim = true;
+      }
     ];
   };
 
