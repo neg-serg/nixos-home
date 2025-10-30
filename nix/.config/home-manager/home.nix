@@ -45,6 +45,57 @@ in {
   # Enable OpenXR dev stack (installs Envision UI)
   features.dev.openxr.enable = true;
 
+  # Prewarm scratchpad apps (persistent, background user services)
+  neg.hypr.prewarm = {
+    enable = true;
+    apps = [
+      # Discord (vesktop) scratchpad
+      {
+        name = "discord";
+        exec = "${lib.getExe pkgs.vesktop}";
+        package = pkgs.vesktop;
+        class = "vesktop";
+        workspace = " 𐍀:im";
+      }
+      # Telegram scratchpad
+      {
+        name = "telegram";
+        exec = "${lib.getExe pkgs.telegram-desktop}";
+        package = pkgs.telegram-desktop;
+        class = "org.telegram.desktop";
+        workspace = " 𐍀:im";
+      }
+      # Music (rmpc in kitty) scratchpad
+      {
+        name = "music";
+        exec = "${lib.getExe pkgs.kitty} --class music -e ${lib.getExe pkgs.rmpc}";
+        package = pkgs.rmpc;
+        class = "music";
+      }
+      # Torrents dashboard (rustmission in kitty) scratchpad
+      {
+        name = "torrment";
+        exec = "${lib.getExe pkgs.kitty} --class torrment -e ${lib.getExe pkgs.rustmission}";
+        package = pkgs.rustmission;
+        class = "torrment";
+      }
+      # Teardown monitor (btop in kitty) scratchpad
+      {
+        name = "teardown";
+        exec = "${lib.getExe pkgs.kitty} --class teardown -e ${lib.getExe pkgs.btop}";
+        package = pkgs.btop;
+        class = "teardown";
+      }
+      # PipeWire mixer scratchpad
+      {
+        name = "mixer";
+        exec = "${lib.getExe pkgs.pwvucontrol}";
+        package = pkgs.pwvucontrol;
+        class = "com.saivert.pwvucontrol";
+      }
+    ];
+  };
+
   # XDG aggregated fixups were removed; rely on per‑file `force = true` when needed.
 
   # Unfree policy centralized in modules/misc/unfree.nix (features.allowUnfree.allowed)
