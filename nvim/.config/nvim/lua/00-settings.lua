@@ -51,6 +51,8 @@ o.path='.,..,'..config_home_..'/nvim,'..
     	config_home_..'/nvim/lua,'..
 	config_home_..'/nvim/after,'..
 	home_..'/.local/share/nvim/site/,/usr/include'
+-- Allow recursive file lookup for gf/:find
+vim.opt.path:append('**')
 o.fillchars={foldopen="", foldclose="",
     fold=" ", foldsep=" ",
     diff="╱", eob=" "}
