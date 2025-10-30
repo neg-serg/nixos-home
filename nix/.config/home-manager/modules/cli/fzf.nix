@@ -43,6 +43,8 @@
       "--info=default"
       "--multi"
       "--no-mouse"
+      # Hide scrollbar entirely to avoid bright vertical stripe
+      "--no-scrollbar"
 
       # Prompt & symbols (Nerd Font friendly)
       "--prompt=❯  "
@@ -58,7 +60,7 @@
     historyWidgetOptions = [
       "--sort"
       "--exact"
-      "--border=sharp --margin=0 --padding=0"
+      "--border=sharp --margin=0 --padding=0 --no-scrollbar"
       "--footer='[Enter] Paste  [Ctrl-y] Yank  [?] Preview'"
       "--preview 'echo {}'"
       "--preview-window down:5:hidden,wrap --bind '?:toggle-preview'"
@@ -66,13 +68,14 @@
 
     # FZF_CTRL_T_OPTS
     fileWidgetOptions = [
-      ''--border=sharp --margin=0 --padding=0 --preview 'if [ -d "{}" ]; then (eza --tree --icons=auto -L 2 --color=always "{}" 2>/dev/null || tree -C -L 2 "{}" 2>/dev/null); else (bat --style=plain --color=always --line-range :200 "{}" 2>/dev/null || highlight -O ansi -l "{}" 2>/dev/null || head -200 "{}" 2>/dev/null || file -b "{}" 2>/dev/null); fi' --preview-window=right,60%,border-left,wrap''
+      ''--border=sharp --margin=0 --padding=0 --no-scrollbar --preview 'if [ -d "{}" ]; then (eza --tree --icons=auto -L 2 --color=always "{}" 2>/dev/null || tree -C -L 2 "{}" 2>/dev/null); else (bat --style=plain --color=always --line-range :200 "{}" 2>/dev/null || highlight -O ansi -l "{}" 2>/dev/null || head -200 "{}" 2>/dev/null || file -b "{}" 2>/dev/null); fi' --preview-window=right,60%,border-left,wrap''
     ];
 
     # Restore previous custom theme colors
     colors = {
       "preview-bg" = "-1";
-      "gutter" = "-1";
+      # Avoid bright column on the left when preview/markers are shown
+      "gutter" = lib.mkForce "#000000";
       "bg" = lib.mkForce "#000000";
       "bg+" = lib.mkForce "#000000";
       "fg" = lib.mkForce "#4f5d78";
@@ -83,10 +86,13 @@
       "border" = lib.mkForce "#0b2536";
       "list-border" = lib.mkForce "#0b2536";
       "input-border" = lib.mkForce "#0b2536";
-      "preview-border" = lib.mkForce "#0b2536";
+      # Match preview border to background to avoid a visible stripe
+      "preview-border" = lib.mkForce "#000000";
       "header-border" = lib.mkForce "#0b2536";
       "footer-border" = lib.mkForce "#0b2536";
       "separator" = lib.mkForce "#0b2536";
+      # Right-side scrollbar indicator (avoid bright vertical stripe)
+      "scrollbar" = lib.mkForce "#0b2536";
       # header color set via defaultOptions to include underline
       "info" = lib.mkForce "#3f5876";
       "pointer" = lib.mkForce "#005faf";
