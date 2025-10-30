@@ -19,6 +19,11 @@ lib.mkMerge [
     source = config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/shell/.config/zsh";
     recursive = true;
   })
+  # PowerShell (pwsh) profile under XDG
+  (xdg.mkXdgSource "powershell" {
+    source = config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/shell/.config/powershell";
+    recursive = true;
+  })
   # Fish config (conf.d drop-ins)
   (xdg.mkXdgSource "fish" {
     source = config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/shell/.config/fish";
