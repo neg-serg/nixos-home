@@ -22,7 +22,7 @@ with lib;
         # audio/video + helpers (mpv comes from media stack)
         pkgs.playerctl # media control for pl bindings
         pkgs.wireplumber # wpctl for vol/pl volume control
-        pkgs.mpc-cli # mpc for MPD helpers (mpd-add/mpd_del_album)
+        pkgs.mpc # mpc for MPD helpers (mpd-add/mpd_del_album)
         # wayland utils
         pkgs.wl-clipboard # wl-copy/wl-paste used across many scripts
         pkgs.grim # screenshots (qr/screenshot)
