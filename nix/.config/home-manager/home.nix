@@ -52,8 +52,8 @@ in {
       # Terminal on workspace 1 (term)
       {
         name = "term";
-        # Launch exactly like Win+X binding (apps.conf): kitty --class term
-        exec = "kitty --class term";
+        # Idempotent launch: use raise to focus existing or start if missing
+        exec = "raise --class 'term' --launch 'kitty --class term'";
         class = "term";
         workspaceId = 1;
         noAnim = true;
