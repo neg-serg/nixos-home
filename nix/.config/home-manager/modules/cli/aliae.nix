@@ -10,8 +10,8 @@ let
 in
 lib.mkMerge [
   # Enable Aliae when available in current nixpkgs
-  (config.lib.neg.mkWhen hasAliae {
-    programs.aliae.enable = true;
+  (config.lib.neg.mkWhen hasAliae (lib.mkMerge [
+    { programs.aliae.enable = true; }
     # Provide a minimal, cross-shell alias set via XDG config.
     # Format: YAML (aliases mapping). Safe defaults mirror Nushell aliases.
     (xdg.mkXdgConfigText "aliae/config.yaml" ''
@@ -26,10 +26,7 @@ lib.mkMerge [
         gs:  "git status -sb"
         mp:  "mpv"
     '')
-    # Note: shell init is handled by Aliae per-shell init snippets.
-    # This repo links full zsh config from dotfiles; add the recommended
-    # `aliae init <shell>` snippet there if not injected automatically.
-  })
+  ]))
 
   # Soft warning if package is missing
   (config.lib.neg.mkUnless hasAliae {
