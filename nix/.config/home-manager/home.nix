@@ -77,6 +77,7 @@ in {
         exec = "${lib.getExe pkgs.kitty} --class music -e ${lib.getExe pkgs.rmpc}";
         package = pkgs.rmpc;
         class = "music";
+        noAnim = true;
       }
       # Torrents dashboard (rustmission in kitty) scratchpad
       {
@@ -84,6 +85,7 @@ in {
         exec = "${lib.getExe pkgs.kitty} --class torrment -e ${lib.getExe pkgs.rustmission}";
         package = pkgs.rustmission;
         class = "torrment";
+        noAnim = true;
       }
       # Teardown monitor (btop in kitty) scratchpad
       {
@@ -91,6 +93,7 @@ in {
         exec = "${lib.getExe pkgs.kitty} --class teardown -e ${lib.getExe pkgs.btop}";
         package = pkgs.btop;
         class = "teardown";
+        noAnim = true;
       }
       # PipeWire mixer scratchpad
       {
@@ -99,6 +102,7 @@ in {
         package = pkgs.pwvucontrol;
         class = "com.saivert.pwvucontrol";
         environment = { QT_QPA_PLATFORM = "wayland"; };
+        noAnim = true;
       }
     ];
   };
