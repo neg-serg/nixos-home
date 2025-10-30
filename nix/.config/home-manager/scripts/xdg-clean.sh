@@ -8,9 +8,13 @@ set -euo pipefail
 # Env:
 #   RETENTION_DAYS: number of days for age threshold (default 60)
 #   DRY_RUN: 1 for report-only, 0 to actually delete (default 0)
+#   KEEP_CACHE_NAMES: whitespace-separated basenames to keep in cache (globs ok). Default: "floorp"
+#   SKIP_PATHS: whitespace-separated absolute paths to skip entirely
 
 RETENTION_DAYS="${RETENTION_DAYS:-60}"
 DRY_RUN="${DRY_RUN:-0}"
+KEEP_CACHE_NAMES="${KEEP_CACHE_NAMES:-floorp}"
+SKIP_PATHS="${SKIP_PATHS:-}"
 
 XDG_CACHE_HOME=${XDG_CACHE_HOME:-"$HOME/.cache"}
 XDG_DATA_HOME=${XDG_DATA_HOME:-"$HOME/.local/share"}
@@ -33,6 +37,7 @@ du_h() {
 }
 
 log "Retention: ${RETENTION_DAYS}d | Dry-run: ${DRY_RUN}"
+log "Keep cache names: ${KEEP_CACHE_NAMES:-<none>}"
 
 # 1) Clean caches older than retention at top-level of XDG cache
 if [[ -d "$XDG_CACHE_HOME" ]]; then
@@ -43,6 +48,21 @@ if [[ -d "$XDG_CACHE_HOME" ]]; then
     log "Cache candidates (older than ${RETENTION_DAYS}d):"
     du_h "${cache_candidates[@]}" | sed 's/^/  - /'
     for p in "${cache_candidates[@]}"; do
+      # Skip explicit paths
+      for sp in ${SKIP_PATHS}; do
+        if [[ "$p" == "$sp"* ]]; then
+          log "SKIP (explicit): $p"
+          continue 2
+        fi
+      done
+      # Skip basenames from keep list
+      bname="$(basename -- "$p")"
+      for pat in ${KEEP_CACHE_NAMES}; do
+        if [[ "$bname" == $pat ]]; then
+          log "SKIP (keep list): $p"
+          continue 2
+        fi
+      done
       rm_path "$p"
     done
   else
@@ -79,4 +99,3 @@ else
 fi
 
 log "Done."
-
