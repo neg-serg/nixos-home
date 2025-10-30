@@ -96,6 +96,7 @@ in {
   ];
   config = {
     programs = {
+      bat.enable = true; # ensure bat present for cat alias
       "fabric-ai".enable = true; # Fabric AI CLI
       "fabric-ai".enableYtAlias = false; # disable default yt alias to avoid conflicts
       hwatch = {enable = true;}; # better watch with history
@@ -113,6 +114,9 @@ in {
         pkgs.neg.comma # run commands from nixpkgs by name (",") — local variant from overlay
         pkgs.kubectl # Kubernetes CLI
         pkgs.kubernetes-helm # Helm package manager
+        pkgs.erdtree # modern tree
+        pkgs.pigz # parallel gzip backend
+        pkgs.pbzip2 # parallel bzip2 backend
       ]
     );
   };
