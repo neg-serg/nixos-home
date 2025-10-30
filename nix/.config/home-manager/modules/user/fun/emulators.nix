@@ -8,8 +8,8 @@ with lib; {
   config = {
     assertions = [
       {
-        assertion = (! config.features.emulators.retroarch.full) || (pkgs ? retroarchFull);
-        message = "RetroArch full mode enabled but pkgs.retroarchFull is not available on this system.";
+        assertion = (! config.features.emulators.retroarch.full) || (builtins.hasAttr "retroarch-full" pkgs);
+        message = "RetroArch full mode enabled but pkgs.\"retroarch-full\" is not available on this system.";
       }
     ];
     home.packages = config.lib.neg.pkgsList (
@@ -19,7 +19,7 @@ with lib; {
       ]
       ++ (
         if config.features.emulators.retroarch.full
-        then [pkgs.retroarchFull] # RetroArch with full core set
+        then [pkgs."retroarch-full"] # RetroArch with full core set
         else [pkgs.retroarch] # RetroArch with free cores only
       )
     ); # frontend (full|free cores)
