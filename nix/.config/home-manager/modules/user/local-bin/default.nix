@@ -239,6 +239,10 @@ with lib;
             name = "v";
             src = ./scripts/v.sh;
           }
+          {
+            name = "journal-clean";
+            src = ./scripts/journal-clean.sh;
+          }
         ];
         base = builtins.listToAttrs (map mkEnt scripts);
         # Special case: vid-info needs path substitution for libs
