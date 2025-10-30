@@ -61,8 +61,8 @@ in {
       # Default browser (Floorp) on workspace 2 (web)
       {
         name = "web";
-        exec = "${lib.getExe pkgs.floorp-bin}";
-        package = pkgs.floorp-bin;
+        # Use PATH-resolved floorp to avoid pulling duplicate store paths
+        exec = "floorp";
         class = "(one\\.ablaze\\.floorp|floorp)";
         environment = { MOZ_ENABLE_WAYLAND = "1"; };
         workspaceId = 2;
