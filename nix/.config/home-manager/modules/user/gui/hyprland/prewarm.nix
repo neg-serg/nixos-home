@@ -19,17 +19,20 @@ with lib; let
           if (a.class or null) != null then "class:^(${a.class})$"
           else if (a.match or null) != null then a.match
           else null;
-        rules =
-          lib.concatStringsSep "\n" (
-            lib.concatLists [
-              (lib.optional (match != null) ("windowrulev2 = noinitialfocus, " + match))
-              (
-                let target = a.workspace or null; in
-                lib.optional ((match != null) && (target != null))
-                ("windowrulev2 = workspace name:" + target + ", " + match)
-              )
-            ]
-          );
+        # Choose workspace routing by id first (stable), else by name
+        wsRule =
+          if (a.workspaceId or null) != null
+          then "windowrulev2 = workspace " + (toString a.workspaceId) + ", " + match
+          else if (a.workspace or null) != null
+          then "windowrulev2 = workspace name:" + a.workspace + ", " + match
+          else "";
+        rules = lib.concatStringsSep "\n" (
+          lib.concatLists [
+            (lib.optional (match != null) ("windowrulev2 = noinitialfocus, " + match))
+            (lib.optional ((match != null) && (a.noAnim or false)) ("windowrulev2 = noanim, " + match))
+            (lib.optional ((match != null) && (wsRule != "")) wsRule)
+          ]
+        );
       in rules;
       lines = lib.filter (s: s != "") (map mkOne apps);
     in
@@ -42,10 +45,13 @@ with lib; let
       name = "warm-" + a.name;
       value = lib.mkMerge [
         {
-          Unit.Description = "Prewarm: " + a.name;
+          Unit =
+            { Description = "Prewarm: " + a.name; }
+            // lib.optionalAttrs (a.startLimitIntervalSec or null != null) { StartLimitIntervalSec = a.startLimitIntervalSec; }
+            // lib.optionalAttrs (a.startLimitBurst or null != null) { StartLimitBurst = a.startLimitBurst; };
           Service = {
             ExecStart = a.exec;
-            Restart = "on-failure";
+            Restart = a.restartPolicy or "on-failure";
             RestartSec = 2;
             Slice = "background-graphical.slice";
             # Don't tear down children when reloading the unit
@@ -55,7 +61,10 @@ with lib; let
             );
           };
         }
-        (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["graphical"]; })
+        (config.lib.neg.systemdUser.mkUnitFromPresets {
+          presets = ["graphical" "dbusSocket"];
+          partOf = ["graphical-session.target"];
+        })
       ];
     }) apps);
 in {
@@ -96,10 +105,35 @@ in {
               default = null;
               description = "Optional workspace name (exact, e.g., ' 𐌱:web') for routing rule.";
             };
+            workspaceId = mkOption {
+              type = nullOr int;
+              default = null;
+              description = "Optional numeric workspace id for routing rule (preferred over name).";
+            };
+            noAnim = mkOption {
+              type = bool;
+              default = false;
+              description = "Add 'noanim' rule to avoid animation on initial show.";
+            };
             environment = mkOption {
               type = attrsOf (oneOf [str int bool]);
               default = {};
               description = "Extra environment variables for the service.";
+            };
+            restartPolicy = mkOption {
+              type = enum ["on-failure" "always"];
+              default = "on-failure";
+              description = "Systemd Restart policy for the app service.";
+            };
+            startLimitIntervalSec = mkOption {
+              type = nullOr (oneOf [int str]);
+              default = null;
+              description = "Unit.StartLimitIntervalSec value to control restart rate limiting.";
+            };
+            startLimitBurst = mkOption {
+              type = nullOr int;
+              default = null;
+              description = "Unit.StartLimitBurst value for restart rate limiting.";
             };
           };
         }));

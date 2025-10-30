@@ -52,10 +52,13 @@ in {
       # Discord (vesktop) scratchpad
       {
         name = "discord";
-        exec = "${lib.getExe pkgs.vesktop}";
+        exec = "${lib.getExe pkgs.vesktop} --ozone-platform=wayland --enable-features=WaylandWindowDecorations";
         package = pkgs.vesktop;
         class = "vesktop";
         workspace = " 𐍀:im";
+        workspaceId = 17;
+        noAnim = true;
+        environment = { NIXOS_OZONE_WL = "1"; };
       }
       # Telegram scratchpad
       {
@@ -64,6 +67,9 @@ in {
         package = pkgs.telegram-desktop;
         class = "org.telegram.desktop";
         workspace = " 𐍀:im";
+        workspaceId = 17;
+        noAnim = true;
+        environment = { QT_QPA_PLATFORM = "wayland"; };
       }
       # Music (rmpc in kitty) scratchpad
       {
@@ -92,6 +98,7 @@ in {
         exec = "${lib.getExe pkgs.pwvucontrol}";
         package = pkgs.pwvucontrol;
         class = "com.saivert.pwvucontrol";
+        environment = { QT_QPA_PLATFORM = "wayland"; };
       }
     ];
   };
