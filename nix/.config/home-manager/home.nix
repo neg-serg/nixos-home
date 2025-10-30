@@ -80,6 +80,7 @@ in {
         name = "notes";
         exec = "raise --class 'Obsidian' --launch 'flatpak run md.obsidian.Obsidian || obsidian'";
         class = "Obsidian";
+        workspaceId = 19;
         noAnim = true;
       }
     ];
