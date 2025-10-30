@@ -83,6 +83,7 @@ in {
     ./btop.nix
     ./fastfetch.nix
     ./nushell.nix
+    ./aliae.nix
     ./config-links.nix # dircolors, f-sy-h, zsh, inputrc
     ./amfora.nix
     ./icedtea-web.nix
