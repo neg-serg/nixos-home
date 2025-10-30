@@ -7,6 +7,8 @@
 }:
 with lib; let
   cfg = config.neg.hypr.prewarm;
+  # Local mkBool to avoid early dependency on config.lib.neg during option evaluation
+  mkBool = desc: default: (lib.mkEnableOption desc) // { inherit default; };
 
   # Render optional window rules for prewarmed apps
   mkRulesText = apps:
@@ -56,37 +58,10 @@ with lib; let
         (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["graphical"]; })
       ];
     }) apps);
-in
-  lib.mkIf (config.features.gui.enable && (cfg.enable or false)) (lib.mkMerge [
-    # Optional Hyprland rules to keep windows unfocused on start and route to a workspace
-    (lib.mkIf (((cfg.apps or []) != [])) (
-      lib.mkMerge [
-        (xdg.mkXdgText "hypr/rules-prewarm.conf" (mkRulesText cfg.apps))
-        {
-          wayland.windowManager.hyprland.settings.source = lib.mkAfter [
-            "${config.xdg.configHome}/hypr/rules-prewarm.conf"
-          ];
-        }
-      ]
-    ))
-
-    # Systemd (user) services per app
-    {
-      systemd.user.services = mkServices (cfg.apps or []);
-    }
-
-    # Optional: install declared packages if provided (kept minimal)
-    (let
-      pkgsToInstall = builtins.filter (p: p != null) (map (a: a.package or null) (cfg.apps or []));
-    in {
-      home.packages = config.lib.neg.pkgsList pkgsToInstall;
-    })
-  ])
-
-# Options: neg.hypr.prewarm
-// {
+in {
+  # Options: neg.hypr.prewarm
   options.neg.hypr.prewarm = {
-    enable = config.lib.neg.mkBool "Enable persistent prewarmed apps managed by systemd (Hyprland)" false;
+    enable = mkBool "Enable persistent prewarmed apps managed by systemd (Hyprland)" false;
     apps = lib.mkOption {
       type = with lib.types;
         listOf (submodule ({...}: {
@@ -132,4 +107,31 @@ in
       description = "List of apps to prewarm as persistent user services.";
     };
   };
+
+  # Config
+  config = lib.mkIf (config.features.gui.enable && (cfg.enable or false)) (lib.mkMerge [
+    # Optional Hyprland rules to keep windows unfocused on start and route to a workspace
+    (lib.mkIf (((cfg.apps or []) != [])) (
+      lib.mkMerge [
+        (xdg.mkXdgText "hypr/rules-prewarm.conf" (mkRulesText cfg.apps))
+        {
+          wayland.windowManager.hyprland.settings.source = lib.mkAfter [
+            "${config.xdg.configHome}/hypr/rules-prewarm.conf"
+          ];
+        }
+      ]
+    ))
+
+    # Systemd (user) services per app
+    {
+      systemd.user.services = mkServices (cfg.apps or []);
+    }
+
+    # Optional: install declared packages if provided (kept minimal)
+    (let
+      pkgsToInstall = builtins.filter (p: p != null) (map (a: a.package or null) (cfg.apps or []));
+    in {
+      home.packages = config.lib.neg.pkgsList pkgsToInstall;
+    })
+  ]);
 }

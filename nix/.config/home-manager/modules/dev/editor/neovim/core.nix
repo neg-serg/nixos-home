@@ -1,9 +1,9 @@
-{pkgs, ...}: {
+{ lib, pkgs, ... }: {
   programs.neovim = {
     plugins = [
       pkgs.vimPlugins.clangd_extensions-nvim # extra clangd LSP features (inlay hints, etc.)
       pkgs.vimPlugins.nvim-treesitter # incremental parsing/highlighting
-    ];
+    ] ++ lib.optional (pkgs.vimPlugins ? kitty-scrollback-nvim) pkgs.vimPlugins.kitty-scrollback-nvim;
     extraLuaConfig = ''
       -- put parsers in a writable dir and ensure it is early on rtp
       local parser_dir = vim.fn.stdpath("data") .. "/treesitter"
