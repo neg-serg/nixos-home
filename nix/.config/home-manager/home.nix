@@ -48,7 +48,27 @@ in {
   # Prewarm scratchpad apps (persistent, background user services)
   neg.hypr.prewarm = {
     enable = true;
-    apps = [ ]; # managed by pyprland scratchpads; keep prewarm empty
+    apps = [
+      # Terminal on workspace 1 (term)
+      {
+        name = "term";
+        exec = "${lib.getExe pkgs.kitty} --class term";
+        package = pkgs.kitty;
+        class = "term";
+        workspaceId = 1;
+        noAnim = true;
+      }
+      # Default browser (Floorp) on workspace 2 (web)
+      {
+        name = "web";
+        exec = "${lib.getExe pkgs.floorp-bin}";
+        package = pkgs.floorp-bin;
+        class = "(one\\.ablaze\\.floorp|floorp)";
+        environment = { MOZ_ENABLE_WAYLAND = "1"; };
+        workspaceId = 2;
+        noAnim = true;
+      }
+    ];
   };
 
   # XDG aggregated fixups were removed; rely on per‑file `force = true` when needed.
