@@ -75,5 +75,7 @@ if [[ ! -s "$tmp_report" ]]; then
 fi
 
 printf "size_bytes | size | age_days | root | path\n"
-LC_ALL=C sort -t '|' -k1,1nr "$tmp_report" | head -n "$TOP_N" | awk -F'|' '{printf "%10s | %6s | %8s | %s | %s\n", $1, $2, $3, $4, $5}'
-
+LC_ALL=C sort -t '|' -k1,1nr "$tmp_report" \
+  | awk -F'|' 'NF>=5' \
+  | head -n "$TOP_N" \
+  | awk -F'|' '{printf "%10s | %6s | %8s | %s | %s\n", $1, $2, $3, $4, $5}'
