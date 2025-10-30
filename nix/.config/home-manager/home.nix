@@ -75,6 +75,13 @@ in {
         class = "org.nicotine_plus.Nicotine";
         noAnim = true;
       }
+      # Notes (Obsidian): focus existing or launch
+      {
+        name = "notes";
+        exec = "raise --class 'Obsidian' --launch 'flatpak run md.obsidian.Obsidian || obsidian'";
+        class = "Obsidian";
+        noAnim = true;
+      }
     ];
   };
 
