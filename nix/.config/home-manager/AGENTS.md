@@ -165,7 +165,7 @@ This repo is configured for Home Manager + flakes with a small set of helpers to
 - Don’t reintroduce Hyprland auto‑reload or activation reload hooks.
 - For files under `~/.config` prefer XDG helpers + `config.lib.file.mkOutOfStoreSymlink` instead of ad‑hoc shell.
 - Use feature flags (`features.*`) with `mkIf`; parent flag off implies children default to off.
-- Quickshell: `quickshell/.config/quickshell/Settings.json` is ignored; do not add it back.
+- Quickshell: `modules/user/gui/quickshell/conf/Settings.json` is ignored; do not add it back.
 
 ## Validation
 
