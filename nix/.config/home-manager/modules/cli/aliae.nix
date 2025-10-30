@@ -14,7 +14,7 @@ lib.mkMerge [
     { programs.aliae.enable = true; }
     # Provide a minimal, cross-shell alias set via XDG config.
     # Format: YAML (aliases mapping). Safe defaults mirror Nushell aliases.
-    (xdg.mkXdgConfigText "aliae/config.yaml" ''
+    (xdg.mkXdgText "aliae/config.yaml" ''
       # Aliae aliases (cross-shell)
       # Edit and reload your shell to apply changes.
       aliases:
