@@ -48,63 +48,7 @@ in {
   # Prewarm scratchpad apps (persistent, background user services)
   neg.hypr.prewarm = {
     enable = true;
-    apps = [
-      # Discord (vesktop) scratchpad
-      {
-        name = "discord";
-        exec = "${lib.getExe pkgs.vesktop} --ozone-platform=wayland --enable-features=WaylandWindowDecorations";
-        package = pkgs.vesktop;
-        class = "vesktop";
-        workspace = " 𐍀:im";
-        workspaceId = 17;
-        noAnim = true;
-        environment = { NIXOS_OZONE_WL = "1"; };
-      }
-      # Telegram scratchpad
-      {
-        name = "telegram";
-        exec = "${lib.getExe pkgs.telegram-desktop}";
-        package = pkgs.telegram-desktop;
-        class = "org.telegram.desktop";
-        workspace = " 𐍀:im";
-        workspaceId = 17;
-        noAnim = true;
-        environment = { QT_QPA_PLATFORM = "wayland"; };
-      }
-      # Music (rmpc in kitty) scratchpad
-      {
-        name = "music";
-        exec = "${lib.getExe pkgs.kitty} --class music -e ${lib.getExe pkgs.rmpc}";
-        package = pkgs.rmpc;
-        class = "music";
-        noAnim = true;
-      }
-      # Torrents dashboard (rustmission in kitty) scratchpad
-      {
-        name = "torrment";
-        exec = "${lib.getExe pkgs.kitty} --class torrment -e ${lib.getExe pkgs.rustmission}";
-        package = pkgs.rustmission;
-        class = "torrment";
-        noAnim = true;
-      }
-      # Teardown monitor (btop in kitty) scratchpad
-      {
-        name = "teardown";
-        exec = "${lib.getExe pkgs.kitty} --class teardown -e ${lib.getExe pkgs.btop}";
-        package = pkgs.btop;
-        class = "teardown";
-        noAnim = true;
-      }
-      # PipeWire mixer scratchpad
-      {
-        name = "mixer";
-        exec = "${lib.getExe pkgs.pwvucontrol}";
-        package = pkgs.pwvucontrol;
-        class = "com.saivert.pwvucontrol";
-        environment = { QT_QPA_PLATFORM = "wayland"; };
-        noAnim = true;
-      }
-    ];
+    apps = [ ]; # managed by pyprland scratchpads; keep prewarm empty
   };
 
   # XDG aggregated fixups were removed; rely on per‑file `force = true` when needed.
