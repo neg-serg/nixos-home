@@ -61,8 +61,8 @@ in {
       # Default browser (Floorp) on workspace 2 (web)
       {
         name = "web";
-        # Use PATH-resolved floorp to avoid pulling duplicate store paths
-        exec = "floorp";
+        # Idempotent launch via raise; relies on PATH-resolved browser
+        exec = "raise --class '(one.ablaze.floorp|floorp)' --launch 'floorp'";
         class = "(one\\.ablaze\\.floorp|floorp)";
         environment = { MOZ_ENABLE_WAYLAND = "1"; };
         workspaceId = 2;
