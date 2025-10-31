@@ -16,7 +16,7 @@ with lib;
         pkgs.git # used by nb (notes repo updates)
         pkgs.imagemagick # convert/mogrify for screenshot/swayimg-actions
         pkgs.libnotify # notify-send for pic-notify/qr/screenshot
-        pkgs.socat # UNIX sockets (pypr-client, swayimg IPC)
+        pkgs.socat # UNIX sockets (swayimg/Hyprland IPC)
         # fasd removed; use zoxide for ranking
         pkgs.usbutils # lsusb (unlock Yubikey detection)
         # audio/video + helpers (mpv comes from media stack)
@@ -231,10 +231,7 @@ with lib;
             name = "punzip";
             src = ./scripts/punzip;
           }
-          {
-            name = "pypr-client";
-            src = ./scripts/pypr-client.sh;
-          }
+          
           {
             name = "v";
             src = ./scripts/v.sh;
@@ -275,5 +272,12 @@ with lib;
         config.lib.neg.mkRemoveIfSymlink "${config.home.homeDirectory}/.local/bin/raise";
       home.activation.cleanRaiseFile =
         config.lib.neg.mkEnsureAbsent "${config.home.homeDirectory}/.local/bin/raise";
+    }
+    # Cleanup: drop legacy pypr-client wrapper (use `pypr` CLI directly)
+    {
+      home.activation.cleanPyprClientSymlink =
+        config.lib.neg.mkRemoveIfSymlink "${config.home.homeDirectory}/.local/bin/pypr-client";
+      home.activation.cleanPyprClientFile =
+        config.lib.neg.mkEnsureAbsent "${config.home.homeDirectory}/.local/bin/pypr-client";
     }
   ])
