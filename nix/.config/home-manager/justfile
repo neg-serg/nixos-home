@@ -187,6 +187,10 @@ xdg-delete:
       exit 2; \
     fi
 
+xdg-delete-targets:
+    # Delete curated list from scripts/xdg-delete-targets.txt
+    TARGETS_FILE=scripts/xdg-delete-targets.txt just xdg-delete
+
 clean-caches:
     set -eu
     repo=$(git rev-parse --show-toplevel)
