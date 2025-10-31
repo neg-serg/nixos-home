@@ -109,6 +109,12 @@ bindurl git\.sr\.ht/.*/.*/log ;F hint -Jbc .event > div > a:nth-of-type(1)
 bindurl searx\.semipvt\.com ;f hint -Jc .result_header > a
 bindurl searx\.semipvt\.com ;F hint -Jbc .result_header > a
 
+" Stack Overflow: search and list pages
+bindurl stackoverflow\.com/search ;f hint -Jc .s-post-summary h3 a, .question-summary h3 a, a.question-hyperlink
+bindurl stackoverflow\.com/search ;F hint -Jbc .s-post-summary h3 a, .question-summary h3 a, a.question-hyperlink
+bindurl stackoverflow\.com/questions ;f hint -Jc .s-post-summary h3 a, .question-summary h3 a, a.question-hyperlink
+bindurl stackoverflow\.com/questions ;F hint -Jbc .s-post-summary h3 a, .question-summary h3 a, a.question-hyperlink
+
 " GitLab: issues / MRs / commits / search
 bindurl gitlab\.com/search ;f hint -Jc a.search-result-row, a.search-result-link, a[data-qa-selector="result_title"], .results a
 bindurl gitlab\.com/search ;F hint -Jbc a.search-result-row, a.search-result-link, a[data-qa-selector="result_title"], .results a
