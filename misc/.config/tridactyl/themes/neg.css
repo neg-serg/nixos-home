@@ -22,9 +22,11 @@
 }
 
 #command-line-holder {
+  background: var(--tridactyl-bg);
   border: 1px solid var(--border_color);
-  color: var(--tridactyl-bg);
+  color: var(--tridactyl-fg);
   order: 1;
+  border-radius: 6px;
 }
 
 #tridactyl-input {
