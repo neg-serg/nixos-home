@@ -1,6 +1,11 @@
 reloaddead
 colors neg
 
+" Quick theme switchers
+command theme-dark colors neg
+command theme-light colors neg-light
+command theme-contrast colors neg-contrast
+
 set newtab about:newtab
 set home about:home
 
