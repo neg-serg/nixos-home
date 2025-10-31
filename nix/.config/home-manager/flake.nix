@@ -281,7 +281,7 @@ in {
             hmBaseModules (lib.optionalAttrs (n == "neg-lite") {profile = "lite";})
             ++ [
               # Ensure raise from fork is in PATH for this system
-              { home.packages = [ inputs.raise.packages.${defaultSystem}.default ]; }
+              { home.packages = [ inputs.raise.defaultPackage.${defaultSystem} ]; }
             ];
         }
     );
