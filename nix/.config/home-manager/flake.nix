@@ -39,6 +39,11 @@ in {
     # Keep literal lists here to avoid early-import pitfalls; modules reuse these values via mkHMArgs
     extra-substituters = extraSubstituters;
     extra-trusted-public-keys = extraTrustedKeys;
+    # Use neg-serg fork of raise
+    raise = {
+      url = "github:neg-serg/raise";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   inputs = {
     bzmenu = {
@@ -285,8 +290,3 @@ in {
     templates = import ./flake/templates.nix;
   };
 }
-    # Use neg-serg fork of raise
-    raise = {
-      url = "github:neg-serg/raise";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
