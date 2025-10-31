@@ -5,6 +5,11 @@ colors neg
 command theme-dark colors neg
 command theme-light colors neg-light
 command theme-contrast colors neg-contrast
+command theme-midnight colors neg-midnight
+
+" Cycle through available themes
+command theme-next jsb const list=["neg","neg-midnight","neg-contrast","neg-light"]; const cur=(tri.config.get("colorscheme")||"neg").toString(); let i=list.indexOf(cur); i=(i+1)%list.length; tri.excmds.colors(list[i])
+command theme-prev jsb const list=["neg","neg-midnight","neg-contrast","neg-light"]; const cur=(tri.config.get("colorscheme")||"neg").toString(); let i=list.indexOf(cur); i=(i-1+list.length)%list.length; tri.excmds.colors(list[i])
 
 set newtab about:newtab
 set home about:home
