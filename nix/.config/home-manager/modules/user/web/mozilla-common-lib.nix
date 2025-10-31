@@ -125,6 +125,37 @@ with lib; let
     .urlbarView-row .urlbarView-url { font-size: 14px !important; font-weight: 400 !important; }
   '';
 
+  # Tridactyl UI sizing: clamp completions popup and commandline for consistency.
+  # Goals:
+  # - Avoid tiny lists on small viewports (min height/width)
+  # - Avoid almost-fullscreen lists on large monitors (max height/width)
+  # - Keep table layout stable and scrolled within the popup
+  # Scope:
+  # - Targets Tridactyl's overlay ids (#commandline and #completions), which are unique
+  #   to the extension UI and very unlikely to clash with page content.
+  tridactylUserContent = ''
+    /* Tridactyl commandline/completions sizing clamps */
+    #TridactylCommandline, #commandline{
+      font-size: 14px !important;
+    }
+    #completions{
+      /* Prevent tiny and fullscreen extremes */
+      min-height: 22vh !important;
+      max-height: min(52vh, 640px) !important;
+      min-width: 420px !important;
+      width: min(75vw, 1100px) !important;
+      overflow: auto !important;
+    }
+    #completions table{
+      table-layout: fixed !important;
+      width: 100% !important;
+    }
+    #completions .sectionHeader{
+      position: sticky !important;
+      top: 0 !important;
+    }
+  '';
+
   # Optional: move URL bar/toolbar to bottom.
   # Based on MrOtherGuy's firefox-csshacks (navbar_below_content.css).
   # Upstream: https://github.com/MrOtherGuy/firefox-csshacks
@@ -301,6 +332,8 @@ in {
         + hideUrlbarOneOffs
         + hideSearchBarWidget
         + userChromeExtra;
+      # Clamp Tridactyl overlay sizes globally via userContent.css
+      userContent = tridactylUserContent;
       inherit extraConfig;
     };
     profile = profileBase // profileExtra;

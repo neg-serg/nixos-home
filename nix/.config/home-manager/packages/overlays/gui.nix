@@ -33,7 +33,7 @@ _final: prev: {
     src = prev.fetchurl {
       url = "https://github.com/atlas-engineer/nyxt/releases/download/${version}/Linux-Nyxt-x86_64.tar.gz";
       # Note: despite the name, this is a single ELF binary (static-pie).
-      hash = "sha256-0z68029xwg9af55ivykvq5v3l3aldl5y8x3i8i3x20zw4qdk02i4";
+      hash = "sha256-9kwgLVvnqXJnL/8jdY2jly/bS2XtgF9WBsDeoXNHX8M=";
     };
 
     dontUnpack = true;

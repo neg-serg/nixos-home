@@ -6,8 +6,8 @@
   ...
 }: let
   nyxtPkg =
-    if nyxt4 != null
-    then nyxt4
+    if nyxt4 != null then nyxt4
+    else if pkgs ? nyxt4-bin then pkgs.nyxt4-bin
     else pkgs.nyxt;
   # Floorp upstream source package is deprecated in nixpkgs >= 12.x; always use floorp-bin.
   floorpPkg = pkgs.floorp-bin;
