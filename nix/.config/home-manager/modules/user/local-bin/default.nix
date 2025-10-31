@@ -243,6 +243,13 @@ with lib;
             name = "journal-clean";
             src = ./scripts/journal-clean.sh;
           }
+          # Hyprland raise shim with tag support.
+          # If called with --tag, performs matching via hyprctl JSON.
+          # Otherwise delegates to upstream raise if present.
+          {
+            name = "raise";
+            src = ./scripts/raise;
+          }
         ];
         base = builtins.listToAttrs (map mkEnt scripts);
         # Special case: vid-info needs path substitution for libs

@@ -40,7 +40,14 @@ _final: prev: {
 
     installPhase = ''
       runHook preInstall
-      install -Dm0755 "$src" "$out/bin/nyxt"
+      mkdir -p "$out/bin"
+      if gzip -t "$src" >/dev/null 2>&1; then
+        # Some releases ship a gzipped single binary under a misleading name.
+        gzip -dc "$src" > "$out/bin/nyxt"
+        chmod 0755 "$out/bin/nyxt"
+      else
+        install -Dm0755 "$src" "$out/bin/nyxt"
+      fi
       runHook postInstall
     '';
 

@@ -15,6 +15,8 @@
   # Prefer Nyxt 4 / QtWebEngine variant when available from chaotic
   nyxt4 = let
     hasAttr = builtins.hasAttr;
+    # Cheap env parser to keep eval fast and optional
+    boolEnv = name: let v = builtins.getEnv name; in v == "1" || v == "true" || v == "yes";
     # Prefer explicit custom provider if present in inputs as `nyxtQt`.
     customPkgs = if hasAttr "nyxtQt" inputs then (inputs.nyxtQt.packages.${system} or null) else null;
     fromCustom =
@@ -26,8 +28,8 @@
           let n = builtins.head names; in
             if hasAttr n customPkgs then customPkgs.${n} else pick (builtins.tail names);
       in pick candidates;
-    # Fallback to chaotic if it exposes a Qt/Blink variant
-    chaoticPkgs = inputs.chaotic.packages.${system} or null;
+    # Fallback to chaotic if it exposes a Qt/Blink variant and is explicitly enabled
+    chaoticPkgs = if boolEnv "HM_USE_CHAOTIC_NYXT" then (inputs.chaotic.packages.${system} or null) else null;
     fromChaotic =
       if chaoticPkgs == null then null else
       if hasAttr "nyxt4" chaoticPkgs then chaoticPkgs.nyxt4

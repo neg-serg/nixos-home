@@ -118,11 +118,13 @@ with lib; let
     #nav-bar #forward-button,
     #nav-bar #stop-reload-button,
     #nav-bar #home-button { display: none !important; }
-    /* Bigger, bolder URL bar text */
-    :root { --urlbar-min-height: 36px !important; }
-    #urlbar-input { font-size: 17px !important; font-weight: 500 !important; }
+    /* Compact urlbar text and results */
+    :root { --urlbar-min-height: 30px !important; }
+    #urlbar-input { font-size: 14px !important; font-weight: 500 !important; }
     .urlbarView-row .urlbarView-title,
-    .urlbarView-row .urlbarView-url { font-size: 14px !important; font-weight: 400 !important; }
+    .urlbarView-row .urlbarView-url { font-size: 12px !important; font-weight: 400 !important; }
+    /* Keep urlbar dropdown reasonable */
+    .urlbarView-body-inner{ max-height: min(60vh, 640px) !important; overflow: auto !important; }
   '';
 
   # Tridactyl UI sizing: clamp completions popup and commandline for consistency.
@@ -134,25 +136,13 @@ with lib; let
   # - Targets Tridactyl's overlay ids (#commandline and #completions), which are unique
   #   to the extension UI and very unlikely to clash with page content.
   tridactylUserContent = ''
-    /* Tridactyl commandline/completions sizing clamps */
-    #TridactylCommandline, #commandline{
-      font-size: 14px !important;
-    }
-    #completions{
-      /* Prevent tiny and fullscreen extremes */
-      min-height: 22vh !important;
-      max-height: min(52vh, 640px) !important;
-      min-width: 420px !important;
-      width: min(75vw, 1100px) !important;
-      overflow: auto !important;
-    }
-    #completions table{
-      table-layout: fixed !important;
-      width: 100% !important;
-    }
-    #completions .sectionHeader{
-      position: sticky !important;
-      top: 0 !important;
+    /* Tridactyl: balanced height for window/buffer completions */
+    #TridactylModeIndicatorAndCmdline #completions,
+    #TridactylCommandline #completions{
+      /* Allow reasonably tall lists for :w while avoiding fullscreen */
+      min-height: 28vh !important;
+      max-height: min(60vh, 640px) !important;
+      overflow-y: auto !important;
     }
   '';
 

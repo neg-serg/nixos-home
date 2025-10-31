@@ -22,9 +22,7 @@ with lib;
         ];
         warnings =
           (lib.optional (nyxt4 == null && !(pkgs ? nyxt4-bin))
-            "Nyxt Qt/Blink provider not found; using WebKitGTK (pkgs.nyxt). Provide `nyxtQt` input or a chaotic package attribute (nyxt-qtwebengine/nyxt-qt/nyxt4).")
-          ++ (lib.optional (nyxt4 == null && (pkgs ? nyxt4-bin))
-            "Using Nyxt 4 pre-release binary (Electron/Blink) from pkgs.nyxt4-bin.");
+            "Nyxt Qt/Blink provider not found; using WebKitGTK (pkgs.nyxt). Provide `nyxtQt` input or a chaotic package attribute (nyxt-qtwebengine/nyxt-qt/nyxt4).");
       }
       (let
         tpl = builtins.readFile ./nyxt/init.lisp;
