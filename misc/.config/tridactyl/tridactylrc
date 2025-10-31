@@ -77,6 +77,7 @@ unbind <F1><C-q><SA-ArrowUp><SA-ArrowUp><SA-ArrowDown><SA-ArrowDown><SA-ArrowLef
 " Comment toggler for Reddit, Hacker News and Lobste.rs
 bind ;c hint -Jc [class*="expand"],[class="togg"],[class="comment_folder"]
 bindurl reddit.com gu urlparent 4
+bindurl news\.ycombinator\.com/item gu urlparent 2
 bindurl youtu((\.be)|(be\.com)) f hint -J
 bindurl google(\.[a-zA-Z0-9]+){1,2}/search f hint -Jc #top_nav a, #search a, .card-section a, a.fl, #pnnext, #pnprev
 bindurl google(\.[a-zA-Z0-9]+){1,2}/search F hint -Jbc #top_nav a, #search a, .card-section a, a.fl, #pnnext, #pnprev
