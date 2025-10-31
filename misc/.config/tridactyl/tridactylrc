@@ -121,6 +121,14 @@ bindurl [A-Za-z\.-]*wikipedia\.org/w/index\.php\?search ;F hint -Jbc .mw-search-
 bindurl [A-Za-z\.-]*wikipedia\.org/wiki/Special:Search ;f hint -Jc .mw-search-result-heading > a
 bindurl [A-Za-z\.-]*wikipedia\.org/wiki/Special:Search ;F hint -Jbc .mw-search-result-heading > a
 
+" YouTube: results, subscriptions, and channels
+bindurl (www\.)?youtube\.com/results ;f hint -Jc a#video-title
+bindurl (www\.)?youtube\.com/results ;F hint -Jbc a#video-title
+bindurl (www\.)?youtube\.com/feed/subscriptions ;f hint -Jc a#video-title
+bindurl (www\.)?youtube\.com/feed/subscriptions ;F hint -Jbc a#video-title
+bindurl (www\.)?youtube\.com/@.* ;f hint -Jc a#video-title
+bindurl (www\.)?youtube\.com/@.* ;F hint -Jbc a#video-title
+
 " GitLab: issues / MRs / commits / search
 bindurl gitlab\.com/search ;f hint -Jc a.search-result-row, a.search-result-link, a[data-qa-selector="result_title"], .results a
 bindurl gitlab\.com/search ;F hint -Jbc a.search-result-row, a.search-result-link, a[data-qa-selector="result_title"], .results a
