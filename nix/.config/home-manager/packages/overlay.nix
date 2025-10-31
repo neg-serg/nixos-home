@@ -5,11 +5,10 @@ _final: prev: let
   media = importOv ./overlays/media.nix;
   gui = importOv ./overlays/gui.nix;
   dev = importOv ./overlays/dev.nix;
-  compat = importOv ./overlays/compat.nix;
 in
   # Merge all top-level overrides from overlays (functions/tools/media/dev), and also
   # provide a combined pkgs.neg namespace aggregating their custom packages and helpers.
-  (functions // tools // media // dev // gui // compat)
+  (functions // tools // media // dev // gui)
   // {
     neg = (functions.neg or {}) // (tools.neg or {}) // (media.neg or {}) // (dev.neg or {});
   }
