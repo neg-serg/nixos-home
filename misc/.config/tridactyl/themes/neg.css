@@ -37,7 +37,7 @@
   border: 1px solid var(--border_color);
   color: var(--tridactyl-fg);
   order: 1;
-  border-radius: 6px;
+  border-radius: 0;
 }
 
 #tridactyl-input {
@@ -139,10 +139,10 @@
 
 span.TridactylHint {
   background-color: var(--tridactyl-hintspan-bg) !important;
-  border-radius: 4px !important;
+  border-radius: 0 !important;
   border-style: var(--tridactyl-hintspan-border-style, solid) !important;
   border-width: var(--tridactyl-hintspan-border-width, 1px) !important;
-  border-color: color-mix(in oklab, var(--tridactyl-hintspan-fg) 60%, black) !important;
+  border-color: var(--border_color) !important;
   color: var(--tridactyl-hintspan-fg) !important;
   font-family: var(--tridactyl-hintspan-font-family) !important;
   font-size: var(--tridactyl-hintspan-font-size) !important;
@@ -152,7 +152,6 @@ span.TridactylHint {
   padding: 2px !important;
   position: absolute !important;
   z-index: 2147483646 !important;
-  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
 }
 
 /* Distinct style for active hint */
