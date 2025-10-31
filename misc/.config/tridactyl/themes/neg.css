@@ -13,7 +13,7 @@
   --tridactyl-hintspan-bg: #001742 !important;
   --tridactyl-hintspan-fg: #89cdd2 !important;
   --tridactyl-hintspan-font-family: "Iosevka" !important;
-  --tridactyl-hintspan-font-size: 10pt !important;
+  --tridactyl-hintspan-font-size: 0.875rem !important;
   --tridactyl-hintspan-font-weight: 600 !important;
   --tridactyl-url-bg: var(--color_black);
   --tridactyl-url-fg: var(--url_highlight);
@@ -21,7 +21,7 @@
 }
 
 #command-line-holder {
-  border: 1pt solid var(--border_color);
+  border: 1px solid var(--border_color);
   color: var(--tridactyl-bg);
   order: 1;
 }
@@ -30,7 +30,7 @@
   background: var(--tridactyl-bg);
   color: var(--tridactyl-fg);
   font-family: "Iosevka";
-  font-size: 10pt;
+  font-size: 0.875rem;
   font-weight: 600;
 }
 
@@ -39,7 +39,7 @@
   color: var(--tridactyl-fg);
   display: inline-block;
   font-family: "Iosevka";
-  font-size: 10pt;
+  font-size: 0.875rem;
   font-weight: 600;
   --option-height: 1.2em;
   overflow: hidden;
@@ -54,31 +54,31 @@
 
 #completions table {
   font-family: "Iosevka";
-  font-size: 10pt;
+  font-size: 0.875rem;
   font-weight: 600;
   padding: 0;
 }
 
 #completions .HistoryCompletionSource {
-  max-height: 292pt;
+  max-height: 292px;
   min-height: unset;
 }
 
 #completions .HistoryCompletionSource table {
   border-spacing: 0;
-  font-size: 10pt;
+  font-size: 0.875rem;
   table-layout: fixed;
   width: 100%;
 }
 
 #completions .BmarkCompletionSource {
-  max-height: 292pt;
+  max-height: 292px;
   min-height: unset;
 }
 
 #completions .BufferCompletionSource table {
   border-spacing: 0;
-  font-size: 10pt;
+  font-size: 0.875rem;
   table-layout: fixed;
   width: unset;
 }
@@ -121,7 +121,7 @@ span.TridactylHint {
   font-size: var(--tridactyl-hintspan-font-size) !important;
   font-style: var(--tridactyl-hintspan-font-style) !important;
   min-width: 0.75em !important;
-  padding: 2pt !important;
+  padding: 2px !important;
   position: absolute !important;
   z-index: 2147483646 !important;
 }
