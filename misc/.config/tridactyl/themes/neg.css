@@ -32,7 +32,7 @@
 #tridactyl-input {
   background: var(--tridactyl-bg);
   color: var(--tridactyl-fg);
-  font-family: "Iosevka";
+  font-family: "Iosevka", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
   font-size: 0.875rem;
   line-height: 1.25rem;
   font-weight: 600;
@@ -50,7 +50,7 @@
   background: var(--tridactyl-bg);
   color: var(--tridactyl-fg);
   display: inline-block;
-  font-family: "Iosevka";
+  font-family: "Iosevka", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
   font-size: 0.875rem;
   font-weight: 600;
   --option-height: 1.2em;
@@ -67,7 +67,7 @@
 }
 
 #completions table {
-  font-family: "Iosevka";
+  font-family: "Iosevka", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
   font-size: 0.875rem;
   font-weight: 600;
   padding: 0;
