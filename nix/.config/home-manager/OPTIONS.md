@@ -33,9 +33,10 @@ Notes
 
 Mozilla browsers
 - Firefox, LibreWolf and Floorp share a unified constructor in `modules/user/web/mozilla-common-lib.nix`:
-  - `mkBrowser { name, package, profileId ? "default", settingsExtra ? {}, defaults ? {}, addonsExtra ? [], nativeMessagingExtra ? [], policiesExtra ? {}, profileExtra ? {} }`
+  - `mkBrowser { name, package, profileId ? "default", settingsExtra ? {}, defaults ? {}, addonsExtra ? [], nativeMessagingExtra ? [], policiesExtra ? {}, profileExtra ? {}, userChromeExtra ? "", bottomNavbar ? true }`
   - Browser modules call this to produce their `programs.<name>` blocks, avoiding duplication.
   - Use the `*Extra` fields to extend settings/policies/addons per browser.
+  - `bottomNavbar` controls optional CSS that переносит панель навигации вниз. По умолчанию `true`; для Floorp выставлено `false`.
 
 ## Audio Stack (`modules/media/audio`)
 
