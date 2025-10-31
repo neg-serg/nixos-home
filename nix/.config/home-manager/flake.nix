@@ -272,7 +272,12 @@ in {
         homeManagerInput.lib.homeManagerConfiguration {
           inherit (perSystem.${defaultSystem}) pkgs;
           extraSpecialArgs = mkHMArgs defaultSystem;
-          modules = hmBaseModules (lib.optionalAttrs (n == "neg-lite") {profile = "lite";});
+          modules =
+            hmBaseModules (lib.optionalAttrs (n == "neg-lite") {profile = "lite";})
+            ++ [
+              # Ensure raise from fork is in PATH for this system
+              { home.packages = [ inputs.raise.packages.${defaultSystem}.default ]; }
+            ];
         }
     );
 
@@ -280,3 +285,8 @@ in {
     templates = import ./flake/templates.nix;
   };
 }
+    # Use neg-serg fork of raise
+    raise = {
+      url = "github:neg-serg/raise";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
