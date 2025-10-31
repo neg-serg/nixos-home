@@ -47,7 +47,7 @@
   font-size: 0.875rem;
   line-height: 1.25rem;
   font-weight: 600;
-  caret-color: var(--accent);
+  caret-color: var(--foreground);
 }
 
 #tridactyl-input::placeholder {
@@ -69,7 +69,7 @@
   padding: 0;
   width: 100%;
   scrollbar-width: thin;
-  scrollbar-color: var(--accent) transparent;
+  scrollbar-color: var(--border_color) transparent;
 }
 
 #completions > div {
@@ -128,12 +128,12 @@
   background: color-mix(in oklab, var(--line_highlight) 80%, transparent);
   color: var(--foreground);
   padding: 0;
-  box-shadow: inset 3px 0 0 0 var(--accent);
+  /* No accent stripe to keep it minimal */
 }
 
 #completions .focused .url {
   background: var(--line_highlight);
-  color: var(--accent);
+  color: var(--foreground);
   padding: 0;
 }
 
@@ -156,6 +156,6 @@ span.TridactylHint {
 
 /* Distinct style for active hint */
 span.TridactylHint.ActiveHint {
-  background-color: color-mix(in oklab, var(--accent) 22%, var(--tridactyl-hintspan-bg));
-  outline: 2px solid var(--accent);
+  background-color: color-mix(in oklab, var(--line_highlight) 80%, transparent);
+  outline: 1px solid var(--border_color);
 }
