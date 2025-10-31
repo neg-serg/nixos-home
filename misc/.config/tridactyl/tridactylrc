@@ -63,7 +63,8 @@ blacklistadd e.mail.ru
 blacklistadd keep.google.com
 
 bind --mode=normal u undo tab
-bind --mode=normal U undo tab
+unbind --mode=normal U
+bind --mode=normal U fillcmdline undo
 unbind J
 unbind K
 
