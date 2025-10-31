@@ -124,7 +124,7 @@ with lib; let
     .urlbarView-row .urlbarView-url { font-size: 14px !important; font-weight: 400 !important; }
   '';
 
-  # Move URL bar/toolbar to bottom for both Firefox and Floorp.
+  # Optional: move URL bar/toolbar to bottom.
   # Based on MrOtherGuy's firefox-csshacks (navbar_below_content.css).
   # Upstream: https://github.com/MrOtherGuy/firefox-csshacks
   # Notes:
@@ -265,6 +265,8 @@ in {
   #   # Extra profile fields to merge (e.g., isDefault, bookmarks, search)
   #   profileExtra ? {},
   #   userChromeExtra ? "",
+  #   # Whether to pin navbar to bottom via CSS (default true)
+  #   bottomNavbar ? true,
   # }
   mkBrowser = {
     name,
@@ -277,6 +279,7 @@ in {
     policiesExtra ? {},
     profileExtra ? {},
     userChromeExtra ? "",
+    bottomNavbar ? true,
   }: let
     pid = profileId;
     mergedSettings = settings // defaults // settingsExtra;
@@ -286,7 +289,12 @@ in {
       isDefault = true;
       extensions = {packages = (addons.common or []) ++ addonsExtra;};
       settings = mergedSettings;
-      userChrome = userChrome + bottomNavbarChrome + hideSearchModeChip + hideUrlbarOneOffs + hideSearchBarWidget + userChromeExtra;
+      userChrome = userChrome
+        + (optionalString bottomNavbar bottomNavbarChrome)
+        + hideSearchModeChip
+        + hideUrlbarOneOffs
+        + hideSearchBarWidget
+        + userChromeExtra;
       inherit extraConfig;
     };
     profile = profileBase // profileExtra;
