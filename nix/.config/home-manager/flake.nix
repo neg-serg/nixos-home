@@ -39,11 +39,6 @@ in {
     # Keep literal lists here to avoid early-import pitfalls; modules reuse these values via mkHMArgs
     extra-substituters = extraSubstituters;
     extra-trusted-public-keys = extraTrustedKeys;
-    # Use neg-serg fork of raise
-    raise = {
-      url = "github:neg-serg/raise";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
   inputs = {
     bzmenu = {
@@ -119,6 +114,11 @@ in {
     };
     # CamelCase alias for convenience in code
     yandexBrowserInput.follows = "yandex-browser";
+    # Use neg-serg fork of raise
+    raise = {
+      url = "github:neg-serg/raise";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs @ {
