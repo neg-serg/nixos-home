@@ -6,7 +6,8 @@
   ...
 }:
 with lib; let
-  dlDir = "${config.home.homeDirectory}/dw";
+  # Prefer configured XDG Downloads directory; fallback to ~/dw to match defaults
+  dlDir = lib.attrByPath ["xdg" "userDirs" "download"] "${config.home.homeDirectory}/dw" config;
   useNurAddons = config.features.web.addonsFromNUR.enable or false;
   fa =
     if useNurAddons && faProvider != null
