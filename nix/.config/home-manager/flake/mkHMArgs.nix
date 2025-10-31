@@ -72,6 +72,8 @@
   iwmenuProvider = pkgs: inputs.iwmenu.packages.${pkgs.system}.default;
   bzmenuProvider = pkgs: inputs.bzmenu.packages.${pkgs.system}.default;
   rsmetrxProvider = pkgs: inputs.rsmetrx.packages.${pkgs.system}.default;
+  # Rust raise utility (flake-utils defaultPackage)
+  raiseProvider = pkgs: inputs.raise.defaultPackage.${pkgs.system};
   # Provide xdg helpers directly to avoid _module.args fallback recursion
   xdg = import ../modules/lib/xdg-helpers.nix {
     inherit lib;

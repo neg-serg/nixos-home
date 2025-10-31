@@ -3,6 +3,7 @@
   config,
   pkgs,
   xdg,
+  raiseProvider ? null,
   ...
 }:
 with lib; let
@@ -63,7 +64,8 @@ in
               pkgs.hyprutils # core utils for Hyprland
               pkgs.pyprland # Hyprland plugin system
               pkgs.upower # power management daemon
-            ];
+            ]
+            ++ lib.optional (raiseProvider != null) (raiseProvider pkgs);
             qt = [
               pkgs.hyprland-qt-support # Qt integration fixes
               pkgs.kdePackages.qt6ct # Qt6 config tool

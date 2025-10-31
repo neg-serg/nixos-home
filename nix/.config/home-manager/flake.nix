@@ -114,6 +114,11 @@ in {
     };
     # CamelCase alias for convenience in code
     yandexBrowserInput.follows = "yandex-browser";
+    # Rust window raiser utility used in Hyprland bindings
+    raise = {
+      url = "github:neg-serg/raise";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs @ {
