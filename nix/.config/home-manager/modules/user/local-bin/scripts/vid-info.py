@@ -96,7 +96,8 @@ def media_info(filename: str):
         return
     for stream in ret.get('streams', []):
         if stream.get('codec_type') == 'video':
-            w = stream.get('width'); h = stream.get('height')
+            w = stream.get('width')
+            h = stream.get('height')
             if w and h:
                 out += pp.wrap(f"{w}x{h}")
             afr = stream.get('avg_frame_rate') or ""
@@ -177,4 +178,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-

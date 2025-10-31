@@ -220,8 +220,7 @@ in {
         packages = let
           extrasFlag = boolEnv "HM_EXTRAS";
           extrasSet = import ./flake/pkgs-extras.nix {
-            inherit hy3 pkgs;
-            system = system;
+            inherit hy3 pkgs system;
           };
         in
           {

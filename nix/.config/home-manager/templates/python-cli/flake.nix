@@ -2,7 +2,7 @@
   description = "Minimal Python CLI with devShell (ruff/black/pytest)";
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
   outputs = {
-    self,
+    _self,
     nixpkgs,
   }: let
     lib = nixpkgs.lib;

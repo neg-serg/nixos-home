@@ -2,7 +2,7 @@
   description = "Shell app packaged with writeShellApplication";
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
   outputs = {
-    self,
+    _self,
     nixpkgs,
   }: let
     lib = nixpkgs.lib;

@@ -14,7 +14,7 @@
   inherit (perSystem.${system}) iosevkaNeg;
   # Prefer Nyxt 4 / QtWebEngine variant when available from chaotic
   nyxt4 = let
-    hasAttr = builtins.hasAttr;
+    inherit (builtins) hasAttr;
     # Cheap env parser to keep eval fast and optional
     boolEnv = name: let v = builtins.getEnv name; in v == "1" || v == "true" || v == "yes";
     # Prefer explicit custom provider if present in inputs as `nyxtQt`.

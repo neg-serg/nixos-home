@@ -11,7 +11,6 @@ Description:
 """
 import argparse
 import json
-import math
 import os
 import sys
 from pathlib import Path
@@ -24,7 +23,7 @@ torch_available = False
 try:  # torch might fail to import if CUDA libs missing; defer error until use.
     import torch
     torch_available = True
-except Exception as exc:  # pragma: no cover
+except Exception:  # pragma: no cover
     torch = None  # type: ignore
 
 try:  # optional faster JSON
@@ -34,7 +33,7 @@ except Exception:  # pragma: no cover
 
 try:
     from laion_clap import CLAP_Module
-except Exception as exc:  # pragma: no cover
+except Exception:  # pragma: no cover
     print("[music-clap] laion_clap module not available. Ensure python env includes laion-clap.", file=sys.stderr)
     raise
 

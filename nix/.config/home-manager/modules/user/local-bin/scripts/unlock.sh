@@ -2,13 +2,10 @@
 # unlock: unlock SSH keys (optionally Yubikey) via expect using pass(1) secrets
 # Usage: unlock
 pp0="$(pass show ssh-key)"
-pp2="$(pass show wrk/ssh-key || true)" # unused fallback; kept for compatibility
-cleanup() { unset pp0 pp1 pp2 || true; }
+cleanup() { unset pp0 pp1 || true; }
 trap cleanup EXIT HUP INT TERM
 
 . /etc/profile
-pp0="$(pass show ssh-key)"
-pp2="$(pass show wrk/ssh-key)"
 if lsusb | grep -q "0407 Yubico"; then
     pp1="$(pass show pin)"
     expect << EOF

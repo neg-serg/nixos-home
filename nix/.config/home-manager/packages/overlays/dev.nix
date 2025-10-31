@@ -97,7 +97,7 @@ _final: prev: {
   });
 
   # GNU Radio: disable upstream tests (flaky qa_blocks_hier_block2)
-  gnuradio = prev.gnuradio.overrideAttrs (old: {
+  gnuradio = prev.gnuradio.overrideAttrs (_old: {
     doCheck = false;
     checkPhase = ":";
   });

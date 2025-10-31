@@ -30,10 +30,7 @@
       "mask_token": "<mask>"
     }'';
 
-  patch = fetchurl {
-    url = "https://raw.githubusercontent.com/LAION-AI/CLAP/2c5d5acbdbeb6f951a90fb3b52df1ec6a9c52ddc/hook.py";
-    hash = "sha256-7gk1uDjhfT7oGgL+tVQsmjVipxtg9muMtR+qqEk2RnY=";
-  };
+  # Note: no local patching; tokenizer resources are vendored below.
 in
   python3Packages.buildPythonPackage rec {
     pname = "laion_clap";

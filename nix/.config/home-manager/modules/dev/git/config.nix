@@ -2,7 +2,7 @@
   lib,
   pkgs,
   config,
-  xdg,
+  _xdg,
   ...
 }:
 with lib;

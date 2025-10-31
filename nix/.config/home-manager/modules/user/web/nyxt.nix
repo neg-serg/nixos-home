@@ -9,10 +9,7 @@
 with lib;
   mkIf (config.features.web.enable && config.features.web.nyxt.enable) (let
     # Prefer Nyxt 4 provider (Qt/Blink if available). Fallback to local nyxt4-bin (Electron/Blink), else nixpkgs Nyxt (WebKitGTK).
-    nyxtPkg =
-      if nyxt4 != null then nyxt4
-      else if pkgs ? nyxt4-bin then pkgs.nyxt4-bin
-      else pkgs.nyxt;
+    nyxtPkg = if nyxt4 != null then nyxt4 else (pkgs.nyxt4-bin or pkgs.nyxt);
     dlDir = "${config.home.homeDirectory}/dw";
   in
     lib.mkMerge [

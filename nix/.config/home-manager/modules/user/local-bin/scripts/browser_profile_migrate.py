@@ -249,7 +249,6 @@ def ensure_general(cfg: configparser.ConfigParser) -> None:
         cfg["General"]["Version"] = "2"
 
 def update_profiles_ini(app: str, path_str: str, make_default: bool = True, create_if_missing: bool = True) -> None:
-    base = APP_DIRS[app]
     p_ini = profiles_ini_path(app)
     cfg = read_ini(p_ini)
     if not cfg.sections() and not create_if_missing:
@@ -399,4 +398,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

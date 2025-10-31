@@ -1,5 +1,5 @@
 {
-  pkgs,
+  _pkgs,
   lib,
   config,
   xdg,

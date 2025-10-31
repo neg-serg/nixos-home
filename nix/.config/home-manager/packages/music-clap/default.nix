@@ -2,16 +2,6 @@
   lib,
   python3Packages,
   laion_clap,
-  torch,
-  torchaudio,
-  torchvision,
-  soundfile,
-  librosa,
-  tqdm,
-  numpy,
-  scipy,
-  scikit-learn,
-  pandas,
 }:
 python3Packages.buildPythonApplication {
   pname = "music-clap";
