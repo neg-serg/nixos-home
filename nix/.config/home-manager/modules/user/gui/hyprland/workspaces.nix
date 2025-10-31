@@ -118,6 +118,7 @@ with lib; let
     windowrulev2 = float, class:^(swayimg)$
     windowrulev2 = size 1200 800, class:^(swayimg)$
     windowrulev2 = move 100 100, class:^(swayimg)$
+    windowrulev2 = tag swayimg, class:^(swayimg)$
     # special
     windowrulev2 = fullscreen, $pic
   '';
@@ -133,9 +134,22 @@ with lib; let
         workspaces
       )
     );
+    tagLines = builtins.concatStringsSep "\n" (
+      lib.filter (s: s != "") (
+        map (
+          w:
+            if (w.var or null) != null
+            then "windowrulev2 = tag " + w.var + ", $" + w.var
+            else ""
+        )
+        workspaces
+      )
+    );
   in ''
     # routing
     windowrulev2 = noblur, $term
+    # tags for workspace-routed classes
+    ${tagLines}
     ${routeLines}
   '';
 in

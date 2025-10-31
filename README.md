@@ -63,6 +63,14 @@ Profiles
 Common flags (set in `home.nix` or via module overlays)
 - GUI: `features.gui.enable`, `features.gui.qt.enable`
 - Web: `features.web.enable`, `features.web.default = "floorp" | "firefox" | "librewolf" | "nyxt" | "yandex"`
+
+Optional: Nyxt QtWebEngine provider
+- To prefer Nyxt with the QtWebEngine (Blink) backend, provide a flake input exposing a suitable package and it will be auto‑picked if present.
+- Expected attribute names (first match wins): `nyxt-qtwebengine`, `nyxt-qt`, `nyxt4`, `nyxt` under `packages.<system>`.
+- Example flake input (disabled by default):
+  - In `flake.nix` inputs, add (uncomment and point to a real provider):
+    `# nyxtQt = { url = "github:<owner>/<repo>"; };`
+  - The module will pick it up via `nyxt4` special arg.
 - Audio: `features.media.audio.core/apps/creation/mpd.enable`
 - Emulators: `features.emulators.retroarch.full`
 - GPG: `features.gpg.enable`

@@ -15,13 +15,27 @@
   # Prefer Nyxt 4 / QtWebEngine variant when available from chaotic
   nyxt4 = let
     hasAttr = builtins.hasAttr;
+    # Prefer explicit custom provider if present in inputs as `nyxtQt`.
+    customPkgs = if hasAttr "nyxtQt" inputs then (inputs.nyxtQt.packages.${system} or null) else null;
+    fromCustom =
+      if customPkgs == null then null else
+      let
+        candidates = ["nyxt-qtwebengine" "nyxt-qt" "nyxt4" "nyxt"];
+        pick = names:
+          if names == [] then null else
+          let n = builtins.head names; in
+            if hasAttr n customPkgs then customPkgs.${n} else pick (builtins.tail names);
+      in pick candidates;
+    # Fallback to chaotic if it exposes a Qt/Blink variant
     chaoticPkgs = inputs.chaotic.packages.${system} or null;
+    fromChaotic =
+      if chaoticPkgs == null then null else
+      if hasAttr "nyxt4" chaoticPkgs then chaoticPkgs.nyxt4
+      else if hasAttr "nyxt-qtwebengine" chaoticPkgs then chaoticPkgs."nyxt-qtwebengine"
+      else if hasAttr "nyxt-qt" chaoticPkgs then chaoticPkgs."nyxt-qt"
+      else null;
   in
-    if chaoticPkgs == null then null
-    else if hasAttr "nyxt4" chaoticPkgs then chaoticPkgs.nyxt4
-    else if hasAttr "nyxt-qtwebengine" chaoticPkgs then chaoticPkgs."nyxt-qtwebengine"
-    else if hasAttr "nyxt-qt" chaoticPkgs then chaoticPkgs."nyxt-qt"
-    else null;
+    if fromCustom != null then fromCustom else fromChaotic;
   # Flake cache settings for reuse in modules (single source of truth)
   caches = {
     substituters = extraSubstituters;
