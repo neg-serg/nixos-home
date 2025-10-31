@@ -54,9 +54,11 @@
   font-size: 0.875rem;
   font-weight: 600;
   --option-height: 1.2em;
-  overflow: hidden;
+  overflow: auto;
   padding: 0;
   width: 100%;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent) transparent;
 }
 
 #completions > div {
