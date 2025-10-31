@@ -143,6 +143,11 @@ bindurl old\.reddit\.com ;F hint -Jbc a.title, a.search-title, .flat-list a.comm
 bindurl news\.ycombinator\.com/newest ;f hint -Jc .age > a
 bindurl news\.ycombinator\.com/newest ;F hint -Jbc .age > a
 
+" Reverse image search and image copy
+bind ;M composite hint -Jpipe img src | tabopen https://images.google.com/searchbyimage?image_url=
+bind ;m composite hint -Jpipe img src | open https://images.google.com/searchbyimage?image_url=
+bind ;Y hint -cF img i => tri.excmds.yankimage(tri.urlutils.getAbsoluteURL(i.src))
+
 " GitLab: issues / MRs / commits / search
 bindurl gitlab\.com/search ;f hint -Jc a.search-result-row, a.search-result-link, a[data-qa-selector="result_title"], .results a
 bindurl gitlab\.com/search ;F hint -Jbc a.search-result-row, a.search-result-link, a[data-qa-selector="result_title"], .results a
