@@ -1,4 +1,5 @@
 :root {
+  --accent: #89cdd2;
   --border_color: #0a3749;
   --color_black: #020202;
   --foreground: #f0f1ff;
@@ -11,7 +12,7 @@
   --tridactyl-hint-bg: none;
   --tridactyl-hint-outline: none;
   --tridactyl-hintspan-bg: #001742 !important;
-  --tridactyl-hintspan-fg: #89cdd2 !important;
+  --tridactyl-hintspan-fg: var(--accent) !important;
   --tridactyl-hintspan-font-family: "Iosevka" !important;
   --tridactyl-hintspan-font-size: 0.875rem !important;
   --tridactyl-hintspan-font-weight: 600 !important;
@@ -114,14 +115,23 @@
 span.TridactylHint {
   background-color: var(--tridactyl-hintspan-bg) !important;
   border-radius: 4px !important;
-  border-style: var(--tridactyl-hintspan-border-style) !important;
-  border-width: var(--tridactyl-hintspan-border-width) !important;
+  border-style: var(--tridactyl-hintspan-border-style, solid) !important;
+  border-width: var(--tridactyl-hintspan-border-width, 1px) !important;
+  border-color: color-mix(in oklab, var(--tridactyl-hintspan-fg) 60%, black) !important;
   color: var(--tridactyl-hintspan-fg) !important;
   font-family: var(--tridactyl-hintspan-font-family) !important;
   font-size: var(--tridactyl-hintspan-font-size) !important;
   font-style: var(--tridactyl-hintspan-font-style) !important;
+  font-weight: var(--tridactyl-hintspan-font-weight, 600) !important;
   min-width: 0.75em !important;
   padding: 2px !important;
   position: absolute !important;
   z-index: 2147483646 !important;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
+}
+
+/* Distinct style for active hint */
+span.TridactylHint.ActiveHint {
+  background-color: color-mix(in oklab, var(--accent) 22%, var(--tridactyl-hintspan-bg));
+  outline: 2px solid var(--accent);
 }
