@@ -11,7 +11,7 @@ with lib;
     # Prefer Nyxt 4 provider (Qt/Blink if available). Fallback to local nyxt4-bin (Electron/Blink), else nixpkgs Nyxt (WebKitGTK).
     nyxtPkg =
       if nyxt4 != null then nyxt4
-      else if pkgs ? neg && pkgs.neg ? nyxt4-bin then pkgs.neg.nyxt4-bin
+      else if pkgs ? nyxt4-bin then pkgs.nyxt4-bin
       else pkgs.nyxt;
     dlDir = "${config.home.homeDirectory}/dw";
   in
@@ -21,10 +21,10 @@ with lib;
           nyxtPkg # Nyxt web browser
         ];
         warnings =
-          (lib.optional (nyxt4 == null && !(pkgs ? neg && pkgs.neg ? nyxt4-bin))
+          (lib.optional (nyxt4 == null && !(pkgs ? nyxt4-bin))
             "Nyxt Qt/Blink provider not found; using WebKitGTK (pkgs.nyxt). Provide `nyxtQt` input or a chaotic package attribute (nyxt-qtwebengine/nyxt-qt/nyxt4).")
-          ++ (lib.optional (nyxt4 == null && (pkgs ? neg && pkgs.neg ? nyxt4-bin))
-            "Using Nyxt 4 pre-release binary (Electron/Blink) from pkgs.neg.nyxt4-bin.");
+          ++ (lib.optional (nyxt4 == null && (pkgs ? nyxt4-bin))
+            "Using Nyxt 4 pre-release binary (Electron/Blink) from pkgs.nyxt4-bin.");
       }
       (let
         tpl = builtins.readFile ./nyxt/init.lisp;
