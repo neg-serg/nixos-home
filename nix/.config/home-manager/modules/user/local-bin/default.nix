@@ -264,6 +264,18 @@ with lib;
             force = true;
             text = renText;
           };
+          # Provide a stable wrapper for Pyprland CLI with absolute path,
+          # so Hypr bindings don't rely on PATH. Kept at ~/.local/bin/pypr-client
+          # to preserve existing config and muscle memory.
+          ".local/bin/pypr-client" = {
+            executable = true;
+            force = true;
+            text = let exe = lib.getExe' pkgs.pyprland "pypr"; in ''
+              #!/usr/bin/env bash
+              set -euo pipefail
+              exec ${exe} "$@"
+            '';
+          };
         };
     }
     # Cleanup: ensure any old ~/.local/bin/raise (from previous config) is removed
@@ -273,11 +285,5 @@ with lib;
       home.activation.cleanRaiseFile =
         config.lib.neg.mkEnsureAbsent "${config.home.homeDirectory}/.local/bin/raise";
     }
-    # Cleanup: drop legacy pypr-client wrapper (use `pypr` CLI directly)
-    {
-      home.activation.cleanPyprClientSymlink =
-        config.lib.neg.mkRemoveIfSymlink "${config.home.homeDirectory}/.local/bin/pypr-client";
-      home.activation.cleanPyprClientFile =
-        config.lib.neg.mkEnsureAbsent "${config.home.homeDirectory}/.local/bin/pypr-client";
-    }
+    # No cleanup: pypr-client is provided as stable wrapper around pkgs.pyprland
   ])
