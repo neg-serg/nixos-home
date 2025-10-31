@@ -32,7 +32,16 @@
   color: var(--tridactyl-fg);
   font-family: "Iosevka";
   font-size: 0.875rem;
+  line-height: 1.25rem;
   font-weight: 600;
+  caret-color: var(--accent);
+}
+
+#tridactyl-input::placeholder {
+  color: color-mix(in oklab, var(--tridactyl-fg) 60%, transparent);
+}
+#tridactyl-input::-moz-placeholder {
+  color: color-mix(in oklab, var(--tridactyl-fg) 60%, transparent);
 }
 
 #completions {
