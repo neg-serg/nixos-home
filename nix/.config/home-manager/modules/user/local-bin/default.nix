@@ -244,7 +244,7 @@ with lib;
             src = ./scripts/journal-clean.sh;
           }
           {
-            name = "raise";
+            name = "raise_class";
             src = ./scripts/raise;
           }
         ];

@@ -53,7 +53,7 @@ in {
       {
         name = "term";
         # Idempotent launch: use raise to focus existing or start if missing
-        exec = "raise --class 'term' --launch 'kitty --class term'";
+        exec = "raise --tag term --launch 'kitty --class term'";
         class = "term";
         workspaceId = 1;
         noAnim = true;
@@ -62,7 +62,7 @@ in {
       {
         name = "web";
         # Idempotent launch via raise; relies on PATH-resolved browser
-        exec = "raise --class '(one.ablaze.floorp|floorp)' --launch 'floorp'";
+        exec = "raise --tag web --launch 'floorp'";
         class = "(one\\.ablaze\\.floorp|floorp)";
         environment = { MOZ_ENABLE_WAYLAND = "1"; };
         workspaceId = 2;
@@ -71,7 +71,7 @@ in {
       # Soulseek client (Nicotine+): focus existing or launch once
       {
         name = "slsk";
-        exec = "raise --class 'org.nicotine_plus.Nicotine' --launch 'nicotine'";
+        exec = "raise --tag music --launch 'nicotine'";
         class = "org.nicotine_plus.Nicotine";
         workspaceId = 15;
         noAnim = true;
@@ -79,7 +79,7 @@ in {
       # Notes (Obsidian): focus existing or launch
       {
         name = "notes";
-        exec = "raise --class 'Obsidian' --launch 'flatpak run md.obsidian.Obsidian || obsidian'";
+        exec = "raise --tag notes --launch 'flatpak run md.obsidian.Obsidian || obsidian'";
         class = "Obsidian";
         workspaceId = 19;
         noAnim = true;
