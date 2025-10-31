@@ -10,6 +10,7 @@ with lib; {
   imports = [
     ./lib/neg.nix
     ./features.nix
+    ./compat
     ./cli
     ./db
     ./dev

@@ -1,153 +1,63 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Hyprland-aware raise wrapper with tag support.
+# Simple Hyprland window raiser:
+# - If a window matching --class REGEX exists, focus it.
+# - Otherwise, run the provided --launch COMMAND.
 #
-# Adds:
-#   --tag <REGEX>    (repeatable) match Hyprland window tags via regex
-#   --all-tags       require all provided --tag values to match (AND)
-#
-# Existing flags (best-effort):
-#   --class <REGEX>  regex to match window class
-#   --title <REGEX>  regex to match window title
-#   --launch <CMD>   launch if no window matched
-# All unknown flags/args are forwarded to upstream raise when --tag is not used.
+# Usage:
+#   raise --class "term" --launch "kitty --class term"
 
-orig_args=("$@")
-
-declare -a TAGS
-ALL_TAGS=0
-CLASS=""
-TITLE=""
-LAUNCH=""
+CLASS_REGEX=""
+LAUNCH_CMD=""
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --tag)
-      [[ $# -ge 2 ]] || { echo "raise: --tag requires an argument" >&2; exit 2; }
-      TAGS+=("$2"); shift 2;;
-    --all-tags)
-      ALL_TAGS=1; shift;;
     --class)
-      [[ $# -ge 2 ]] || { echo "raise: --class requires an argument" >&2; exit 2; }
-      CLASS="$2"; shift 2;;
-    --title)
-      [[ $# -ge 2 ]] || { echo "raise: --title requires an argument" >&2; exit 2; }
-      TITLE="$2"; shift 2;;
+      CLASS_REGEX=${2:-}
+      shift 2
+      ;;
     --launch)
-      [[ $# -ge 2 ]] || { echo "raise: --launch requires an argument" >&2; exit 2; }
-      LAUNCH="$2"; shift 2;;
+      LAUNCH_CMD=${2:-}
+      shift 2
+      ;;
     --help|-h)
-      cat <<'EOF'
-raise (shim) — Hyprland window raiser with tag support
-
-Usage:
-  raise [--class REGEX] [--title REGEX] [--tag REGEX ...] [--all-tags] [--launch CMD]
-
-Notes:
-  - When any --tag is provided, this shim matches windows via hyprctl JSON and focuses.
-  - Without --tag, the call is delegated to upstream 'raise' in PATH if present.
-  - Matching uses regex via jq's test().
-EOF
-      exit 0;;
+      echo "Usage: raise --class REGEX --launch COMMAND" >&2
+      exit 0
+      ;;
     *)
-      # Unknown/positional: stop parsing; delegate-only case keeps them in orig_args
-      shift;;
+      echo "Unknown argument: $1" >&2
+      exit 2
+      ;;
   esac
 done
 
-# Helper: focus window by Hypr address
-focus_addr() {
-  local addr="$1"
-  command -v hyprctl >/dev/null 2>&1 || return 1
-  hyprctl dispatch focuswindow "address:${addr}" >/dev/null 2>&1 || return 1
-  hyprctl dispatch bringactivetotop >/dev/null 2>&1 || true
-}
-
-json_clients() {
-  command -v hyprctl >/dev/null 2>&1 || return 1
-  hyprctl -j clients 2>/dev/null || true
-}
-
-# Try to find upstream raise to delegate when no --tag was supplied
-delegate_if_possible() {
-  local self
-  self="$(readlink -f "$0" 2>/dev/null || printf '%s' "$0")"
-  # shellcheck disable=SC2207
-  local paths=( $(command -v -a raise 2>/dev/null || true) )
-  for p in "${paths[@]:-}"; do
-    [[ -n "$p" ]] || continue
-    local canon
-    canon="$(readlink -f "$p" 2>/dev/null || printf '%s' "$p")"
-    if [[ "$canon" != "$self" ]]; then
-      exec "$p" "${orig_args[@]}"
-    fi
-  done
-  return 1
-}
-
-if [[ ${#TAGS[@]} -eq 0 ]]; then
-  # No tag usage — delegate to upstream raise if available; otherwise try a minimal built-in class/title match.
-  if delegate_if_possible; then
-    exit 0 # not reached
-  fi
-  # Fallback minimal behavior (class/title only)
-  if [[ -z "$CLASS" && -z "$TITLE" ]]; then
-    # Nothing to match; just launch if requested
-    if [[ -n "$LAUNCH" ]]; then
-      nohup sh -lc "$LAUNCH" >/dev/null 2>&1 &
-      exit 0
-    fi
-    echo "raise: no --tag and upstream raise not found" >&2
-    exit 2
-  fi
+if [[ -z "$CLASS_REGEX" ]]; then
+  echo "--class is required" >&2
+  exit 2
 fi
 
-# Compose jq program for matching clients
-JQ_PROG='
-  def clients: (.clients // .);
-  def match_any($re): (if $re == "" then true else (test($re)) end);
-  def tags_match_or($obj; $res):
-    if ($res|length) == 0 then true else
-      reduce $res[] as $rg (false; . or (($obj.tags // []) | any(. | test($rg))))
-    end;
-  def tags_match_and($obj; $res):
-    if ($res|length) == 0 then true else
-      reduce $res[] as $rg (true; . and (($obj.tags // []) | any(. | test($rg))))
-    end;
-  clients
-  | map(. as $o | select((.mapped // true)
-               and ((.class // "") | match_any($class))
-               and ((.title // "") | match_any($title))
-               and (if $alltags then tags_match_and($o; $tags) else tags_match_or($o; $tags) end)))
-  | .[0] // empty
-'
-
-# Build args for jq
-tags_json='[]'
-if [[ ${#TAGS[@]} -gt 0 ]]; then
-  tags_json=$(printf '%s\n' "${TAGS[@]}" | jq -R . | jq -s .)
-fi
-
-clients_json=$(json_clients || true)
-addr=""
-if [[ -n "${clients_json}" ]]; then
-  addr=$(jq -r --arg class "$CLASS" \
-              --arg title "$TITLE" \
-              --argjson tags "$tags_json" \
-              --argjson alltags "$ALL_TAGS" \
-              "$JQ_PROG | .address // empty" <<<"${clients_json}" 2>/dev/null || true)
-fi
-
-if [[ -n "$addr" ]]; then
-  if focus_addr "$addr"; then
+# Try to focus via Hyprland directly when possible
+if command -v hyprctl >/dev/null 2>&1; then
+  # Prefer native dispatch by class regex; fall back to address lookup if needed
+  if hyprctl dispatch focuswindow "class:$CLASS_REGEX" >/dev/null 2>&1; then
     exit 0
   fi
+
+  # Fallback: parse clients JSON to get first matching address
+  if command -v jq >/dev/null 2>&1; then
+    if ADDR=$(hyprctl clients -j | jq -r --arg re "$CLASS_REGEX" '.[] | select(.class|test($re)) | .address' | head -n1); then
+      if [[ -n "$ADDR" ]]; then
+        hyprctl dispatch focuswindow "address:$ADDR" && exit 0 || true
+      fi
+    fi
+  fi
 fi
 
-if [[ -n "$LAUNCH" ]]; then
-  nohup sh -lc "$LAUNCH" >/dev/null 2>&1 &
-  exit 0
+# If focusing failed or Hyprland not present, launch the command if provided
+if [[ -n "$LAUNCH_CMD" ]]; then
+  exec bash -lc "$LAUNCH_CMD"
 fi
 
 exit 1
+
