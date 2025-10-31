@@ -15,7 +15,7 @@ set newtab about:newtab
 set home about:home
 
 set searchengine @google
-set allowautofocus true
+set allowautofocus false
 set visualenterauto false
 set wordpattern [^\s\/]+
 set tabopencontaineraware false
