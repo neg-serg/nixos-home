@@ -3,7 +3,6 @@
   config,
   pkgs,
   xdg,
-  _hy3,
   ...
 }:
 with lib;

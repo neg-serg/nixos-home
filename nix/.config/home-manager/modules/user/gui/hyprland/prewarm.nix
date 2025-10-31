@@ -1,6 +1,5 @@
 {
   lib,
-  _pkgs,
   config,
   xdg,
   ...

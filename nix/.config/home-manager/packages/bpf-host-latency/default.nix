@@ -3,7 +3,6 @@
   stdenvNoCC,
   makeWrapper,
   python3,
-  _python3Packages,
 }: let
   py = python3.withPackages (ps: [ps.bcc]);
 in
