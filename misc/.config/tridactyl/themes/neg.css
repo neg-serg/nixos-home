@@ -1,21 +1,32 @@
+/* Base tokens */
 :root {
   --accent: #89cdd2;
   --border_color: #0a3749;
   --color_black: #020202;
   --foreground: #f0f1ff;
   --line_highlight: #13384f;
+  --mono: "Iosevka", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+
+  /* Tridactyl tokens */
   --tridactyl-bg: var(--color_black);
   --tridactyl-fg: var(--foreground);
+
+  /* Hint tokens */
   --tridactyl-hint-active-bg: var(--tridactyl-hintspan-bg);
   --tridactyl-hint-active-fg: var(--foreground);
   --tridactyl-hint-active-outline: none;
   --tridactyl-hint-bg: none;
   --tridactyl-hint-outline: none;
+
+  /* Hintspan tokens */
   --tridactyl-hintspan-bg: #001742 !important;
   --tridactyl-hintspan-fg: var(--accent) !important;
-  --tridactyl-hintspan-font-family: "Iosevka" !important;
+  --tridactyl-hintspan-font-family: var(--mono) !important;
   --tridactyl-hintspan-font-size: 0.875rem !important;
   --tridactyl-hintspan-font-weight: 600 !important;
+  --tridactyl-hintspan-border-width: 1px !important;
+
+  /* URL tokens */
   --tridactyl-url-bg: var(--color_black);
   --tridactyl-url-fg: var(--url_highlight);
   --url_highlight: #243f55;
@@ -32,7 +43,7 @@
 #tridactyl-input {
   background: var(--tridactyl-bg);
   color: var(--tridactyl-fg);
-  font-family: "Iosevka", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font-family: var(--mono);
   font-size: 0.875rem;
   line-height: 1.25rem;
   font-weight: 600;
@@ -50,7 +61,7 @@
   background: var(--tridactyl-bg);
   color: var(--tridactyl-fg);
   display: inline-block;
-  font-family: "Iosevka", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font-family: var(--mono);
   font-size: 0.875rem;
   font-weight: 600;
   --option-height: 1.2em;
@@ -67,7 +78,7 @@
 }
 
 #completions table {
-  font-family: "Iosevka", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font-family: var(--mono);
   font-size: 0.875rem;
   font-weight: 600;
   padding: 0;
