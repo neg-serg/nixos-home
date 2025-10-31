@@ -115,6 +115,12 @@ bindurl stackoverflow\.com/search ;F hint -Jbc .s-post-summary h3 a, .question-s
 bindurl stackoverflow\.com/questions ;f hint -Jc .s-post-summary h3 a, .question-summary h3 a, a.question-hyperlink
 bindurl stackoverflow\.com/questions ;F hint -Jbc .s-post-summary h3 a, .question-summary h3 a, a.question-hyperlink
 
+" Wikipedia: search (Special:Search and non-JS search form)
+bindurl [A-Za-z\.-]*wikipedia\.org/w/index\.php\?search ;f hint -Jc .mw-search-result-heading > a
+bindurl [A-Za-z\.-]*wikipedia\.org/w/index\.php\?search ;F hint -Jbc .mw-search-result-heading > a
+bindurl [A-Za-z\.-]*wikipedia\.org/wiki/Special:Search ;f hint -Jc .mw-search-result-heading > a
+bindurl [A-Za-z\.-]*wikipedia\.org/wiki/Special:Search ;F hint -Jbc .mw-search-result-heading > a
+
 " GitLab: issues / MRs / commits / search
 bindurl gitlab\.com/search ;f hint -Jc a.search-result-row, a.search-result-link, a[data-qa-selector="result_title"], .results a
 bindurl gitlab\.com/search ;F hint -Jbc a.search-result-row, a.search-result-link, a[data-qa-selector="result_title"], .results a
