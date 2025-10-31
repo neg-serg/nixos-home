@@ -114,11 +114,6 @@ in {
     };
     # CamelCase alias for convenience in code
     yandexBrowserInput.follows = "yandex-browser";
-    # Use neg-serg fork of raise
-    raise = {
-      url = "github:neg-serg/raise";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   outputs = inputs @ {
@@ -277,12 +272,7 @@ in {
         homeManagerInput.lib.homeManagerConfiguration {
           inherit (perSystem.${defaultSystem}) pkgs;
           extraSpecialArgs = mkHMArgs defaultSystem;
-          modules =
-            hmBaseModules (lib.optionalAttrs (n == "neg-lite") {profile = "lite";})
-            ++ [
-              # Ensure raise from fork is in PATH for this system
-              { home.packages = [ inputs.raise.defaultPackage.${defaultSystem} ]; }
-            ];
+          modules = hmBaseModules (lib.optionalAttrs (n == "neg-lite") {profile = "lite";});
         }
     );
 

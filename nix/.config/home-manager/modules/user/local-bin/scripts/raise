@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Simple Hyprland window raiser:
+# - If a window matching --class REGEX exists, focus it.
+# - Otherwise, run the provided --launch COMMAND.
+#
+# Usage:
+#   raise --class "term" --launch "kitty --class term"
+
+CLASS_REGEX=""
+LAUNCH_CMD=""
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --class)
+      CLASS_REGEX=${2:-}
+      shift 2
+      ;;
+    --launch)
+      LAUNCH_CMD=${2:-}
+      shift 2
+      ;;
+    --help|-h)
+      echo "Usage: raise --class REGEX --launch COMMAND" >&2
+      exit 0
+      ;;
+    *)
+      echo "Unknown argument: $1" >&2
+      exit 2
+      ;;
+  esac
+done
+
+if [[ -z "$CLASS_REGEX" ]]; then
+  echo "--class is required" >&2
+  exit 2
+fi
+
+# Try to focus via Hyprland directly when possible
+if command -v hyprctl >/dev/null 2>&1; then
+  # Prefer native dispatch by class regex; fall back to address lookup if needed
+  if hyprctl dispatch focuswindow "class:$CLASS_REGEX" >/dev/null 2>&1; then
+    exit 0
+  fi
+
+  # Fallback: parse clients JSON to get first matching address
+  if command -v jq >/dev/null 2>&1; then
+    if ADDR=$(hyprctl clients -j | jq -r --arg re "$CLASS_REGEX" '.[] | select(.class|test($re)) | .address' | head -n1); then
+      if [[ -n "$ADDR" ]]; then
+        hyprctl dispatch focuswindow "address:$ADDR" && exit 0 || true
+      fi
+    fi
+  fi
+fi
+
+# If focusing failed or Hyprland not present, launch the command if provided
+if [[ -n "$LAUNCH_CMD" ]]; then
+  exec bash -lc "$LAUNCH_CMD"
+fi
+
+exit 1
+
