@@ -62,7 +62,7 @@
 }
 
 #completions > div {
-  max-height: calc(20 * var(--option-height));
+  max-height: min(45vh, calc(20 * var(--option-height)));
   min-height: calc(2 * var(--option-height));
 }
 
@@ -74,7 +74,7 @@
 }
 
 #completions .HistoryCompletionSource {
-  max-height: 292px;
+  max-height: unset;
   min-height: unset;
 }
 
@@ -86,7 +86,7 @@
 }
 
 #completions .BmarkCompletionSource {
-  max-height: 292px;
+  max-height: unset;
   min-height: unset;
 }
 
