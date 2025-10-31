@@ -94,12 +94,18 @@ bindurl news\.ycombinator\.com/news ;F hint -Jbc .age > a
 bindurl news\.ycombinator\.com/item ;f hint -Jc .comment .commtext a
 bindurl news\.ycombinator\.com/item ;F hint -Jbc .comment .commtext a
 
-bindurl github\.com/search ;f hint -Jc .f4.text-normal a
-bindurl github\.com/search ;F hint -Jbc .f4.text-normal a
+bindurl github\.com/search ;f hint -Jc a.Link--primary, .f4.text-normal a
+bindurl github\.com/search ;F hint -Jbc a.Link--primary, .f4.text-normal a
 bindurl github\.com/.*/.*/issues ;f hint -Jc a.h4
 bindurl github\.com/.*/.*/issues ;F hint -Jbc a.h4
 bindurl github\.com/.*/.*/commits ;f hint -Jc a.message
 bindurl github\.com/.*/.*/commits ;F hint -Jbc a.message
+
+" GitHub: dashboards for issues and PRs
+bindurl github\.com/issues ;f hint -Jc a.Link--primary
+bindurl github\.com/issues ;F hint -Jbc a.Link--primary
+bindurl github\.com/pulls ;f hint -Jc a.Link--primary
+bindurl github\.com/pulls ;F hint -Jbc a.Link--primary
 
 bindurl git\.sr\.ht/.*/.*/tree ;f hint -Jc .name > a
 bindurl git\.sr\.ht/.*/.*/tree ;F hint -Jbc .name > a
