@@ -129,6 +129,14 @@ bindurl (www\.)?youtube\.com/feed/subscriptions ;F hint -Jbc a#video-title
 bindurl (www\.)?youtube\.com/@.* ;f hint -Jc a#video-title
 bindurl (www\.)?youtube\.com/@.* ;F hint -Jbc a#video-title
 
+" Old Reddit: posts, search results, and comment links
+bindurl old\.reddit\.com ;f hint -Jc a.title, a.search-title, .flat-list a.comments
+bindurl old\.reddit\.com ;F hint -Jbc a.title, a.search-title, .flat-list a.comments
+
+" HN newest page
+bindurl news\.ycombinator\.com/newest ;f hint -Jc .age > a
+bindurl news\.ycombinator\.com/newest ;F hint -Jbc .age > a
+
 " GitLab: issues / MRs / commits / search
 bindurl gitlab\.com/search ;f hint -Jc a.search-result-row, a.search-result-link, a[data-qa-selector="result_title"], .results a
 bindurl gitlab\.com/search ;F hint -Jbc a.search-result-row, a.search-result-link, a[data-qa-selector="result_title"], .results a
