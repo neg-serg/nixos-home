@@ -81,6 +81,32 @@ bindurl youtu((\.be)|(be\.com)) f hint -J
 bindurl google(\.[a-zA-Z0-9]+){1,2}/search f hint -Jc #top_nav a, #search a, .card-section a, a.fl, #pnnext, #pnprev
 bindurl google(\.[a-zA-Z0-9]+){1,2}/search F hint -Jbc #top_nav a, #search a, .card-section a, a.fl, #pnnext, #pnprev
 bindurl google(\.[a-zA-Z0-9]+){1,2}/search gF hint -Jqbc #top_nav a, #search a, .card-section a, a.fl, #pnnext, #pnprev
+" Domain-specific focused hints on ;f / ;F
+bindurl next\.duckduckgo\.com ;f hint -Jc  a.result__a
+bindurl next\.duckduckgo\.com ;F hint -Jbc a.result__a
+
+bindurl google(\.[a-zA-Z0-9]+){1,2}/search ;f hint -Jc .rc > .yuRUbf > a
+bindurl google(\.[a-zA-Z0-9]+){1,2}/search ;F hint -Jbc .rc > .yuRUbf > a
+
+bindurl news\.ycombinator\.com/news ;f hint -Jc .age > a
+bindurl news\.ycombinator\.com/news ;F hint -Jbc .age > a
+bindurl news\.ycombinator\.com/item ;f hint -Jc .comment .commtext a
+bindurl news\.ycombinator\.com/item ;F hint -Jbc .comment .commtext a
+
+bindurl github\.com/search ;f hint -Jc .f4.text-normal a
+bindurl github\.com/search ;F hint -Jbc .f4.text-normal a
+bindurl github\.com/.*/.*/issues ;f hint -Jc a.h4
+bindurl github\.com/.*/.*/issues ;F hint -Jbc a.h4
+bindurl github\.com/.*/.*/commits ;f hint -Jc a.message
+bindurl github\.com/.*/.*/commits ;F hint -Jbc a.message
+
+bindurl git\.sr\.ht/.*/.*/tree ;f hint -Jc .name > a
+bindurl git\.sr\.ht/.*/.*/tree ;F hint -Jbc .name > a
+bindurl git\.sr\.ht/.*/.*/log ;f hint -Jc .event > div > a:nth-of-type(1)
+bindurl git\.sr\.ht/.*/.*/log ;F hint -Jbc .event > div > a:nth-of-type(1)
+
+bindurl searx\.semipvt\.com ;f hint -Jc .result_header > a
+bindurl searx\.semipvt\.com ;F hint -Jbc .result_header > a
 bindurl lkml.org/lkml gl js let lis = Array.from(document.querySelectorAll(".threadlist:nth-of-type(1)")[0].querySelectorAll("li")); document.location.href = lis[lis.findIndex(li => li.className.match("origin")) + 1].querySelector("a").href
 bindurl lkml.org/lkml gh js let lis = Array.from(document.querySelectorAll(".threadlist:nth-of-type(1)")[0].querySelectorAll("li")); document.location.href = lis[lis.findIndex(li => li.className.match("origin")) - 1].querySelector("a").href
 command translate js let googleTranslateCallback = document.createElement('script'); googleTranslateCallback.innerHTML = "function googleTranslateElementInit(){ new google.translate.TranslateElement(); }"; document.body.insertBefore(googleTranslateCallback, document.body.firstChild); let googleTranslateScript = document.createElement('script'); googleTranslateScript.charset="UTF-8"; googleTranslateScript.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit&tl=&sl=&hl="; document.body.insertBefore(googleTranslateScript, document.body.firstChild);
@@ -125,7 +151,8 @@ unbindurl mail\.google\.com x
 unbindurl mail\.google\.com e
 unbindurl youtube.com/watch f
 
-bind --mode=ex <C-c> ex.hide_and_clear
+" Free common keys in ex-mode (use native selection/copy)
+unbind --mode=ex <C-c>
 unbind --mode=ex <C-w>
 unbind <C-o>
 
@@ -137,7 +164,7 @@ bind --mode=normal <C-c> composite unfocus | mode normal
 bind --mode=normal <C-[> composite unfocus | mode normal
 
 " thx to: https://github.com/glacambre/.dotfiles/blob/master/default/.config/tridactyl/tridactylrc
-bind --mode=ex <C-a> text.beginning_of_line
+unbind --mode=ex <C-a>
 bind --mode=insert <C-a> text.beginning_of_line
 bind --mode=input <C-a> text.beginning_of_line
 bind --mode=ex <C-e> text.end_of_line
