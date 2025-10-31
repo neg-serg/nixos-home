@@ -16,19 +16,14 @@ in {
     "blissify-rs" = blissify_rs;
     "laion-clap" = laion_clap_pkg;
     laion_clap = laion_clap_pkg;
+    # music_clap depends on laion_clap, which already propagates the
+    # heavy Python deps (torch/torchaudio/torchvision, numpy, etc.).
+    # Passing them explicitly here causes callPackage to complain about
+    # unexpected arguments, since ../music-clap/default.nix does not
+    # declare them. Keep the call minimal.
     music_clap = call ../music-clap {
       python3Packages = python313;
       laion_clap = laion_clap_pkg;
-      torch = python313.torch;
-      torchaudio = python313.torchaudio;
-      torchvision = python313.torchvision;
-      soundfile = python313.soundfile;
-      librosa = python313.librosa;
-      tqdm = python313.tqdm;
-      numpy = python313.numpy;
-      scipy = python313.scipy;
-      scikit-learn = python313.scikit-learn;
-      pandas = python313.pandas;
     };
 
     # Yabridgemgr helpers (plumbing + plugins)
