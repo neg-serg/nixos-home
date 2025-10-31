@@ -22,6 +22,7 @@ import wget
 torch_available = False
 try:  # torch might fail to import if CUDA libs missing; defer error until use.
     import torch
+
     torch_available = True
 except Exception:  # pragma: no cover
     torch = None  # type: ignore
@@ -34,7 +35,10 @@ except Exception:  # pragma: no cover
 try:
     from laion_clap import CLAP_Module
 except Exception:  # pragma: no cover
-    print("[music-clap] laion_clap module not available. Ensure python env includes laion-clap.", file=sys.stderr)
+    print(
+        "[music-clap] laion_clap module not available. Ensure python env includes laion-clap.",
+        file=sys.stderr,
+    )
     raise
 
 AUDIO_EXTS = {
@@ -114,11 +118,14 @@ def _resolve_checkpoint(args: argparse.Namespace, enable_fusion: bool) -> Path:
     if model_id == -1:
         model_id = 3 if enable_fusion else 1
     url = "https://huggingface.co/lukewys/laion_clap/resolve/main/" + names[model_id]
-    cache_root = Path(
-        os.environ.get("LAION_CLAP_CACHE")
-        or os.environ.get("XDG_CACHE_HOME")
-        or (Path.home() / ".cache")
-    ) / "laion_clap"
+    cache_root = (
+        Path(
+            os.environ.get("LAION_CLAP_CACHE")
+            or os.environ.get("XDG_CACHE_HOME")
+            or (Path.home() / ".cache")
+        )
+        / "laion_clap"
+    )
     cache_root.mkdir(parents=True, exist_ok=True)
     target = cache_root / names[model_id]
     if not target.exists():
@@ -170,14 +177,23 @@ def emit_human(entry: dict, top_text: int) -> None:
 def parse_args() -> argparse.Namespace:
     ap = argparse.ArgumentParser(description="Extract CLAP embeddings for audio files")
     ap.add_argument("paths", nargs="*", help="audio files or directories")
-    ap.add_argument("--text", action="append", dest="texts", help="text prompt to compare against (repeatable)")
+    ap.add_argument(
+        "--text", action="append", dest="texts", help="text prompt to compare against (repeatable)"
+    )
     ap.add_argument("--top", type=int, default=5, help="top-N text matches to display per track")
     ap.add_argument("--dump", type=Path, help="directory to store embeddings as .npy")
     ap.add_argument("--json", action="store_true", help="emit JSON per track")
     ap.add_argument("--device", default="auto", help="torch device (default: auto)")
-    ap.add_argument("--amodel", default="HTSAT-tiny", help="audio encoder architecture (default: HTSAT-tiny)")
+    ap.add_argument(
+        "--amodel", default="HTSAT-tiny", help="audio encoder architecture (default: HTSAT-tiny)"
+    )
     ap.add_argument("--fusion", action="store_true", help="enable fusion model variant")
-    ap.add_argument("--model-id", type=int, default=-1, help="pretrained checkpoint id to download (default: 3 fusion / 1 non-fusion)")
+    ap.add_argument(
+        "--model-id",
+        type=int,
+        default=-1,
+        help="pretrained checkpoint id to download (default: 3 fusion / 1 non-fusion)",
+    )
     ap.add_argument("--ckpt", type=str, help="path to a custom checkpoint (skips download)")
     ap.add_argument(
         "--torch-threads",
@@ -191,9 +207,15 @@ def parse_args() -> argparse.Namespace:
         default=None,
         help="set torch.set_num_interop_threads for inter-operator parallelism",
     )
-    ap.add_argument("--include-embedding", action="store_true", help="include embedding vector in output (JSON only)")
+    ap.add_argument(
+        "--include-embedding",
+        action="store_true",
+        help="include embedding vector in output (JSON only)",
+    )
     ap.add_argument("--quiet", action="store_true", help="suppress model load logging")
-    ap.add_argument("--refresh", action="store_true", help="ignore cached embeddings and recompute them")
+    ap.add_argument(
+        "--refresh", action="store_true", help="ignore cached embeddings and recompute them"
+    )
     return ap.parse_args()
 
 
@@ -234,7 +256,10 @@ def main() -> int:
                         cached = cached.reshape(-1)
                     cached_embeddings[audio_path] = cached
                 except Exception as exc:  # pragma: no cover
-                    print(f"[music-clap] failed loading cached embedding {target}: {exc}", file=sys.stderr)
+                    print(
+                        f"[music-clap] failed loading cached embedding {target}: {exc}",
+                        file=sys.stderr,
+                    )
 
     text_prompts = args.texts or list(DEFAULT_TEXTS)
     text_embeds = None
@@ -253,7 +278,9 @@ def main() -> int:
                 audio_embed = cached_embeddings[audio_path]
             else:
                 assert model is not None  # for type checkers
-                result = model.get_audio_embedding_from_filelist([str(audio_path)], use_tensor=False)
+                result = model.get_audio_embedding_from_filelist(
+                    [str(audio_path)], use_tensor=False
+                )
                 if isinstance(result, np.ndarray):
                     audio_embed = result[0]
                 else:

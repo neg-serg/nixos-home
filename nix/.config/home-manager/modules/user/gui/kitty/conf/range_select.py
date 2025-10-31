@@ -32,7 +32,9 @@ def get_scrollback() -> str:
     except Exception:
         # Fallback to just the screen if "all" fails for any reason
         try:
-            out = subprocess.check_output(base + ["get-text", "--extent=screen"], stderr=subprocess.DEVNULL)
+            out = subprocess.check_output(
+                base + ["get-text", "--extent=screen"], stderr=subprocess.DEVNULL
+            )
         except Exception as e:
             print(f"Failed to get scrollback: {e}", file=sys.stderr)
             sys.exit(1)
@@ -44,7 +46,8 @@ def get_scrollback() -> str:
 _re_csi = re.compile(r"\x1b\[[0-9;?]*[ -/]*[@-~]")
 _re_osc = re.compile(r"\x1b\][^\x07\x1b]*(\x07|\x1b\\)")
 _re_ss3 = re.compile(r"\x1bO.")
-_re_misc= re.compile(r"\x1b[@-Z\-_]")
+_re_misc = re.compile(r"\x1b[@-Z\-_]")
+
 
 def strip_escapes(s: str) -> str:
     s = _re_osc.sub("", s)
@@ -75,9 +78,11 @@ def pick_line(lines, prompt: str) -> int:
             [
                 "fzf",
                 "--ansi",
-                "--prompt", prompt,
+                "--prompt",
+                prompt,
                 "--tabstop=4",
-                "--bind", "home:first,end:last",
+                "--bind",
+                "home:first,end:last",
                 "--layout=reverse",
             ],
             stdin=nl.stdout,
