@@ -243,10 +243,6 @@ with lib;
             name = "journal-clean";
             src = ./scripts/journal-clean.sh;
           }
-          {
-            name = "raise_class";
-            src = ./scripts/raise;
-          }
         ];
         base = builtins.listToAttrs (map mkEnt scripts);
         # Special case: vid-info needs path substitution for libs
