@@ -286,6 +286,11 @@ in {
     mergedSettings = settings // defaults // settingsExtra;
     mergedNMH = nativeMessagingHosts ++ nativeMessagingExtra;
     mergedPolicies = policies // policiesExtra;
+    # Soft migration hint: legacy downloads were stored under ~/dw.
+    # When XDG Downloads differs, emit a one-time warning for the default browser.
+    oldDownloadsDir = "${config.home.homeDirectory}/dw";
+    isDefaultBrowser = let def = (config.features.web.default or "floorp"); in (def == name);
+    needsMigration = (config.features.web.enable or false) && (dlDir != oldDownloadsDir) && isDefaultBrowser;
     profileBase = {
       isDefault = true;
       extensions = {packages = (addons.common or []) ++ addonsExtra;};
@@ -311,5 +316,9 @@ in {
         policies = mergedPolicies;
       };
     };
+    warnings = lib.optional needsMigration (
+      "Browser downloads directory moved to XDG Downloads. "
+      + "Consider migrating from " + oldDownloadsDir + " to " + dlDir + "."
+    );
   };
 }
