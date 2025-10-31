@@ -12,6 +12,16 @@
   inputs = hmInputs;
   inherit hy3;
   inherit (perSystem.${system}) iosevkaNeg;
+  # Prefer Nyxt 4 / QtWebEngine variant when available from chaotic
+  nyxt4 = let
+    hasAttr = builtins.hasAttr;
+    chaoticPkgs = inputs.chaotic.packages.${system} or null;
+  in
+    if chaoticPkgs == null then null
+    else if hasAttr "nyxt4" chaoticPkgs then chaoticPkgs.nyxt4
+    else if hasAttr "nyxt-qtwebengine" chaoticPkgs then chaoticPkgs."nyxt-qtwebengine"
+    else if hasAttr "nyxt-qt" chaoticPkgs then chaoticPkgs."nyxt-qt"
+    else null;
   # Flake cache settings for reuse in modules (single source of truth)
   caches = {
     substituters = extraSubstituters;

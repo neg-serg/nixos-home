@@ -3,11 +3,13 @@
   pkgs,
   config,
   xdg,
+  nyxt4 ? null,
   ...
 }:
 with lib;
   mkIf (config.features.web.enable && config.features.web.nyxt.enable) (let
-    nyxtPkg = pkgs.nyxt;
+    # Prefer Nyxt 4 / QtWebEngine backend when provided via specialArgs (e.g., from chaotic)
+    nyxtPkg = if nyxt4 != null then nyxt4 else pkgs.nyxt;
     dlDir = "${config.home.homeDirectory}/dw";
   in
     lib.mkMerge [
