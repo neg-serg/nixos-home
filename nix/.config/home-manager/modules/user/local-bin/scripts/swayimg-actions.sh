@@ -58,6 +58,29 @@ ensure_swww() {
   fi
 }
 
+# Serialize wallpaper changes across different callers (queue behavior)
+_wl_lock_dir="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/wl.lock.d"
+acquire_wl_lock() {
+  local attempts=0
+  while ! mkdir "$_wl_lock_dir" 2>/dev/null; do
+    if [ -f "$_wl_lock_dir/pid" ]; then
+      local pid
+      pid="$(cat "$_wl_lock_dir/pid" 2>/dev/null || true)"
+      if [ -n "${pid}" ] && ! kill -0 "$pid" 2>/dev/null; then
+        rm -rf "$_wl_lock_dir" 2>/dev/null || true
+        continue
+      fi
+    fi
+    attempts=$(( attempts + 1 ))
+    sleep 0.2
+    [ $attempts -ge 300 ] && break
+  done
+  echo $$ >"$_wl_lock_dir/pid" 2>/dev/null || true
+}
+release_wl_lock() {
+  [ -d "$_wl_lock_dir" ] && rm -rf "$_wl_lock_dir" 2>/dev/null || true
+}
+
 # Return maximum WxH among active outputs (fallback 1920x1080)
 screen_wh() {
   local wh
@@ -188,7 +211,9 @@ wall() { # wall <mode> <file> via swww
   ensure_swww
   render_for_mode "$mode" "$file" || return 0
   # Allow user to override transition opts via $SWWW_FLAGS
+  acquire_wl_lock
   swww img "${SWWW_IMAGE_OVERRIDE:-$tmp_wall}" ${SWWW_FLAGS:-} >/dev/null 2>&1 || true
+  release_wl_lock
   echo "$file" >> "${XDG_DATA_HOME:-$HOME/.local/share}/wl/wallpaper.list" 2>/dev/null || true
 }
 
