@@ -44,8 +44,10 @@ ensure_swww() {
 
 pick_random_image() {
   # Collect candidate images and pick one at random
+  # Exclude any .git directories entirely
   # Use find to avoid extra dependencies; ignore errors if folders are missing
-  find "$HOME/pic/wl" "$HOME/pic/black" -type f -print 2>/dev/null \
+  find "$HOME/pic/wl" "$HOME/pic/black" \
+    \( -name .git -type d -prune \) -o -type f -print 2>/dev/null \
     | shuf -n 1
 }
 
@@ -56,9 +58,20 @@ main() {
   local img
   img="$(pick_random_image || true)"
   [ -n "${img}" ] || exit 1
+  # Safety: refuse .git paths even if selected (belt-and-suspenders)
+  if is_git_path "$img"; then
+    exit 0
+  fi
 
   # Apply wallpaper with a smooth transition; keep fast FPS as before
   swww img --transition-fps 240 "$img" >/dev/null 2>&1 || true
 }
 
 main "$@"
+# Never use images from any .git directory
+is_git_path() {
+  case "${1%/}" in
+    */.git|*/.git/*|.git|.git/*) return 0 ;;
+    *) return 1 ;;
+  esac
+}
