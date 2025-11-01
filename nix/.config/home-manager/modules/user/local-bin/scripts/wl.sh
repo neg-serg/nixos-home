@@ -1,14 +1,64 @@
-#!/usr/bin/env nu
+#!/usr/bin/env bash
 # wl: set a random wallpaper from ~/pic/wl or ~/pic/black using swww
+# Ensures calls are serialized so rapid keypresses queue instead of racing.
 # Usage: wl
 
-# best-effort initialize swww (ignore if already running)
-^swww init | ignore
+set -euo pipefail
 
-# Collect candidate images; shuffle and pick the first
-let pics = (ls ...(glob ~/pic/{wl,black}/**/*) | where type == file | get name)
-if ($pics | length) == 0 { exit 1 }
-let pick = ($pics | shuffle | first)
+# Acquire a simple lock (queue) using an atomic directory creation.
+# This prevents overlapping swww img calls which can glitch transitions.
+lock_dir="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/wl.lock.d"
+acquire_lock() {
+  local attempts=0
+  while ! mkdir "$lock_dir" 2>/dev/null; do
+    # Clean up stale lock if the recorded PID no longer exists
+    if [ -f "$lock_dir/pid" ]; then
+      local pid
+      pid="$(cat "$lock_dir/pid" 2>/dev/null || true)"
+      if [ -n "${pid}" ] && ! kill -0 "$pid" 2>/dev/null; then
+        rm -rf "$lock_dir" 2>/dev/null || true
+        continue
+      fi
+    fi
+    attempts=$(( attempts + 1 ))
+    # Wait a bit and keep trying (effectively queues callers)
+    sleep 0.2
+    # Optional: break after ~60s to avoid hanging forever
+    [ $attempts -ge 300 ] && break
+  done
+  echo $$ >"$lock_dir/pid" 2>/dev/null || true
+}
+release_lock() {
+  [ -d "$lock_dir" ] && rm -rf "$lock_dir" 2>/dev/null || true
+}
+trap release_lock EXIT INT TERM
 
-# Apply wallpaper with a smooth transition
-^swww img --transition-fps 240 $pick
+# Best-effort initialize swww (ignore if already running)
+ensure_swww() {
+  if ! swww query >/dev/null 2>&1; then
+    swww init >/dev/null 2>&1 || true
+    # Give the daemon a brief moment to come up
+    sleep 0.05
+  fi
+}
+
+pick_random_image() {
+  # Collect candidate images and pick one at random
+  # Use find to avoid extra dependencies; ignore errors if folders are missing
+  find "$HOME/pic/wl" "$HOME/pic/black" -type f -print 2>/dev/null \
+    | shuf -n 1
+}
+
+main() {
+  acquire_lock
+  ensure_swww
+
+  local img
+  img="$(pick_random_image || true)"
+  [ -n "${img}" ] || exit 1
+
+  # Apply wallpaper with a smooth transition; keep fast FPS as before
+  swww img --transition-fps 240 "$img" >/dev/null 2>&1 || true
+}
+
+main "$@"
