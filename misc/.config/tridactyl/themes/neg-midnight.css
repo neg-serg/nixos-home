@@ -87,8 +87,8 @@
 
 #completions > div {
   overflow-y: auto;
-  /* Keep in sync with global userContent clamp (60vh) */
-  max-height: min(60vh, calc(30 * var(--option-height)));
+  /* Hard cap in lines: at most 8 rows visible */
+  max-height: calc(8 * var(--option-height));
   min-height: calc(2 * var(--option-height));
 }
 
@@ -137,8 +137,8 @@
 
 /* Make buffers (tabs/windows) list longer */
 #completions .BufferCompletionSource {
-  /* Allow more rows for buffers but respect global clamp */
-  max-height: min(60vh, calc(40 * var(--option-height)));
+  /* Defer to container cap; do not override per-source */
+  max-height: unset;
 }
 
 /* Match per-source sizing/table behavior from base theme to avoid jumps */
