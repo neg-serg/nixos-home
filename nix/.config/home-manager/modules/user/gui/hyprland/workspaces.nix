@@ -156,4 +156,7 @@ in
   mkIf config.features.gui.enable (lib.mkMerge [
     (xdg.mkXdgText "hypr/workspaces.conf" workspacesConf)
     (xdg.mkXdgText "hypr/rules-routing.conf" routesConf)
+    # Force overwrite to avoid clobber errors if files pre-exist
+    { xdg.configFile."hypr/workspaces.conf".force = true; }
+    { xdg.configFile."hypr/rules-routing.conf".force = true; }
   ])

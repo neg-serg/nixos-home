@@ -33,6 +33,8 @@ with lib; let
     xdg.mkXdgSource ("hypr/" + rel) {
       source = config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/nix/.config/home-manager/modules/user/gui/hypr/conf/${rel}";
       recursive = false;
+      # Ensure repo-managed Hypr files replace any existing files
+      force = true;
     };
 in
   mkIf config.features.gui.enable (lib.mkMerge [
@@ -93,4 +95,6 @@ in
         plugin = ${pluginPath}
       ''
     ))
+    # Overwrite existing generated config files if present
+    { xdg.configFile."hypr/plugins.conf".force = true; }
   ])

@@ -6,8 +6,8 @@
   ...
 }:
 with lib;
-  mkIf config.features.gui.enable (
-    xdg.mkXdgText "hypr/permissions.conf" ''
+  mkIf config.features.gui.enable (lib.mkMerge [
+    (xdg.mkXdgText "hypr/permissions.conf" ''
       ecosystem {
         enforce_permissions = 1
       }
@@ -17,5 +17,7 @@ with lib;
       # RE2 full-match is used; keep anchors.
       permission = ^/nix/store/[^/]+-hy3-[^/]+/lib/libhy3\.so$, plugin, allow
       permission = /etc/hypr/libhy3.so, plugin, allow
-    ''
-  )
+    '')
+    # Ensure the generated file replaces any pre-existing file
+    { xdg.configFile."hypr/permissions.conf".force = true; }
+  ])

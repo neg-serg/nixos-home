@@ -21,6 +21,8 @@ with lib; let
     xdg.mkXdgSource ("hypr/" + rel) {
       source = config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/nix/.config/home-manager/modules/user/gui/hypr/conf/${rel}";
       recursive = false;
+      # Overwrite any pre-existing files to avoid activation clobber errors
+      force = true;
     };
 in
   mkIf config.features.gui.enable (
