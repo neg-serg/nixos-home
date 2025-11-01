@@ -127,23 +127,12 @@ with lib; let
     .urlbarView-body-inner{ max-height: min(60vh, 640px) !important; overflow: auto !important; }
   '';
 
-  # Tridactyl UI sizing: clamp completions popup and commandline for consistency.
-  # Goals:
-  # - Avoid tiny lists on small viewports (min height/width)
-  # - Avoid almost-fullscreen lists on large monitors (max height/width)
-  # - Keep table layout stable and scrolled within the popup
-  # Scope:
-  # - Targets Tridactyl's overlay ids (#commandline and #completions), which are unique
-  #   to the extension UI and very unlikely to clash with page content.
+  # Tridactyl UI sizing:
+  # Leave sizing to Tridactyl's own theme CSS so that per-theme caps (e.g. 8-line limit)
+  # can take effect. A previous global userContent clamp here overrode theme rules with
+  # !important and prevented the cap from working. Keep this intentionally empty.
   tridactylUserContent = ''
-    /* Tridactyl: balanced height for window/buffer completions */
-    #TridactylModeIndicatorAndCmdline #completions,
-    #TridactylCommandline #completions{
-      /* Allow reasonably tall lists for :w while avoiding fullscreen */
-      min-height: 28vh !important;
-      max-height: min(60vh, 640px) !important;
-      overflow-y: auto !important;
-    }
+    /* Intentionally empty: sizing controlled by Tridactyl theme CSS. */
   '';
 
   # Optional: move URL bar/toolbar to bottom.
