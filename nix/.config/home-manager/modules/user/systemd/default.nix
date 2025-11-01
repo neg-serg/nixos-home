@@ -26,6 +26,30 @@ with lib;
       in {
         # Quickshell session (Qt-bound, skip in dev-speed) + other services
         systemd.user.services = lib.mkMerge [
+          (lib.mkIf ((config.features.gui.qt.enable or false) && (config.features.gui.quickshell.enable or false) && (! (config.features.devSpeed.enable or false))) {
+            quickshell = lib.mkMerge [
+              {
+                Unit.Description = "Quickshell Wayland shell";
+                Service = {
+                  ExecStart = let
+                    wrapped = config.neg.quickshell.wrapperPackage or null;
+                    pkg =
+                      if wrapped != null
+                      then wrapped
+                      else pkgs.quickshell;
+                    exe = lib.getExe' pkg "qs";
+                  in "${exe}";
+                  Environment = ["RUST_LOG=info,quickshell.dbus.properties=error"];
+                  Restart = "on-failure";
+                  RestartSec = "1";
+                  Slice = "background-graphical.slice";
+                  TimeoutStopSec = "5s";
+                };
+                Unit.PartOf = ["graphical-session.target"];
+              }
+              (config.lib.neg.systemdUser.mkUnitFromPresets {presets = ["graphical"];})
+            ];
+          })
           {
             # Pic dirs notifier
             "pic-dirs" = lib.mkMerge [
