@@ -114,7 +114,6 @@ with lib;
             #
             # Note: GUI gating is handled by the outer mkIf; this block only
             # checks the feature flag.
-            ${/* insert conditionally via mkMerge element below */""}
 
             # Walker app launcher background service
             walker = lib.mkMerge [
