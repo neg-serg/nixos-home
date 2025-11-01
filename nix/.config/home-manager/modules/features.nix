@@ -30,6 +30,7 @@ in {
 
     gui.enable = mkBool "enable GUI stack (wayland/hyprland, quickshell, etc.)" true;
     gui.qt.enable = mkBool "enable Qt integrations for GUI (qt6ct, hyprland-qt-*)" true;
+    gui.quickshell.enable = mkBool "enable Quickshell (panel) at login" true;
     mail.enable = mkBool "enable Mail stack (notmuch, isync, vdirsyncer, etc.)" true;
     mail.vdirsyncer.enable = mkBool "enable Vdirsyncer sync service/timer" true;
     hack.enable = mkBool "enable Hack/security tooling stack" true;
@@ -300,6 +301,10 @@ in {
           {
             assertion = cfg.gui.enable || (! cfg.gui.qt.enable);
             message = "features.gui.qt.enable requires features.gui.enable = true";
+          }
+          {
+            assertion = cfg.gui.enable || (! cfg.gui.quickshell.enable);
+            message = "features.gui.quickshell.enable requires features.gui.enable = true";
           }
           {
             assertion = cfg.web.enable || (! cfg.web.tools.enable && ! cfg.web.floorp.enable && ! cfg.web.yandex.enable && ! cfg.web.firefox.enable && ! cfg.web.librewolf.enable && ! cfg.web.nyxt.enable);

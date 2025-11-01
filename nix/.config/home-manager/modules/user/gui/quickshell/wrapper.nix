@@ -39,7 +39,7 @@ with lib; let
     '';
   };
 in
-  mkIf (config.features.gui.enable && (config.features.gui.qt.enable or false) && (! (config.features.devSpeed.enable or false))) {
+  mkIf (config.features.gui.enable && (config.features.gui.qt.enable or false) && (config.features.gui.quickshell.enable or false) && (! (config.features.devSpeed.enable or false))) {
     home.packages = [quickshellWrapped]; # quickshell wrapper with required env paths
     # Expose the wrapped package for other modules (e.g., systemd service ExecStart)
     neg.quickshell.wrapperPackage = quickshellWrapped;
