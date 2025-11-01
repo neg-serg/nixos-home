@@ -18,6 +18,11 @@ with lib;
             exec pic-dirs-list
           '';
         };
+        # Floorp package name changed upstream; prefer floorp-bin where available.
+        floorpPkg =
+          if builtins.hasAttr "floorp-bin" pkgs then pkgs."floorp-bin"
+          else if builtins.hasAttr "floorp" pkgs then pkgs.floorp
+          else pkgs.emptyFile;
       in {
         # Quickshell session (Qt-bound, skip in dev-speed) + other services
         systemd.user.services = lib.mkMerge [
@@ -44,6 +49,94 @@ with lib;
             ];
           })
           {
+            # Floorp browser (autostart via systemd instead of Hypr exec-once)
+            floorp = lib.mkMerge [
+              {
+                Unit = {
+                  Description = "Floorp browser";
+                };
+                Service = {
+                  ExecStart = let exe = lib.getExe floorpPkg; in "${exe}";
+                  TimeoutStopSec = "5s";
+                };
+              }
+              (config.lib.neg.systemdUser.mkUnitFromPresets {
+                presets = ["graphical"];
+                partOf = ["graphical-session.target"];
+              })
+            ];
+
+            # Nicotine+ (Soulseek client)
+            nicotine = lib.mkMerge [
+              {
+                Unit = {
+                  Description = "Nicotine+ (Soulseek client)";
+                };
+                Service = {
+                  ExecStart = let exe = lib.getExe pkgs.nicotine-plus; in "${exe}";
+                  TimeoutStopSec = "5s";
+                };
+              }
+              (config.lib.neg.systemdUser.mkUnitFromPresets {
+                presets = ["graphical"];
+                partOf = ["graphical-session.target"];
+              })
+            ];
+
+            # Obsidian (Flatpak preferred, fallback to native if present)
+            obsidian = lib.mkMerge [
+              {
+                Unit = {
+                  Description = "Obsidian";
+                };
+                Service = {
+                  # Use a shell to keep the original flatpak-or-native behavior
+                  ExecStart = let sh = lib.getExe pkgs.bash; in ''
+                    ${sh} -lc 'flatpak run md.obsidian.Obsidian || exec obsidian'
+                  '';
+                  TimeoutStopSec = "5s";
+                };
+              }
+              (config.lib.neg.systemdUser.mkUnitFromPresets {
+                presets = ["graphical"];
+                partOf = ["graphical-session.target"];
+              })
+            ];
+
+            # Walker app launcher background service
+            walker = lib.mkMerge [
+              {
+                Unit = {
+                  Description = "Walker GApplication service";
+                };
+                Service = {
+                  ExecStart = let exe = lib.getExe pkgs.walker; in "${exe} --gapplication-service";
+                  TimeoutStopSec = "5s";
+                };
+              }
+              (config.lib.neg.systemdUser.mkUnitFromPresets {
+                presets = ["graphical"];
+                partOf = ["graphical-session.target"];
+              })
+            ];
+
+            # Hypridle idle daemon
+            hypridle = lib.mkMerge [
+              {
+                Unit = {
+                  Description = "Hypridle daemon";
+                };
+                Service = {
+                  ExecStart = let exe = lib.getExe pkgs.hypridle; in "${exe}";
+                  TimeoutStopSec = "5s";
+                };
+              }
+              (config.lib.neg.systemdUser.mkUnitFromPresets {
+                presets = ["graphical"];
+                partOf = ["graphical-session.target"];
+              })
+            ];
+
             # Pyprland daemon (Hyprland helper)
             pyprland = lib.mkMerge [
               {
@@ -54,7 +147,9 @@ with lib;
                   Restart = "on-failure";
                   RestartSec = "1";
                   Slice = "background-graphical.slice";
+                  TimeoutStopSec = "5s";
                 };
+                Unit.PartOf = ["graphical-session.target"];
               }
               (config.lib.neg.systemdUser.mkUnitFromPresets {presets = ["graphical"];})
             ];
