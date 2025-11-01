@@ -1,5 +1,3 @@
-# Prevent committing local Quickshell settings
-modules/user/gui/quickshell/conf/Settings.json
 **/result
 **/__pycache__/
 *.pyc

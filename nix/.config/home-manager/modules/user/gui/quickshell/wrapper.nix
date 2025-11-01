@@ -6,17 +6,17 @@
   ...
 }:
 with lib; let
+  qsPkg =
+    if qsProvider != null
+    then (qsProvider pkgs)
+    else pkgs.emptyFile;
   qsPath = pkgs.lib.makeBinPath [
     pkgs.fd # fast file finder (used by scripts)
     pkgs.coreutils # basic UNIX tools for PATH
   ];
-  qsBin = let
-    qs =
-      if qsProvider != null
-      then (qsProvider pkgs)
-      else pkgs.emptyFile;
-  in
-    lib.getExe' qs "qs";
+  qsBin = lib.getExe' qsPkg "qs";
+  # Quickshell ships its own QML module; include its QML dir explicitly.
+  qsQmlPath = "${qsPkg}/${pkgs.qt6.qtbase.qtQmlPrefix}";
   quickshellWrapped = pkgs.stdenv.mkDerivation {
     name = "quickshell-wrapped";
     buildInputs = [pkgs.makeWrapper]; # for makeWrapper helper
@@ -26,12 +26,15 @@ with lib; let
       makeWrapper ${qsBin} $out/bin/qs \
         --prefix QT_PLUGIN_PATH : "${pkgs.qt6.qtbase}/${pkgs.qt6.qtbase.qtPluginPrefix}" \
         --prefix QT_PLUGIN_PATH : "${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtPluginPrefix}" \
+        --prefix QT_PLUGIN_PATH : "${pkgs.kdePackages.qtwayland}/${pkgs.qt6.qtbase.qtPluginPrefix}" \
         --prefix QML2_IMPORT_PATH : "${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtQmlPrefix}" \
         --prefix QML2_IMPORT_PATH : "${pkgs.qt6.qtdeclarative}/${pkgs.qt6.qtbase.qtQmlPrefix}" \
         --prefix QML2_IMPORT_PATH : "${pkgs.qt6.qtpositioning}/${pkgs.qt6.qtbase.qtQmlPrefix}" \
         --prefix QML2_IMPORT_PATH : "${pkgs.kdePackages.syntax-highlighting}/${pkgs.qt6.qtbase.qtQmlPrefix}" \
         --prefix QT_PLUGIN_PATH : "${pkgs.qt6.qtmultimedia}/${pkgs.qt6.qtbase.qtPluginPrefix}" \
         --prefix QML2_IMPORT_PATH : "${pkgs.qt6.qtmultimedia}/${pkgs.qt6.qtbase.qtQmlPrefix}" \
+        --prefix QML2_IMPORT_PATH : "${qsQmlPath}" \
+        --set QT_QPA_PLATFORM wayland \
         --prefix PATH : ${qsPath}
     '';
   };
