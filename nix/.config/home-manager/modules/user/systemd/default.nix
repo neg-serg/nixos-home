@@ -44,6 +44,23 @@ with lib;
               (config.lib.neg.systemdUser.mkUnitFromPresets {presets = ["defaultWanted"];})
             ];
 
+            # Pyprland daemon (Hyprland helper)
+            pyprland = lib.mkMerge [
+              {
+                Unit.Description = "Pyprland daemon for Hyprland";
+                Service = {
+                  Type = "simple";
+                  ExecStart = let exe = lib.getExe' pkgs.pyprland "pypr"; in "${exe}";
+                  Restart = "on-failure";
+                  RestartSec = "1";
+                  Slice = "background-graphical.slice";
+                  TimeoutStopSec = "5s";
+                };
+                Unit.PartOf = ["graphical-session.target"];
+              }
+              (config.lib.neg.systemdUser.mkUnitFromPresets {presets = ["graphical"];})
+            ];
+
             # OpenRGB daemon
             openrgb = lib.mkMerge [
               {
