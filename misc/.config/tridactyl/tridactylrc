@@ -205,8 +205,8 @@ unbindurl mail\.google\.com x
 unbindurl mail\.google\.com e
 unbindurl youtube.com/watch f
 
-" Free common keys in ex-mode (use native selection/copy)
-unbind --mode=ex <C-c>
+" Restore Ctrl+C behavior in ex-mode
+bind --mode=ex <C-c> ex.hide_and_clear
 unbind --mode=ex <C-w>
 unbind <C-o>
 

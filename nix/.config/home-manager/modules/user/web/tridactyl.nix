@@ -12,12 +12,9 @@ with lib;
       themesPath = let bck = base + "/themes.bck"; in if builtins.pathExists bck then bck else (base + "/themes");
       mozillaPath = let bck = base + "/mozilla.bck"; in if builtins.pathExists bck then bck else (base + "/mozilla");
       userjsPath = let bck = base + "/user.js.bck"; in if builtins.pathExists bck then bck else (base + "/user.js");
-      # Compose Tridactyl config to allow a small post-source override without
-      # rewriting the user's rc in misc/ (restores Ctrl+C cancel in ex-mode).
+      # Compose Tridactyl config: only source user's rc; avoid overriding keys here
       rcText = ''
         source ${rcPath}
-        " Ensure Ctrl+C cancels commandline/completions in ex-mode
-        bind --mode=ex <C-c> composite unfocus | mode normal
       '';
     in
       lib.mkMerge [
