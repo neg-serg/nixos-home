@@ -127,12 +127,33 @@ with lib; let
     .urlbarView-body-inner{ max-height: min(60vh, 640px) !important; overflow: auto !important; }
   '';
 
-  # Tridactyl UI sizing:
-  # Leave sizing to Tridactyl's own theme CSS so that per-theme caps (e.g. 8-line limit)
-  # can take effect. A previous global userContent clamp here overrode theme rules with
-  # !important and prevented the cap from working. Keep this intentionally empty.
+  # Tridactyl UI sizing (fallback cap):
+  # Some Tridactyl builds/layouts render the completions list without the expected
+  # inner wrapper targeted by theme CSS, which can lead to very tall popups
+  # (e.g., :tabopen listing many buffers). Provide a conservative fallback that
+  # caps the visible height to ~8 lines and scrolls, without touching other layout.
   tridactylUserContent = ''
-    /* Intentionally empty: sizing controlled by Tridactyl theme CSS. */
+    /* Fallback: cap completions viewport to ~8 rows and enable scrolling */
+    #TridactylModeIndicatorAndCmdline #completions,
+    #TridactylCommandline #completions{
+      /* Fallback line height if theme doesn't provide one */
+      --tri-option-height: 1.4em;
+      max-height: calc(8 * var(--tri-option-height)) !important;
+      overflow-y: auto !important;
+    }
+
+    /* If an inner wrapper exists, cap it as well (newer markup variants) */
+    #TridactylModeIndicatorAndCmdline #completions > div,
+    #TridactylCommandline #completions > div{
+      max-height: calc(8 * var(--tri-option-height)) !important;
+      overflow-y: auto !important;
+    }
+
+    /* Buffer (tabopen) source often grows aggressively; enforce row height */
+    #TridactylModeIndicatorAndCmdline #completions table tr,
+    #TridactylCommandline #completions table tr{
+      line-height: var(--tri-option-height) !important;
+    }
   '';
 
   # Optional: move URL bar/toolbar to bottom.
