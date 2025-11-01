@@ -74,7 +74,8 @@
   font-family: var(--mono);
   font-size: 0.875rem;
   font-weight: 600;
-  --option-height: 1.3rem;
+  /* Align row sizing with other themes (relative to font-size) */
+  --option-height: 1.2em;
   overflow: auto;
   padding: 0;
   width: 100%;
@@ -84,7 +85,8 @@
 }
 
 #completions > div {
-  max-height: min(70vh, calc(30 * var(--option-height)));
+  /* Keep in sync with global userContent clamp (60vh) */
+  max-height: min(60vh, calc(30 * var(--option-height)));
   min-height: calc(2 * var(--option-height));
 }
 
@@ -133,7 +135,33 @@
 
 /* Make buffers (tabs/windows) list longer */
 #completions .BufferCompletionSource {
-  max-height: min(80vh, calc(40 * var(--option-height)));
+  /* Allow more rows for buffers but respect global clamp */
+  max-height: min(60vh, calc(40 * var(--option-height)));
+}
+
+/* Match per-source sizing/table behavior from base theme to avoid jumps */
+#completions .HistoryCompletionSource {
+  max-height: unset;
+  min-height: unset;
+}
+
+#completions .HistoryCompletionSource table {
+  border-spacing: 0;
+  font-size: 0.875rem;
+  table-layout: fixed;
+  width: 100%;
+}
+
+#completions .BmarkCompletionSource {
+  max-height: unset;
+  min-height: unset;
+}
+
+#completions .BufferCompletionSource table {
+  border-spacing: 0;
+  font-size: 0.875rem;
+  table-layout: fixed;
+  width: unset;
 }
 
 /* Other parts (hints, etc.) are identical to neg */
