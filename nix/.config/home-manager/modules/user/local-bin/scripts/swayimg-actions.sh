@@ -17,6 +17,27 @@ rofi_cmd='rofi -dmenu -sort -matching fuzzy -no-plugins -no-only-match -theme vi
 pics_dir_default="$HOME/Pictures"
 pics_dir="${XDG_PICTURES_DIR:-$pics_dir_default}"
 
+# ---- path guards -----------------------------------------------------------
+# Never operate on files inside any .git directory:
+# - don't set wallpapers from there, don't move/copy/rotate from/to there.
+_is_git_path() {
+  local p
+  p="${1%/}"
+  case "$p" in
+    */.git|*/.git/*|.git|.git/*) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+_require_not_git() { # _require_not_git <path> <what>
+  local p="$1" what="$2"
+  if _is_git_path "$p"; then
+    printf 'swayimg-actions: skip %s inside .git: %s\n' "$what" "$p" >&2
+    return 1
+  fi
+  return 0
+}
+
 # ---- IPC helpers -----------------------------------------------------------
 # Find swayimg IPC socket from env or runtime dir (best-effort)
 _find_ipc_socket() {
@@ -127,7 +148,10 @@ render_for_mode() {
 rotate() { # modifies file in-place
   angle="$1"
   shift
-  while read -r file; do mogrify -rotate "$angle" "$file"; done
+  while read -r file; do
+    _require_not_git "$file" rotate || continue
+    mogrify -rotate "$angle" "$file"
+  done
 }
 
 choose_dest() {
@@ -150,9 +174,11 @@ choose_dest() {
       {
         printf '%s\n' "$pics_dir"
         if command -v fd >/dev/null 2>&1; then
-          fd -td -d 3 . "$pics_dir" 2>/dev/null
+          # Exclude .git from candidates
+          fd -td -d 3 . "$pics_dir" -E .git 2>/dev/null
         else
-          find "$pics_dir" -maxdepth 3 -type d -print 2>/dev/null
+          # Prune .git dirs when listing
+          find "$pics_dir" -maxdepth 3 \( -name .git -type d -prune \) -o -type d -print 2>/dev/null
         fi
       } \
       | sed "s:^$HOME:~:" \
@@ -174,6 +200,15 @@ proc() { # mv/cp with remembered last dest
     dest="$(choose_dest "$cmd" || true)"
   fi
   [ -z "${dest}" ] && exit 0
+  # Block operations on .git paths (source or destination)
+  if _is_git_path "$file"; then
+    printf 'swayimg-actions: refusing to %s from .git: %s\n' "$cmd" "$file" >&2
+    exit 0
+  fi
+  if _is_git_path "$dest"; then
+    printf 'swayimg-actions: refusing to %s to .git: %s\n' "$cmd" "$dest" >&2
+    exit 0
+  fi
   if [ -d "$dest" ]; then
     # Avoid swayimg crash when current list ends after move: switch away first
     if [ "$cmd" = "mv" ]; then
@@ -200,6 +235,7 @@ repeat_action() { # repeat last mv/cp to same dir
 
 copy_name() { # copy absolute path to clipboard
   file="$1"
+  _require_not_git "$file" copy || return 0
   printf '%s\n' "$(realpath "$file")" | wl-copy
   if command -v pic-notify >/dev/null 2>&1; then
     pic-notify "$file" || true
@@ -208,6 +244,8 @@ copy_name() { # copy absolute path to clipboard
 
 wall() { # wall <mode> <file> via swww
   local mode="$1" file="$2"
+  # Never read or set wallpapers from .git paths
+  _require_not_git "$file" wallpaper || return 0
   ensure_swww
   render_for_mode "$mode" "$file" || return 0
   # Allow user to override transition opts via $SWWW_FLAGS
