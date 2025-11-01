@@ -73,13 +73,13 @@
 }
 
 #completions > div {
-  max-height: min(75vh, calc(30 * var(--option-height)));
+  max-height: min(60vh, calc(30 * var(--option-height)));
   min-height: calc(2 * var(--option-height));
 }
 
 /* Make buffers (tabs/windows) list longer */
 #completions .BufferCompletionSource {
-  max-height: min(85vh, calc(40 * var(--option-height)));
+  max-height: min(60vh, calc(40 * var(--option-height)));
 }
 
 #completions table {
@@ -87,6 +87,24 @@
   font-size: 1rem;
   font-weight: 700;
   padding: 0;
+}
+
+/* Match per-source sizing with dark themes to avoid jumps */
+#completions .HistoryCompletionSource {
+  max-height: unset;
+  min-height: unset;
+}
+
+#completions .HistoryCompletionSource table {
+  border-spacing: 0;
+  font-size: 1rem;
+  table-layout: fixed;
+  width: 100%;
+}
+
+#completions .BmarkCompletionSource {
+  max-height: unset;
+  min-height: unset;
 }
 
 #completions .BufferCompletionSource table {

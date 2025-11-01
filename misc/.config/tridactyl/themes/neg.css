@@ -73,13 +73,13 @@
 }
 
 #completions > div {
-  max-height: min(70vh, calc(30 * var(--option-height)));
+  max-height: min(60vh, calc(30 * var(--option-height)));
   min-height: calc(2 * var(--option-height));
 }
 
 /* Make buffers (tabs/windows) list longer */
 #completions .BufferCompletionSource {
-  max-height: min(80vh, calc(40 * var(--option-height)));
+  max-height: min(60vh, calc(40 * var(--option-height)));
 }
 
 #completions table {
