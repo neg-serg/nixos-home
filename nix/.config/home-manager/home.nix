@@ -45,47 +45,7 @@ in {
   # Enable OpenXR dev stack (installs Envision UI)
   features.dev.openxr.enable = true;
 
-  # Prewarm scratchpad apps (persistent, background user services)
-  neg.hypr.prewarm = {
-    enable = true;
-    apps = [
-      # Terminal on workspace 1 (term)
-      {
-        name = "term";
-        # Idempotent launch: use raise to focus existing or start if missing
-        exec = "raise --class 'term' --launch 'kitty --class term'";
-        class = "term";
-        workspaceId = 1;
-        noAnim = true;
-      }
-      # Default browser (Floorp) on workspace 2 (web)
-      {
-        name = "web";
-        # Idempotent launch via raise; relies on PATH-resolved browser
-        exec = "raise --class '(one.ablaze.floorp|floorp)' --launch 'floorp'";
-        class = "(one\\.ablaze\\.floorp|floorp)";
-        environment = { MOZ_ENABLE_WAYLAND = "1"; };
-        workspaceId = 2;
-        noAnim = true;
-      }
-      # Soulseek client (Nicotine+): focus existing or launch once
-      {
-        name = "slsk";
-        exec = "raise --class 'org.nicotine_plus.Nicotine' --launch 'nicotine'";
-        class = "org.nicotine_plus.Nicotine";
-        workspaceId = 15;
-        noAnim = true;
-      }
-      # Notes (Obsidian): focus existing or launch
-      {
-        name = "notes";
-        exec = "raise --class 'Obsidian' --launch 'flatpak run md.obsidian.Obsidian || obsidian'";
-        class = "Obsidian";
-        workspaceId = 19;
-        noAnim = true;
-      }
-    ];
-  };
+  # Prewarm removed: persistent launcher services are disabled
 
   # XDG aggregated fixups were removed; rely on per‑file `force = true` when needed.
 
