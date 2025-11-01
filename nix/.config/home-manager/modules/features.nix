@@ -92,6 +92,12 @@ in {
 
     # Development-speed mode: aggressively trim heavy features/inputs for faster local iteration
     devSpeed.enable = mkBool "enable dev-speed mode (trim heavy features for faster eval)" false;
+
+    # General app toggles
+    apps = {
+      obsidian.autostart.enable =
+        mkBool "autostart Obsidian at GUI login (systemd user service)" false;
+    };
   };
 
   # Apply profile defaults. Users can still override flags after this.
@@ -322,5 +328,14 @@ in {
     }
     # Auto-enable dev-speed by env var
     (mkIf devSpeedEnv {features.devSpeed.enable = mkDefault true;})
+    # Dependency assertions for new app flags
+    {
+      assertions = [
+        {
+          assertion = cfg.gui.enable || (! cfg.apps.obsidian.autostart.enable);
+          message = "features.apps.obsidian.autostart.enable requires features.gui.enable = true";
+        }
+      ];
+    }
   ];
 }
