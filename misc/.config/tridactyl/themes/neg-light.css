@@ -65,7 +65,8 @@
   font-size: 0.9375rem;
   font-weight: 600;
   --option-height: 1.45rem;
-  overflow: auto;
+  /* Keep parent non-scrollable; scroll only inner container */
+  overflow: hidden;
   padding: 0;
   width: 100%;
   scrollbar-width: thin;
@@ -73,6 +74,7 @@
 }
 
 #completions > div {
+  overflow-y: auto;
   max-height: min(60vh, calc(30 * var(--option-height)));
   min-height: calc(2 * var(--option-height));
 }

@@ -76,7 +76,8 @@
   font-weight: 600;
   /* Align row sizing with other themes (relative to font-size) */
   --option-height: 1.2em;
-  overflow: auto;
+  /* Keep parent non-scrollable; scroll only inner container */
+  overflow: hidden;
   padding: 0;
   width: 100%;
   border: 1px solid var(--border_color);
@@ -85,6 +86,7 @@
 }
 
 #completions > div {
+  overflow-y: auto;
   /* Keep in sync with global userContent clamp (60vh) */
   max-height: min(60vh, calc(30 * var(--option-height)));
   min-height: calc(2 * var(--option-height));
