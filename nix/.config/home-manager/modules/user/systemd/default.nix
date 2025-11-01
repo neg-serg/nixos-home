@@ -50,6 +50,27 @@ with lib;
               (config.lib.neg.systemdUser.mkUnitFromPresets {presets = ["graphical"];})
             ];
           })
+          (lib.mkIf (config.features.apps.obsidian.autostart.enable or false) {
+            # Obsidian (Flatpak preferred, fallback to native if present)
+            obsidian = lib.mkMerge [
+              {
+                Unit = {
+                  Description = "Obsidian";
+                };
+                Service = {
+                  # Use a shell to keep the original flatpak-or-native behavior
+                  ExecStart = let sh = lib.getExe pkgs.bash; in ''
+                    ${sh} -lc 'flatpak run md.obsidian.Obsidian || exec obsidian'
+                  '';
+                  TimeoutStopSec = "5s";
+                };
+              }
+              (config.lib.neg.systemdUser.mkUnitFromPresets {
+                presets = ["graphical"];
+                partOf = ["graphical-session.target"];
+              })
+            ];
+          })
           {
             # Floorp browser (autostart via systemd instead of Hypr exec-once)
             floorp = lib.mkMerge [
@@ -86,24 +107,14 @@ with lib;
             ];
 
             # Obsidian (Flatpak preferred, fallback to native if present)
-            obsidian = lib.mkMerge [
-              {
-                Unit = {
-                  Description = "Obsidian";
-                };
-                Service = {
-                  # Use a shell to keep the original flatpak-or-native behavior
-                  ExecStart = let sh = lib.getExe pkgs.bash; in ''
-                    ${sh} -lc 'flatpak run md.obsidian.Obsidian || exec obsidian'
-                  '';
-                  TimeoutStopSec = "5s";
-                };
-              }
-              (config.lib.neg.systemdUser.mkUnitFromPresets {
-                presets = ["graphical"];
-                partOf = ["graphical-session.target"];
-              })
-            ];
+            # Controlled by features.apps.obsidian.autostart.enable (default: false)
+            # Kept separate to avoid unconditional startup.
+            # Service is added only when the feature flag is enabled.
+            # The binding to launch on demand remains in Hypr config.
+            #
+            # Note: GUI gating is handled by the outer mkIf; this block only
+            # checks the feature flag.
+            ${/* insert conditionally via mkMerge element below */""}
 
             # Walker app launcher background service
             walker = lib.mkMerge [
