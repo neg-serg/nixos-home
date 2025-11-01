@@ -32,11 +32,12 @@ lib.mkIf config.features.media.audio.mpd.enable (lib.mkMerge [
               args = ["-c" config.sops.secrets.mpdas_negrc.path];
             in "${exe} ${lib.escapeShellArgs args}";
             Restart = "on-failure";
-            RestartSec = "10";
+            RestartSec = "2";
           };
         }
         (config.lib.neg.systemdUser.mkUnitFromPresets {
-          presets = ["net" "defaultWanted"];
+          # wait for sops-nix to provision the secret; defaultWanted for login start
+          presets = ["sops" "defaultWanted"];
           after = ["sound.target"]; # preserve additional ordering
         })
       ];
