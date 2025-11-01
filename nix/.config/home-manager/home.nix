@@ -88,7 +88,7 @@ in {
 
   # Auto-push built store paths to Cachix
   services.cachix.watchStore = {
-    enable = true;
+    enable = false;
     cacheName = "neg-serg";
     authTokenFile = config.sops.secrets."cachix_env".path;
   };
