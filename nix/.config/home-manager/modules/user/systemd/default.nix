@@ -91,6 +91,7 @@ with lib;
                 Unit = {
                   Description = "OpenRGB daemon with profile";
                   PartOf = ["graphical-session.target"];
+                  StartLimitBurst = "8";
                 };
                 Service = {
                   ExecStart = let
@@ -98,11 +99,10 @@ with lib;
                     args = ["--server" "-p" "neg.orp"];
                   in "${exe} ${lib.escapeShellArgs args}";
                   RestartSec = "30";
-                  StartLimitBurst = "8";
                 };
               }
               (config.lib.neg.systemdUser.mkUnitFromPresets {
-                presets = ["dbusSocket" "defaultWanted"];
+                presets = ["dbusSocket" "graphical"];
               })
             ];
           }
