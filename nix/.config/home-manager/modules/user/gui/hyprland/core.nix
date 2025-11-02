@@ -84,6 +84,13 @@ in
       );
       programs.hyprlock.enable = true;
     }
+    # Ensure polkit agent starts in a Wayland session and uses the graphical preset.
+    {
+      systemd.user.services.hyprpolkitagent = lib.mkMerge [
+        { Service.Environment = [ "QT_QPA_PLATFORM=wayland" "XDG_SESSION_TYPE=wayland" ]; }
+        (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["graphical"]; })
+      ];
+    }
     # Core config files from repo
     (lib.mkMerge (map mkHyprSource coreFiles))
     # Dynamically generated plugin loader (pin to flake hy3 package)
