@@ -24,7 +24,8 @@ with lib;
           pkgs.wl-clipboard # copy/paste for Wayland
           pkgs.wl-clip-persist # persist clipboard across app exits
           pkgs.wtype # fake typing for Wayland
-        ];
+        ]
+        ++ lib.optionals (pkgs ? uwsm) [ pkgs.uwsm ];
         extras = lib.optionals (! devSpeed && (iwmenuProvider != null)) [
           (iwmenuProvider pkgs) # Wayland app launcher/menu from flake input
         ];
