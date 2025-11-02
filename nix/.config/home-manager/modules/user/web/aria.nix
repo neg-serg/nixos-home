@@ -9,8 +9,11 @@
   inherit (config.xdg) configHome dataHome;
   aria2Bin = getExe' pkgs.aria2 "aria2c";
   sessionFile = "${dataHome}/aria2/session";
-in
-  lib.mkIf (config.features.web.enable && config.features.web.tools.enable) (lib.mkMerge [
+in {
+  options.features.web.aria2.service.enable =
+    (lib.mkEnableOption "run aria2 as a user systemd service (graphical preset)") // {default = false;};
+
+  config = lib.mkIf (config.features.web.enable && config.features.web.tools.enable) (lib.mkMerge [
     {
       # Minimal, robust aria2 configuration through Home Manager
       programs.aria2 = {
@@ -29,8 +32,8 @@ in
     }
     # Ensure the session file exists under XDG data (no activation DAG noise)
     (xdg.mkXdgDataText "aria2/session" "")
-    # Simple user service: read only from the generated config
-    {
+    # Optional user service (behind a flag)
+    (lib.mkIf (config.features.web.aria2.service.enable or false) {
       systemd.user.services.aria2 = lib.mkMerge [
         {
           Unit = {
@@ -47,5 +50,6 @@ in
         }
         (config.lib.neg.systemdUser.mkUnitFromPresets {presets = ["graphical"];})
       ];
-    }
-  ])
+    })
+  ]);
+}
