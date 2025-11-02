@@ -1,3 +1,5 @@
+bindkey -e
+
 autoload -Uz fg-widget && zle -N fg-widget
 autoload -Uz imv
 autoload -Uz inplace_mk_dirs && zle -N inplace_mk_dirs
