@@ -50,13 +50,13 @@ in
           Unit = {
             Description = "Jackett (torrent indexer)";
             ConditionPathExists = lib.getExe pkgs.jackett;
+            StartLimitBurst = "8";
           };
           Service = {
             Type = "simple";
             ExecStart = lib.getExe pkgs.jackett;
             Restart = "on-failure";
             RestartSec = "10s";
-            StartLimitBurst = "8";
           };
         }
         (config.lib.neg.systemdUser.mkUnitFromPresets {presets = ["netOnline" "defaultWanted"];})
@@ -69,6 +69,7 @@ in
           Unit = {
             Description = "transmission service";
             ConditionPathExists = "${lib.getExe' transmissionPkg "transmission-daemon"}";
+            StartLimitBurst = "8";
           };
           Service = {
             Type = "simple";
@@ -78,7 +79,6 @@ in
             in "${exe} ${lib.escapeShellArgs args}";
             Restart = "on-failure";
             RestartSec = "30";
-            StartLimitBurst = "8";
             ExecReload = let kill = lib.getExe' pkgs.util-linux "kill"; in "${kill} -s HUP $MAINPID";
           };
         }
