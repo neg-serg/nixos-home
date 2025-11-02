@@ -10,11 +10,13 @@ with lib;
       {
         Unit = {Description = "Keep track of media player activity";};
         Service = {
-          Type = "oneshot";
+          Type = "simple";
           ExecStart = let
             exe = lib.getExe' pkgs.playerctl "playerctld";
             args = ["daemon"];
           in "${exe} ${lib.escapeShellArgs args}";
+          Restart = "on-failure";
+          RestartSec = "2";
         };
       }
       (config.lib.neg.systemdUser.mkUnitFromPresets {presets = ["defaultWanted"];})
