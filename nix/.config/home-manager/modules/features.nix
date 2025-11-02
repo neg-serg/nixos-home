@@ -239,6 +239,8 @@ in {
     })
     (mkIf (! cfg.gui.enable) {
       features.gui.qt.enable = mkForce false;
+      # Ensure nested GUI components are disabled when GUI is off
+      features.gui.quickshell.enable = mkForce false;
     })
     (mkIf (! cfg.mail.enable) {
       features.mail.vdirsyncer.enable = mkForce false;
