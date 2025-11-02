@@ -8,6 +8,8 @@
 with lib;
   mkIf config.features.gui.enable (
     let
+      # Import XDG helpers from repo root modules/lib
+      xdg = import ../../../lib/xdg-helpers.nix { inherit pkgs; };
       devSpeed = config.features.devSpeed.enable or false;
       groups = {
         core = [
@@ -34,7 +36,28 @@ with lib;
         core = true;
         extras = true;
       };
-    in {
-      home.packages = config.lib.neg.pkgsList (config.lib.neg.mkEnabledList flags groups);
-    }
+    in lib.mkMerge [
+      {
+        home.packages = config.lib.neg.pkgsList (config.lib.neg.mkEnabledList flags groups);
+      }
+      # Set UWSM default compositor selection to Hyprland so
+      # `uwsm start default` resolves to Hyprland.
+      (xdg.mkXdgText "uwsm/default-id" "hyprland")
+      { xdg.configFile."uwsm/default-id".force = true; }
+      # Provide a Wayland session entry that starts Hyprland via UWSM directly.
+      # Some DMs list sessions from XDG data dirs; if supported, this entry will appear.
+      (xdg.mkXdgDataText "wayland-sessions/hyprland-uwsm.desktop" ''
+        [Desktop Entry]
+        Name=Hyprland (UWSM)
+        Comment=Hyprland via Universal Wayland Session Manager
+        Exec=uwsm start hyprland
+        TryExec=uwsm
+        Type=Application
+        DesktopNames=Hyprland
+        X-GDM-Session-Type=wayland
+        X-KDE-PluginInfo-Name=hyprland
+        Keywords=wayland;wm;compositor;
+      '')
+      { xdg.dataFile."wayland-sessions/hyprland-uwsm.desktop".force = true; }
+    ]
   )
