@@ -66,14 +66,15 @@
   # Firefox addons via NUR
   faProvider = pkgs: (pkgs.extend nur.overlays.default).nur.repos.rycee.firefox-addons;
   # Lazy Yandex Browser provider
-  yandexBrowserProvider = pkgs: yandexBrowserInput.packages.${pkgs.system};
+  yandexBrowserProvider = pkgs:
+    yandexBrowserInput.packages.${pkgs.stdenv.hostPlatform.system};
   # GUI helpers
-  qsProvider = pkgs: inputs.quickshell.packages.${pkgs.system}.default;
-  iwmenuProvider = pkgs: inputs.iwmenu.packages.${pkgs.system}.default;
-  bzmenuProvider = pkgs: inputs.bzmenu.packages.${pkgs.system}.default;
-  rsmetrxProvider = pkgs: inputs.rsmetrx.packages.${pkgs.system}.default;
+  qsProvider = pkgs: inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default;
+  iwmenuProvider = pkgs: inputs.iwmenu.packages.${pkgs.stdenv.hostPlatform.system}.default;
+  bzmenuProvider = pkgs: inputs.bzmenu.packages.${pkgs.stdenv.hostPlatform.system}.default;
+  rsmetrxProvider = pkgs: inputs.rsmetrx.packages.${pkgs.stdenv.hostPlatform.system}.default;
   # Rust raise utility (flake-utils defaultPackage)
-  raiseProvider = pkgs: inputs.raise.defaultPackage.${pkgs.system};
+  raiseProvider = pkgs: inputs.raise.defaultPackage.${pkgs.stdenv.hostPlatform.system};
   # Provide xdg helpers directly to avoid _module.args fallback recursion
   xdg = import ../modules/lib/xdg-helpers.nix {
     inherit lib;
