@@ -60,4 +60,13 @@
     XZ_DEFAULTS = "-T 0";
     ZDOTDIR = "${config.xdg.configHome}/zsh";
   };
+
+  # Ensure login shells source Home Manager session variables
+  # so exported values like ZDOTDIR and SSH_AUTH_SOCK propagate.
+  home.file.".zprofile".text = ''
+    # Load Home Manager session variables if available
+    if [ -r "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
+      . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+    fi
+  '';
 }
