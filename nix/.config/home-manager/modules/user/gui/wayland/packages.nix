@@ -40,10 +40,8 @@ with lib;
       {
         home.packages = config.lib.neg.pkgsList (config.lib.neg.mkEnabledList flags groups);
       }
-      # Set UWSM default compositor selection to Hyprland so
-      # `uwsm start default` resolves to Hyprland.
-      (xdg.mkXdgText "uwsm/default-id" "hyprland")
-      { xdg.configFile."uwsm/default-id".force = true; }
+      # Note: Do not manage UWSM default-id here; allow uwsm to own
+      # ~/.config/uwsm/default-id so it can be changed at runtime.
       # Provide a Wayland session entry that starts Hyprland via UWSM directly.
       # Some DMs list sessions from XDG data dirs; if supported, this entry will appear.
       (xdg.mkXdgDataText "wayland-sessions/hyprland-uwsm.desktop" ''
