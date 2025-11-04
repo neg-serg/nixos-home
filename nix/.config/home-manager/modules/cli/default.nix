@@ -90,6 +90,7 @@ in {
     ./dosbox.nix
     ./pretty-printer.nix
     ./fzf.nix
+    ./nix-index-db.nix
     ./tmux.nix
     ./tig.nix
     ./yazi.nix
