@@ -1,4 +1,4 @@
-{ config, ... }: {
+{ ... }: {
   # Start a user-scoped ssh-agent managed by Home Manager
   services.ssh-agent.enable = true;
 

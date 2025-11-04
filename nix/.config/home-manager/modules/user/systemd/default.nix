@@ -18,11 +18,6 @@ with lib;
             exec pic-dirs-list
           '';
         };
-        # Floorp package name changed upstream; prefer floorp-bin where available.
-        floorpPkg =
-          if builtins.hasAttr "floorp-bin" pkgs then pkgs."floorp-bin"
-          else if builtins.hasAttr "floorp" pkgs then pkgs.floorp
-          else pkgs.emptyFile;
       in {
         # Quickshell session (Qt-bound, skip in dev-speed) + other services
         systemd.user.services = lib.mkMerge [
