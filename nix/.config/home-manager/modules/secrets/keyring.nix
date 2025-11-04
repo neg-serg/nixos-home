@@ -23,9 +23,12 @@ in {
     (disable "gnome-keyring-pkcs11.desktop")
     # Some distros ship a legacy daemon entry; disable just in case.
     (disable "gnome-keyring-daemon.desktop")
-    # Ensure SSH_AUTH_SOCK points to the Home Manager ssh-agent service,
-    # not the stale gnome-keyring socket. Keep this lightweight and local.
-    (xdg.mkXdgText "environment.d/90-ssh-agent.conf" "SSH_AUTH_SOCK=%t/ssh-agent\n")
+    # Ensure SSH_AUTH_SOCK points to the Home Manager ssh-agent service.
+    # Note: environment.d does not expand systemd specifiers like %t nor
+    # shell vars; set an absolute runtime path to avoid shells inheriting
+    # a literal "%t/ssh-agent" value.
+    # This repo targets user UID 1000; adjust if different.
+    (xdg.mkXdgText "environment.d/90-ssh-agent.conf" "SSH_AUTH_SOCK=/run/user/1000/ssh-agent\n")
     {
       # Remove a pre-existing gnome-keyring env drop-in that overrides SSH_AUTH_SOCK.
       # This avoids clients picking up %t/keyring/ssh when ssh-agent.service is active.
