@@ -30,8 +30,11 @@ Item {
 
     property string layoutText: "??"
     property string deviceName: ""
-    // Normalized device selector used for matching JSON devices reliably
+    // Normalized device selector for pinned device (if any)
     property string deviceNeedle: ""
+    // Track main keyboard to ignore noise from pseudo-keyboards
+    property string mainDeviceName: ""
+    property string mainDeviceNeedle: ""
     property var knownKeyboards:[]
     // If true, we only accept events for the pinned deviceName
     // This prevents the indicator from jumping between multiple keyboards.
@@ -137,20 +140,15 @@ Item {
             const byKnown = kb.knownKeyboards.length ? kb.knownKeyboards.some(n => n === kbd) : true
             const byPinned = kb.hasPinnedDevice ? (kb.deviceName === kbd) : true
 
-            // Prefer the keyboard that emitted the event; keep a normalized needle for matching
-            if (kbd) {
-                kb.deviceName = kbd
-                kb.deviceNeedle = norm(kbd)
-            }
-
-            if (!(byMatch && byKnown)) return
+            // Only react to events from the main device (or explicit match)
+            const fromMain = (norm(kbd) === kb.mainDeviceNeedle)
+            const allowed = fromMain || byMatch
+            if (!allowed) return
 
             // Update immediately from event payload for snappy UI
             const evTxt = shortenLayout(layout)
             if (evTxt && evTxt !== kb.layoutText) kb.layoutText = evTxt
-
-            // Confirm with devices snapshot right away (no artificial delay)
-            postEventProc.start()
+            // No devices snapshot here to avoid lag; main device's payload is authoritative
         }
     }
 
@@ -162,6 +160,14 @@ Item {
             try {
                 const list = (obj?.keyboards || [])
                 kb.knownKeyboards = list.map(k => (k.name || ""))
+                // Identify main keyboard once
+                for (let k of list) {
+                    if (k.main) {
+                        kb.mainDeviceName = k.name || kb.mainDeviceName
+                        kb.mainDeviceNeedle = norm(k.name || k.identifier || kb.mainDeviceName)
+                        break
+                    }
+                }
                 const pick = pickDevice(list)
                 if (pick) kb.layoutText = shortenLayout(pick.active_keymap || pick.layout || kb.layoutText)
             } catch (_) { }
@@ -170,21 +176,7 @@ Item {
 
     ProcessRunner { id: switchProc; autoStart: false; restartOnExit: false }
 
-    ProcessRunner {
-        id: postEventProc
-        cmd: ["hyprctl", "-j", "devices"]
-        parseJson: true
-        onJson: (obj) => {
-            try {
-                const list = (obj?.keyboards || [])
-                const dev = pickDevice(list)
-                if (dev) {
-                    const txt = shortenLayout(dev.active_keymap || dev.layout || kb.layoutText)
-                    if (txt && txt !== kb.layoutText) kb.layoutText = txt
-                }
-            } catch (_) {}
-        }
-    }
+    // Optional confirmation runner removed to keep switching snappy
 
     function norm(s) { return (String(s || "").toLowerCase().replace(/[^a-z0-9]+/g, "-")) }
     function deviceAllowed(name, identifier) {
