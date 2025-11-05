@@ -31,6 +31,9 @@ Item {
     property string layoutText: "??"
     property string deviceName: ""
     property var knownKeyboards:[]
+    // If true, we only accept events for the pinned deviceName
+    // This prevents the indicator from jumping between multiple keyboards.
+    readonly property bool hasPinnedDevice: (deviceName && deviceName.length > 0)
 
     function sc() {
         const s = kb.screen || (Quickshell.screens && Quickshell.screens.length ? Quickshell.screens[0] : null)
@@ -106,7 +109,11 @@ Item {
     Connections {
         target: Hyprland
         function onRawEvent(a, b) {
-            // Accept (a,b), a, or object with .data
+            // Accept (eventName, payload), payload, or object { signal, data }
+            let eventName =
+                (typeof a === "string" && typeof b === "string") ? a :
+                (a && typeof a === "object" && typeof a.signal === "string") ? a.signal :
+                ""
             let payload =
                 (typeof a === "string" && typeof b === "string") ? b :
                 (typeof a === "string" && b === undefined)       ? a :
@@ -114,17 +121,28 @@ Item {
                 null
             if (!payload) return
 
+            // Filter strictly to keyboard-layout events to avoid false positives
+            if (eventName) {
+                const ev = String(eventName).toLowerCase()
+                if (ev.indexOf("keyboard-layout") === -1)
+                    return
+            }
+
             const i = payload.indexOf(","); if (i < 0) return
             const kbd = payload.slice(0, i)
             const layout = payload.slice(i + 1)
 
             const byMatch = deviceAllowed(kbd)
             const byKnown = kb.knownKeyboards.length ? kb.knownKeyboards.some(n => n === kbd) : true
-            if (!(byMatch && byKnown)) return
+            const byPinned = kb.hasPinnedDevice ? (kb.deviceName === kbd) : true
 
-            if (kbd && kb.deviceName !== kbd) kb.deviceName = kbd
-            const txt = shortenLayout(layout || "")
-            if (txt && txt !== kb.layoutText) kb.layoutText = txt
+            // If we haven't pinned yet but got a valid keyboard, pin now
+            if (!kb.hasPinnedDevice && byMatch && byKnown && kbd) kb.deviceName = kbd
+
+            if (!(byMatch && byKnown && (kb.deviceName === kbd))) return
+
+            // Query Hypr for the actual active_keymap after the event settles
+            postEventTimer.restart()
         }
     }
 
@@ -137,6 +155,8 @@ Item {
                 kb.knownKeyboards = (obj?.keyboards || []).map(k => (k.name || ""))
                 const pick = selectKeyboard(obj?.keyboards || [])
                 if (pick && deviceAllowed(pick.name || "")) {
+                    // Pin to the initially selected physical keyboard to avoid jumping
+                    if (!kb.hasPinnedDevice) kb.deviceName = (pick.name || kb.deviceName)
                     kb.layoutText = shortenLayout(pick.active_keymap || pick.layout || kb.layoutText)
                 }
             } catch (_) { }
@@ -144,6 +164,35 @@ Item {
     }
 
     ProcessRunner { id: switchProc; autoStart: false; restartOnExit: false }
+
+    // After receiving a keyboard-layout event, re-read devices to get the true current layout
+    Timer {
+        id: postEventTimer
+        interval: 80
+        running: false
+        repeat: false
+        onTriggered: postEventProc.start()
+    }
+    ProcessRunner {
+        id: postEventProc
+        cmd: ["bash", "-lc", "hyprctl -j devices"]
+        parseJson: true
+        onJson: (obj) => {
+            try {
+                const list = (obj?.keyboards || [])
+                let dev = null
+                // Prefer pinned device
+                for (let k of list) {
+                    if ((k.name || "") === kb.deviceName) { dev = k; break }
+                }
+                if (!dev) dev = selectKeyboard(list)
+                if (dev && deviceAllowed(dev.name || "")) {
+                    const txt = shortenLayout(dev.active_keymap || dev.layout || kb.layoutText)
+                    if (txt && txt !== kb.layoutText) kb.layoutText = txt
+                }
+            } catch (_) {}
+        }
+    }
 
     function deviceAllowed(name) {
         const needle = (kb.deviceMatch || "").toLowerCase().trim()

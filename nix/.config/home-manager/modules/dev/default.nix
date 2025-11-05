@@ -44,6 +44,7 @@ in {
     ./cachix
     ./ansible
     ./editor
+    ./mcp
     ./git
     ./gdb
     ./hack
