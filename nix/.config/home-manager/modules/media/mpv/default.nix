@@ -7,5 +7,6 @@
     ./bindings.nix
     ./shaders-profiles.nix
     ./shaders-fetch.nix
+    ./vapoursynth.nix
   ];
 }

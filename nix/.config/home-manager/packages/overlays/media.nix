@@ -5,10 +5,10 @@ _final: prev: let
     python3Packages = python313;
     fetchurl = _final.fetchurl;
   };
-in {
-  neg = let
-    blissify_rs = call ../blissify-rs {};
   in {
+    neg = let
+      blissify_rs = call ../blissify-rs {};
+    in {
     inherit blissify_rs;
     # Media-related tools
     mkvcleaner = call ../mkvcleaner {};
@@ -38,5 +38,19 @@ in {
         valhalla_supermassive = call ../yabridgemgr/plugins/valhalla_supermassive.nix {};
       };
     };
+
+    # mpv built with VapourSynth filter enabled + wrapper that provides PYTHONPATH
+    mpv-vs = let
+      unwrapped = prev.mpv-unwrapped.overrideAttrs (old: {
+        buildInputs = (old.buildInputs or []) ++ [ prev.vapoursynth ];
+        mesonFlags = (old.mesonFlags or []) ++ [ "-Dvapoursynth=enabled" ];
+      });
+      pySite = prev.python3.sitePackages;
+      pyVS = prev.python3Packages.vapoursynth;
+    in prev.writeShellScriptBin "mpv" ''
+      #!/usr/bin/env bash
+      export PYTHONPATH="${pyVS}/${pySite}:${pyVS}/lib/${prev.python3.libPrefix}/site-packages:${prev.python3}/${pySite}:$PYTHONPATH"
+      exec ${unwrapped}/bin/mpv "$@"
+    '';
   };
 }
