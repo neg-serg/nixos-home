@@ -3,5 +3,8 @@
   "version": "0.0.1",
   "description": "Minimal local Vicinae extension placeholder",
   "main": "index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "build": "echo build noop"
+  }
 }
