@@ -6,7 +6,7 @@
 }:
 with lib;
 let
-  xdg = import ../lib/xdg-helpers.nix { inherit lib; };
+  xdg = import ../lib/xdg-helpers.nix { inherit lib pkgs; };
   cfg = config.features.media.aiUpscale or {};
   scale = builtins.toString (cfg.scale or 2);
   content = cfg.content or "general";
@@ -66,7 +66,7 @@ clip.set_output()
 in
 mkIf ((config.features.gui.enable or false) && (cfg.enable or false) && ((cfg.mode or "realtime") == "realtime")) (
   mkMerge [
-    (xdg.mkXdgConfigText "mpv/vs/ai/realesrgan.vpy" vpy)
+    (xdg.mkXdgText "mpv/vs/ai/realesrgan.vpy" vpy)
     {
       # Toggle realtime upscale on demand (Alt+I)
       programs.mpv.bindings = {
@@ -78,4 +78,3 @@ mkIf ((config.features.gui.enable or false) && (cfg.enable or false) && ((cfg.mo
       };
     }
   ])
-
