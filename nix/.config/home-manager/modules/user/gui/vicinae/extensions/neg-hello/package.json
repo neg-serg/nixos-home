@@ -1,0 +1,7 @@
+{
+  "name": "neg-hello",
+  "version": "0.0.1",
+  "description": "Minimal local Vicinae extension placeholder",
+  "main": "index.js",
+  "license": "MIT"
+}

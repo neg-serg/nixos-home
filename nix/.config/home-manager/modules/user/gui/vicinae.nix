@@ -21,9 +21,13 @@ with lib;
             autoStart = true;
             target = "graphical-session.target";
           };
-          # Avoid import-from-derivation during eval: leave extensions empty by default.
-          # Add Raycast/Vicinae extensions explicitly in a follow-up once HM allows builds.
-          extensions = [];
+          # Local extension to avoid IFD (no remote fetch/build during eval)
+          extensions = [
+            (config.lib.vicinae.mkExtension {
+              name = "neg-hello";
+              src = ./vicinae/extensions/neg-hello;
+            })
+          ];
           # Drop a minimal theme placeholder; not selected unless explicitly referenced by settings
           themes = {
             neg = {
