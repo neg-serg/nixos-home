@@ -141,7 +141,11 @@ Item {
 
             if (!(byMatch && byKnown && (kb.deviceName === kbd))) return
 
-            // Query Hypr for the actual active_keymap after the event settles
+            // Update immediately from event payload (Hyprland sends current layout)
+            const evTxt = shortenLayout(layout)
+            if (evTxt && evTxt !== kb.layoutText) kb.layoutText = evTxt
+
+            // Then confirm from devices JSON after Hyprland settles
             postEventTimer.restart()
         }
     }
@@ -218,14 +222,35 @@ Item {
     }
     function shortenLayout(s) {
         if (!s) return "??"
+        s = String(s).trim()
+        const lower = s.toLowerCase()
+        // Common names and codes from Hyprland events/devices
         const map = {
-            "English (US)": "en", "Russian": "ru",
-            "English (UK)": "en-uk", "German": "de",
-            "French": "fr", "Finnish": "fi"
+            "english (us)": "en",
+            "english (uk)": "en-uk",
+            "russian": "ru",
+            "us": "en",
+            "us-intl": "en",
+            "us(international)": "en",
+            "en_us": "en",
+            "en-us": "en",
+            "ru": "ru",
+            "ru_ru": "ru",
+            "ru-ru": "ru",
+            "german": "de",
+            "french": "fr",
+            "finnish": "fi"
         }
-        if (map[s]) return map[s]
+        if (map[lower]) return map[lower]
         const m = s.match(/\(([^)]+)\)/)
-        if (m && m[1] && m[1].length <= 3) return m[1].toUpperCase()
+        if (m && m[1]) {
+            const code = m[1].toLowerCase()
+            if (code === "us" || code.startsWith("en")) return "en"
+            if (code === "ru" || code.startsWith("ru")) return "ru"
+            return m[1].toUpperCase()
+        }
+        if (/\b(us|en)\b/i.test(s)) return "en"
+        if (/\bru\b/i.test(s)) return "ru"
         return s.split(/\s+/)[0].toUpperCase().slice(0, 3)
     }
 }
