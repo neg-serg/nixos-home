@@ -2,6 +2,7 @@
   imports = [
     ./apps.nix
     ./audio
+    ./ai-upscale.nix
     ./images
     ./mpv
     ./pipewire.nix
