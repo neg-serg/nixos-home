@@ -148,6 +148,14 @@ Rofi
 Images
 - `swayimg-first` wrapper is installed to `~/.local/bin/swayimg` and `~/.local/bin/sx` for convenience.
 
+Keyboard Layout Indicator (Quickshell + Hyprland)
+- Instant UI update: the bar indicator updates immediately from Hyprland’s `keyboard-layout` payload (no timers/debounce).
+- Main device preference: the module identifies the `main: true` keyboard at init and prefers its events, ignoring pseudo devices (power‑button, video‑bus, virtual keyboards).
+- Conditional confirmation: if an event comes from a non‑main device, it performs a single `hyprctl -j devices` snapshot to confirm/correct the label. No per‑event snapshots to avoid latency.
+- Click behavior: toggles layout using `hyprctl switchxkblayout current next` (no shell involved) for speed.
+- Recommended Hyprland binding: `bind = $M4, S, switchxkblayout, current, next` (dispatcher syntax with comma‑separated args).
+- More details: quickshell/.config/quickshell/Docs/Config.md
+
 --------------------------------------------------------------------------------
 
 ## 9) XDG & Activation Safety
