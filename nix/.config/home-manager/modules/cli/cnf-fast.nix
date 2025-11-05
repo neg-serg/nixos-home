@@ -2,9 +2,9 @@
   lib,
   config,
   pkgs,
+  xdg,
   ...
 }: let
-  xdg = import ../../lib/xdg-helpers.nix {inherit lib pkgs;};
   cfg = config.features.cli.fastCnf;
 in {
   options.features.cli.fastCnf.enable =
@@ -52,4 +52,3 @@ in {
     '')
   ]);
 }
-
