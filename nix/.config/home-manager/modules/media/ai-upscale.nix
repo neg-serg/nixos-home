@@ -10,7 +10,7 @@ in
 with lib;
 let cfg = config.features.media.aiUpscale or {};
 in
-lib.mkIf ((config.features.gui.enable or false) && (cfg.enable or false) && ((cfg.mode or "realtime") == "offline")) (
+lib.mkIf ((config.features.gui.enable or false) && (cfg.enable or false)) (
   let
     haveRE = pkgs ? realesrgan-ncnn-vulkan;
     haveFF = pkgs ? ffmpeg-full;

@@ -45,6 +45,14 @@ in {
   # Enable OpenXR dev stack (installs Envision UI)
   features.dev.openxr.enable = true;
 
+  # Enable AI upscaling features (realtime + offline tools)
+  features.media.aiUpscale = {
+    enable = true;
+    mode = "realtime"; # toggle live in mpv via Alt+I
+    content = "general"; # or "anime"
+    scale = 2; # 2 or 4 for realtime path
+  };
+
   # Prewarm removed: persistent launcher services are disabled
 
   # XDG aggregated fixups were removed; rely on per‑file `force = true` when needed.
