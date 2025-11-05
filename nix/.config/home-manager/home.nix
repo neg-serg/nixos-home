@@ -78,6 +78,10 @@ in {
     ./secrets
     ./modules
   ];
+  # Use a consistent backup suffix during activation so shell aliases are unnecessary
+  # for `home-manager switch`. Newer Home Manager also supports `backupCommand`,
+  # but the extension-based fallback covers the current zsh alias use-case.
+  home.activation.backupFileExtension = "bck";
   xdg.stateHome = "${config.home.homeDirectory}/.local/state";
   home = {
     homeDirectory = "/home/neg";
