@@ -37,11 +37,6 @@ let
 in
 mkIf (config.features.gui.enable or false) (
   mkMerge [
-    # Option to control fetching of recommended shaders under aiUpscale
-    {
-      options.features.media.aiUpscale.installShaders =
-        (lib.mkEnableOption "install recommended mpv GLSL shaders (FSRCNNX/SSimSR/Anime4K)") // { default = true; };
-    }
     (mkIf want {
       # Best-effort fetch before linking generation; do not fail activation on errors
       home.activation.installMpvShaders = lib.hm.dag.entryBefore ["linkGeneration"] ''
@@ -50,4 +45,3 @@ mkIf (config.features.gui.enable or false) (
       '';
     })
   ])
-

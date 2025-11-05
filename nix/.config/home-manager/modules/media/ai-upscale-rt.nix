@@ -69,12 +69,10 @@ mkIf ((config.features.gui.enable or false) && (cfg.enable or false) && ((cfg.mo
     (xdg.mkXdgText "mpv/vs/ai/realesrgan.vpy" vpy)
     {
       # Toggle realtime upscale on demand (Alt+I)
+      # Note: We do NOT define a profile with 'vf=...' because mpv parses profiles at startup
+      # and errors if the 'vapoursynth' filter is not compiled. A runtime toggle is safe.
       programs.mpv.bindings = {
         "Alt+I" = "vf toggle vapoursynth=~~/vs/ai/realesrgan.vpy:buffered-frames=3:concurrent-frames=1";
-      };
-      # Optional convenience profile
-      programs.mpv.profiles."ai-realtime" = {
-        vf = [ "vapoursynth=~~/vs/ai/realesrgan.vpy:buffered-frames=3:concurrent-frames=1" ];
       };
     }
   ])

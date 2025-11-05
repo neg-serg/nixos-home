@@ -84,6 +84,7 @@ in {
           default = 2;
           description = "Upscale factor for realtime path (2 or 4).";
         };
+        installShaders = mkBool "install recommended mpv GLSL shaders (FSRCNNX/SSimSR/Anime4K)" true;
       };
       audio = {
         core.enable = mkBool "enable audio core (PipeWire routing tools)" true;
