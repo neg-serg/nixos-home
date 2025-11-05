@@ -68,7 +68,7 @@
             local items = {}
             for k = 1, cols do
               local p = group[k]
-              local name = p and (p:match('([^/]+)$') or p) or ''
+              local name = p and (p:match('([^/]+)$') or p) or ""
               items[k] = pad(name, col_width)
             end
 
