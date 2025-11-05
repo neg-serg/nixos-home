@@ -18,21 +18,24 @@ pics_dir_default="$HOME/Pictures"
 pics_dir="${XDG_PICTURES_DIR:-$pics_dir_default}"
 
 # ---- path guards -----------------------------------------------------------
-# Never operate on files inside any .git directory:
+# Never operate on files inside any VCS directory (.git, .hg, .svn, .bzr):
 # - don't set wallpapers from there, don't move/copy/rotate from/to there.
-_is_git_path() {
+_is_vcs_path() {
   local p
   p="${1%/}"
   case "$p" in
     */.git|*/.git/*|.git|.git/*) return 0 ;;
+    */.hg|*/.hg/*|.hg|.hg/*) return 0 ;;
+    */.svn|*/.svn/*|.svn|.svn/*) return 0 ;;
+    */.bzr|*/.bzr/*|.bzr|.bzr/*) return 0 ;;
     *) return 1 ;;
   esac
 }
 
-_require_not_git() { # _require_not_git <path> <what>
+_require_not_vcs() { # _require_not_vcs <path> <what>
   local p="$1" what="$2"
-  if _is_git_path "$p"; then
-    printf 'swayimg-actions: skip %s inside .git: %s\n' "$what" "$p" >&2
+  if _is_vcs_path "$p"; then
+    printf 'swayimg-actions: skip %s inside VCS dir: %s\n' "$what" "$p" >&2
     return 1
   fi
   return 0
@@ -164,6 +167,7 @@ choose_dest() {
       command -v zoxide >/dev/null 2>&1 && zoxide query -l 2>/dev/null || true
     } \
     | awk -v pic="$pics_dir" 'index($0, pic) == 1' \
+    | awk '!/(^|\/)\.(git|hg|svn|bzr)(\/|$)/' \
     | sed "s:^$HOME:~:" \
     | awk 'NF' \
     | sort -u
@@ -174,11 +178,11 @@ choose_dest() {
       {
         printf '%s\n' "$pics_dir"
         if command -v fd >/dev/null 2>&1; then
-          # Exclude .git from candidates
-          fd -td -d 3 . "$pics_dir" -E .git 2>/dev/null
+          # Exclude VCS dirs from candidates
+          fd -td -d 3 . "$pics_dir" -E .git -E .hg -E .svn -E .bzr 2>/dev/null
         else
-          # Prune .git dirs when listing
-          find "$pics_dir" -maxdepth 3 \( -name .git -type d -prune \) -o -type d -print 2>/dev/null
+          # Prune VCS dirs when listing
+          find "$pics_dir" -maxdepth 3 \( -type d \( -name .git -o -name .hg -o -name .svn -o -name .bzr \) -prune \) -o -type d -print 2>/dev/null
         fi
       } \
       | sed "s:^$HOME:~:" \
@@ -235,7 +239,7 @@ repeat_action() { # repeat last mv/cp to same dir
 
 copy_name() { # copy absolute path to clipboard
   file="$1"
-  _require_not_git "$file" copy || return 0
+  _require_not_vcs "$file" copy || return 0
   printf '%s\n' "$(realpath "$file")" | wl-copy
   if command -v pic-notify >/dev/null 2>&1; then
     pic-notify "$file" || true
@@ -244,8 +248,8 @@ copy_name() { # copy absolute path to clipboard
 
 wall() { # wall <mode> <file> via swww
   local mode="$1" file="$2"
-  # Never read or set wallpapers from .git paths
-  _require_not_git "$file" wallpaper || return 0
+  # Never read or set wallpapers from VCS paths
+  _require_not_vcs "$file" wallpaper || return 0
   ensure_swww
   render_for_mode "$mode" "$file" || return 0
   # Allow user to override transition opts via $SWWW_FLAGS

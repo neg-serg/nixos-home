@@ -44,10 +44,10 @@ ensure_swww() {
 
 pick_random_image() {
   # Collect candidate images and pick one at random
-  # Exclude any .git directories entirely
+  # Exclude VCS dirs entirely: .git, .hg, .svn, .bzr
   # Use find to avoid extra dependencies; ignore errors if folders are missing
   find "$HOME/pic/wl" "$HOME/pic/black" \
-    \( -name .git -type d -prune \) -o -type f -print 2>/dev/null \
+    \( -type d \( -name .git -o -name .hg -o -name .svn -o -name .bzr \) -prune \) -o -type f -print 2>/dev/null \
     | shuf -n 1
 }
 
@@ -58,8 +58,8 @@ main() {
   local img
   img="$(pick_random_image || true)"
   [ -n "${img}" ] || exit 1
-  # Safety: refuse .git paths even if selected (belt-and-suspenders)
-  if is_git_path "$img"; then
+  # Safety: refuse VCS paths even if selected (belt-and-suspenders)
+  if is_vcs_path "$img"; then
     exit 0
   fi
 
@@ -68,10 +68,13 @@ main() {
 }
 
 main "$@"
-# Never use images from any .git directory
-is_git_path() {
+# Never use images from any VCS directory (.git, .hg, .svn, .bzr)
+is_vcs_path() {
   case "${1%/}" in
     */.git|*/.git/*|.git|.git/*) return 0 ;;
+    */.hg|*/.hg/*|.hg|.hg/*) return 0 ;;
+    */.svn|*/.svn/*|.svn|.svn/*) return 0 ;;
+    */.bzr|*/.bzr/*|.bzr|.bzr/*) return 0 ;;
     *) return 1 ;;
   esac
 }

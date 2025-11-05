@@ -5,8 +5,39 @@ rt="$XDG_RUNTIME_DIR"; [ -n "$rt" ] || rt="/run/user/$uid"
 sock="$rt/swayimg-$PPID-$$-$RANDOM.sock"
 # Export socket path for child exec actions to use
 export SWAYIMG_IPC="$sock"
+# Pre-filter arguments to avoid VCS dirs (.git, .hg, .svn, .bzr)
+is_vcs_path() {
+  case "${1%/}" in
+    */.git|*/.git/*|.git|.git/*) return 0 ;;
+    */.hg|*/.hg/*|.hg|.hg/*) return 0 ;;
+    */.svn|*/.svn/*|.svn|.svn/*) return 0 ;;
+    */.bzr|*/.bzr/*|.bzr|.bzr/*) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+out_args=()
+for a in "$@"; do
+  if [ -e "$a" ]; then
+    # Skip any explicit VCS paths
+    if is_vcs_path "$a"; then
+      continue
+    fi
+    if [ -d "$a" ]; then
+      # Expand directory to files, pruning VCS dirs
+      while IFS= read -r -d '' f; do
+        out_args+=("$f")
+      done < <(find "$a" \( -type d \( -name .git -o -name .hg -o -name .svn -o -name .bzr \) -prune \) -o -type f -print0)
+    else
+      out_args+=("$a")
+    fi
+  else
+    out_args+=("$a")
+  fi
+done
+
 # Start swayimg with IPC enabled
-"@SWAYIMG_BIN@" --ipc="$sock" "$@" &
+"@SWAYIMG_BIN@" --ipc="$sock" "${out_args[@]}" &
 pid=$!
 i=0
 while :; do
