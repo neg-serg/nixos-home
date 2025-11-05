@@ -5,6 +5,6 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "build": "echo build noop"
+    "build": "mkdir -p /build/.local/share/vicinae/extensions/neg-hello && cp -r . /build/.local/share/vicinae/extensions/neg-hello"
   }
 }
