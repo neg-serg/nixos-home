@@ -158,7 +158,7 @@
       end
 
       -- Keymap: Files (ls-like grid)
-      vim.keymap.set('n', '<leader>f', telescope_files_lsgrid, { desc = 'Files (ls-like grid)' })
+      vim.keymap.set('n', '<leader>t', telescope_files_lsgrid, { desc = 'Files (ls-like grid)' })
     '';
     extraLuaPackages = [pkgs.luajitPackages.magick]; # LuaJIT bindings for ImageMagick
     extraPackages = [pkgs.imagemagick]; # external tool used by some plugins
