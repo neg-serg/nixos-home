@@ -38,10 +38,10 @@ lib.mkIf (config.features.gui.enable or false) (
       in_abs=$(readlink -f "$in")
       base_dir=$(dirname "$in_abs")
       base_name=$(basename "$in_abs")
-      stem="${base_name%.*}"
-      out="$base_dir/${stem}_x${scale}_realesrgan.mp4"
+      stem="\${base_name%.*}"
+      out="$base_dir/\${stem}_x\${scale}_realesrgan.mp4"
 
-      cache_root="${XDG_CACHE_HOME:-$HOME/.cache}/ai-upscale"
+      cache_root="\${XDG_CACHE_HOME:-$HOME/.cache}/ai-upscale"
       mkdir -p "$cache_root"
       work=$(mktemp -d "$cache_root/work.XXXXXX")
       trap 'rm -rf "$work"' EXIT
