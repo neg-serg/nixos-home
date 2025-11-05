@@ -136,17 +136,13 @@ Item {
             const byKnown = kb.knownKeyboards.length ? kb.knownKeyboards.some(n => n === kbd) : true
             const byPinned = kb.hasPinnedDevice ? (kb.deviceName === kbd) : true
 
-            // If we haven't pinned yet but got a valid keyboard, pin now
-            if (!kb.hasPinnedDevice && byMatch && byKnown && kbd) kb.deviceName = kbd
+            // Prefer the keyboard that emitted the event
+            if (kbd) kb.deviceName = kbd
 
-            if (!(byMatch && byKnown && (kb.deviceName === kbd))) return
+            if (!(byMatch && byKnown)) return
 
-            // Update immediately from event payload (Hyprland sends current layout)
-            const evTxt = shortenLayout(layout)
-            if (evTxt && evTxt !== kb.layoutText) kb.layoutText = evTxt
-
-            // Then confirm from devices JSON after Hyprland settles
-            postEventTimer.restart()
+            // Query devices immediately; event payload can be stale on some versions
+            postEventProc.start()
         }
     }
 
@@ -169,14 +165,6 @@ Item {
 
     ProcessRunner { id: switchProc; autoStart: false; restartOnExit: false }
 
-    // After receiving a keyboard-layout event, re-read devices to get the true current layout
-    Timer {
-        id: postEventTimer
-        interval: 80
-        running: false
-        repeat: false
-        onTriggered: postEventProc.start()
-    }
     ProcessRunner {
         id: postEventProc
         cmd: ["bash", "-lc", "hyprctl -j devices"]
