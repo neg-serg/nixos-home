@@ -71,10 +71,10 @@ lib.mkIf (config.features.gui.enable or false) (
   lib.mkMerge [
     (lib.mkIf (haveRE && haveFF) {
       home.packages = [ pkgs.realesrgan-ncnn-vulkan pkgs.ffmpeg-full ];
-      ${upscaleScript}
       # Optional: quick launcher from mpv (Alt+U) to kick off offline upscale of current file
       programs.mpv.bindings = { "Alt+U" = ''run "$HOME/.local/bin/ai-upscale-video" "\${path}"''; };
     })
+    (lib.mkIf (haveRE && haveFF) upscaleScript)
     (lib.mkIf (!haveRE) {
       warnings = [ "realesrgan-ncnn-vulkan is not available on this nixpkgs pin; AI upscale wrapper not installed." ];
     })
