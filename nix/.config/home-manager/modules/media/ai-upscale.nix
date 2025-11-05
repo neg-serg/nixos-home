@@ -24,8 +24,10 @@ lib.mkIf (config.features.gui.enable or false) (
       while [ $# -gt 0 ]; do
         case "$1" in
           --anime) model="realesrgan-x4plus-anime"; shift ;;
-          --scale) scale="\${2:-4}"; shift 2 ;;
-          --crf) crf="\${2:-16}"; shift 2 ;;
+          --scale)
+            if [ $# -ge 2 ]; then scale="$2"; shift 2; else shift; fi ;;
+          --crf)
+            if [ $# -ge 2 ]; then crf="$2"; shift 2; else shift; fi ;;
           *) echo "Unknown arg: $1" >&2; exit 2 ;;
         esac
       done
