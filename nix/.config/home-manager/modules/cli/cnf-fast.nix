@@ -11,7 +11,7 @@ in {
     (lib.mkEnableOption "fast zsh command-not-found via nix-index") // {default = true;};
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
-    (xdg.mkXdgConfigText "zsh-nix/20-cnf-nix-index.zsh" ''
+    (xdg.mkXdgText "zsh-nix/20-cnf-nix-index.zsh" ''
       # Fast command_not_found_handler using nix-index (prebuilt DB)
       # Requires an up-to-date nix-index database (handled by HM timer).
       # If multiple packages provide the command, prints all and a hint.
