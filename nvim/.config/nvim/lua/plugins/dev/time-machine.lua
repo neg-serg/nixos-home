@@ -4,6 +4,7 @@
 return {
   "y3owk1n/time-machine.nvim",
   version = "*",
+  enabled = false, -- disabled via HM request: remove Neovim TimeMachine
   cmd = {
     "TimeMachineToggle",
     "TimeMachinePurgeBuffer",
@@ -11,16 +12,9 @@ return {
     "TimeMachineLogShow",
     "TimeMachineLogClear",
   },
-  keys = {
-    { "<leader>t",  "",                             desc = "Time Machine" },
-    { "<leader>tt", "<cmd>TimeMachineToggle<cr>",    desc = "[Time] Toggle Tree" },
-    { "<leader>tx", "<cmd>TimeMachinePurgeBuffer<cr>", desc = "[Time] Purge current" },
-    { "<leader>tX", "<cmd>TimeMachinePurgeAll<cr>", desc = "[Time] Purge all" },
-    { "<leader>tl", "<cmd>TimeMachineLogShow<cr>",  desc = "[Time] Show log" },
-  },
+  keys = {},
   opts = {
     -- Keep defaults; we already use persistent undo in settings
     -- You can set diff_tool = 'difft' if you have it installed
   },
 }
-
