@@ -7,7 +7,10 @@
 let
   mkLocalBin = import ../../packages/lib/local-bin.nix { inherit lib; };
 in
-lib.mkIf (config.features.gui.enable or false) (
+with lib;
+let cfg = config.features.media.aiUpscale or {};
+in
+lib.mkIf ((config.features.gui.enable or false) && (cfg.enable or false) && ((cfg.mode or "realtime") == "offline")) (
   let
     haveRE = pkgs ? realesrgan-ncnn-vulkan;
     haveFF = pkgs ? ffmpeg-full;

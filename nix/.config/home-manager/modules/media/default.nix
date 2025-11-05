@@ -3,6 +3,7 @@
     ./apps.nix
     ./audio
     ./ai-upscale.nix
+    ./ai-upscale-rt.nix
     ./images
     ./mpv
     ./pipewire.nix
