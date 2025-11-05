@@ -126,28 +126,32 @@ Item {
                 null
             if (!payload) return
 
-            // Filter strictly to keyboard-layout events to avoid false positives
-            if (!eventName) return
-            const ev = String(eventName).toLowerCase()
-            if (ev.indexOf("keyboard-layout") === -1) return
+            // Prefer explicit signal; otherwise heuristically treat payload as keyboard-layout if it matches known keyboards
+            let isKbEvent = false
+            if (eventName) {
+                const ev = String(eventName).toLowerCase()
+                isKbEvent = ev.indexOf("keyboard-layout") !== -1
+            } else {
+                const j = payload.indexOf(",")
+                if (j > 0) {
+                    const maybeKbd = payload.slice(0, j)
+                    isKbEvent = kb.knownKeyboards.length ? kb.knownKeyboards.some(n => n === maybeKbd) : true
+                }
+            }
+            if (!isKbEvent) return
 
             const i = payload.indexOf(","); if (i < 0) return
             const kbd = payload.slice(0, i)
             const layout = payload.slice(i + 1)
 
-            const byMatch = deviceAllowed(kbd)
-            const byKnown = kb.knownKeyboards.length ? kb.knownKeyboards.some(n => n === kbd) : true
-            const byPinned = kb.hasPinnedDevice ? (kb.deviceName === kbd) : true
-
-            // Only react to events from the main device (or explicit match)
             const fromMain = (norm(kbd) === kb.mainDeviceNeedle)
-            const allowed = fromMain || byMatch
-            if (!allowed) return
 
-            // Update immediately from event payload for snappy UI
+            // Immediate UI update from event payload for snappy response
             const evTxt = shortenLayout(layout)
             if (evTxt && evTxt !== kb.layoutText) kb.layoutText = evTxt
-            // No devices snapshot here to avoid lag; main device's payload is authoritative
+
+            // If the event is not from the main keyboard, confirm quickly via devices snapshot
+            if (!fromMain) postEventProc.start()
         }
     }
 
@@ -175,7 +179,25 @@ Item {
 
     ProcessRunner { id: switchProc; autoStart: false; restartOnExit: false }
 
-    // Optional confirmation runner removed to keep switching snappy
+    // Quick confirmation when we got an event from a non-main device
+    ProcessRunner {
+        id: postEventProc
+        cmd: ["hyprctl", "-j", "devices"]
+        parseJson: true
+        onJson: (obj) => {
+            try {
+                const list = (obj?.keyboards || [])
+                // Prefer main device snapshot
+                let dev = null
+                for (let k of list) { if (k.main) { dev = k; break } }
+                if (!dev && list.length) dev = list[0]
+                if (dev) {
+                    const txt = shortenLayout(dev.active_keymap || dev.layout || kb.layoutText)
+                    if (txt && txt !== kb.layoutText) kb.layoutText = txt
+                }
+            } catch (_) {}
+        }
+    }
 
     function norm(s) { return (String(s || "").toLowerCase().replace(/[^a-z0-9]+/g, "-")) }
     function deviceAllowed(name, identifier) {
