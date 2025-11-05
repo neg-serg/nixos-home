@@ -40,6 +40,21 @@ Item {
     // This prevents the indicator from jumping between multiple keyboards.
     readonly property bool hasPinnedDevice: deviceName.length > 0
 
+    /*
+     * Strategy (why this module behaves this way):
+     * - Update the indicator immediately from Hyprland's event payload for zero‑lag UI.
+     * - Identify and prefer the main:true keyboard to ignore noise from pseudo/input helper
+     *   devices (e.g., power-button, video-bus, virtual keyboards).
+     * - Only when an event does not come from the main device, run a single hyprctl -j devices
+     *   snapshot to confirm/correct the state. This avoids persistent inversion seen on some
+     *   Hyprland versions where payload could briefly reflect the previous layout.
+     * Rationale:
+     * - Snapshot on every event introduced noticeable delay and stutter; dropping it restores
+     *   responsiveness without sacrificing correctness for the common case.
+     * - Pure payload-only was fastest but could be wrong in edge cases; the "non‑main confirm"
+     *   compromise keeps the UI snappy and accurate.
+     */
+
     function sc() {
         const s = kb.screen || (Quickshell.screens && Quickshell.screens.length ? Quickshell.screens[0] : null)
         return s ? Theme.scale(s) : 1
@@ -104,13 +119,16 @@ Item {
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
             onClicked: {
-                // Switch only the current keyboard for minimal overhead
+                // Switch only the current keyboard for minimal overhead.
+                // Using hyprctl directly (no shell) is measurably faster and avoids pulling
+                // bash into the process tree on every click.
                 switchProc.cmd = ["hyprctl", "switchxkblayout", "current", "next"]
                 switchProc.start()
             }
         }
     }
 
+    // Event path: prefer payload for snappy UI; fallback snapshot only for non‑main events.
     Connections {
         target: Hyprland
         function onRawEvent(a, b) {
@@ -151,10 +169,13 @@ Item {
             if (evTxt && evTxt !== kb.layoutText) kb.layoutText = evTxt
 
             // If the event is not from the main keyboard, confirm quickly via devices snapshot
+            // to correct a rare stale payload without penalizing the fast path.
             if (!fromMain) postEventProc.start()
         }
     }
 
+    // Init path: detect main:true keyboard once and seed the initial label from the
+    // devices snapshot so the indicator starts with a correct value.
     ProcessRunner {
         id: initProc
         cmd: ["hyprctl", "-j", "devices"]
@@ -179,7 +200,8 @@ Item {
 
     ProcessRunner { id: switchProc; autoStart: false; restartOnExit: false }
 
-    // Quick confirmation when we got an event from a non-main device
+    // Quick confirmation when we got an event from a non‑main device; this is intentionally
+    // not run on every event to avoid introducing latency in the common path.
     ProcessRunner {
         id: postEventProc
         cmd: ["hyprctl", "-j", "devices"]
