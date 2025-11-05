@@ -144,7 +144,11 @@ Item {
 
             if (!(byMatch && byKnown)) return
 
-            // Query devices immediately; event payload can be stale on some versions
+            // Update immediately from event payload for snappy UI
+            const evTxt = shortenLayout(layout)
+            if (evTxt && evTxt !== kb.layoutText) kb.layoutText = evTxt
+
+            // Confirm with devices snapshot right away (no artificial delay)
             postEventProc.start()
         }
     }
@@ -155,16 +159,10 @@ Item {
         parseJson: true
         onJson: (obj) => {
             try {
-                kb.knownKeyboards = (obj?.keyboards || []).map(k => (k.name || ""))
-                const pick = selectKeyboard(obj?.keyboards || [])
-                if (pick && deviceAllowed(pick.name || "")) {
-                    // Pin to the initially selected physical keyboard to avoid jumping
-                    if (!kb.hasPinnedDevice) {
-                        kb.deviceName = (pick.name || kb.deviceName)
-                        kb.deviceNeedle = norm(pick.name || pick.identifier || kb.deviceName)
-                    }
-                    kb.layoutText = shortenLayout(pick.active_keymap || pick.layout || kb.layoutText)
-                }
+                const list = (obj?.keyboards || [])
+                kb.knownKeyboards = list.map(k => (k.name || ""))
+                const pick = pickDevice(list)
+                if (pick) kb.layoutText = shortenLayout(pick.active_keymap || pick.layout || kb.layoutText)
             } catch (_) { }
         }
     }
@@ -178,13 +176,8 @@ Item {
         onJson: (obj) => {
             try {
                 const list = (obj?.keyboards || [])
-                let dev = null
-                // Prefer pinned device
-                for (let k of list) {
-                    if (norm(k.name || "") === kb.deviceNeedle || norm(k.identifier || "") === kb.deviceNeedle) { dev = k; break }
-                }
-                if (!dev) dev = selectKeyboard(list)
-                if (dev && deviceAllowed(dev.name || "")) {
+                const dev = pickDevice(list)
+                if (dev) {
                     const txt = shortenLayout(dev.active_keymap || dev.layout || kb.layoutText)
                     if (txt && txt !== kb.layoutText) kb.layoutText = txt
                 }
@@ -202,10 +195,11 @@ Item {
         // Try normalized match to be resilient to hyphens/spaces
         return norm(name).includes(norm(needle)) || norm(identifier).includes(norm(needle))
     }
-    function selectKeyboard(list) {
+    function pickDevice(list) {
         if (!Array.isArray(list) || list.length === 0) return null
+        // 1) If explicitly matched/pinned, honor it
         const needle = (kb.deviceMatch || kb.deviceName || "").toLowerCase().trim()
-        if (needle) {
+        if (needle.length) {
             for (let k of list) {
                 if ((k.name || "").toLowerCase().includes(needle) ||
                     (k.identifier || "").toLowerCase().includes(needle) ||
@@ -214,11 +208,14 @@ Item {
                     return k
             }
         }
+        // 2) Prefer the main keyboard (actual input device)
+        for (let k of list) { if (k.main) return k }
+        // 3) Otherwise a reasonable non-virtual choice with a keymap
         for (let k of list) {
             const n = (k.name || "").toLowerCase()
-            if (!n.includes("virtual") && (k.active_keymap || k.layout))
-                return k
+            if (!n.includes("virtual") && (k.active_keymap || k.layout)) return k
         }
+        // 4) Fallback
         return list[0]
     }
     function shortenLayout(s) {
