@@ -102,7 +102,8 @@ Item {
             cursorShape: Qt.PointingHandCursor
             onClicked: {
                 const target = (kb.deviceName && kb.deviceName.length) ? kb.deviceName : "current"
-                switchProc.cmd = ["bash", "-lc", `hyprctl switchxkblayout ${target} next`]
+                // Execute hyprctl directly (avoid spawning a shell) for faster switching
+                switchProc.cmd = ["hyprctl", "switchxkblayout", target, "next"]
                 switchProc.start()
             }
         }
@@ -155,7 +156,7 @@ Item {
 
     ProcessRunner {
         id: initProc
-        cmd: ["bash", "-lc", "hyprctl -j devices"]
+        cmd: ["hyprctl", "-j", "devices"]
         parseJson: true
         onJson: (obj) => {
             try {
@@ -171,7 +172,7 @@ Item {
 
     ProcessRunner {
         id: postEventProc
-        cmd: ["bash", "-lc", "hyprctl -j devices"]
+        cmd: ["hyprctl", "-j", "devices"]
         parseJson: true
         onJson: (obj) => {
             try {
