@@ -21,15 +21,9 @@ with lib;
             autoStart = true;
             target = "graphical-session.target";
           };
-          # Provide at least one extension using the built-in Raycast helper
-          extensions = [
-            (config.lib.vicinae.mkRayCastExtension {
-              name = "gif-search";
-              # From upstream docs; rev/sha pinned for reproducibility
-              rev = "4d417c2dfd86a5b2bea202d4a7b48d8eb3dbaeb1";
-              sha256 = "sha256-G7il8T1L+P/2mXWJsb68n4BCbVKcrrtK8GnBNxzt73Q=";
-            })
-          ];
+          # Avoid import-from-derivation during eval: leave extensions empty by default.
+          # Add Raycast/Vicinae extensions explicitly in a follow-up once HM allows builds.
+          extensions = [];
           # Drop a minimal theme placeholder; not selected unless explicitly referenced by settings
           themes = {
             neg = {
@@ -41,4 +35,3 @@ with lib;
       }
     ]
   )
-
