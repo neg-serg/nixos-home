@@ -104,9 +104,8 @@ Item {
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
             onClicked: {
-                const target = (kb.deviceName && kb.deviceName.length) ? kb.deviceName : "current"
-                // Execute hyprctl directly (avoid spawning a shell) for faster switching
-                switchProc.cmd = ["hyprctl", "switchxkblayout", target, "next"]
+                // Switch only the current keyboard for minimal overhead
+                switchProc.cmd = ["hyprctl", "switchxkblayout", "current", "next"]
                 switchProc.start()
             }
         }
