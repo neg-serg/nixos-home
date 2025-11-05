@@ -30,6 +30,8 @@ Item {
 
     property string layoutText: "??"
     property string deviceName: ""
+    // Normalized device selector used for matching JSON devices reliably
+    property string deviceNeedle: ""
     property var knownKeyboards:[]
     // If true, we only accept events for the pinned deviceName
     // This prevents the indicator from jumping between multiple keyboards.
@@ -122,11 +124,9 @@ Item {
             if (!payload) return
 
             // Filter strictly to keyboard-layout events to avoid false positives
-            if (eventName) {
-                const ev = String(eventName).toLowerCase()
-                if (ev.indexOf("keyboard-layout") === -1)
-                    return
-            }
+            if (!eventName) return
+            const ev = String(eventName).toLowerCase()
+            if (ev.indexOf("keyboard-layout") === -1) return
 
             const i = payload.indexOf(","); if (i < 0) return
             const kbd = payload.slice(0, i)
@@ -136,8 +136,11 @@ Item {
             const byKnown = kb.knownKeyboards.length ? kb.knownKeyboards.some(n => n === kbd) : true
             const byPinned = kb.hasPinnedDevice ? (kb.deviceName === kbd) : true
 
-            // Prefer the keyboard that emitted the event
-            if (kbd) kb.deviceName = kbd
+            // Prefer the keyboard that emitted the event; keep a normalized needle for matching
+            if (kbd) {
+                kb.deviceName = kbd
+                kb.deviceNeedle = norm(kbd)
+            }
 
             if (!(byMatch && byKnown)) return
 
@@ -156,7 +159,10 @@ Item {
                 const pick = selectKeyboard(obj?.keyboards || [])
                 if (pick && deviceAllowed(pick.name || "")) {
                     // Pin to the initially selected physical keyboard to avoid jumping
-                    if (!kb.hasPinnedDevice) kb.deviceName = (pick.name || kb.deviceName)
+                    if (!kb.hasPinnedDevice) {
+                        kb.deviceName = (pick.name || kb.deviceName)
+                        kb.deviceNeedle = norm(pick.name || pick.identifier || kb.deviceName)
+                    }
                     kb.layoutText = shortenLayout(pick.active_keymap || pick.layout || kb.layoutText)
                 }
             } catch (_) { }
@@ -175,7 +181,7 @@ Item {
                 let dev = null
                 // Prefer pinned device
                 for (let k of list) {
-                    if ((k.name || "") === kb.deviceName) { dev = k; break }
+                    if (norm(k.name || "") === kb.deviceNeedle || norm(k.identifier || "") === kb.deviceNeedle) { dev = k; break }
                 }
                 if (!dev) dev = selectKeyboard(list)
                 if (dev && deviceAllowed(dev.name || "")) {
@@ -186,18 +192,25 @@ Item {
         }
     }
 
-    function deviceAllowed(name) {
-        const needle = (kb.deviceMatch || "").toLowerCase().trim()
+    function norm(s) { return (String(s || "").toLowerCase().replace(/[^a-z0-9]+/g, "-")) }
+    function deviceAllowed(name, identifier) {
+        const needle = (kb.deviceMatch || kb.deviceName || "").toLowerCase().trim()
         if (!needle) return true
-        return (name || "").toLowerCase().includes(needle)
+        const n1 = (name || "").toLowerCase();
+        const n2 = (identifier || "").toLowerCase();
+        if (n1.includes(needle) || n2.includes(needle)) return true
+        // Try normalized match to be resilient to hyphens/spaces
+        return norm(name).includes(norm(needle)) || norm(identifier).includes(norm(needle))
     }
     function selectKeyboard(list) {
         if (!Array.isArray(list) || list.length === 0) return null
-        const needle = (kb.deviceMatch || "").toLowerCase().trim()
+        const needle = (kb.deviceMatch || kb.deviceName || "").toLowerCase().trim()
         if (needle) {
             for (let k of list) {
                 if ((k.name || "").toLowerCase().includes(needle) ||
-                    (k.identifier || "").toLowerCase().includes(needle))
+                    (k.identifier || "").toLowerCase().includes(needle) ||
+                    norm(k.name).includes(norm(needle)) ||
+                    norm(k.identifier).includes(norm(needle)))
                     return k
             }
         }
