@@ -39,18 +39,10 @@ _final: prev: let
       };
     };
 
-    # mpv built with VapourSynth filter enabled + wrapper that provides PYTHONPATH
-    mpv-vs = let
-      unwrapped = prev.mpv-unwrapped.overrideAttrs (old: {
-        buildInputs = (old.buildInputs or []) ++ [ prev.vapoursynth ];
-        mesonFlags = (old.mesonFlags or []) ++ [ "-Dvapoursynth=enabled" ];
-      });
-      pySite = prev.python3.sitePackages;
-      pyVS = prev.python3Packages.vapoursynth;
-    in prev.writeShellScriptBin "mpv" ''
-      #!/usr/bin/env bash
-      export PYTHONPATH="${pyVS}/${pySite}:${pyVS}/lib/${prev.python3.libPrefix}/site-packages:${prev.python3}/${pySite}:$PYTHONPATH"
-      exec ${unwrapped}/bin/mpv "$@"
-    '';
+    # Ensure mpv is built with VapourSynth support
+    mpv-unwrapped = prev.mpv-unwrapped.overrideAttrs (old: {
+      buildInputs = (old.buildInputs or []) ++ [ prev.vapoursynth ];
+      mesonFlags = (old.mesonFlags or []) ++ [ "-Dvapoursynth=enabled" ];
+    });
   };
 }
