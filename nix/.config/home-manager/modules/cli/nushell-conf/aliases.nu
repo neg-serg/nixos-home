@@ -136,7 +136,10 @@ def linux-kernel [] {
       (o: { nativeBuildInputs = o.nativeBuildInputs ++ [ pkg-config ncurses ]; })
   '
 }
-def seh [] { home-manager -b bck switch -j 32 --cores 32 --flake $"($env.XDG_CONFIG_HOME)/home-manager" }
+def seh [] {
+  # Prefer repo path to ensure latest files are used
+  home-manager -b bck switch -j 32 --cores 32 --flake $"($env.HOME)/.dotfiles/nix/.config/home-manager"
+}
 def ser [] { nh os switch /etc/nixos }
 def nixify [] { nix-shell -p nur.repos.kampka.nixify }
 def S [...args: string] { nix shell ...$args }

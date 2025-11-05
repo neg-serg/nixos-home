@@ -91,6 +91,7 @@ in {
     ./pretty-printer.nix
     ./fzf.nix
     ./nix-index-db.nix
+    ./cnf-fast.nix
     ./tmux.nix
     ./tig.nix
     ./yazi.nix
