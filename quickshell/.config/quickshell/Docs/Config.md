@@ -114,3 +114,11 @@ Tips
 - Color values: `#RRGGBB` or `#AARRGGBB`.
 - Integers are logical px before per-screen scaling; runtime scales via `Theme.scale(Screen)` and per-monitor overrides.
 - Unsure about a token? Search for it in `Settings/Theme.qml` and `Docs/ThemeTokens.md`.
+
+Keyboard layout indicator (Hyprland)
+- The Bar’s keyboard layout indicator updates instantly from Hyprland’s keyboard-layout events for a zero‑lag UI.
+- To avoid noise from pseudo keyboards (power-button, video-bus, virtual keyboards), the module identifies the main:true keyboard at init and prefers its events.
+- If an event arrives from a non‑main device, the module issues one quick `hyprctl -j devices` snapshot to confirm/correct the label. This keeps the common path fast while fixing rare stale payloads.
+- There are no timers/debounces; snapshots are not performed for every event to avoid latency.
+- Click behavior: toggles layout via `hyprctl switchxkblayout current next` (no shell involved).
+- Recommended Hyprland binding for speed: `bind = $M4, S, switchxkblayout, current, next` (dispatcher syntax, comma‑separated args).
