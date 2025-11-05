@@ -5,7 +5,7 @@
   ...
 }:
 let
-  mkLocalBin = import ../packages/lib/local-bin.nix { inherit lib; };
+  mkLocalBin = import ../../packages/lib/local-bin.nix { inherit lib; };
 in
 lib.mkIf (config.features.gui.enable or false) (
   let
@@ -24,8 +24,8 @@ lib.mkIf (config.features.gui.enable or false) (
       while [ $# -gt 0 ]; do
         case "$1" in
           --anime) model="realesrgan-x4plus-anime"; shift ;;
-          --scale) scale="${2:-4}"; shift 2 ;;
-          --crf) crf="${2:-16}"; shift 2 ;;
+          --scale) scale="\${2:-4}"; shift 2 ;;
+          --crf) crf="\${2:-16}"; shift 2 ;;
           *) echo "Unknown arg: $1" >&2; exit 2 ;;
         esac
       done
@@ -71,11 +71,10 @@ lib.mkIf (config.features.gui.enable or false) (
       home.packages = [ pkgs.realesrgan-ncnn-vulkan pkgs.ffmpeg-full ];
       ${upscaleScript}
       # Optional: quick launcher from mpv (Alt+U) to kick off offline upscale of current file
-      programs.mpv.bindings = { "Alt+U" = ''run "$HOME/.local/bin/ai-upscale-video" "${path}"''; };
+      programs.mpv.bindings = { "Alt+U" = ''run "$HOME/.local/bin/ai-upscale-video" "\${path}"''; };
     })
     (lib.mkIf (!haveRE) {
       warnings = [ "realesrgan-ncnn-vulkan is not available on this nixpkgs pin; AI upscale wrapper not installed." ];
     })
   ]
 )
-
