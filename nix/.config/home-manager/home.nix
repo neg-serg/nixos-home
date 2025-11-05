@@ -81,8 +81,17 @@ in {
   # Enable Local AI server (LocalAI package) as a user service
   services."local-ai" = {
     enable = true;
+    # Use Ollama via a tiny shim to satisfy the upstream service interface.
+    package = pkgs.writeShellScriptBin "local-ai" ''
+      #!/usr/bin/env bash
+      exec ${pkgs.ollama}/bin/ollama serve "$@"
+    '';
     environment = {
+      # For LocalAI compatibility (unused by Ollama shim)
       MODELS_PATH = "${config.xdg.dataHome}/localai/models";
+      # Effective for Ollama
+      OLLAMA_MODELS = "${config.xdg.dataHome}/ollama";
+      OLLAMA_HOST = "127.0.0.1:11434";
     };
   };
   xdg.stateHome = "${config.home.homeDirectory}/.local/state";

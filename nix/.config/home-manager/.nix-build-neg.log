@@ -1,0 +1,16 @@
+fetching git input 'git+file:///home/neg/.dotfiles'
+these 10 derivations will be built:
+  /nix/store/g9frzffskzq4ppzvr29idj8y9mblhlm8-home-manager-path.drv
+  /nix/store/myxx7mrfci7bdsiq0pd25qn2iy2vgxzc-check-link-targets.sh.drv
+  /nix/store/6drvb7ab5ahdxwgj4fwqcg8i94kk5iwc-activation-script.drv
+  /nix/store/xj5fkr2nibjdjprs0pm5l9igbcshzkgb-local-ai.drv
+  /nix/store/3z3f4jrkg3s9m2kx5wghm1nkwx191xqg-local-ai.service.drv
+  /nix/store/a48c5m5731z4i9jzy3lp54ni55w311az-hm_.localbinhmbackup.drv
+  /nix/store/abx7fkzcbsr9pwkgp13bnsz7schy6xj9-config.json.drv
+  /nix/store/d7jngxga23bgkm5liv2w11618l24ll89-hm_fontconfigconf.d10hmfonts.conf.drv
+  /nix/store/99skifldjva90c59m2qwfrpbkg9ksmx5-home-manager-files.drv
+  /nix/store/2rzvfslv5mshlqkp8rgpd9ahbk0l66hc-home-manager-generation.drv
+these 3 paths will be fetched (40.50 MiB download, 159.95 MiB unpacked):
+  /nix/store/bjmi75651r4j78pc4h3snfqy10dshhci-mcp.json
+  /nix/store/337mcln17pl85dv6wlj973785q4d1g3h-ollama-0.12.6
+  /nix/store/ipkd6fximiz73d0c21s2v0mikvd1a7w4-opencode-1.0.10
