@@ -40,7 +40,7 @@ in {
 
         if [[ -n "$matches" ]]; then
           local first
-          first="${matches%%$'\n'*}"
+          first="''${matches%%$'\n'*}"
           print -P "%F{yellow}nix-index:%f %B$cmd%B is provided by:"
           print -rl -- $matches | sed 's/^/  - /'
           print -P "Use: %B, $cmd%b  or  %Bnix shell nixpkgs#$first -c $cmd%b"
