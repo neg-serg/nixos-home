@@ -5,5 +5,6 @@
     ./scripts.nix
     ./script-opts.nix
     ./bindings.nix
+    ./shaders-profiles.nix
   ];
 }
