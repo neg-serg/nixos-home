@@ -1,6 +1,5 @@
 {
   imports = [
-    ./ai/local-ai.nix
     ./files/bin.nix
     ./local-bin
     ./files/nixpkgs-config.nix

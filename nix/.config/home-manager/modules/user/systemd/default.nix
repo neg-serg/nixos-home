@@ -9,7 +9,6 @@ with lib;
     {
       systemd.user.startServices = true;
     }
-    # Local AI service is defined in modules/user/ai/local-ai.nix
     (lib.mkIf (config.features.gui.enable or false)
       (let
         picDirsRunner = pkgs.writeShellApplication {

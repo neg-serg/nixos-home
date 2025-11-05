@@ -1,0 +1,915 @@
+fetching git input 'git+file:///home/neg/.dotfiles'
+error:
+       … while evaluating an expression to select 'config.home.activationPackage' on it
+         at /nix/store/cakyq4fb936clparsyg3w8lbdqvp8g2f-source/modules/default.nix:63:27:
+           62|
+           63|       activationPackage = module.config.home.activationPackage;
+             |                           ^
+           64|
+
+       … while evaluating module
+         at /nix/store/cakyq4fb936clparsyg3w8lbdqvp8g2f-source/modules/default.nix:63:27:
+           62|
+           63|       activationPackage = module.config.home.activationPackage;
+             |                           ^
+           64|
+
+       … from call site
+         at /nix/store/cakyq4fb936clparsyg3w8lbdqvp8g2f-source/modules/default.nix:58:16:
+           57|     let
+           58|       module = moduleChecks rawModule;
+             |                ^
+           59|     in
+
+       … while calling 'moduleChecks'
+         at /nix/store/cakyq4fb936clparsyg3w8lbdqvp8g2f-source/modules/default.nix:40:5:
+           39|   moduleChecks =
+           40|     raw:
+             |     ^
+           41|     showWarnings (
+
+       … from call site
+         at /nix/store/cakyq4fb936clparsyg3w8lbdqvp8g2f-source/modules/default.nix:41:5:
+           40|     raw:
+           41|     showWarnings (
+             |     ^
+           42|       let
+
+       … while calling 'showWarnings'
+         at /nix/store/cakyq4fb936clparsyg3w8lbdqvp8g2f-source/modules/default.nix:17:5:
+           16|   showWarnings =
+           17|     res:
+             |     ^
+           18|     let
+
+       … from call site
+         at /nix/store/cakyq4fb936clparsyg3w8lbdqvp8g2f-source/modules/default.nix:21:5:
+           20|     in
+           21|     lib.fold f res res.config.warnings;
+             |     ^
+           22|
+
+       … while calling 'foldr'
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/lists.nix:139:14:
+          138|   foldr =
+          139|     op: nul: list:
+             |              ^
+          140|     let
+
+       … from call site
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/lists.nix:144:5:
+          143|     in
+          144|     fold' 0;
+             |     ^
+          145|
+
+       … while calling 'fold''
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/lists.nix:142:15:
+          141|       len = length list;
+          142|       fold' = n: if n == len then nul else op (elemAt list n) (fold' (n + 1));
+             |               ^
+          143|     in
+
+       … while evaluating len
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/lists.nix:142:26:
+          141|       len = length list;
+          142|       fold' = n: if n == len then nul else op (elemAt list n) (fold' (n + 1));
+             |                          ^
+          143|     in
+
+       … while calling the 'length' builtin
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/lists.nix:141:13:
+          140|     let
+          141|       len = length list;
+             |             ^
+          142|       fold' = n: if n == len then nul else op (elemAt list n) (fold' (n + 1));
+
+       … while evaluating an expression to select 'config.warnings' on it
+         at /nix/store/cakyq4fb936clparsyg3w8lbdqvp8g2f-source/modules/default.nix:21:20:
+           20|     in
+           21|     lib.fold f res res.config.warnings;
+             |                    ^
+           22|
+
+       … while evaluating res
+         at /nix/store/cakyq4fb936clparsyg3w8lbdqvp8g2f-source/modules/default.nix:21:20:
+           20|     in
+           21|     lib.fold f res res.config.warnings;
+             |                    ^
+           22|
+
+       … while evaluating failed
+         at /nix/store/cakyq4fb936clparsyg3w8lbdqvp8g2f-source/modules/default.nix:46:10:
+           45|       in
+           46|       if failed == [ ] then
+             |          ^
+           47|         raw
+
+       … from call site
+         at /nix/store/cakyq4fb936clparsyg3w8lbdqvp8g2f-source/modules/default.nix:43:18:
+           42|       let
+           43|         failed = collectFailed raw.config;
+             |                  ^
+           44|         failedStr = lib.concatStringsSep "\n" (map (x: "- ${x}") failed);
+
+       … while calling 'collectFailed'
+         at /nix/store/cakyq4fb936clparsyg3w8lbdqvp8g2f-source/modules/default.nix:14:19:
+           13|
+           14|   collectFailed = cfg: map (x: x.message) (lib.filter (x: !x.assertion) cfg.assertions);
+             |                   ^
+           15|
+
+       … while calling the 'map' builtin
+         at /nix/store/cakyq4fb936clparsyg3w8lbdqvp8g2f-source/modules/default.nix:14:24:
+           13|
+           14|   collectFailed = cfg: map (x: x.message) (lib.filter (x: !x.assertion) cfg.assertions);
+             |                        ^
+           15|
+
+       … while calling the 'filter' builtin
+         at /nix/store/cakyq4fb936clparsyg3w8lbdqvp8g2f-source/modules/default.nix:14:44:
+           13|
+           14|   collectFailed = cfg: map (x: x.message) (lib.filter (x: !x.assertion) cfg.assertions);
+             |                                            ^
+           15|
+
+       … while calling anonymous lambda
+         at /nix/store/cakyq4fb936clparsyg3w8lbdqvp8g2f-source/modules/default.nix:14:56:
+           13|
+           14|   collectFailed = cfg: map (x: x.message) (lib.filter (x: !x.assertion) cfg.assertions);
+             |                                                        ^
+           15|
+
+       … while evaluating the attribute 'assertion'
+         at /nix/store/cakyq4fb936clparsyg3w8lbdqvp8g2f-source/modules/files.nix:62:11:
+           61|         {
+           62|           assertion = dups == [ ];
+             |           ^
+           63|           message = ''
+
+       … while evaluating dups
+         at /nix/store/cakyq4fb936clparsyg3w8lbdqvp8g2f-source/modules/files.nix:62:23:
+           61|         {
+           62|           assertion = dups == [ ];
+             |                       ^
+           63|           message = ''
+
+       … while calling the 'attrNames' builtin
+         at /nix/store/cakyq4fb936clparsyg3w8lbdqvp8g2f-source/modules/files.nix:54:18:
+           53|         let
+           54|           dups = lib.attrNames (
+             |                  ^
+           55|             lib.filterAttrs (n: v: v > 1) (
+
+       … from call site
+         at /nix/store/cakyq4fb936clparsyg3w8lbdqvp8g2f-source/modules/files.nix:55:13:
+           54|           dups = lib.attrNames (
+           55|             lib.filterAttrs (n: v: v > 1) (
+             |             ^
+           56|               lib.foldAttrs (acc: v: acc + v) 0 (lib.mapAttrsToList (n: v: { ${v.target} = 1; }) cfg)
+
+       … while calling 'filterAttrs'
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/attrsets.nix:663:23:
+          662|   */
+          663|   filterAttrs = pred: set: removeAttrs set (filter (name: !pred name set.${name}) (attrNames set));
+             |                       ^
+          664|
+
+       … while calling the 'removeAttrs' builtin
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/attrsets.nix:663:28:
+          662|   */
+          663|   filterAttrs = pred: set: removeAttrs set (filter (name: !pred name set.${name}) (attrNames set));
+             |                            ^
+          664|
+
+       … from call site
+         at /nix/store/cakyq4fb936clparsyg3w8lbdqvp8g2f-source/modules/files.nix:56:15:
+           55|             lib.filterAttrs (n: v: v > 1) (
+           56|               lib.foldAttrs (acc: v: acc + v) 0 (lib.mapAttrsToList (n: v: { ${v.target} = 1; }) cfg)
+             |               ^
+           57|             )
+
+       … while calling 'foldAttrs'
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/attrsets.nix:830:14:
+          829|   foldAttrs =
+          830|     op: nul: list_of_attrs:
+             |              ^
+          831|     foldr (
+
+       … from call site
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/attrsets.nix:831:5:
+          830|     op: nul: list_of_attrs:
+          831|     foldr (
+             |     ^
+          832|       n: a: foldr (name: o: o // { ${name} = op n.${name} (a.${name} or nul); }) a (attrNames n)
+
+       … while calling 'foldr'
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/lists.nix:139:14:
+          138|   foldr =
+          139|     op: nul: list:
+             |              ^
+          140|     let
+
+       … from call site
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/lists.nix:144:5:
+          143|     in
+          144|     fold' 0;
+             |     ^
+          145|
+
+       … while calling 'fold''
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/lists.nix:142:15:
+          141|       len = length list;
+          142|       fold' = n: if n == len then nul else op (elemAt list n) (fold' (n + 1));
+             |               ^
+          143|     in
+
+       … while evaluating len
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/lists.nix:142:26:
+          141|       len = length list;
+          142|       fold' = n: if n == len then nul else op (elemAt list n) (fold' (n + 1));
+             |                          ^
+          143|     in
+
+       … while calling the 'length' builtin
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/lists.nix:141:13:
+          140|     let
+          141|       len = length list;
+             |             ^
+          142|       fold' = n: if n == len then nul else op (elemAt list n) (fold' (n + 1));
+
+       … from call site
+         at /nix/store/cakyq4fb936clparsyg3w8lbdqvp8g2f-source/modules/files.nix:56:50:
+           55|             lib.filterAttrs (n: v: v > 1) (
+           56|               lib.foldAttrs (acc: v: acc + v) 0 (lib.mapAttrsToList (n: v: { ${v.target} = 1; }) cfg)
+             |                                                  ^
+           57|             )
+
+       … while calling 'mapAttrsToList'
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/attrsets.nix:1085:23:
+         1084|   */
+         1085|   mapAttrsToList = f: attrs: attrValues (mapAttrs f attrs);
+             |                       ^
+         1086|
+
+       … while calling the 'attrValues' builtin
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/attrsets.nix:1085:30:
+         1084|   */
+         1085|   mapAttrsToList = f: attrs: attrValues (mapAttrs f attrs);
+             |                              ^
+         1086|
+
+       … while calling the 'mapAttrs' builtin
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/attrsets.nix:1085:42:
+         1084|   */
+         1085|   mapAttrsToList = f: attrs: attrValues (mapAttrs f attrs);
+             |                                          ^
+         1086|
+
+       … from call site
+         at /nix/store/cakyq4fb936clparsyg3w8lbdqvp8g2f-source/modules/files.nix:10:9:
+            9|
+           10|   cfg = lib.filterAttrs (n: f: f.enable) config.home.file;
+             |         ^
+           11|
+
+       … while calling 'filterAttrs'
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/attrsets.nix:663:23:
+          662|   */
+          663|   filterAttrs = pred: set: removeAttrs set (filter (name: !pred name set.${name}) (attrNames set));
+             |                       ^
+          664|
+
+       … while calling the 'removeAttrs' builtin
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/attrsets.nix:663:28:
+          662|   */
+          663|   filterAttrs = pred: set: removeAttrs set (filter (name: !pred name set.${name}) (attrNames set));
+             |                            ^
+          664|
+
+       … from call site
+         at /nix/store/cakyq4fb936clparsyg3w8lbdqvp8g2f-source/modules/files.nix:10:54:
+            9|
+           10|   cfg = lib.filterAttrs (n: f: f.enable) config.home.file;
+             |                                                      ^
+           11|
+
+       … while calling anonymous lambda
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/attrsets.nix:1188:17:
+         1187|         mapAttrs (
+         1188|           name: value:
+             |                 ^
+         1189|           if isAttrs value && cond value then recurse (path ++ [ name ]) value else f (path ++ [ name ]) value
+
+       … from call site
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/attrsets.nix:1189:85:
+         1188|           name: value:
+         1189|           if isAttrs value && cond value then recurse (path ++ [ name ]) value else f (path ++ [ name ]) value
+             |                                                                                     ^
+         1190|         );
+
+       … while calling anonymous lambda
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:275:71:
+          274|           # For definitions that have an associated option
+          275|           declaredConfig = mapAttrsRecursiveCond (v: !isOption v) (_: v: v.value) options;
+             |                                                                       ^
+          276|
+
+       … while evaluating the attribute 'value'
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1118:7:
+         1117|     // {
+         1118|       value = addErrorContext "while evaluating the option `${showOption loc}':" value;
+             |       ^
+         1119|       inherit (res.defsFinal') highestPrio;
+
+       … while calling the 'addErrorContext' builtin
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1118:15:
+         1117|     // {
+         1118|       value = addErrorContext "while evaluating the option `${showOption loc}':" value;
+             |               ^
+         1119|       inherit (res.defsFinal') highestPrio;
+
+       … while evaluating the option `home.file':
+
+       … while evaluating the attribute 'mergedValue'
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1189:5:
+         1188|     # Type-check the remaining definitions, and merge them. Or throw if no definitions.
+         1189|     mergedValue =
+             |     ^
+         1190|       if isDefined then
+
+       … while evaluating isDefined
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1190:10:
+         1189|     mergedValue =
+         1190|       if isDefined then
+             |          ^
+         1191|         if type.merge ? v2 then
+
+       … while evaluating defsFinal
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1251:17:
+         1250|
+         1251|     isDefined = defsFinal != [ ];
+             |                 ^
+         1252|
+
+       … while evaluating the attribute 'values'
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1183:9:
+         1182|       {
+         1183|         values = defsSorted;
+             |         ^
+         1184|         inherit (defsFiltered) highestPrio;
+
+       … while calling the 'any' builtin
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1177:14:
+         1176|           # Avoid sorting if we don't have to.
+         1177|           if any (def: def.value._type or "" == "order") defsFiltered.values then
+             |              ^
+         1178|             sortProperties defsFiltered.values
+
+       … while evaluating the attribute 'values'
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1357:7:
+         1356|     {
+         1357|       values = concatMap (def: if getPrio def == highestPrio then [ (strip def) ] else [ ]) defs;
+             |       ^
+         1358|       inherit highestPrio;
+
+       … while calling the 'concatMap' builtin
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1357:16:
+         1356|     {
+         1357|       values = concatMap (def: if getPrio def == highestPrio then [ (strip def) ] else [ ]) defs;
+             |                ^
+         1358|       inherit highestPrio;
+
+       … while calling the 'concatMap' builtin
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1157:26:
+         1156|         # Process mkMerge and mkIf properties.
+         1157|         defsNormalized = concatMap (
+             |                          ^
+         1158|           m:
+
+       … while calling anonymous lambda
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1158:11:
+         1157|         defsNormalized = concatMap (
+         1158|           m:
+             |           ^
+         1159|           map (
+
+       … while calling the 'map' builtin
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1159:11:
+         1158|           m:
+         1159|           map (
+             |           ^
+         1160|             value:
+
+       … while calling the 'addErrorContext' builtin
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1168:14:
+         1167|               }
+         1168|           ) (addErrorContext "while evaluating definitions from `${m.file}':" (dischargeProperties m.value))
+             |              ^
+         1169|         ) defs;
+
+       … while evaluating definitions from `/nix/store/cakyq4fb936clparsyg3w8lbdqvp8g2f-source/modules/misc/xdg.nix':
+
+       … from call site
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1168:80:
+         1167|               }
+         1168|           ) (addErrorContext "while evaluating definitions from `${m.file}':" (dischargeProperties m.value))
+             |                                                                                ^
+         1169|         ) defs;
+
+       … while calling 'dischargeProperties'
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1308:5:
+         1307|   dischargeProperties =
+         1308|     def:
+             |     ^
+         1309|     if def._type or "" == "merge" then
+
+       … while calling the 'concatMap' builtin
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1310:7:
+         1309|     if def._type or "" == "merge" then
+         1310|       concatMap dischargeProperties def.contents
+             |       ^
+         1311|     else if def._type or "" == "if" then
+
+       … while calling 'dischargeProperties'
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1308:5:
+         1307|   dischargeProperties =
+         1308|     def:
+             |     ^
+         1309|     if def._type or "" == "merge" then
+
+       … while evaluating an expression to select '_type' on it
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1309:8:
+         1308|     def:
+         1309|     if def._type or "" == "merge" then
+             |        ^
+         1310|       concatMap dischargeProperties def.contents
+
+       … while evaluating def
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1309:8:
+         1308|     def:
+         1309|     if def._type or "" == "merge" then
+             |        ^
+         1310|       concatMap dischargeProperties def.contents
+
+       … from call site
+         at /nix/store/cakyq4fb936clparsyg3w8lbdqvp8g2f-source/modules/misc/xdg.nix:162:10:
+          161|         (lib.mapAttrs' (name: file: lib.nameValuePair "${cfg.cacheHome}/${name}" file) cfg.cacheFile)
+          162|         (lib.mapAttrs' (name: file: lib.nameValuePair "${cfg.configHome}/${name}" file) cfg.configFile)
+             |          ^
+          163|         (lib.mapAttrs' (name: file: lib.nameValuePair "${cfg.dataHome}/${name}" file) cfg.dataFile)
+
+       … while calling 'mapAttrs''
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/attrsets.nix:1051:18:
+         1050|   */
+         1051|   mapAttrs' = f: set: listToAttrs (mapAttrsToList f set);
+             |                  ^
+         1052|
+
+       … while calling the 'listToAttrs' builtin
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/attrsets.nix:1051:23:
+         1050|   */
+         1051|   mapAttrs' = f: set: listToAttrs (mapAttrsToList f set);
+             |                       ^
+         1052|
+
+       … from call site
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/attrsets.nix:1051:36:
+         1050|   */
+         1051|   mapAttrs' = f: set: listToAttrs (mapAttrsToList f set);
+             |                                    ^
+         1052|
+
+       … while calling 'mapAttrsToList'
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/attrsets.nix:1085:23:
+         1084|   */
+         1085|   mapAttrsToList = f: attrs: attrValues (mapAttrs f attrs);
+             |                       ^
+         1086|
+
+       … while calling the 'attrValues' builtin
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/attrsets.nix:1085:30:
+         1084|   */
+         1085|   mapAttrsToList = f: attrs: attrValues (mapAttrs f attrs);
+             |                              ^
+         1086|
+
+       … while calling the 'mapAttrs' builtin
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/attrsets.nix:1085:42:
+         1084|   */
+         1085|   mapAttrsToList = f: attrs: attrValues (mapAttrs f attrs);
+             |                                          ^
+         1086|
+
+       … from call site
+         at /nix/store/cakyq4fb936clparsyg3w8lbdqvp8g2f-source/modules/misc/xdg.nix:162:93:
+          161|         (lib.mapAttrs' (name: file: lib.nameValuePair "${cfg.cacheHome}/${name}" file) cfg.cacheFile)
+          162|         (lib.mapAttrs' (name: file: lib.nameValuePair "${cfg.configHome}/${name}" file) cfg.configFile)
+             |                                                                                             ^
+          163|         (lib.mapAttrs' (name: file: lib.nameValuePair "${cfg.dataHome}/${name}" file) cfg.dataFile)
+
+       … while calling anonymous lambda
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/attrsets.nix:1188:17:
+         1187|         mapAttrs (
+         1188|           name: value:
+             |                 ^
+         1189|           if isAttrs value && cond value then recurse (path ++ [ name ]) value else f (path ++ [ name ]) value
+
+       … from call site
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/attrsets.nix:1189:85:
+         1188|           name: value:
+         1189|           if isAttrs value && cond value then recurse (path ++ [ name ]) value else f (path ++ [ name ]) value
+             |                                                                                     ^
+         1190|         );
+
+       … while calling anonymous lambda
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:275:71:
+          274|           # For definitions that have an associated option
+          275|           declaredConfig = mapAttrsRecursiveCond (v: !isOption v) (_: v: v.value) options;
+             |                                                                       ^
+          276|
+
+       … while evaluating the attribute 'value'
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1118:7:
+         1117|     // {
+         1118|       value = addErrorContext "while evaluating the option `${showOption loc}':" value;
+             |       ^
+         1119|       inherit (res.defsFinal') highestPrio;
+
+       … while calling the 'addErrorContext' builtin
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1118:15:
+         1117|     // {
+         1118|       value = addErrorContext "while evaluating the option `${showOption loc}':" value;
+             |               ^
+         1119|       inherit (res.defsFinal') highestPrio;
+
+       … while evaluating the option `xdg.configFile':
+
+       (11 duplicate frames omitted)
+
+       … while evaluating definitions from `/nix/store/cakyq4fb936clparsyg3w8lbdqvp8g2f-source/modules/systemd.nix':
+
+       … from call site
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1168:80:
+         1167|               }
+         1168|           ) (addErrorContext "while evaluating definitions from `${m.file}':" (dischargeProperties m.value))
+             |                                                                                ^
+         1169|         ) defs;
+
+       … while calling 'dischargeProperties'
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1308:5:
+         1307|   dischargeProperties =
+         1308|     def:
+             |     ^
+         1309|     if def._type or "" == "merge" then
+
+       … from call site
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1313:31:
+         1312|       if isBool def.condition then
+         1313|         if def.condition then dischargeProperties def.content else [ ]
+             |                               ^
+         1314|       else
+
+       … while calling 'dischargeProperties'
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1308:5:
+         1307|   dischargeProperties =
+         1308|     def:
+             |     ^
+         1309|     if def._type or "" == "merge" then
+
+       … while calling the 'concatMap' builtin
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1310:7:
+         1309|     if def._type or "" == "merge" then
+         1310|       concatMap dischargeProperties def.contents
+             |       ^
+         1311|     else if def._type or "" == "if" then
+
+       … while calling 'dischargeProperties'
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1308:5:
+         1307|   dischargeProperties =
+         1308|     def:
+             |     ^
+         1309|     if def._type or "" == "merge" then
+
+       … while evaluating an expression to select '_type' on it
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1309:8:
+         1308|     def:
+         1309|     if def._type or "" == "merge" then
+             |        ^
+         1310|       concatMap dischargeProperties def.contents
+
+       … while evaluating def
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1309:8:
+         1308|     def:
+         1309|     if def._type or "" == "merge" then
+             |        ^
+         1310|       concatMap dischargeProperties def.contents
+
+       … while calling the 'listToAttrs' builtin
+         at /nix/store/cakyq4fb936clparsyg3w8lbdqvp8g2f-source/modules/systemd.nix:440:8:
+          439|     xdg.configFile = mkMerge [
+          440|       (lib.listToAttrs (
+             |        ^
+          441|         (buildServices "service" cfg.services)
+
+       … from call site
+         at /nix/store/cakyq4fb936clparsyg3w8lbdqvp8g2f-source/modules/systemd.nix:441:10:
+          440|       (lib.listToAttrs (
+          441|         (buildServices "service" cfg.services)
+             |          ^
+          442|         ++ (buildServices "slice" cfg.slices)
+
+       … while calling 'buildServices'
+         at /nix/store/cakyq4fb936clparsyg3w8lbdqvp8g2f-source/modules/systemd.nix:76:12:
+           75|   buildServices =
+           76|     style: serviceCfgs: lib.concatLists (lib.mapAttrsToList (buildService style) serviceCfgs);
+             |            ^
+           77|
+
+       … while calling the 'concatLists' builtin
+         at /nix/store/cakyq4fb936clparsyg3w8lbdqvp8g2f-source/modules/systemd.nix:76:25:
+           75|   buildServices =
+           76|     style: serviceCfgs: lib.concatLists (lib.mapAttrsToList (buildService style) serviceCfgs);
+             |                         ^
+           77|
+
+       … from call site
+         at /nix/store/cakyq4fb936clparsyg3w8lbdqvp8g2f-source/modules/systemd.nix:76:42:
+           75|   buildServices =
+           76|     style: serviceCfgs: lib.concatLists (lib.mapAttrsToList (buildService style) serviceCfgs);
+             |                                          ^
+           77|
+
+       … while calling 'mapAttrsToList'
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/attrsets.nix:1085:23:
+         1084|   */
+         1085|   mapAttrsToList = f: attrs: attrValues (mapAttrs f attrs);
+             |                       ^
+         1086|
+
+       … while calling the 'attrValues' builtin
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/attrsets.nix:1085:30:
+         1084|   */
+         1085|   mapAttrsToList = f: attrs: attrValues (mapAttrs f attrs);
+             |                              ^
+         1086|
+
+       … while calling the 'mapAttrs' builtin
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/attrsets.nix:1085:42:
+         1084|   */
+         1085|   mapAttrsToList = f: attrs: attrValues (mapAttrs f attrs);
+             |                                          ^
+         1086|
+
+       … from call site
+         at /nix/store/cakyq4fb936clparsyg3w8lbdqvp8g2f-source/modules/systemd.nix:441:38:
+          440|       (lib.listToAttrs (
+          441|         (buildServices "service" cfg.services)
+             |                                      ^
+          442|         ++ (buildServices "slice" cfg.slices)
+
+       … while calling anonymous lambda
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/attrsets.nix:1188:17:
+         1187|         mapAttrs (
+         1188|           name: value:
+             |                 ^
+         1189|           if isAttrs value && cond value then recurse (path ++ [ name ]) value else f (path ++ [ name ]) value
+
+       … from call site
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/attrsets.nix:1189:85:
+         1188|           name: value:
+         1189|           if isAttrs value && cond value then recurse (path ++ [ name ]) value else f (path ++ [ name ]) value
+             |                                                                                     ^
+         1190|         );
+
+       … while calling anonymous lambda
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:275:71:
+          274|           # For definitions that have an associated option
+          275|           declaredConfig = mapAttrsRecursiveCond (v: !isOption v) (_: v: v.value) options;
+             |                                                                       ^
+          276|
+
+       … while evaluating the attribute 'value'
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1118:7:
+         1117|     // {
+         1118|       value = addErrorContext "while evaluating the option `${showOption loc}':" value;
+             |       ^
+         1119|       inherit (res.defsFinal') highestPrio;
+
+       … while calling the 'addErrorContext' builtin
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1118:15:
+         1117|     // {
+         1118|       value = addErrorContext "while evaluating the option `${showOption loc}':" value;
+             |               ^
+         1119|       inherit (res.defsFinal') highestPrio;
+
+       … while evaluating the option `systemd.user.services':
+
+       (11 duplicate frames omitted)
+
+       … while evaluating definitions from `/nix/store/8cxkz6lhaj984c7in5nz894p1qmc4xlm-source/nix/.config/home-manager/modules/user/ai/local-ai.nix':
+
+       … from call site
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1168:80:
+         1167|               }
+         1168|           ) (addErrorContext "while evaluating definitions from `${m.file}':" (dischargeProperties m.value))
+             |                                                                                ^
+         1169|         ) defs;
+
+       … while calling 'dischargeProperties'
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1308:5:
+         1307|   dischargeProperties =
+         1308|     def:
+             |     ^
+         1309|     if def._type or "" == "merge" then
+
+       … while calling the 'isBool' builtin
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1312:10:
+         1311|     else if def._type or "" == "if" then
+         1312|       if isBool def.condition then
+             |          ^
+         1313|         if def.condition then dischargeProperties def.content else [ ]
+
+       … while evaluating the attribute 'condition'
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1468:13:
+         1467|     _type = "if";
+         1468|     inherit condition content;
+             |             ^
+         1469|   };
+
+       … while evaluating the attribute 'condition'
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1468:13:
+         1467|     _type = "if";
+         1468|     inherit condition content;
+             |             ^
+         1469|   };
+
+       … while evaluating the attribute 'condition'
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1468:13:
+         1467|     _type = "if";
+         1468|     inherit condition content;
+             |             ^
+         1469|   };
+
+       … while evaluating the attribute 'condition'
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1468:13:
+         1467|     _type = "if";
+         1468|     inherit condition content;
+             |             ^
+         1469|   };
+
+       … from call site
+         at /nix/store/8cxkz6lhaj984c7in5nz894p1qmc4xlm-source/nix/.config/home-manager/modules/user/ai/local-ai.nix:9:26:
+            8|
+            9|   config = lib.mkIf (cfg.enable or false) (lib.mkMerge [
+             |                          ^
+           10|     {
+
+       … while calling anonymous lambda
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/attrsets.nix:1188:17:
+         1187|         mapAttrs (
+         1188|           name: value:
+             |                 ^
+         1189|           if isAttrs value && cond value then recurse (path ++ [ name ]) value else f (path ++ [ name ]) value
+
+       … while calling the 'isAttrs' builtin
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/attrsets.nix:1189:14:
+         1188|           name: value:
+         1189|           if isAttrs value && cond value then recurse (path ++ [ name ]) value else f (path ++ [ name ]) value
+             |              ^
+         1190|         );
+
+       … while calling anonymous lambda
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:881:37:
+          880|
+          881|       matchedOptions = mapAttrs (n: v: v.matchedOptions) resultsByName;
+             |                                     ^
+          882|
+
+       … while evaluating the attribute 'matchedOptions'
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:847:13:
+          846|           {
+          847|             matchedOptions = evalOptionValue loc opt defns';
+             |             ^
+          848|             unmatchedDefns = [ ];
+
+       … from call site
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:847:30:
+          846|           {
+          847|             matchedOptions = evalOptionValue loc opt defns';
+             |                              ^
+          848|             unmatchedDefns = [ ];
+
+       … while calling 'evalOptionValue'
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1079:15:
+         1078|   evalOptionValue =
+         1079|     loc: opt: defs:
+             |               ^
+         1080|     let
+
+       … while evaluating warnDeprecation
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1116:5:
+         1115|     in
+         1116|     warnDeprecation opt
+             |     ^
+         1117|     // {
+
+       … from call site
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1112:9:
+         1111|       warnDeprecation =
+         1112|         warnIf (opt.type.deprecationMessage != null)
+             |         ^
+         1113|           "The type `types.${opt.type.name}' of option `${showOption loc}' defined in ${showFiles opt.declarations} is deprecated. ${opt.type.deprecationMessage}";
+
+       … while calling 'warnIf'
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/trivial.nix:845:18:
+          844|   */
+          845|   warnIf = cond: msg: if cond then warn msg else x: x;
+             |                  ^
+          846|
+
+       … while evaluating cond
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/trivial.nix:845:26:
+          844|   */
+          845|   warnIf = cond: msg: if cond then warn msg else x: x;
+             |                          ^
+          846|
+
+       … while evaluating an expression to select 'type.deprecationMessage' on it
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1112:17:
+         1111|       warnDeprecation =
+         1112|         warnIf (opt.type.deprecationMessage != null)
+             |                 ^
+         1113|           "The type `types.${opt.type.name}' of option `${showOption loc}' defined in ${showFiles opt.declarations} is deprecated. ${opt.type.deprecationMessage}";
+
+       … while evaluating opt
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1112:17:
+         1111|       warnDeprecation =
+         1112|         warnIf (opt.type.deprecationMessage != null)
+             |                 ^
+         1113|           "The type `types.${opt.type.name}' of option `${showOption loc}' defined in ${showFiles opt.declarations} is deprecated. ${opt.type.deprecationMessage}";
+
+       … from call site
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:844:19:
+          843|           let
+          844|             opt = fixupOptionType loc (mergeOptionDecls loc decls);
+             |                   ^
+          845|           in
+
+       … while calling 'fixupOptionType'
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1394:10:
+         1393|   fixupOptionType =
+         1394|     loc: opt:
+             |          ^
+         1395|     if opt.type.getSubModules or null == null then
+
+       … while evaluating an expression to select 'type.getSubModules' on it
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1395:8:
+         1394|     loc: opt:
+         1395|     if opt.type.getSubModules or null == null then
+             |        ^
+         1396|       opt // { type = opt.type or types.unspecified; }
+
+       … while evaluating opt
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1395:8:
+         1394|     loc: opt:
+         1395|     if opt.type.getSubModules or null == null then
+             |        ^
+         1396|       opt // { type = opt.type or types.unspecified; }
+
+       … from call site
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:844:40:
+          843|           let
+          844|             opt = fixupOptionType loc (mergeOptionDecls loc decls);
+             |                                        ^
+          845|           in
+
+       … while calling 'mergeOptionDecls'
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:967:10:
+          966|   mergeOptionDecls =
+          967|     loc: opts:
+             |          ^
+          968|     foldl'
+
+       … while calling the 'foldl'' builtin
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:968:5:
+          967|     loc: opts:
+          968|     foldl'
+             |     ^
+          969|       (
+
+       … while calling anonymous lambda
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:970:14:
+          969|       (
+          970|         res: opt:
+             |              ^
+          971|         let
+
+       … caused by explicit throw
+         at /nix/store/1wnxdqr2n1pj80lirh9pzsymslx8zd9l-source/lib/modules.nix:1016:11:
+         1015|           # Keep in sync with the same error above!
+         1016|           throw
+             |           ^
+         1017|             "The option `${showOption loc}' in `${opt._file}' is already declared in ${showFiles res.declarations}."
+
+       error: The option `services.local-ai.enable' in `/nix/store/cakyq4fb936clparsyg3w8lbdqvp8g2f-source/modules/services/local-ai.nix' is already declared in `/nix/store/8cxkz6lhaj984c7in5nz894p1qmc4xlm-source/nix/.config/home-manager/modules/user/ai/local-ai.nix'.

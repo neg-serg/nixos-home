@@ -33,7 +33,7 @@ Item {
     property var knownKeyboards:[]
     // If true, we only accept events for the pinned deviceName
     // This prevents the indicator from jumping between multiple keyboards.
-    readonly property bool hasPinnedDevice: (deviceName && deviceName.length > 0)
+    readonly property bool hasPinnedDevice: deviceName.length > 0
 
     function sc() {
         const s = kb.screen || (Quickshell.screens && Quickshell.screens.length ? Quickshell.screens[0] : null)

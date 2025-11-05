@@ -78,8 +78,13 @@ in {
     ./secrets
     ./modules
   ];
-  # Enable Local AI server (Ollama) as a user service
-  services."local-ai".enable = true;
+  # Enable Local AI server (LocalAI package) as a user service
+  services."local-ai" = {
+    enable = true;
+    environment = {
+      MODELS_PATH = "${config.xdg.dataHome}/localai/models";
+    };
+  };
   xdg.stateHome = "${config.home.homeDirectory}/.local/state";
   home = {
     homeDirectory = "/home/neg";

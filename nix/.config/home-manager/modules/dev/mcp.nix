@@ -38,9 +38,8 @@ lib.mkIf cfgDev (lib.mkMerge [
       enableMcpIntegration = true;
       # Keep default package (pkgs.opencode) if available; do not force extra settings
     };
-
-    # Materialize MCP for the default VS Code user profile
-    programs.vscode.profiles.default.enableMcpIntegration = true;
+    # VSCode MCP integration can be enabled later if needed;
+    # it may introduce extra evaluation edges in some environments.
+    # programs.vscode.profiles.default.enableMcpIntegration = true;
   }
 ])
-

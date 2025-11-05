@@ -1,26 +1,35 @@
 { lib, config, pkgs, ... }:
+let
+  # Avoid referencing config.lib.neg here to prevent HM eval recursion
+  mkLocalBin = import ../../../packages/lib/local-bin.nix { inherit lib; };
+in
 lib.mkMerge [
   {
     programs.home-manager.enable = true; # Let Home Manager install and manage itself.
-    # Prefer built-in activation backup over shell aliases.
-    # New HM option takes precedence; uses env $HOME_MANAGER_BACKUP_EXT when set.
-    home-manager.backupFileExtension = "bck";
-    home-manager.backupCommand = "${config.home.homeDirectory}/.local/bin/hm-backup";
   }
   # Small wrapper used by backupCommand: moves the existing path to path.$HOME_MANAGER_BACKUP_EXT
-  (config.lib.neg.mkLocalBin "hm-backup" ''#!/usr/bin/env bash
-set -euo pipefail
+  (mkLocalBin "hm-backup" ''#!/usr/bin/env bash
+ set -euo pipefail
 
-src=${1:?"usage: hm-backup <path>"}
-ext="${HOME_MANAGER_BACKUP_EXT:-bck}"
-dst="${src}.${ext}"
+ src="$1"
+ if [ -z "$src" ]; then
+   echo "usage: hm-backup <path>" >&2
+   exit 2
+ fi
 
-# Avoid clobbering: append timestamp if destination exists
-if [ -e "$dst" ] || [ -L "$dst" ]; then
-  ts=$(date +%Y%m%d-%H%M%S)
-  dst="${src}.${ext}.${ts}"
-fi
+ ext="$HOME_MANAGER_BACKUP_EXT"
+ if [ -z "$ext" ]; then
+   ext="bck"
+ fi
 
-mv -- "$src" "$dst"
-'' )
+ dst="$src.$ext"
+
+ # Avoid clobbering: append timestamp if destination exists
+ if [ -e "$dst" ] || [ -L "$dst" ]; then
+   ts=$(date +%Y%m%d-%H%M%S)
+   dst="$src.$ext.$ts"
+ fi
+
+ mv -- "$src" "$dst"
+ '' )
 ]
