@@ -78,6 +78,8 @@ in {
     ./secrets
     ./modules
   ];
+  # Enable Local AI server (Ollama) as a user service
+  services."local-ai".enable = true;
   xdg.stateHome = "${config.home.homeDirectory}/.local/state";
   home = {
     homeDirectory = "/home/neg";
