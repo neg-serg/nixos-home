@@ -9,6 +9,37 @@ with lib;
     {
       systemd.user.startServices = true;
     }
+    # Local AI service (Ollama) — user service
+    (lib.mkIf (config.features.dev.ai.enable or false) (let
+      modelsDir = "${config.xdg.dataHome}/ollama";
+      exe = lib.getExe pkgs.ollama;
+    in {
+      # Ensure model directory exists after write boundary
+      home.activation.ensureLocalAIDirs = config.lib.neg.mkEnsureDirsAfterWrite [ modelsDir ];
+
+      # Install client/daemon binary
+      home.packages = config.lib.neg.pkgsList [ pkgs.ollama ];
+
+      systemd.user.services."local-ai" = lib.mkMerge [
+        {
+          Unit = {
+            Description = "Local AI (Ollama server)";
+            StartLimitBurst = "8";
+          };
+          Service = {
+            Type = "simple";
+            ExecStart = "${exe} serve";
+            Environment = [
+              "OLLAMA_MODELS=${modelsDir}"
+              "OLLAMA_HOST=127.0.0.1:11434"
+            ];
+            Restart = "on-failure";
+            RestartSec = "5s";
+          };
+        }
+        (config.lib.neg.systemdUser.mkUnitFromPresets {presets = ["defaultWanted"];})
+      ];
+    }))
     (lib.mkIf (config.features.gui.enable or false)
       (let
         picDirsRunner = pkgs.writeShellApplication {
