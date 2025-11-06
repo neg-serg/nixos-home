@@ -16,13 +16,13 @@ let
     fetch() {
       url="$1"; out="$2"
       if [ -s "$dir/$out" ]; then
-        exit 0
+        return 0
       fi
       tmp="$dir/$out.tmp$$"
       if command -v curl >/dev/null 2>&1; then
-        curl -fsSL "$url" -o "$tmp" || exit 0
+        curl -fsSL "$url" -o "$tmp" || return 0
       else
-        ${pkgs.curl}/bin/curl -fsSL "$url" -o "$tmp" || exit 0
+        ${pkgs.curl}/bin/curl -fsSL "$url" -o "$tmp" || return 0
       fi
       mv -f "$tmp" "$dir/$out"
     }
