@@ -266,6 +266,22 @@ lib.mkIf (config.features.web.enable && config.features.web.floorp.enable) (let
       }
     }
   '';
+
+  # Unify fonts across toolbar/urlbar to match tabs styling.
+  # Keep sizes from common userChrome; only override family for consistency.
+  uiFontUserChrome = ''
+    @-moz-document url(chrome://browser/content/browser.xhtml) {
+      :root {
+        --neg-ui-font: "Iosevka Term", "FiraCode Nerd Font", monospace;
+      }
+      #nav-bar,
+      #urlbar,
+      #urlbar-input,
+      .toolbarbutton-text {
+        font-family: var(--neg-ui-font) !important;
+      }
+    }
+  '';
 in
   lib.mkMerge [
     (common.mkBrowser {
@@ -285,7 +301,8 @@ in
       userChromeExtra =
         hideSearchModeControls
         + shimmerFindbarUserChrome
-        + qutebrowserTabsUserChrome;
+        + qutebrowserTabsUserChrome
+        + uiFontUserChrome;
     })
     {
       home.sessionVariables = {
