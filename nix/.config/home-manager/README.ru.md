@@ -34,6 +34,16 @@
 - Рекомендованный хоткей Hyprland для быстрого переключения: `bind = $M4, S, switchxkblayout, current, next` (обратите внимание на синтаксис с запятыми для диспетчера).
 - Подробнее: quickshell/.config/quickshell/Docs/Config.md
 
+### Floorp: панель навигации сверху
+
+- Для Floorp панель навигации оставлена сверху. Перенос вниз через CSS‑хаки (в духе
+  MrOtherGuy) отключён — он ломается при апдейтах темы Floorp/Lepton, вызывает нестабильность
+  позиционирования попапов и панелей расширений.
+- Оставлены только «безопасные» правки (findbar, компактные вкладки). Для отладки селекторов
+  используйте `chrome://browser/content/browser.xhtml` и DevTools.
+- Если очень нужно — можно включить вручную, поменяв `bottomNavbar = false` на `true` в
+  `modules/user/web/floorp.nix`, но сопровождать CSS придётся самостоятельно.
+
 ### Активация HM: пояснения
 
 - Сообщение «Activating ensureTransmissionDirs»

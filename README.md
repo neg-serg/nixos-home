@@ -156,6 +156,14 @@ Keyboard Layout Indicator (Quickshell + Hyprland)
 - Recommended Hyprland binding: `bind = $M4, S, switchxkblayout, current, next` (dispatcher syntax with comma‑separated args).
 - More details: quickshell/.config/quickshell/Docs/Config.md
 
+Floorp navbar (top vs bottom)
+- Floorp keeps the navigation toolbar at the top. The bottom‑navbar CSS hacks (MrOtherGuy style)
+  are disabled for Floorp because they are brittle with Floorp’s own theme changes and can
+  misplace panels/urlbar popups. Minimal, safe tweaks remain (findbar polish, compact tabs).
+- Inspect/verify selectors via `chrome://browser/content/browser.xhtml` (open devtools there).
+- If you still want a bottom navbar, change `bottomNavbar = false` to `true` for Floorp in
+  `modules/user/web/floorp.nix` and maintain the overrides locally.
+
 --------------------------------------------------------------------------------
 
 ## 9) XDG & Activation Safety

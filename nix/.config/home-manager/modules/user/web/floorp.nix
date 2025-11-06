@@ -273,7 +273,14 @@ in
       package = floorpPkg;
       # Floorp uses flat profile tree; keep explicit id
       profileId = "bqtlgdxw.default";
-      # Keep navbar on top for Floorp: disable bottom pinning.
+      # Keep navbar on top for Floorp.
+      # Rationale:
+      # - Floorp ships heavy UI theming (Lepton‑style tweaks); bottom pinning adds brittle CSS
+      #   overrides and regresses with upstream changes (urlbar popup, engine badges, panels).
+      # - Extension panels and some popups mis‑position when the navbar is fixed to bottom;
+      #   stock top navbar avoids those edge cases.
+      # - We keep minimal, safe tweaks (findbar polish, compact tabs) and skip bottom pinning.
+      # Opt‑in (unsupported): set bottomNavbar = true and maintain custom CSS locally.
       bottomNavbar = false;
       userChromeExtra =
         hideSearchModeControls
