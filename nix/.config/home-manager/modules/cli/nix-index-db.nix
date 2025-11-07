@@ -23,7 +23,8 @@ in {
           Unit.Description = "Update nix-index prebuilt database";
           Service = {
             Type = "simple";
-            ExecStart = "${pkgs.nix-index}/bin/nix-index -f";
+            # Explicitly pass nixpkgs path; nix-index >= 0.3 requires --nixpkgs when no channels are used
+            ExecStart = "${pkgs.nix-index}/bin/nix-index -f --nixpkgs ${pkgs.path}";
           };
         }
         # No presets required for the service; timer triggers it.
@@ -44,4 +45,3 @@ in {
     }
   ]);
 }
-
