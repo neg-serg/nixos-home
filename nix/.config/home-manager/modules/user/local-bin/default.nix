@@ -275,6 +275,50 @@ with lib;
               exec ${exe} "$@"
             '';
           };
+          # Robust starter for Pyprland: determines the current Hyprland
+          # instance signature before launching so that restarts/crashes
+          # of Hyprland don't leave pyprland bound to a stale socket.
+          ".local/bin/pypr-run" = {
+            executable = true;
+            force = true;
+            text = let exe = lib.getExe' pkgs.pyprland "pypr"; in ''
+              #!/usr/bin/env bash
+              set -euo pipefail
+
+              runtime="$XDG_RUNTIME_DIR"
+              if [ -z "$runtime" ]; then
+                runtime="/run/user/$(id -u)"
+              fi
+              sig="$HYPRLAND_INSTANCE_SIGNATURE"
+
+              # Validate existing signature; otherwise select newest hypr instance
+              if [ -n "$sig" ] && [ -S "$runtime/hypr/$sig/.socket.sock" ]; then
+                :
+              else
+                if [ -d "$runtime/hypr" ]; then
+                  newest="$(ls -td "$runtime/hypr"/* 2>/dev/null | head -n1 || true)"
+                  if [ -n "$newest" ]; then
+                    cand="$(basename -- "$newest" || true)"
+                    if [ -S "$runtime/hypr/$cand/.socket.sock" ] || [ -S "$runtime/hypr/$cand/.socket2.sock" ]; then
+                      sig="$cand"
+                    else
+                      sig=""
+                    fi
+                  fi
+                else
+                  sig=""
+                fi
+              fi
+
+              if [ -z "$sig" ]; then
+                echo "pypr-run: Hyprland not detected (no signature)." >&2
+                exit 1
+              fi
+
+              export HYPRLAND_INSTANCE_SIGNATURE="$sig"
+              exec ${exe} "$@"
+            '';
+          };
         };
     }
     # Cleanup: ensure any old ~/.local/bin/raise (from previous config) is removed

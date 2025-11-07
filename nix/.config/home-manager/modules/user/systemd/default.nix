@@ -64,16 +64,28 @@ with lib;
             ];
 
             # Pyprland daemon (Hyprland helper)
+            # Use a wrapper that resolves the current HYPRLAND_INSTANCE_SIGNATURE
+            # at start time so restarts after Hyprland crashes/restarts are stable.
             pyprland = lib.mkMerge [
               {
-                Unit.Description = "Pyprland daemon for Hyprland";
+                Unit = {
+                  Description = "Pyprland daemon for Hyprland";
+                  StartLimitIntervalSec = "0";
+                };
                 Service = {
                   Type = "simple";
-                  ExecStart = let exe = lib.getExe' pkgs.pyprland "pypr"; in "${exe}";
-                  Restart = "on-failure";
-                  RestartSec = "1";
+                  # Wrapper ensures we always target the newest Hypr instance
+                  ExecStart = "${config.home.homeDirectory}/.local/bin/pypr-run";
+                  Restart = "always";
+                  RestartSec = "1s";
                   Slice = "background-graphical.slice";
                   TimeoutStopSec = "5s";
+                  # Ensure common env from the user manager is visible
+                  PassEnvironment = [
+                    "XDG_RUNTIME_DIR"
+                    "WAYLAND_DISPLAY"
+                    "HYPRLAND_INSTANCE_SIGNATURE"
+                  ];
                 };
                 Unit.PartOf = ["graphical-session.target"];
               }
@@ -100,7 +112,30 @@ with lib;
                 presets = ["dbusSocket" "graphical"];
               })
             ];
+
+            # Watch Hyprland socket and restart pyprland on new instance
+            pyprland-watch = lib.mkMerge [
+              {
+                Unit.Description = "Restart pyprland on Hyprland instance change";
+                Service = {
+                  Type = "oneshot";
+                  ExecStart = "${pkgs.systemd}/bin/systemctl --user restart pyprland.service";
+                };
+              }
+              (config.lib.neg.systemdUser.mkUnitFromPresets {presets = ["graphical"];})
+            ];
           }
+        ];
+        # Path unit triggers the oneshot service whenever a new hypr socket appears
+        systemd.user.paths.pyprland-watch = lib.mkMerge [
+          {
+            Unit.Description = "Watch Hyprland socket path";
+            Path = {
+              PathExistsGlob = ["%t/hypr/*/.socket.sock" "%t/hypr/*/.socket2.sock"];
+              Unit = "pyprland-watch.service";
+            };
+          }
+          (config.lib.neg.systemdUser.mkUnitFromPresets {presets = ["graphical"];})
         ];
       }))
   ]
