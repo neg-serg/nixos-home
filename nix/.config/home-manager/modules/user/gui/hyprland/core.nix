@@ -4,6 +4,7 @@
   pkgs,
   xdg,
   hy3, # flake input (passed via mkHMArgs) to locate hy3 plugin path
+  inputs, # expose flake inputs (hyprland) to align runtime with hy3
   raiseProvider ? null,
   ...
 }:
@@ -55,7 +56,8 @@ in
     {
       wayland.windowManager.hyprland = {
         enable = true;
-        package = null;
+        # Use the pinned Hyprland from flake inputs to match the hy3 plugin ABI.
+        package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
         portalPackage = null;
         settings = {
           source = [
