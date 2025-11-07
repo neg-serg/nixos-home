@@ -53,58 +53,7 @@ in
         # Start quickshell only if not already active; 'start' is idempotent.
         systemctl --user start quickshell.service >/dev/null 2>&1 || true
       '')
-    # Keyboard layout cycle helper to handle Hyprland argument changes across versions
-    (let
-      mkLocalBin = import ../../../../packages/lib/local-bin.nix {inherit lib;};
-    in
-      mkLocalBin "kb-layout-next" ''#!/usr/bin/env bash
-        set -euo pipefail
-
-        try() { hyprctl dispatch "$@" >/dev/null 2>&1; }
-
-        # 1) Newer syntax: global cycle
-        if try switchxkblayout next; then exit 0; fi
-
-        # 2) Older syntax: current device cycle
-        if try switchxkblayout current next; then exit 0; fi
-
-        # 3) Target a specific device by name and cycle (skip power/sleep buttons)
-        dev=$(hyprctl -j devices 2>/dev/null \
-          | jq -r '.keyboards[]
-              | select((.name|test("^(power-button|sleep-button)$")|not))
-              | select((.active? == true) or (.main? == true) or (.enabled? == true) or (.name != null))
-              | .name' \
-          | head -n1 || true)
-        if [[ -n "${dev:-}" ]]; then
-          if try switchxkblayout "device:${dev}" next; then exit 0; fi
-          if try switchxkblayout "${dev}" next; then exit 0; fi
-
-          # 4) Compute next index (fallback): idx = (idx+1) % len
-          json=$(hyprctl -j devices 2>/dev/null || echo '{}')
-          # Support multiple field names across Hyprland versions
-          idx=$(printf "%s" "$json" \
-            | jq -r --arg n "$dev" '.keyboards[]
-                | select(.name==$n)
-                | (.active_layout_index // .xkb_active_layout_index // .active_keymap_index // -1)')
-          # Prefer explicit layout names array if present, else derive from comma-separated string
-          len=$(printf "%s" "$json" \
-            | jq -r --arg n "$dev" '
-                .keyboards[] | select(.name==$n)
-                | if (.xkb_layout_names // empty) then (.xkb_layout_names | length)
-                  elif (.layouts // empty) then (.layouts | length)
-                  elif (.layout // empty) then ((.layout | tostring | split(",") | length))
-                  else 0 end')
-          if [[ ${idx:- -1} -ge 0 && ${len:- 0} -gt 0 ]]; then
-            next=$(( (idx + 1) % len ))
-            if try switchxkblayout "device:${dev}" "$next"; then exit 0; fi
-            if try switchxkblayout "${dev}" "$next"; then exit 0; fi
-          fi
-        fi
-
-        # If all attempts failed, surface a friendly error
-        echo "Failed to switch XKB layout (tried multiple Hyprland dispatcher variants)" >&2
-        exit 1
-      '')
+    # Removed custom kb-layout-next wrapper; rely on Hyprland dispatcher and XKB options
     {
       wayland.windowManager.hyprland = {
         enable = true;
