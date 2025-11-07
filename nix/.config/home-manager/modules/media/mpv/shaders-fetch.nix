@@ -31,7 +31,7 @@ USAGE
       esac
     done
 
-    cfg_home=${XDG_CONFIG_HOME:-"$HOME/.config"}
+    cfg_home=''${XDG_CONFIG_HOME:-"$HOME/.config"}
     dir="$cfg_home/mpv/shaders"
     mkdir -p "$dir"
 
@@ -82,4 +82,3 @@ mkIf (config.features.gui.enable or false) (
     # Provide manual fetcher only when AI upscaling feature is enabled
     (mkIf (cfg.enable or false) script)
   ])
-
