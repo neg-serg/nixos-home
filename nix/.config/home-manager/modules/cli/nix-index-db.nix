@@ -23,8 +23,10 @@ in {
           Unit.Description = "Update nix-index prebuilt database";
           Service = {
             Type = "simple";
-            # Explicitly pass nixpkgs path; nix-index >= 0.3 requires --nixpkgs when no channels are used
-            ExecStart = "${pkgs.nix-index}/bin/nix-index -f --nixpkgs ${pkgs.path}";
+            # Build/refresh the local database against the pinned nixpkgs used by HM
+            # Note: in nix-index 0.1.x, '-f' means '--nixpkgs <path>' (not 'fetch').
+            # Database location defaults to $XDG_CACHE_HOME/nix-index; pin it explicitly.
+            ExecStart = "${pkgs.nix-index}/bin/nix-index -f ${pkgs.path} --db ${config.xdg.cacheHome}/nix-index";
           };
         }
         # No presets required for the service; timer triggers it.
