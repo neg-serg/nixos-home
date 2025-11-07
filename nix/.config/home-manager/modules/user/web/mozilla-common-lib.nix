@@ -299,6 +299,8 @@ in {
   #   userChromeExtra ? "",
   #   # Whether to pin navbar to bottom via CSS (default true)
   #   bottomNavbar ? true,
+  #   # When true, do not inject default userChrome tweaks (return to stock UI)
+  #   vanillaChrome ? false,
   # }
   mkBrowser = {
     name,
@@ -312,6 +314,7 @@ in {
     profileExtra ? {},
     userChromeExtra ? "",
     bottomNavbar ? true,
+    vanillaChrome ? false,
   }: let
     pid = profileId;
     mergedSettings = settings // defaults // settingsExtra;
@@ -322,16 +325,21 @@ in {
     oldDownloadsDir = "${config.home.homeDirectory}/dw";
     isDefaultBrowser = let def = (config.features.web.default or "floorp"); in (def == name);
     needsMigration = (config.features.web.enable or false) && (dlDir != oldDownloadsDir) && isDefaultBrowser;
-    profileBase = {
-      isDefault = true;
-      extensions = {packages = (addons.common or []) ++ addonsExtra;};
-      settings = mergedSettings;
-      userChrome = userChrome
+    userChromeInjected =
+      if vanillaChrome
+      then userChromeExtra
+      else userChrome
         + (optionalString bottomNavbar bottomNavbarChrome)
         + hideSearchModeChip
         + hideUrlbarOneOffs
         + hideSearchBarWidget
         + userChromeExtra;
+
+    profileBase = {
+      isDefault = true;
+      extensions = {packages = (addons.common or []) ++ addonsExtra;};
+      settings = mergedSettings;
+      userChrome = userChromeInjected;
       # Clamp Tridactyl overlay sizes globally via userContent.css
       userContent = tridactylUserContent;
       inherit extraConfig;
