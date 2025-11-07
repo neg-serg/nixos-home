@@ -58,10 +58,16 @@ in
       mkLocalBin = import ../../../../packages/lib/local-bin.nix {inherit lib;};
       exe = "${inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland}/bin/Hyprland";
     in
-      mkLocalBin "hyprland" ''#!/usr/bin/env bash
-        set -euo pipefail
-        exec "''${exe}" "$@"
-      '')
+      lib.mkMerge [
+        (mkLocalBin "hyprland" ''#!/usr/bin/env bash
+          set -euo pipefail
+          exec "''${exe}" "$@"
+        '')
+        (mkLocalBin "Hyprland" ''#!/usr/bin/env bash
+          set -euo pipefail
+          exec "''${exe}" "$@"
+        '')
+      ])
     # Removed custom kb-layout-next wrapper; rely on Hyprland dispatcher and XKB options
     {
       wayland.windowManager.hyprland = {
