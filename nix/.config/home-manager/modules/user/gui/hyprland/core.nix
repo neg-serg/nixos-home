@@ -53,6 +53,15 @@ in
         # Start quickshell only if not already active; 'start' is idempotent.
         systemctl --user start quickshell.service >/dev/null 2>&1 || true
       '')
+    # Ensure the pinned Hyprland binary is used regardless of DM/UWSM PATH
+    (let
+      mkLocalBin = import ../../../../packages/lib/local-bin.nix {inherit lib;};
+      exe = "${inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland}/bin/Hyprland";
+    in
+      mkLocalBin "hyprland" ''#!/usr/bin/env bash
+        set -euo pipefail
+        exec "''${exe}" "$@"
+      '')
     # Removed custom kb-layout-next wrapper; rely on Hyprland dispatcher and XKB options
     {
       wayland.windowManager.hyprland = {
