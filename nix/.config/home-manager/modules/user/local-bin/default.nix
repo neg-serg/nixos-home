@@ -49,8 +49,11 @@ with lib;
         pkgs.alsa-utils # amixer (vol fallback)
         # audio tools
         pkgs.sox # spectrograms (flacspec)
-        # Xvfb for exorg
-        pkgs.xorg.xvfb # headless X server (exorg)
+        # Note: Xvfb (xorg.xvfb) conflicts with newer xwayland in the
+        # Home Manager buildEnv (both ship lib/xorg/protocol.txt).
+        # Do not include by default to avoid closure collisions when
+        # Hyprland pulls in xwayland. The exorg script will work if
+        # Xvfb is available on PATH (install xorg.xvfb when needed).
         # document viewer for read_documents
         pkgs.zathura # PDF/DJVU/EPUB viewer (rofi file-browser)
         # notify daemon (dunstify) provided by dunst service; ensure package present
