@@ -13,9 +13,10 @@ with lib;
       }
       permission = ${lib.getExe pkgs.grim}, screencopy, allow
       permission = ${lib.getExe pkgs.hyprlock}, screencopy, allow
-      # Allow loading hy3 plugin. Use a regex to survive path hash/version changes.
+      # Allow loading hy3 plugin. Use a regex to survive path hash/version changes
+      # and possible library filename variants (e.g., libhyprland-hy3.so).
       # RE2 full-match is used; keep anchors.
-      permission = ^/nix/store/[^/]+-hy3-[^/]+/lib/libhy3\.so$, plugin, allow
+      permission = ^/nix/store/[^/]+-hy3-[^/]+/lib/[^/]*hy3[^/]*\.so$, plugin, allow
       permission = /etc/hypr/libhy3.so, plugin, allow
     '')
     # Ensure the generated file replaces any pre-existing file
