@@ -1,7 +1,6 @@
 {
   runCommand,
   wineWowPackages,
-  xorg,
   squashfsTools,
   username ? "wineuser",
   plugins ? [],
@@ -9,7 +8,6 @@
 runCommand "build_prefix" {
   nativeBuildInputs = [
     wineWowPackages.full # 32/64-bit Wine for plugins
-    xorg.xorgserver # Xvfb headless X server
     squashfsTools # mksquashfs to pack the prefix
   ];
 } (''
@@ -17,10 +15,6 @@ runCommand "build_prefix" {
     export WINEPREFIX=$(pwd)/prefix
     mkdir home
     export HOME=$(pwd)/home
-
-    Xvfb :8456 -screen 0 1024x768x16 &
-    XVFB_PID=$!
-    export DISPLAY=:8456.0
     export USER=${username}
 
     echo "--------------------"
@@ -46,5 +40,5 @@ runCommand "build_prefix" {
     echo "--------------------"
     mksquashfs prefix $out/wineprefix.squashfs
 
-    kill $XVFB_PID
+    # No Xvfb; nothing to clean up here.
   '')

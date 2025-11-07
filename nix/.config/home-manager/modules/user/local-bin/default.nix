@@ -139,10 +139,6 @@ with lib;
           }
           # Legacy image wrappers removed (sx, sxivnc); use swayimg-first directly
           {
-            name = "exorg";
-            src = ./scripts/exorg;
-          }
-          {
             name = "flacspec";
             src = ./scripts/flacspec;
           }
