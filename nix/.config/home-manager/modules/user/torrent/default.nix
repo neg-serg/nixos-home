@@ -97,8 +97,19 @@ in
             tmp="$(mktemp)"
             trap 'rm -f "$tmp"' EXIT
 
-            if ! curl -fsSL "$TRACKERS_URL" -o "$tmp"; then
-              echo "Failed to fetch trackers list: $TRACKERS_URL" >&2
+            # Prefer wget, fallback to curl if available
+            if command -v wget >/dev/null 2>&1; then
+              if ! wget -qO "$tmp" "$TRACKERS_URL"; then
+                echo "Failed to fetch trackers list with wget: $TRACKERS_URL" >&2
+                exit 1
+              fi
+            elif command -v curl >/dev/null 2>&1; then
+              if ! curl -fsSL "$TRACKERS_URL" -o "$tmp"; then
+                echo "Failed to fetch trackers list with curl: $TRACKERS_URL" >&2
+                exit 1
+              fi
+            else
+              echo "Neither wget nor curl found; please install one to fetch trackers." >&2
               exit 1
             fi
 

@@ -278,11 +278,6 @@ with lib;
         };
     }
     # Cleanup: ensure any old ~/.local/bin/raise (from previous config) is removed
-    {
-      home.activation.cleanRaiseSymlink =
-        config.lib.neg.mkRemoveIfSymlink "${config.home.homeDirectory}/.local/bin/raise";
-      home.activation.cleanRaiseFile =
-        config.lib.neg.mkEnsureAbsent "${config.home.homeDirectory}/.local/bin/raise";
-    }
-    # No cleanup: pypr-client is provided as stable wrapper around pkgs.pyprland
+    # No per-activation cleanup: keep activation quiet. If legacy ~/.local/bin/raise
+    # exists, it can be removed manually.
   ])
