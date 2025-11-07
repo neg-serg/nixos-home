@@ -28,7 +28,6 @@ lib.mkMerge [
       hasMpvc = pkgs ? mpvc;
       hasYtDlp = pkgs ? yt-dlp;
       hasKhal = pkgs ? khal;
-      openCmd = if hasHandlr then "handlr open" else "xdg-open";
       content = lib.concatStrings [
         "# Aliae aliases (cross-shell)\n"
         "# Edit and reload your shell to apply changes.\n"
@@ -71,8 +70,6 @@ lib.mkMerge [
         "  zstd: \"zstd --threads=0\"\n"
         (lib.optionalString hasMpvc "  mpvc: \"mpvc -S \$XDG_CONFIG_HOME/mpv/socket\"\n")
         (lib.optionalString hasWget2 "  wget: \"wget2 --hsts-file \$XDG_DATA_HOME/wget-hsts\"\n")
-        # Quick link opener for lucida.to
-        ("  lucida: \"" + openCmd + " https://lucida.to\"\n")
         (lib.optionalString hasYtDlp "  yt:   \"yt-dlp --downloader aria2c --embed-metadata --embed-thumbnail --embed-subs --sub-langs=all\"\n")
         "  ctl: \"systemctl\"\n"
         "  stl: \"sudo systemctl\"\n"
