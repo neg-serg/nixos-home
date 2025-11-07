@@ -6,6 +6,7 @@ Useful references:
 - How to work in this repo (helpers, presets): `AGENTS.md`
 - Coding style for modules: `STYLE.md`
 - Feature flags and defaults: `modules/features.nix`, overview in `OPTIONS.md`
+- Lucida: https://lucida.to/ (link)
 
 --------------------------------------------------------------------------------
 
