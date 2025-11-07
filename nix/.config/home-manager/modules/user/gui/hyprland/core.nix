@@ -3,6 +3,7 @@
   config,
   pkgs,
   xdg,
+  hy3, # flake input (passed via mkHMArgs) to locate hy3 plugin path
   raiseProvider ? null,
   ...
 }:
@@ -119,15 +120,19 @@ in
     }
     # Core config files from repo
     (lib.mkMerge (map mkHyprSource coreFiles))
-    # Dynamically generated plugin loader (pin to flake hy3 package)
-    (xdg.mkXdgText "hypr/plugins.conf" (
-      let
-        pluginPath = "/etc/hypr/libhy3.so";
-      in ''
+    # Dynamically generated plugin loader: point at the exact store path for hy3
+    (let
+      # Resolve hy3 plugin for the current system; keep out of closure churn elsewhere
+      hy3Pkg = hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3;
+      pluginPath = "${hy3Pkg}/lib/libhy3.so";
+    in
+      xdg.mkXdgText "hypr/plugins.conf" ''
         # Hyprland plugins
         plugin = ${pluginPath}
       ''
-    ))
+    )
     # Overwrite existing generated config files if present
     { xdg.configFile."hypr/plugins.conf".force = true; }
+    # Keep the hy3 plugin alive in the profile to avoid GC removing the path
+    { home.packages = [ (hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3) ]; }
   ])
