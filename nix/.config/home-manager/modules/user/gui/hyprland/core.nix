@@ -53,6 +53,42 @@ in
         # Start quickshell only if not already active; 'start' is idempotent.
         systemctl --user start quickshell.service >/dev/null 2>&1 || true
       '')
+    # Keyboard layout cycle helper to handle Hyprland argument changes across versions
+    (let
+      mkLocalBin = import ../../../../packages/lib/local-bin.nix {inherit lib;};
+    in
+      mkLocalBin "kb-layout-next" ''#!/usr/bin/env bash
+        set -euo pipefail
+
+        try() { hyprctl dispatch "$@" >/dev/null 2>&1; }
+
+        # 1) Newer syntax: global cycle
+        if try switchxkblayout next; then exit 0; fi
+
+        # 2) Older syntax: current device cycle
+        if try switchxkblayout current next; then exit 0; fi
+
+        # 3) Target a specific device by name and cycle
+        dev=$(hyprctl -j devices 2>/dev/null | jq -r '.keyboards[] | select((.active? == true) or (.main? == true) or (.enabled? == true)) | .name' | head -n1 || true)
+        if [[ -n "${dev:-}" ]]; then
+          if try switchxkblayout "device:${dev}" next; then exit 0; fi
+          if try switchxkblayout "${dev}" next; then exit 0; fi
+
+          # 4) Compute next index (fallback): idx = (idx+1) % len
+          json=$(hyprctl -j devices 2>/dev/null || echo '{}')
+          idx=$(printf "%s" "$json" | jq -r --arg n "$dev" '.keyboards[] | select(.name==$n) | (.xkb_active_layout_index // .active_keymap_index // -1)')
+          len=$(printf "%s" "$json" | jq -r --arg n "$dev" '.keyboards[] | select(.name==$n) | (.xkb_layout_names // .layouts // []) | length')
+          if [[ ${idx:- -1} -ge 0 && ${len:- 0} -gt 0 ]]; then
+            next=$(( (idx + 1) % len ))
+            if try switchxkblayout "device:${dev}" "$next"; then exit 0; fi
+            if try switchxkblayout "${dev}" "$next"; then exit 0; fi
+          fi
+        fi
+
+        # If all attempts failed, surface a friendly error
+        echo "Failed to switch XKB layout (tried multiple Hyprland dispatcher variants)" >&2
+        exit 1
+      '')
     {
       wayland.windowManager.hyprland = {
         enable = true;
