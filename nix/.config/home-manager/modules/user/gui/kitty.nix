@@ -16,7 +16,7 @@ lib.mkIf (config.features.gui.enable or false) (lib.mkMerge [
     ];
   }
   (let mkLocalBin = import ../../../packages/lib/local-bin.nix {inherit lib;}; in mkLocalBin "kitty-panel" (builtins.readFile ./kitty/panel))
-  # Robust kitty-scrollback-nvim kitten wrapper
+  # Robust kitty-scrollback-nvim kitten wrapper (local-bin) and env hint
   (let
     mkLocalBin = import ../../../packages/lib/local-bin.nix {inherit lib;};
     nixKsbPath = if pkgs.vimPlugins ? kitty-scrollback-nvim
@@ -59,6 +59,10 @@ def is_main_thread():
     f = getattr(mod, "is_main_thread", None)
     return f() if callable(f) else False
 '' )
+  (lib.mkIf (pkgs.vimPlugins ? kitty-scrollback-nvim) {
+    # Hint the dynamic kitten in conf/kittens/ to the Nix path when present
+    home.sessionVariables.KITTY_KSB_NIX_PATH = "${pkgs.vimPlugins.kitty-scrollback-nvim}/python/kitty_scrollback_nvim.py";
+  })
   # Live-editable config via helper (guards parent dir and target)
   (xdg.mkXdgSource "kitty" {
     source = config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/nix/.config/home-manager/modules/user/gui/kitty/conf";
