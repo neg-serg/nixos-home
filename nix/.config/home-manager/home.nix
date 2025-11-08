@@ -39,6 +39,9 @@ in {
   # Enable GPG stack (gpg + gpg-agent)
   features.gpg.enable = true;
 
+  # Use Hyprland with hy3 plugin and config
+  features.gui.hy3.enable = true;
+
   # Enable Unreal Engine tooling (ue5-sync/build/editor wrappers)
   features.dev.unreal.enable = true;
 
