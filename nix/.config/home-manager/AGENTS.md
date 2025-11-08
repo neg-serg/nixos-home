@@ -65,6 +65,7 @@ This repo is configured for Home Manager + flakes with a small set of helpers to
 - Rofi wrapper (launcher)
   - A local wrapper is installed to `~/.local/bin/rofi` to provide safe defaults and consistent UX:
     - Adds `-no-config` unless the caller explicitly passes `-config`/`-no-config`.
+    - Enables auto-accept by default (`-auto-select`). Disable per-call with `-no-auto-select`.
     - Ensures Ctrl+C cancels (`-kb-cancel "Control+c,Escape"`) and frees it from the default copy binding (`-kb-secondary-copy ""`).
     - Resolves themes passed via `-theme <name|name.rasi>` relative to `$XDG_DATA_HOME/rofi/themes` or `$XDG_CONFIG_HOME/rofi`.
     - Computes offsets for top bars via Quickshell/Hyprland metadata when not provided.

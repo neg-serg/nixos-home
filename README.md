@@ -144,6 +144,7 @@ Hyprland
 Rofi
 - Wrapper `~/.local/bin/rofi` ensures theme discovery and safe defaults (`-no-config` unless requested).
 - Themes are linked into `$XDG_DATA_HOME/rofi/themes`.
+ - Auto-accept is enabled by default (`-auto-select`). Disable per call with `-no-auto-select` if needed.
 
 Images
 - `swayimg-first` wrapper is installed to `~/.local/bin/swayimg` and `~/.local/bin/sx` for convenience.
