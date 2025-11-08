@@ -71,6 +71,11 @@ with lib;
                 Unit = {
                   Description = "Pyprland daemon for Hyprland";
                   StartLimitIntervalSec = "0";
+                  # Start only when a Hyprland instance socket exists
+                  ConditionPathExistsGlob = [
+                    "%t/hypr/*/.socket.sock"
+                    "%t/hypr/*/.socket2.sock"
+                  ];
                 };
                 Service = {
                   Type = "simple";
@@ -119,7 +124,8 @@ with lib;
                 Unit.Description = "Restart pyprland on Hyprland instance change";
                 Service = {
                   Type = "oneshot";
-                  ExecStart = "${pkgs.systemd}/bin/systemctl --user restart pyprland.service";
+                  # Be tolerant if pyprland is not running yet
+                  ExecStart = "${pkgs.systemd}/bin/systemctl --user try-restart pyprland.service";
                 };
               }
               (config.lib.neg.systemdUser.mkUnitFromPresets {presets = ["graphical"];})
