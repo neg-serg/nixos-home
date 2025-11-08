@@ -4,7 +4,7 @@ configuration {
     
     sort:                          true;
     parse-hosts:                   false;
-    auto-select:                   false;
+    auto-select:                   true;
     show-icons:                    false;
     matching:                      "fuzzy";
     tokenize:                      true;

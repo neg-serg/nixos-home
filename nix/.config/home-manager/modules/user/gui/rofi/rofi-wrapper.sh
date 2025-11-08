@@ -17,6 +17,8 @@ theme_name=""
 have_cfg=0
 have_kb_cancel=0
 have_kb_secondary_copy=0
+have_auto_select=0
+have_no_auto_select=0
 want_offsets=1
 have_xoff=0; have_yoff=0; have_loc=0
 for arg in "$@"; do
@@ -50,6 +52,8 @@ for arg in "$@"; do
     -location| -location=*) have_loc=1 ;;
     -kb-cancel| -kb-cancel=*) have_kb_cancel=1 ;;
     -kb-secondary-copy| -kb-secondary-copy=*) have_kb_secondary_copy=1 ;;
+    -auto-select) have_auto_select=1 ;;
+    -no-auto-select) have_no_auto_select=1 ;;
   esac
 done
 [ -d "$cd_dir" ] && cd "$cd_dir"
@@ -94,6 +98,11 @@ fi
 # Avoid parsing user/system config if not explicitly requested (rofi 2.0 parser is strict)
 if [ "$have_cfg" -eq 0 ]; then
   set -- -no-config "$@"
+fi
+
+# Enable auto-accept by default (can be disabled with -no-auto-select)
+if [ "$have_auto_select" -eq 0 ] && [ "$have_no_auto_select" -eq 0 ]; then
+  set -- -auto-select "$@"
 fi
 
 # Only inject keybindings when not loading a config (avoid duplicate "already bound")
