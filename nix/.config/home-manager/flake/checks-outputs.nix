@@ -135,5 +135,21 @@ lib.genAttrs systems (
   in
     base
     // fast
+    // Extra: explicit hy3-on eval (default profile, retro off).
+    // Usage: nix build .#checks.${s}.hm-eval-neg-hy3-on-retro-off
+    {
+      hm-eval-neg-hy3-on-retro-off = let
+        profile = null; # default ("neg")
+        retroFlag = false;
+        extra = [ (_: { features.gui.hy3.enable = true; }) ];
+        hmCfg = homeManagerInput.lib.homeManagerConfiguration {
+          inherit (perSystem.${s}) pkgs;
+          extraSpecialArgs = mkHMArgs s;
+          modules = hmBaseModules { inherit profile; extra = extra; };
+        };
+      in perSystem.${s}.pkgs.writeText
+        "hm-eval-neg-hy3-on-retro-off.json"
+        (builtins.toJSON hmCfg.config.features);
+    }
     // lib.optionalAttrs fullChecks heavy
 )
