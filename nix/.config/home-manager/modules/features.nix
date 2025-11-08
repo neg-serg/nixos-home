@@ -29,6 +29,7 @@ in {
     };
 
     gui.enable = mkBool "enable GUI stack (wayland/hyprland, quickshell, etc.)" true;
+    gui.hy3.enable = mkBool "enable hy3 plugin and hy3-specific Hyprland config" false;
     gui.qt.enable = mkBool "enable Qt integrations for GUI (qt6ct, hyprland-qt-*)" true;
     gui.quickshell.enable = mkBool "enable Quickshell (panel) at login" true;
     mail.enable = mkBool "enable Mail stack (notmuch, isync, vdirsyncer, etc.)" true;
@@ -260,6 +261,7 @@ in {
     })
     (mkIf (! cfg.gui.enable) {
       features.gui.qt.enable = mkForce false;
+      features.gui.hy3.enable = mkForce false;
       # Ensure nested GUI components are disabled when GUI is off
       features.gui.quickshell.enable = mkForce false;
     })
@@ -272,8 +274,8 @@ in {
     # Consistency assertions for nested flags
     {
       assertions =
-        # Hypr/hy3 compatibility check only matters when GUI is enabled
-        (lib.optionals cfg.gui.enable [
+        # Hypr/hy3 compatibility check only matters when GUI and hy3 are enabled
+        (lib.optionals (cfg.gui.enable && cfg.gui.hy3.enable) [
           (let
             # Avoid evaluating inputs.hyprland.packages; read version from pinned ref if available.
             hyprlandRef = lib.attrByPath ["original" "ref"] null inputs.hyprland;
