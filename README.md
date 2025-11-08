@@ -162,8 +162,15 @@ Floorp navbar (top vs bottom)
   are disabled for Floorp because they are brittle with Floorp’s own theme changes and can
   misplace panels/urlbar popups. Minimal, safe tweaks remain (findbar polish, compact tabs).
 - Inspect/verify selectors via `chrome://browser/content/browser.xhtml` (open devtools there).
-- If you still want a bottom navbar, change `bottomNavbar = false` to `true` for Floorp in
+  - If you still want a bottom navbar, change `bottomNavbar = false` to `true` for Floorp in
   `modules/user/web/floorp.nix` and maintain the overrides locally.
+
+Floorp privacy/New Tab defaults
+- Strict content blocking (ETP) and DNS-over-HTTPS enabled via enterprise policies.
+- Telemetry, Studies, and Pocket disabled via policies.
+- New Tab (Activity Stream) is trimmed: no sponsored tiles, Top Sites, Highlights, Top Stories, or Weather.
+- URL bar suggestions: Quicksuggest/trending are disabled.
+- Native file picker uses the XDG desktop portal.
 
 --------------------------------------------------------------------------------
 
