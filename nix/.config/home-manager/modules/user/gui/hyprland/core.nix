@@ -24,11 +24,10 @@ with lib; let
     '';
   };
   coreFiles = [
-    "init.conf"
     "vars.conf"
     "classes.conf"
     "rules.conf"
-    "bindings.conf"
+    # bindings.conf handled below (hy3/nohy3 variants)
     "autostart.conf"
   ];
   mkHyprSource = rel:
@@ -75,14 +74,18 @@ in
         # Use the pinned Hyprland from flake inputs to match the hy3 plugin ABI.
         package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
         portalPackage = null;
-        settings = {
-          source = [
-            # Apply permissions first so plugin load is allowed
-            "${config.xdg.configHome}/hypr/permissions.conf"
-            # Load plugins (hy3) before the rest of the config
-            "${config.xdg.configHome}/hypr/plugins.conf"
-            "${config.xdg.configHome}/hypr/init.conf"
-          ];
+        settings = let hy3Enabled = config.features.gui.hy3.enable or false; in {
+          source = (
+            [
+              # Apply permissions first so plugin load is allowed (even without hy3)
+              "${config.xdg.configHome}/hypr/permissions.conf"
+            ]
+            ++ lib.optionals hy3Enabled [
+              # Load plugins (hy3) before the rest of the config
+              "${config.xdg.configHome}/hypr/plugins.conf"
+            ]
+            ++ [ "${config.xdg.configHome}/hypr/init.conf" ]
+          );
         };
         systemd.variables = ["--all"];
       };
@@ -138,19 +141,38 @@ in
     }
     # Core config files from repo
     (lib.mkMerge (map mkHyprSource coreFiles))
-    # Dynamically generated plugin loader: point at the exact store path for hy3
-    (let
-      # Resolve hy3 plugin for the current system; keep out of closure churn elsewhere
-      hy3Pkg = hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3;
-      pluginPath = "${hy3Pkg}/lib/libhy3.so";
-    in
-      xdg.mkXdgText "hypr/plugins.conf" ''
-        # Hyprland plugins
-        plugin = ${pluginPath}
-      ''
-    )
-    # Overwrite existing generated config files if present
-    { xdg.configFile."hypr/plugins.conf".force = true; }
+    # init.conf variants
+    (mkIf (config.features.gui.hy3.enable or false) (mkHyprSource "init.conf"))
+    (mkIf (! (config.features.gui.hy3.enable or false)) (
+      xdg.mkXdgSource "hypr/init.conf" {
+        source = config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/nix/.config/home-manager/modules/user/gui/hypr/conf/init.nohy3.conf";
+        recursive = false;
+        force = true;
+      }
+    ))
+    # bindings.conf variants
+    (mkIf (config.features.gui.hy3.enable or false) (mkHyprSource "bindings.conf"))
+    (mkIf (! (config.features.gui.hy3.enable or false)) (
+      xdg.mkXdgSource "hypr/bindings.conf" {
+        source = config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/nix/.config/home-manager/modules/user/gui/hypr/conf/bindings.nohy3.conf";
+        recursive = false;
+        force = true;
+      }
+    ))
+    # Dynamically generated plugin loader (hy3 only)
+    (mkIf (config.features.gui.hy3.enable or false) (
+      let
+        # Resolve hy3 plugin for the current system; keep out of closure churn elsewhere
+        hy3Pkg = hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3;
+        pluginPath = "${hy3Pkg}/lib/libhy3.so";
+      in
+        xdg.mkXdgText "hypr/plugins.conf" ''
+          # Hyprland plugins
+          plugin = ${pluginPath}
+        ''
+    ))
+    # Overwrite existing generated plugin config file if present
+    (mkIf (config.features.gui.hy3.enable or false) { xdg.configFile."hypr/plugins.conf".force = true; })
     # Keep the hy3 plugin alive in the profile to avoid GC removing the path
-    { home.packages = [ (hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3) ]; }
+    (mkIf (config.features.gui.hy3.enable or false) { home.packages = [ (hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3) ]; })
   ])

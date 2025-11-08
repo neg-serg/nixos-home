@@ -7,18 +7,23 @@
 }:
 with lib;
   mkIf config.features.gui.enable (lib.mkMerge [
-    (xdg.mkXdgText "hypr/permissions.conf" ''
-      ecosystem {
-        enforce_permissions = 1
-      }
-      permission = ${lib.getExe pkgs.grim}, screencopy, allow
-      permission = ${lib.getExe pkgs.hyprlock}, screencopy, allow
-      # Allow loading hy3 plugin. Use a regex to survive path hash/version changes
-      # and possible library filename variants (e.g., libhyprland-hy3.so).
-      # RE2 full-match is used; keep anchors.
-      permission = ^/nix/store/[^/]+-hy3-[^/]+/lib/[^/]*hy3[^/]*\.so$, plugin, allow
-      permission = /etc/hypr/libhy3.so, plugin, allow
-    '')
+    (let
+      hy3Perms = if (config.features.gui.hy3.enable or false) then ''
+        # Allow loading hy3 plugin. Use a regex to survive path hash/version changes
+        # and possible library filename variants (e.g., libhyprland-hy3.so).
+        # RE2 full-match is used; keep anchors.
+        permission = ^/nix/store/[^/]+-hy3-[^/]+/lib/[^/]*hy3[^/]*\.so$, plugin, allow
+        permission = /etc/hypr/libhy3.so, plugin, allow
+      '' else "";
+    in
+      xdg.mkXdgText "hypr/permissions.conf" (''
+        ecosystem {
+          enforce_permissions = 1
+        }
+        permission = ${lib.getExe pkgs.grim}, screencopy, allow
+        permission = ${lib.getExe pkgs.hyprlock}, screencopy, allow
+      '' + hy3Perms)
+    )
     # Ensure the generated file replaces any pre-existing file
     { xdg.configFile."hypr/permissions.conf".force = true; }
   ])
