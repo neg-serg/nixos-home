@@ -167,13 +167,14 @@ with lib;
               StartLimitIntervalSec = "0";
             };
             Path = {
-              # Trigger when hypr creates sockets or when the hypr dir changes
+              # Trigger when hypr creates sockets (avoid noisy PathChanged)
               PathExistsGlob = [
                 "%t/hypr/*/.socket.sock"
                 "%t/hypr/*/.socket2.sock"
               ];
-              DirectoryNotEmpty = "%t/hypr";
-              PathChanged = "%t/hypr";
+              # Disable path trigger rate limiting (systemd v258)
+              TriggerLimitIntervalSec = "0";
+              TriggerLimitBurst = 0;
               Unit = "pyprland-watch.service";
             };
           }
