@@ -44,6 +44,21 @@ in
         "browser.urlbar.trending.featureGate" = false;
         # Keep scenario offline if some bits slip through in certain versions
         "browser.urlbar.quicksuggest.scenario" = "offline";
+
+        # Stronger content blocking and native file picker via portals
+        "browser.contentblocking.category" = "strict";
+        "widget.use-xdg-desktop-portal.file-picker" = 1;
+      };
+      # Enterprise policies: reduce telemetry/noise and enable DoH
+      policiesExtra = {
+        DisableTelemetry = true;
+        DisableFirefoxStudies = true;
+        DisablePocket = true;
+        CaptivePortal = false;
+        DNSOverHTTPS = {
+          Enabled = true;
+          Locked = false;
+        };
       };
     })
     {
