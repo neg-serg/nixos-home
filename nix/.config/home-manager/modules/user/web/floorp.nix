@@ -42,6 +42,10 @@ in
         "browser.newtabpage.activity-stream.showHighlights" = false;
         # Hide Top Stories (Pocket recommendations), in addition to policies
         "browser.newtabpage.activity-stream.feeds.section.topstories" = false;
+        # Hide Weather (if present in this build)
+        "browser.newtabpage.activity-stream.showWeather" = false;
+        "browser.newtabpage.activity-stream.feeds.section.weather" = false;
+        "browser.newtabpage.activity-stream.feeds.weather" = false;
 
         # URL bar suggestions — disable Firefox Suggest/Quicksuggest including trending
         "browser.urlbar.quicksuggest.enabled" = false;
