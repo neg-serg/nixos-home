@@ -18,6 +18,28 @@ with lib;
             exec pic-dirs-list
           '';
         };
+        pyprlandWatchOnce = pkgs.writeShellApplication {
+          name = "pyprland-watch-once";
+          text = ''
+            set -euo pipefail
+            if [ -z "$XDG_RUNTIME_DIR" ]; then
+              XDG_RUNTIME_DIR="/run/user/$(${pkgs.coreutils}/bin/id -u)"
+            fi
+            dir="$XDG_RUNTIME_DIR/hypr"
+            stamp="$dir/.pyprland-watch.stamp"
+            now=$(${pkgs.coreutils}/bin/date +%s)
+            last=0
+            if [ -f "$stamp" ]; then
+              last=$(${pkgs.coreutils}/bin/date +%s -r "$stamp" 2>/dev/null || echo 0)
+            fi
+            if [ $((now - last)) -lt 2 ]; then
+              exit 0
+            fi
+            ${pkgs.coreutils}/bin/mkdir -p "$dir"
+            ${pkgs.coreutils}/bin/touch "$stamp"
+            exec ${pkgs.systemd}/bin/systemctl --user try-restart pyprland.service >/dev/null 2>&1 || true
+          '';
+        };
       in {
         # Quickshell session (Qt-bound, skip in dev-speed) + other services
         systemd.user.services = lib.mkMerge [
@@ -126,25 +148,9 @@ with lib;
                   # Disable start-rate limiting; path may trigger bursts on Hypr restarts
                   StartLimitIntervalSec = "0";
                 };
-                Service = let
-                  script = ''
-                    set -euo pipefail
-                    XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(${pkgs.coreutils}/bin/id -u)}"
-                    stamp="$XDG_RUNTIME_DIR/hypr/.pyprland-watch.stamp"
-                    now=$(${pkgs.coreutils}/bin/date +%s)
-                    last=0
-                    if [ -f "$stamp" ]; then
-                      last=$(${pkgs.coreutils}/bin/date +%s -r "$stamp" 2>/dev/null || echo 0)
-                    fi
-                    if [ $((now - last)) -lt 2 ]; then
-                      exit 0
-                    fi
-                    ${pkgs.coreutils}/bin/touch "$stamp"
-                    exec ${pkgs.systemd}/bin/systemctl --user try-restart pyprland.service >/dev/null 2>&1 || true
-                  '';
-                in {
+                Service = {
                   Type = "oneshot";
-                  ExecStart = "${pkgs.bash}/bin/bash" + lib.escapeShellArgs [ "-lc" script ];
+                  ExecStart = lib.getExe' pyprlandWatchOnce "pyprland-watch-once";
                   SuccessExitStatus = ["0"]; # explicit for clarity
                 };
               }
