@@ -37,7 +37,31 @@ with lib;
             fi
             ${pkgs.coreutils}/bin/mkdir -p "$dir"
             ${pkgs.coreutils}/bin/touch "$stamp"
-            exec ${pkgs.systemd}/bin/systemctl --user try-restart pyprland.service >/dev/null 2>&1 || true
+
+            # Determine the newest Hyprland instance signature present
+            newest=""
+            if [ -d "$dir" ]; then
+              newest="$(${pkgs.coreutils}/bin/ls -td "$dir"/* 2>/dev/null | ${pkgs.coreutils}/bin/head -n1 | ${pkgs.coreutils}/bin/xargs -r basename || true)"
+            fi
+            if [ -z "$newest" ]; then
+              # No hypr instance detected; nothing to do
+              exit 0
+            fi
+
+            # Read current pyprland MainPID and its bound signature, if running
+            mainpid="$(${pkgs.systemd}/bin/systemctl --user show -p MainPID --value pyprland.service 2>/dev/null || echo 0)"
+            current_sig=""
+            if [ -n "$mainpid" ] && [ "$mainpid" != "0" ] && [ -r "/proc/$mainpid/environ" ]; then
+              current_sig="$(${pkgs.coreutils}/bin/tr '\0' '\n' < "/proc/$mainpid/environ" | ${pkgs.gnugrep}/bin/grep -m1 '^HYPRLAND_INSTANCE_SIGNATURE=' | ${pkgs.coreutils}/bin/cut -d= -f2 || true)"
+            fi
+
+            if [ "$current_sig" = "$newest" ]; then
+              # Already bound to the newest instance; skip restart
+              exit 0
+            fi
+
+            # Restart (or start) pyprland to bind to the newest instance; ignore errors
+            ${pkgs.systemd}/bin/systemctl --user restart pyprland.service >/dev/null 2>&1 || true
           '';
         };
       in {
