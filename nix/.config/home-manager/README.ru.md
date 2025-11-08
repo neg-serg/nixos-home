@@ -44,6 +44,15 @@
 - Если очень нужно — можно включить вручную, поменяв `bottomNavbar = false` на `true` в
   `modules/user/web/floorp.nix`, но сопровождать CSS придётся самостоятельно.
 
+### Floorp: приватность и Новая вкладка
+
+- Усиленная приватность по умолчанию:
+  - Строгая блокировка контента (ETP) и DNS‑over‑HTTPS через политики.
+  - Отключены Telemetry, Studies и Pocket (через политики).
+- «Новая вкладка» (Activity Stream) очищена: нет спонсорских плиток, Top Sites, Highlights, Top Stories и погоды.
+- Подсказки в адресной строке: отключены Quicksuggest/Trending.
+- Диалог выбора файлов использует XDG‑порталы (Wayland‑дружественно).
+
 ### Активация HM: пояснения
 
 - Сообщение «Activating ensureTransmissionDirs»
