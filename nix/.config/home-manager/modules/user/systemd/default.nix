@@ -126,24 +126,25 @@ with lib;
                   # Disable start-rate limiting; path may trigger bursts on Hypr restarts
                   StartLimitIntervalSec = "0";
                 };
-                Service = {
-                  Type = "oneshot";
-                  # Debounce frequent triggers within 2s; ignore errors
-                  ExecStart = ''${pkgs.bash}/bin/bash -lc '
+                Service = let
+                  script = ''
                     set -euo pipefail
-                    : "${XDG_RUNTIME_DIR:=/run/user/$(id -u)}"
+                    XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(${pkgs.coreutils}/bin/id -u)}"
                     stamp="$XDG_RUNTIME_DIR/hypr/.pyprland-watch.stamp"
-                    now=$(date +%s)
+                    now=$(${pkgs.coreutils}/bin/date +%s)
                     last=0
                     if [ -f "$stamp" ]; then
-                      last=$(date +%s -r "$stamp" 2>/dev/null || echo 0)
+                      last=$(${pkgs.coreutils}/bin/date +%s -r "$stamp" 2>/dev/null || echo 0)
                     fi
                     if [ $((now - last)) -lt 2 ]; then
                       exit 0
                     fi
-                    touch "$stamp"
+                    ${pkgs.coreutils}/bin/touch "$stamp"
                     exec ${pkgs.systemd}/bin/systemctl --user try-restart pyprland.service >/dev/null 2>&1 || true
-                  '''';
+                  '';
+                in {
+                  Type = "oneshot";
+                  ExecStart = "${pkgs.bash}/bin/bash" + lib.escapeShellArgs [ "-lc" script ];
                   SuccessExitStatus = ["0"]; # explicit for clarity
                 };
               }
