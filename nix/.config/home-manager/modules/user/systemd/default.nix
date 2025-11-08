@@ -121,11 +121,29 @@ with lib;
             # Watch Hyprland socket and restart pyprland on new instance
             pyprland-watch = lib.mkMerge [
               {
-                Unit.Description = "Restart pyprland on Hyprland instance change";
+                Unit = {
+                  Description = "Restart pyprland on Hyprland instance change";
+                  # Disable start-rate limiting; path may trigger bursts on Hypr restarts
+                  StartLimitIntervalSec = "0";
+                };
                 Service = {
                   Type = "oneshot";
-                  # Be tolerant if pyprland is not running yet; always exit 0
-                  ExecStart = ''${pkgs.bash}/bin/bash -lc "${pkgs.systemd}/bin/systemctl --user try-restart pyprland.service >/dev/null 2>&1 || true"'';
+                  # Debounce frequent triggers within 2s; ignore errors
+                  ExecStart = ''${pkgs.bash}/bin/bash -lc '
+                    set -euo pipefail
+                    : "${XDG_RUNTIME_DIR:=/run/user/$(id -u)}"
+                    stamp="$XDG_RUNTIME_DIR/hypr/.pyprland-watch.stamp"
+                    now=$(date +%s)
+                    last=0
+                    if [ -f "$stamp" ]; then
+                      last=$(date +%s -r "$stamp" 2>/dev/null || echo 0)
+                    fi
+                    if [ $((now - last)) -lt 2 ]; then
+                      exit 0
+                    fi
+                    touch "$stamp"
+                    exec ${pkgs.systemd}/bin/systemctl --user try-restart pyprland.service >/dev/null 2>&1 || true
+                  '''';
                   SuccessExitStatus = ["0"]; # explicit for clarity
                 };
               }
@@ -136,7 +154,11 @@ with lib;
         # Path unit triggers the oneshot service whenever a new hypr socket appears
         systemd.user.paths.pyprland-watch = lib.mkMerge [
           {
-            Unit.Description = "Watch Hyprland socket path";
+            Unit = {
+              Description = "Watch Hyprland socket path";
+              # Also disable rate limiting on the path unit itself
+              StartLimitIntervalSec = "0";
+            };
             Path = {
               # Trigger when hypr creates sockets or when the hypr dir changes
               PathExistsGlob = [
