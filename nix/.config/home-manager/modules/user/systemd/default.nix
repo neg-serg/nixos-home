@@ -138,7 +138,13 @@ with lib;
           {
             Unit.Description = "Watch Hyprland socket path";
             Path = {
-              PathExistsGlob = ["%t/hypr/*/.socket.sock" "%t/hypr/*/.socket2.sock"];
+              # Trigger when hypr creates sockets or when the hypr dir changes
+              PathExistsGlob = [
+                "%t/hypr/*/.socket.sock"
+                "%t/hypr/*/.socket2.sock"
+              ];
+              DirectoryNotEmpty = "%t/hypr";
+              PathChanged = "%t/hypr";
               Unit = "pyprland-watch.service";
             };
           }
