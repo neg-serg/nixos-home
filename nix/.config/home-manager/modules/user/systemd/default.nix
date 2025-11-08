@@ -124,8 +124,9 @@ with lib;
                 Unit.Description = "Restart pyprland on Hyprland instance change";
                 Service = {
                   Type = "oneshot";
-                  # Be tolerant if pyprland is not running yet
-                  ExecStart = "${pkgs.systemd}/bin/systemctl --user try-restart pyprland.service";
+                  # Be tolerant if pyprland is not running yet; always exit 0
+                  ExecStart = ''${pkgs.bash}/bin/bash -lc "${pkgs.systemd}/bin/systemctl --user try-restart pyprland.service >/dev/null 2>&1 || true"'';
+                  SuccessExitStatus = ["0"]; # explicit for clarity
                 };
               }
               (config.lib.neg.systemdUser.mkUnitFromPresets {presets = ["graphical"];})
