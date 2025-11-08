@@ -28,6 +28,23 @@ in
       bottomNavbar = false;
       # Return to stock UI (no injected userChrome tweaks)
       vanillaChrome = true;
+      # Convenience tweaks: remove sponsored tiles on New Tab and
+      # disable trending/Quicksuggest items in the urlbar.
+      settingsExtra = {
+        # Activity Stream (New Tab) — no sponsored content
+        "browser.newtabpage.activity-stream.showSponsored" = false;
+        "browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
+
+        # URL bar suggestions — disable Firefox Suggest/Quicksuggest including trending
+        "browser.urlbar.quicksuggest.enabled" = false;
+        "browser.urlbar.quicksuggest.sponsoredEnabled" = false;
+        "browser.urlbar.quicksuggest.nonSponsoredEnabled" = false;
+        # Feature gates used by newer builds
+        "browser.urlbar.merino.enabled" = false;
+        "browser.urlbar.trending.featureGate" = false;
+        # Keep scenario offline if some bits slip through in certain versions
+        "browser.urlbar.quicksuggest.scenario" = "offline";
+      };
     })
     {
       home.sessionVariables = {
