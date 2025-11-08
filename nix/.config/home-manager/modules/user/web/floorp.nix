@@ -34,6 +34,14 @@ in
         # Activity Stream (New Tab) — no sponsored content
         "browser.newtabpage.activity-stream.showSponsored" = false;
         "browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
+        # Hide Top Sites row entirely
+        "browser.newtabpage.activity-stream.feeds.topsites" = false;
+        "browser.newtabpage.activity-stream.showTopSites" = false;
+        # Hide Highlights section
+        "browser.newtabpage.activity-stream.feeds.section.highlights" = false;
+        "browser.newtabpage.activity-stream.showHighlights" = false;
+        # Hide Top Stories (Pocket recommendations), in addition to policies
+        "browser.newtabpage.activity-stream.feeds.section.topstories" = false;
 
         # URL bar suggestions — disable Firefox Suggest/Quicksuggest including trending
         "browser.urlbar.quicksuggest.enabled" = false;
