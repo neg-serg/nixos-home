@@ -1,7 +1,6 @@
 {
   lib,
   config,
-  inputs,
   hy3,
   ...
 }:
@@ -274,61 +273,7 @@ in {
     # Consistency assertions for nested flags
     {
       assertions =
-        # Hypr/hy3 compatibility check only matters when GUI and hy3 are enabled
-        (lib.optionals (cfg.gui.enable && cfg.gui.hy3.enable) [
-          (let
-            # Avoid evaluating inputs.hyprland.packages; read version from pinned ref if available.
-            hyprlandRef = lib.attrByPath ["original" "ref"] null inputs.hyprland;
-            hyprlandVersion = let
-              # Fallback: strip leading 'v' from ref like "v0.50.1"
-              refNorm =
-                if hyprlandRef == null
-                then null
-                else
-                  (let
-                    s = toString hyprlandRef;
-                  in
-                    if lib.hasPrefix "v" s
-                    then builtins.substring 1 (builtins.stringLength s - 1) s
-                    else s);
-            in
-              refNorm;
-            hy3Rev = lib.attrByPath ["rev"] null hy3;
-            compatible = [
-              {
-                hv = "0.50.1";
-                rev = "1fdc0a291f8c23b22d27d6dabb466d018757243c";
-              }
-              {
-                hv = "0.51.0";
-                rev = "e317a4cf89486f33c0e09364fbb6949e9f4f5624";
-              }
-              {
-                hv = "0.51.1";
-                rev = "e317a4cf89486f33c0e09364fbb6949e9f4f5624";
-              }
-            ];
-            matches = c: (hyprlandVersion == null || hyprlandVersion == c.hv) && (hy3Rev == null || hy3Rev == c.rev);
-            ok = lib.any matches compatible;
-          in {
-            assertion = ok;
-            message = ''
-              Incompatible Hyprland/hy3 pins detected.
-              Expected one of: ${builtins.concatStringsSep ", " (map (c: "Hyprland " + c.hv + " + hy3 " + builtins.substring 0 7 c.rev) compatible)}
-              Got: Hyprland ${toString (
-                if hyprlandVersion == null
-                then "<unknown>"
-                else hyprlandVersion
-              )} + hy3 ${toString (
-                if hy3Rev == null
-                then "<unknown>"
-                else builtins.substring 0 7 hy3Rev
-              )}
-              Update flake.nix pins or extend the compatibility matrix in modules/features.nix.
-            '';
-          })
-        ])
-        ++ [
+        [
           {
             assertion = cfg.gui.enable || (! cfg.gui.qt.enable);
             message = "features.gui.qt.enable requires features.gui.enable = true";

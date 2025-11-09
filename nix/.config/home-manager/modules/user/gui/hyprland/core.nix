@@ -3,8 +3,7 @@
   config,
   pkgs,
   xdg,
-  hy3, # flake input (passed via mkHMArgs) to locate hy3 plugin path
-  inputs, # expose flake inputs (hyprland) to align runtime with hy3
+  hy3, # provided via mkHMArgs (wraps pkgs.hyprlandPlugins.hy3)
   raiseProvider ? null,
   ...
 }:
@@ -52,10 +51,10 @@ in
         # Start quickshell only if not already active; 'start' is idempotent.
         systemctl --user start quickshell.service >/dev/null 2>&1 || true
       '')
-    # Ensure the pinned Hyprland binary is used regardless of DM/UWSM PATH
+    # Ensure the packaged Hyprland binary is used regardless of DM/UWSM PATH
     (let
       mkLocalBin = import ../../../../packages/lib/local-bin.nix {inherit lib;};
-      exe = "${inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland}/bin/Hyprland";
+      exe = "${pkgs.hyprland}/bin/Hyprland";
     in
       lib.mkMerge [
         (mkLocalBin "hyprland" ''#!/usr/bin/env bash
@@ -71,8 +70,7 @@ in
     {
       wayland.windowManager.hyprland = {
         enable = true;
-        # Use the pinned Hyprland from flake inputs to match the hy3 plugin ABI.
-        package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
+        package = pkgs.hyprland;
         portalPackage = null;
         settings = let hy3Enabled = config.features.gui.hy3.enable or false; in {
           source = (

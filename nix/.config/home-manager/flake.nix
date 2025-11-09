@@ -55,18 +55,6 @@ in {
     };
     # CamelCase alias for convenience in code
     homeManagerInput.follows = "home-manager";
-    # Pin hy3 to tag compatible with Hyprland v0.51.0
-    hy3 = {
-      # hy3 tags track Hyprland compatibility (hlX.Y.Z)
-      url = "github:outfoxxed/hy3?rev=e317a4cf89486f33c0e09364fbb6949e9f4f5624"; # hl0.51.0
-      # Ensure hy3 uses the same Hyprland input we pin below
-      inputs.hyprland.follows = "hyprland";
-    };
-    # Pin Hyprland to v0.51.1 (latest stable)
-    hyprland = {
-      url = "github:hyprwm/Hyprland?ref=v0.51.1";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     iosevka-neg = {
       url = "git+ssh://git@github.com/neg-serg/iosevka-neg";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -125,7 +113,6 @@ in {
     self,
     chaotic,
     homeManagerInput,
-    hy3,
     iosevkaNegInput,
     nixpkgs,
     nur,
@@ -155,11 +142,10 @@ in {
       then [defaultSystem]
       else cleaned;
 
-    # Pass only minimal inputs required by HM modules (hyprland for asserts, nupm for Nushell).
+    # Pass only minimal inputs required by HM modules (nupm for Nushell).
     # Nilla raw-loader compatibility: add a synthetic type to each selected input.
     hmInputs = let
       selected = {
-        inherit (inputs) hyprland;
         inherit (inputs) nupm;
       };
     in
@@ -173,7 +159,7 @@ in {
 
     # mkHMArgs moved to a helper; keep semantics identical
     mkHMArgs = import ./flake/mkHMArgs.nix {
-      inherit lib perSystem hy3 yandexBrowserInput nur inputs;
+      inherit lib perSystem yandexBrowserInput nur inputs;
       inherit hmInputs extraSubstituters extraTrustedKeys;
     };
 
@@ -225,7 +211,7 @@ in {
         packages = let
           extrasFlag = boolEnv "HM_EXTRAS";
           extrasSet = import ./flake/pkgs-extras.nix {
-            inherit hy3 pkgs system;
+            inherit pkgs system;
           };
         in
           {
