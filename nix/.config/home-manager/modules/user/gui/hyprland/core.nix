@@ -51,21 +51,6 @@ in
         # Start quickshell only if not already active; 'start' is idempotent.
         systemctl --user start quickshell.service >/dev/null 2>&1 || true
       '')
-    # Ensure the packaged Hyprland binary is used regardless of DM/UWSM PATH
-    (let
-      mkLocalBin = import ../../../../packages/lib/local-bin.nix {inherit lib;};
-      exe = "${pkgs.hyprland}/bin/Hyprland";
-    in
-      lib.mkMerge [
-        (mkLocalBin "hyprland" ''#!/usr/bin/env bash
-          set -euo pipefail
-          exec "''${exe}" "$@"
-        '')
-        (mkLocalBin "Hyprland" ''#!/usr/bin/env bash
-          set -euo pipefail
-          exec "''${exe}" "$@"
-        '')
-      ])
     # Removed custom kb-layout-next wrapper; rely on Hyprland dispatcher and XKB options
     {
       wayland.windowManager.hyprland = {
@@ -103,6 +88,7 @@ in
             ++ lib.optional (raiseProvider != null) (raiseProvider pkgs);
             qt = [
               pkgs.hyprland-qt-support # Qt integration fixes
+              pkgs.hyprland-qtutils # Qt helper binaries (hyprland-qt-helper)
               pkgs.kdePackages.qt6ct # Qt6 config tool
             ];
             tools = [hyprWinList]; # helper: list windows from Hyprctl JSON
