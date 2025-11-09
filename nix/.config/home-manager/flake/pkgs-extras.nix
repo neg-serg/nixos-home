@@ -1,8 +1,5 @@
+{ pkgs, ... }:
 {
-  hy3,
-  system,
-  pkgs,
-}: {
-  hy3Plugin = hy3.packages.${system}.hy3;
+  hy3Plugin = pkgs.hyprlandPlugins.hy3;
   bpf-host-latency = pkgs.neg.bpf_host_latency;
 }
