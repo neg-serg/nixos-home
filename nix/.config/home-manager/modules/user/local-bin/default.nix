@@ -28,6 +28,12 @@ with lib;
         pkgs.grim # screenshots (qr/screenshot)
         pkgs.slurp # region selection (qr/screenshot)
         pkgs.wtype # fake keypress (clip pipe/paste)
+        # archive helpers shared across scripts (clip/punzip/etc.)
+        pkgs.unar # extract .rar archives
+        pkgs.p7zip # 7z extraction
+        pkgs.lbzip2 # fast bzip2 backend for tar
+        pkgs.rapidgzip # parallel gzip backend for tar/raw gz
+        pkgs.xz # xz backend for tar/unxz
         pkgs.unzip # unzip (used via punzip helper)
         # image/qr/info
         pkgs.qrencode # generate QR codes (qr gen)
