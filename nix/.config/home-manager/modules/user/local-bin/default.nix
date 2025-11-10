@@ -28,12 +28,6 @@ with lib;
         pkgs.grim # screenshots (qr/screenshot)
         pkgs.slurp # region selection (qr/screenshot)
         pkgs.wtype # fake keypress (clip pipe/paste)
-        # archive/utils for se (prefer free tools)
-        pkgs.unar # extract .rar (se)
-        pkgs.p7zip # 7z extraction (se)
-        pkgs.lbzip2 # bzip2 backend for tar (se)
-        pkgs.rapidgzip # gzip backend for tar (se)
-        pkgs.xz # xz backend for tar/unxz (se)
         pkgs.unzip # unzip (used via punzip helper)
         # image/qr/info
         pkgs.qrencode # generate QR codes (qr gen)
@@ -185,10 +179,6 @@ with lib;
           {
             name = "screenshot";
             src = ./scripts/screenshot;
-          }
-          {
-            name = "se";
-            src = ./scripts/se;
           }
           {
             name = "shot-optimizer";
