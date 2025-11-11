@@ -152,7 +152,7 @@ rotate() { # modifies file in-place
   angle="$1"
   shift
   while read -r file; do
-    _require_not_git "$file" rotate || continue
+    _require_not_vcs "$file" rotate || continue
     mogrify -rotate "$angle" "$file"
   done
 }
@@ -204,13 +204,13 @@ proc() { # mv/cp with remembered last dest
     dest="$(choose_dest "$cmd" || true)"
   fi
   [ -z "${dest}" ] && exit 0
-  # Block operations on .git paths (source or destination)
-  if _is_git_path "$file"; then
-    printf 'swayimg-actions: refusing to %s from .git: %s\n' "$cmd" "$file" >&2
+  # Block operations on VCS paths (source or destination)
+  if _is_vcs_path "$file"; then
+    printf 'swayimg-actions: refusing to %s from VCS dir: %s\n' "$cmd" "$file" >&2
     exit 0
   fi
-  if _is_git_path "$dest"; then
-    printf 'swayimg-actions: refusing to %s to .git: %s\n' "$cmd" "$dest" >&2
+  if _is_vcs_path "$dest"; then
+    printf 'swayimg-actions: refusing to %s to VCS dir: %s\n' "$cmd" "$dest" >&2
     exit 0
   fi
   if [ -d "$dest" ]; then
