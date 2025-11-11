@@ -6,6 +6,17 @@ if [[ "$1" == "-h" || "$1" == "--help" ]]; then
   sed -n '2,7p' "$0" | sed 's/^# \{0,1\}//'; exit 0
 fi
 
+# Some launchers sanitize PATH; fall back to a sane default so wl-copy/etc. stay reachable.
+if [ -z "${PATH:-}" ]; then
+  PATH="$HOME/.local/bin:$HOME/.local/state/nix/profile/bin:$HOME/.nix-profile/bin"
+  PATH="$PATH:/etc/profiles/per-user/${USER:-${LOGNAME:-}}/bin:/run/current-system/sw/bin"
+  PATH="$PATH:/run/wrappers/bin:/usr/bin:/bin"
+  export PATH
+  path=(${(s/:/)PATH})
+else
+  export PATH
+fi
+
 # Run heavy actions out-of-band so swayimg doesn't block; set SWAYIMG_ACTIONS_SYNC=1 to opt out.
 if [ "${SWAYIMG_ACTIONS_SYNC:-0}" != 1 ] && [ -z "${SWAYIMG_ACTIONS_ASYNC_CHILD:-}" ]; then
   export SWAYIMG_ACTIONS_ASYNC_CHILD=1
@@ -21,6 +32,20 @@ cache="${HOME}/tmp"
 mkdir -p "${cache}"
 ff="${cache}/swayimg.$$"
 tmp_wall="${cache}/wall_swww.$$"
+debug_log="${cache}/swayimg-actions.log"
+debug_target="${SWAYIMG_ACTIONS_DEBUG:-}"
+_debug() {
+  [ -n "$debug_target" ] || return 0
+  local ts msg line
+  ts="$(date '+%Y-%m-%d %H:%M:%S' 2>/dev/null || date 2>/dev/null || printf '%s' 'unknown-time')"
+  msg="$*"
+  [ -n "$msg" ] || msg="(empty)"
+  line="$ts $msg"
+  printf '%s\n' "$line" >> "$debug_log"
+  if [ "$debug_target" = "stderr" ]; then
+    printf 'swayimg-actions(debug): %s\n' "$line" >&2
+  fi
+}
 swayimg_data="${XDG_DATA_HOME:-$HOME/.local/share}/swayimg"
 mkdir -p "$swayimg_data"
 last_file="${swayimg_data}/last"
@@ -445,14 +470,42 @@ range_cp() {
 }
 
 copy_name() { # copy absolute path to clipboard
-  local file="$1" path pretty
-  _require_not_vcs "$file" copy || return 0
-  path="$(realpath "$file")"
-  printf '%s\n' "$path" | wl-copy
+  local file="$1" abs_path pretty rc hint
+  _debug "copy_name start file='${file}'"
+  if [ -z "$file" ]; then
+    _debug "copy_name: empty file argument"
+    announce_action "copyname failed (empty file)"
+    return 1
+  fi
+  if ! _require_not_vcs "$file" copy; then
+    _debug "copy_name: skipped due to VCS guard (file=${file})"
+    return 0
+  fi
+  if ! command -v wl-copy >/dev/null 2>&1; then
+    _debug "copy_name: wl-copy not found; PATH=${PATH}"
+    announce_action "copyname failed (wl-copy missing)"
+    return 1
+  fi
+  abs_path="$(realpath "$file" 2>/dev/null || true)"
+  if [ -z "$abs_path" ]; then
+    _debug "copy_name: realpath failed, falling back to original path"
+    abs_path="$file"
+  fi
+  if ! printf '%s\n' "$abs_path" | wl-copy; then
+    rc=$?
+    _debug "copy_name: wl-copy rc=${rc} WAYLAND_DISPLAY='${WAYLAND_DISPLAY:-}' XDG_RUNTIME_DIR='${XDG_RUNTIME_DIR:-}'"
+    hint="copyname failed (wl-copy rc ${rc})"
+    if [ -n "$debug_target" ] && [ "$debug_target" != "stderr" ]; then
+      hint="${hint}; see ${debug_log}"
+    fi
+    announce_action "$hint"
+    return $rc
+  fi
+  _debug "copy_name: wl-copy ok path='${abs_path}'"
   if command -v pic-notify >/dev/null 2>&1; then
     pic-notify "$file" || true
   fi
-  pretty="$(_pretty_path "$path")"
+  pretty="$(_pretty_path "$abs_path")"
   announce_action "copied path → clipboard (${pretty})"
 }
 
