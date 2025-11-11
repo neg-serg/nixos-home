@@ -57,57 +57,21 @@ Item {
         height: Math.max(1, Math.round(Math.hypot(root.width, root.height) - root.inset * 2))
         rotation: root.angleDeg
         transformOrigin: Item.Center
-        // Base trapezoid parameters
+        fragmentShader: Qt.resolvedUrl("../shaders/diag.frag.qsb")
         property color baseColor: Qt.rgba(root.color.r, root.color.g, root.color.b, root.sepOpacity)
         property color accentColor: Qt.rgba(root.stripeColor.r, root.stripeColor.g, root.stripeColor.b, root.stripeOpacity)
-        property bool accentEnabled: root.stripeEnabled && root.stripeRatio > 0
-        property bool accentOnRight: root.stripeOnRight
-        property real accentRatio: Utils.clamp(root.stripeRatio, 0, 1)
-        property real topInsetPx: Math.max(0, root.inset)
-        property real bottomInsetPx: 0
-        property real tiltNorm: Utils.clamp(root.angleDeg / 90.0, -1, 1)
-        fragmentShader: "
-            uniform lowp vec4 baseColor;
-            uniform lowp vec4 accentColor;
-            uniform bool accentEnabled;
-            uniform bool accentOnRight;
-            uniform float accentRatio;
-            uniform float topInsetPx;
-            uniform float bottomInsetPx;
-            uniform float tiltNorm;
-            uniform float width;
-            uniform float height;
-            varying highp vec2 qt_TexCoord0;
-
-            void main() {
-                if (width <= 0.0 || height <= 0.0) discard;
-                float y = qt_TexCoord0.y * height;
-                float progress = y / height;
-                float currentInset = mix(topInsetPx, bottomInsetPx, progress);
-                currentInset = clamp(currentInset, 0.0, width * 0.49);
-                float centerShift = tiltNorm * (progress - 0.5) * width * 0.6;
-                float innerWidth = width - (currentInset * 2.0);
-                float minX = (width - innerWidth) * 0.5 + centerShift;
-                float maxX = (width + innerWidth) * 0.5 + centerShift;
-                minX = clamp(minX, 0.0, width);
-                maxX = clamp(maxX, 0.0, width);
-                if (minX >= maxX) discard;
-                float x = qt_TexCoord0.x * width;
-                if (x < minX || x > maxX) discard;
-
-                lowp vec4 color = baseColor;
-                if (accentEnabled && accentRatio > 0.0) {
-                    float inner = max(1e-4, maxX - minX);
-                    float stripeWidth = clamp(accentRatio, 0.0, 1.0) * inner;
-                    if (accentOnRight) {
-                        if (x > maxX - stripeWidth) color = accentColor;
-                    } else {
-                        if (x < minX + stripeWidth) color = accentColor;
-                    }
-                }
-                gl_FragColor = color;
-            }
-        "
+        property vector4d params0: Qt.vector4d(
+            (root.stripeEnabled && root.stripeRatio > 0) ? 1 : 0,
+            root.stripeOnRight ? 1 : 0,
+            Utils.clamp(root.stripeRatio, 0, 1),
+            Math.min(0.49, Math.max(0, root.inset) / Math.max(1, diag.width))
+        )
+        property vector4d params1: Qt.vector4d(
+            0,
+            Utils.clamp(root.angleDeg / 90.0, -1, 1),
+            root.opacity,
+            0
+        )
     }
 
     // --- Vertical ---
