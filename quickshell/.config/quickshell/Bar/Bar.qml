@@ -70,7 +70,6 @@ Scope {
                     property int barHeightPx: Math.round(Theme.panelHeight * s)
                     property int sideMargin: Math.round(Theme.panelSideMargin * s)
                     property int widgetSpacing: Math.round(Theme.panelWidgetSpacing * s)
-                    property int sepOvershoot: 0
                     property color barBgColor: Theme.background
 
                     readonly property real contentWidth: Math.max(
@@ -80,7 +79,7 @@ Scope {
 
                     component DiagSep: ThemedSeparator {
                         kind: "diagonal"
-                        Layout.preferredHeight: leftBarBackground.height + leftPanel.sepOvershoot
+                        Layout.preferredHeight: leftBarBackground.height
                         height: Layout.preferredHeight
                     }
 
@@ -94,7 +93,7 @@ Scope {
                     }
                     Rectangle {
                         id: leftBarFill
-                        width: Math.min(leftBarBackground.width, Math.round(leftPanel.sideMargin + leftPanel.contentWidth + leftPanel.sepOvershoot))
+                        width: Math.min(leftBarBackground.width, Math.round(leftPanel.sideMargin + leftPanel.contentWidth))
                         height: leftBarBackground.height
                         color: leftPanel.barBgColor
                         anchors.top: leftBarBackground.top
@@ -132,7 +131,7 @@ Scope {
                         }
                         DiagSep {
                             Layout.alignment: Qt.AlignVCenter
-                            Layout.preferredHeight: leftBarBackground.height + leftPanel.sepOvershoot
+                            Layout.preferredHeight: leftBarBackground.height
                             height: Layout.preferredHeight
                             stripeEnabled: false
                             visible: netCluster.visible
@@ -161,7 +160,6 @@ Scope {
                     property int barHeightPx: Math.round(Theme.panelHeight * s)
                     property int sideMargin: Math.round(Theme.panelSideMargin * s)
                     property int widgetSpacing: Math.round(Theme.panelWidgetSpacing * s)
-                    property int sepOvershoot: 0
                     property color barBgColor: Theme.background
 
                     readonly property real contentWidth: Math.max(
@@ -171,7 +169,7 @@ Scope {
 
                     component RightDiagSep: ThemedSeparator {
                         kind: "diagonal"
-                        Layout.preferredHeight: rightBarBackground.height + rightPanel.sepOvershoot
+                        Layout.preferredHeight: rightBarBackground.height
                         height: Layout.preferredHeight
                     }
 
@@ -185,7 +183,7 @@ Scope {
                     }
                     Rectangle {
                         id: rightBarFill
-                        width: Math.min(rightBarBackground.width, Math.round(rightPanel.sideMargin + rightPanel.contentWidth + rightPanel.sepOvershoot))
+                        width: Math.min(rightBarBackground.width, Math.round(rightPanel.sideMargin + rightPanel.contentWidth))
                         height: rightBarBackground.height
                         color: rightPanel.barBgColor
                         anchors.top: rightBarBackground.top
