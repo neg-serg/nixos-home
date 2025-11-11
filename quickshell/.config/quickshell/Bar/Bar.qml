@@ -48,7 +48,7 @@ Scope {
                         id: reserveBackground
                         width: parent.width
                         height: reservePanel.barHeightPx
-                        color: "transparent"
+                        color: Qt.rgba(Theme.background.r, Theme.background.g, Theme.background.b, Theme.background.a * 0.5)
                     }
                 }
 
@@ -72,6 +72,8 @@ Scope {
                     property int widgetSpacing: Math.round(Theme.panelWidgetSpacing * s)
                     property int sepOvershoot: Theme.panelSepOvershoot
                     property color barBgColor: Theme.background
+                    property color barTint: Qt.rgba(barBgColor.r, barBgColor.g, barBgColor.b, barBgColor.a * 0.5)
+                    property color diagTint: Qt.rgba(barBgColor.r, barBgColor.g, barBgColor.b, barBgColor.a * 0.35)
 
                     component DiagSep: ThemedSeparator {
                         kind: "diagonal"
@@ -83,9 +85,19 @@ Scope {
                         id: leftBarBackground
                         width: parent.width
                         height: leftPanel.barHeightPx
-                        color: leftPanel.barBgColor
+                        color: leftPanel.barTint
                         anchors.top: parent.top
                         anchors.left: parent.left
+                    }
+                    Rectangle {
+                        id: leftDiagBackdrop
+                        width: Math.max(1, Math.round(leftPanel.sepOvershoot))
+                        height: leftBarBackground.height
+                        color: leftPanel.diagTint
+                        anchors.right: leftBarBackground.right
+                        anchors.bottom: leftBarBackground.bottom
+                        z: leftBarBackground.z + 0.5
+                        visible: monitorEnabled
                     }
 
                     Component.onCompleted: rootScope.barHeight = leftBarBackground.height
@@ -150,6 +162,8 @@ Scope {
                     property int widgetSpacing: Math.round(Theme.panelWidgetSpacing * s)
                     property int sepOvershoot: Theme.panelSepOvershoot
                     property color barBgColor: Theme.background
+                    property color barTint: Qt.rgba(barBgColor.r, barBgColor.g, barBgColor.b, barBgColor.a * 0.5)
+                    property color diagTint: Qt.rgba(barBgColor.r, barBgColor.g, barBgColor.b, barBgColor.a * 0.35)
 
                     component RightDiagSep: ThemedSeparator {
                         kind: "diagonal"
@@ -161,9 +175,19 @@ Scope {
                         id: rightBarBackground
                         width: parent.width
                         height: rightPanel.barHeightPx
-                        color: rightPanel.barBgColor
+                        color: rightPanel.barTint
                         anchors.top: parent.top
                         anchors.left: parent.left
+                    }
+                    Rectangle {
+                        id: rightDiagBackdrop
+                        width: Math.max(1, Math.round(rightPanel.sepOvershoot))
+                        height: rightBarBackground.height
+                        color: rightPanel.diagTint
+                        anchors.left: rightBarBackground.left
+                        anchors.bottom: rightBarBackground.bottom
+                        z: rightBarBackground.z + 0.5
+                        visible: monitorEnabled
                     }
 
                     RowLayout {
