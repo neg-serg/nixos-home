@@ -82,6 +82,16 @@ lint:
       python3 scripts/comments_guard.py; \
     fi
 
+lint-md *ARGS:
+    set -eu
+    if [ "$#" -gt 0 ]; then \
+      markdownlint --config .markdownlint.yaml "$@"; \
+    elif git ls-files -- '*.md' >/dev/null 2>&1; then \
+      markdownlint --config .markdownlint.yaml .; \
+    else \
+      echo 'No Markdown files found'; \
+    fi
+
 hm-neg:
     home-manager switch --flake .#neg
 

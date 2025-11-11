@@ -36,3 +36,9 @@ includes = ["**/*.py"]
 command = "black"
 options = ["--quiet", "--line-length", "100"]
 includes = ["**/*.py"]
+
+# Markdown: format via mdformat (wrap at 100 cols)
+[formatter.mdformat]
+command = "mdformat"
+options = ["--wrap", "100"]
+includes = ["**/*.md", "**/*.mdown", "**/*.markdown", "**/*.mdx"]

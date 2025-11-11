@@ -15,6 +15,7 @@
         pkgs.shellcheck
         pkgs.black
         pkgs.ruff
+        pkgs.python3Packages.mdformat
         pkgs.findutils
         pkgs.gnugrep
       ];
@@ -48,6 +49,10 @@
       command = "ruff"
       options = ["--fix"]
       includes = ["**/*.py"]
+      [formatter.mdformat]
+      command = "mdformat"
+      options = ["--wrap", "100"]
+      includes = ["**/*.md", "**/*.mdown", "**/*.markdown", "**/*.mdx"]
       EOF
       treefmt --config-file ./.treefmt-check.toml --fail-on-change .
       touch "$out"

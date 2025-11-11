@@ -9,6 +9,8 @@
     pkgs.git-absorb # autosquash fixups into commits
     pkgs.gitoxide # fast Rust Git tools
     pkgs.just # task runner
+    pkgs.markdownlint-cli # Markdown linter/fixer
+    pkgs.python3Packages.mdformat # Markdown formatter
     pkgs.nil # Nix language server
     pkgs.sops # secrets management
     pkgs.statix # Nix linter

@@ -5,6 +5,7 @@ pkgs.writeShellApplication {
     pkgs.alejandra # Nix formatter
     pkgs.black # Python formatter
     pkgs.deadnix # find dead Nix code
+    pkgs.python3Packages.mdformat # Markdown formatter
     pkgs.ruff # Python linter/fixer
     pkgs.shellcheck # shell linter
     pkgs.shfmt # shell formatter
