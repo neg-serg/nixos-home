@@ -222,16 +222,26 @@ proc() { # mv/cp with remembered last dest
       "$cmd" "$(realpath "$line")" "$dest"
     done <"$ff"
     command -v zoxide >/dev/null 2>&1 && zoxide add "$dest" || true
-    printf '%s %s\n' "$cmd" "$dest" >"$last_file"
+    {
+      printf '%s\n' "$cmd"
+      printf '%s\n' "$dest"
+    } >"$last_file"
   fi
 }
 
 repeat_action() { # repeat last mv/cp to same dir
-  file="$1"
+  local file="$1" cmd="" dest="" last=""
   [ -f "$last_file" ] || exit 0
-  last="$(cat "$last_file")"
-  cmd="$(printf '%s\n' "$last" | awk '{print $1}')"
-  dest="$(printf '%s\n' "$last" | awk '{print $2}')"
+  {
+    IFS= read -r cmd || true
+    IFS= read -r dest || true
+  } <"$last_file"
+  if [ -z "$cmd" ] || [ -z "$dest" ]; then
+    last="$(cat "$last_file")"
+    cmd="${last%% *}"
+    dest="${last#* }"
+  fi
+  [ -n "$cmd" ] && [ -n "$dest" ] || exit 0
   if [ "$cmd" = "mv" ] || [ "$cmd" = "cp" ]; then
     "$cmd" "$file" "$dest"
   fi
