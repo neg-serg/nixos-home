@@ -25,71 +25,90 @@ Scope {
 
             Item {
                 property var modelData // 'modelData' comes from Variants
+                readonly property bool monitorEnabled: (Settings.settings.barMonitors.includes(modelData.name)
+                                                        || (Settings.settings.barMonitors.length === 0))
+
                 PanelWindow {
-                    id: panel
+                    id: reservePanel
                     screen: modelData
                     color: "transparent"
-                    property bool panelHovering: false
-                    WlrLayershell.namespace: "quickshell-bar"
+                    WlrLayershell.namespace: "quickshell-bar-reserve"
                     anchors.bottom: true
                     anchors.left: true
                     anchors.right: true
-                    visible: Settings.settings.barMonitors.includes(modelData.name)
-                             || (Settings.settings.barMonitors.length === 0)
-                    implicitHeight: barBackground.height
+                    visible: monitorEnabled
+                    implicitHeight: reserveBackground.height
                     exclusionMode: ExclusionMode.Normal
-                    exclusiveZone: panel.barHeightPx   // reserve exactly bar height
-                    property real s: Theme.scale(panel.screen)
-                    property int barHeightPx:Math.round(Theme.panelHeight * s)
-                    property int sideMargin:Math.round(Theme.panelSideMargin * s)
-                    property int widgetSpacing:Math.round(Theme.panelWidgetSpacing * s)
-                    property int sepOvershoot:Theme.panelSepOvershoot
-                    property color barBgColor: Theme.background // Colors
+                    exclusiveZone: barHeightPx
+                    property real s: Theme.scale(reservePanel.screen)
+                    property int barHeightPx: Math.round(Theme.panelHeight * s)
 
-                    // Inline component for repeated diagonal separator
+                    Rectangle {
+                        id: reserveBackground
+                        width: parent.width
+                        height: reservePanel.barHeightPx
+                        color: "transparent"
+                    }
+                }
+
+                PanelWindow {
+                    id: leftPanel
+                    screen: modelData
+                    color: "transparent"
+                    property bool panelHovering: false
+                    WlrLayershell.namespace: "quickshell-bar-left"
+                    anchors.bottom: true
+                    anchors.left: true
+                    anchors.right: false
+                    implicitWidth: leftPanel.screen ? Math.round(leftPanel.screen.width / 2) : 960
+                    visible: monitorEnabled
+                    implicitHeight: leftBarBackground.height
+                    exclusionMode: ExclusionMode.Ignore
+                    exclusiveZone: 0
+                    property real s: Theme.scale(leftPanel.screen)
+                    property int barHeightPx: Math.round(Theme.panelHeight * s)
+                    property int sideMargin: Math.round(Theme.panelSideMargin * s)
+                    property int widgetSpacing: Math.round(Theme.panelWidgetSpacing * s)
+                    property int sepOvershoot: Theme.panelSepOvershoot
+                    property color barBgColor: Theme.background
+
                     component DiagSep: ThemedSeparator {
                         kind: "diagonal"
-                        // For layouts: provide preferred height so RowLayout sizes correctly
-                        Layout.preferredHeight: barBackground.height + panel.sepOvershoot
-                        // Also set height for non-layout contexts (defensive)
+                        Layout.preferredHeight: leftBarBackground.height + leftPanel.sepOvershoot
                         height: Layout.preferredHeight
                     }
 
-                    Rectangle { // Bar background
-                        id: barBackground
+                    Rectangle {
+                        id: leftBarBackground
                         width: parent.width
-                        height: panel.barHeightPx
-                        color: panel.barBgColor
+                        height: leftPanel.barHeightPx
+                        color: leftPanel.barBgColor
                         anchors.top: parent.top
                         anchors.left: parent.left
                     }
 
-                    
-
-                    Component.onCompleted: {
-                        rootScope.barHeight = barBackground.height
-                    }
+                    Component.onCompleted: rootScope.barHeight = leftBarBackground.height
                     Connections {
-                        target: barBackground
-                        function onHeightChanged() { rootScope.barHeight = barBackground.height }
+                        target: leftBarBackground
+                        function onHeightChanged() { rootScope.barHeight = leftBarBackground.height }
                     }
 
                     RowLayout {
                         id: leftWidgetsRow
-                        anchors.verticalCenter: barBackground.verticalCenter
-                        anchors.left: barBackground.left
-                        anchors.leftMargin: panel.sideMargin
-                        spacing: panel.widgetSpacing
+                        anchors.verticalCenter: leftBarBackground.verticalCenter
+                        anchors.left: leftBarBackground.left
+                        anchors.leftMargin: leftPanel.sideMargin
+                        spacing: leftPanel.widgetSpacing
                         ClockWidget { Layout.alignment: Qt.AlignVCenter }
                         DiagSep { stripeEnabled: false; Layout.alignment: Qt.AlignVCenter }
                         WsIndicator { id: wsindicator; Layout.alignment: Qt.AlignVCenter }
                         DiagSep { Layout.alignment: Qt.AlignVCenter }
-                        KeyboardLayoutHypr { id: kbIndicator; /* deviceMatch: "dygma-defy-keyboard" */ Layout.alignment: Qt.AlignVCenter }
+                        KeyboardLayoutHypr { id: kbIndicator; Layout.alignment: Qt.AlignVCenter }
                         DiagSep { Layout.alignment: Qt.AlignVCenter }
                         Row {
                             id: netCluster
                             Layout.alignment: Qt.AlignVCenter
-                            spacing: Math.round(Theme.panelNetClusterSpacing * panel.s)
+                            spacing: Math.round(Theme.panelNetClusterSpacing * leftPanel.s)
                             LocalMods.VpnAmneziaIndicator {
                                 id: amneziaVpn
                                 showLabel: false
@@ -99,26 +118,60 @@ Scope {
                         }
                         DiagSep {
                             Layout.alignment: Qt.AlignVCenter
-                            Layout.preferredHeight: barBackground.height + panel.sepOvershoot
+                            Layout.preferredHeight: leftBarBackground.height + leftPanel.sepOvershoot
                             height: Layout.preferredHeight
                             stripeEnabled: false
                             visible: netCluster.visible
                         }
                         DiagSep { visible: Settings.settings.showWeatherInBar === true; Layout.alignment: Qt.AlignVCenter }
                         LocalMods.WeatherButton { visible: Settings.settings.showWeatherInBar === true; Layout.alignment: Qt.AlignVCenter }
-                        // Rightmost separator of the left section: show only if weather is visible
                         DiagSep { stripeEnabled: false; visible: Settings.settings.showWeatherInBar === true; Layout.alignment: Qt.AlignVCenter }
                     }
+                }
 
-                    
+                PanelWindow {
+                    id: rightPanel
+                    screen: modelData
+                    color: "transparent"
+                    property bool panelHovering: false
+                    WlrLayershell.namespace: "quickshell-bar-right"
+                    anchors.bottom: true
+                    anchors.right: true
+                    anchors.left: false
+                    implicitWidth: rightPanel.screen ? Math.round(rightPanel.screen.width / 2) : 960
+                    visible: monitorEnabled
+                    implicitHeight: rightBarBackground.height
+                    exclusionMode: ExclusionMode.Ignore
+                    exclusiveZone: 0
+                    property real s: Theme.scale(rightPanel.screen)
+                    property int barHeightPx: Math.round(Theme.panelHeight * s)
+                    property int sideMargin: Math.round(Theme.panelSideMargin * s)
+                    property int widgetSpacing: Math.round(Theme.panelWidgetSpacing * s)
+                    property int sepOvershoot: Theme.panelSepOvershoot
+                    property color barBgColor: Theme.background
+
+                    component RightDiagSep: ThemedSeparator {
+                        kind: "diagonal"
+                        Layout.preferredHeight: rightBarBackground.height + rightPanel.sepOvershoot
+                        height: Layout.preferredHeight
+                    }
+
+                    Rectangle {
+                        id: rightBarBackground
+                        width: parent.width
+                        height: rightPanel.barHeightPx
+                        color: rightPanel.barBgColor
+                        anchors.top: parent.top
+                        anchors.left: parent.left
+                    }
 
                     RowLayout {
                         id: rightWidgetsRow
-                        anchors.verticalCenter: barBackground.verticalCenter
-                        anchors.right: barBackground.right
-                        anchors.rightMargin: panel.sideMargin
-                        spacing: panel.widgetSpacing
-                        DiagSep {
+                        anchors.verticalCenter: rightBarBackground.verticalCenter
+                        anchors.right: rightBarBackground.right
+                        anchors.rightMargin: rightPanel.sideMargin
+                        spacing: rightPanel.widgetSpacing
+                        RightDiagSep {
                             Layout.alignment: Qt.AlignVCenter
                             visible: mediaModule.visible
                         }
@@ -138,7 +191,7 @@ Scope {
                                 && (MusicManager.isPlaying || MusicManager.isPaused || (MusicManager.trackTitle && MusicManager.trackTitle.length > 0))
                             )
                             enabled: _mediaVisible && MusicManager.isCurrentMpdPlayer()
-                            iconPx: Math.round(Theme.fontSizeSmall * Theme.scale(panel.screen) * Theme.mpdFlagsIconScale)
+                            iconPx: Math.round(Theme.fontSizeSmall * Theme.scale(rightPanel.screen) * Theme.mpdFlagsIconScale)
                             iconColor: Theme.textPrimary
                         }
                         
@@ -163,35 +216,35 @@ Scope {
 
                     MusicPopup {
                         id: sidebarPopup
-                        anchorWindow: panel
+                        anchorWindow: rightPanel
                         panelEdge: "bottom"
                     }
 
                     property string _lastAlbum: ""
                     function maybeShowOnAlbumChange() {
                         try {
-                            if (!panel.visible) return;
+                            if (!rightPanel.visible) return;
                             if (MusicManager.isStopped) return;
                             const album = String(MusicManager.trackAlbum || "");
                             if (!album || album.length === 0) return;
-                            if (album !== panel._lastAlbum) {
+                            if (album !== rightPanel._lastAlbum) {
                                 if (MusicManager.trackTitle || MusicManager.trackArtist) sidebarPopup.showAt();
-                                panel._lastAlbum = album;
+                                rightPanel._lastAlbum = album;
                             }
                         } catch (e) { /* ignore */ }
                     }
                     
                     Connections {
                         target: MusicManager
-                        function onTrackAlbumChanged()  { panel.maybeShowOnAlbumChange(); }
+                        function onTrackAlbumChanged()  { rightPanel.maybeShowOnAlbumChange(); }
                     }
 
                     MouseArea {
                         id: trayHotZone
-                        anchors.right: barBackground.right
-                        anchors.bottom: barBackground.bottom
-                        width: Math.round(Theme.panelHotzoneWidth * panel.s)
-                        height: Math.round(Theme.panelHotzoneHeight * panel.s)
+                        anchors.right: rightBarBackground.right
+                        anchors.bottom: rightBarBackground.bottom
+                        width: Math.round(Theme.panelHotzoneWidth * rightPanel.s)
+                        height: Math.round(Theme.panelHotzoneHeight * rightPanel.s)
                         anchors.rightMargin: Math.round(width * Theme.panelHotzoneRightShift)
                         anchors.bottomMargin: Theme.uiMarginNone
                         hoverEnabled: true
@@ -209,20 +262,20 @@ Scope {
 
                     MouseArea {
                         id: barHoverTracker
-                        anchors.fill: barBackground
+                        anchors.fill: rightBarBackground
                         hoverEnabled: true
                         acceptedButtons: Qt.NoButton
                         propagateComposedEvents: true
                         z: 10000
-                        onEntered: { systemTrayModule.panelHover = true; panel.panelHovering = true }
-                            onExited: {
-                                systemTrayModule.panelHover = false
-                                panel.panelHovering = false
-                                const menuOpen = systemTrayModule.trayMenu && systemTrayModule.trayMenu.visible
-                                if (!systemTrayModule.hotHover && !systemTrayModule.holdOpen && !systemTrayModule.shortHoldActive && !menuOpen) {
-                                    systemTrayModule.expanded = false
-                                }
+                        onEntered: { systemTrayModule.panelHover = true; rightPanel.panelHovering = true }
+                        onExited: {
+                            systemTrayModule.panelHover = false
+                            rightPanel.panelHovering = false
+                            const menuOpen = systemTrayModule.trayMenu && systemTrayModule.trayMenu.visible
+                            if (!systemTrayModule.hotHover && !systemTrayModule.holdOpen && !systemTrayModule.shortHoldActive && !menuOpen) {
+                                systemTrayModule.expanded = false
                             }
+                        }
                         visible: true
                         Rectangle { visible: false }
                     }
