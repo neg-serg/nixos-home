@@ -52,7 +52,11 @@ Item {
     ShaderEffect {
         id: diag
         visible: root.kind === "diagonal"
-        anchors.fill: parent
+        anchors.centerIn: parent
+        width: Math.max(1, Math.round(root.thickness * Theme.scale(root.screen)))
+        height: Math.max(1, Math.round(Math.hypot(root.width, root.height) - root.inset * 2))
+        rotation: root.angleDeg
+        transformOrigin: Item.Center
         // Base trapezoid parameters
         property color baseColor: Qt.rgba(root.color.r, root.color.g, root.color.b, root.sepOpacity)
         property color accentColor: Qt.rgba(root.stripeColor.r, root.stripeColor.g, root.stripeColor.b, root.stripeOpacity)
