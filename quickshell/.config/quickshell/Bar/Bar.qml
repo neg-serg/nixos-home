@@ -74,19 +74,11 @@ Scope {
 
                     Rectangle {
                         id: leftBarBackground
-                        width: parent.width
+                        width: Math.max(1, Math.round(leftPanel.sideMargin + (leftWidgetsRow.implicitWidth || 0)))
                         height: leftPanel.barHeightPx
-                        color: "transparent"
+                        color: leftPanel.barBgColor
                         anchors.top: parent.top
                         anchors.left: parent.left
-                    }
-                    Rectangle {
-                        id: leftBarFill
-                        width: Math.max(1, Math.round(leftPanel.sideMargin + (leftWidgetsRow.implicitWidth || 0)))
-                        height: leftBarBackground.height
-                        color: leftPanel.barBgColor
-                        anchors.top: leftBarBackground.top
-                        anchors.left: leftBarBackground.left
                     }
 
                     Component.onCompleted: rootScope.barHeight = leftBarBackground.height
@@ -160,19 +152,11 @@ Scope {
 
                     Rectangle {
                         id: rightBarBackground
-                        width: parent.width
+                        width: Math.max(1, Math.round(rightPanel.sideMargin + (rightWidgetsRow.implicitWidth || 0)))
                         height: rightPanel.barHeightPx
-                        color: "transparent"
+                        color: rightPanel.barBgColor
                         anchors.top: parent.top
                         anchors.right: parent.right
-                    }
-                    Rectangle {
-                        id: rightBarFill
-                        width: Math.max(1, Math.round(rightPanel.sideMargin + (rightWidgetsRow.implicitWidth || 0)))
-                        height: rightBarBackground.height
-                        color: rightPanel.barBgColor
-                        anchors.top: rightBarBackground.top
-                        anchors.right: rightBarBackground.right
                     }
 
                     RowLayout {
