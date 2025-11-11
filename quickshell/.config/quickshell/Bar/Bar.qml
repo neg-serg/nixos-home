@@ -32,6 +32,7 @@ Scope {
                     id: reservePanel
                     screen: modelData
                     color: "transparent"
+                    WlrLayershell.layer: WlrLayer.Bottom
                     WlrLayershell.namespace: "quickshell-bar-reserve"
                     anchors.bottom: true
                     anchors.left: true
