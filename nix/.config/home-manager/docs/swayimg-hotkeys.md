@@ -11,6 +11,11 @@ corner) describing what is happening — e.g., how many files were moved and whe
 `SWAYIMG_ACTIONS_SYNC=1` before calling the script if you ever need to run it synchronously from a
 terminal.
 
+Enable verbose logging with `SWAYIMG_ACTIONS_DEBUG=1` before launching swayimg to capture clipboard
+failures (such as `wl-copy` errors) in `~/tmp/swayimg-actions.log`. Use
+`SWAYIMG_ACTIONS_DEBUG=stderr` to mirror the same lines to the terminal; entries still land in the
+log file either way so you can read them later via `tail -f ~/tmp/swayimg-actions.log`.
+
 ## Viewer Mode
 
 | Key | Script action | Effect |
