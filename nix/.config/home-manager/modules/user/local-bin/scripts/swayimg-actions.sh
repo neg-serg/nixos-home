@@ -10,12 +10,18 @@ cache="${HOME}/tmp"
 mkdir -p "${cache}"
 ff="${cache}/swayimg.$$"
 tmp_wall="${cache}/wall_swww.$$"
-mkdir -p ${XDG_DATA_HOME:-$HOME/.local/share}/swayimg
-last_file="${XDG_DATA_HOME:-$HOME/.local/share}/swayimg/last"
+swayimg_data="${XDG_DATA_HOME:-$HOME/.local/share}/swayimg"
+mkdir -p "$swayimg_data"
+last_file="${swayimg_data}/last"
 trash="${HOME}/trash/1st-level/pic"
 rofi_cmd='rofi -dmenu -sort -matching fuzzy -no-plugins -no-only-match -theme viewer -custom'
 pics_dir_default="$HOME/Pictures"
 pics_dir="${XDG_PICTURES_DIR:-$pics_dir_default}"
+session_id="${SWAYIMG_SESSION_ID:-manual}"
+playlist_file="${SWAYIMG_FILELIST:-${swayimg_data}/${session_id}.list}"
+range_file="${SWAYIMG_RANGE_FILE:-${swayimg_data}/${session_id}.range}"
+typeset -a playlist
+typeset -gi range_idx
 
 # ---- path guards -----------------------------------------------------------
 # Never operate on files inside any VCS directory (.git, .hg, .svn, .bzr):
@@ -39,6 +45,84 @@ _require_not_vcs() { # _require_not_vcs <path> <what>
     return 1
   fi
   return 0
+}
+
+# ---- session / range helpers -----------------------------------------------
+_resolve_realpath() {
+  local target="$1" out=""
+  if command -v realpath >/dev/null 2>&1; then
+    out="$(realpath "$target" 2>/dev/null || true)"
+  fi
+  if [ -z "$out" ] && command -v readlink >/dev/null 2>&1; then
+    out="$(readlink -f "$target" 2>/dev/null || true)"
+  fi
+  [ -n "$out" ] && printf '%s\n' "$out" || printf '%s\n' "$target"
+}
+
+_range_warn() {
+  printf 'swayimg-actions: %s\n' "$1" >&2
+}
+
+_range_load_playlist() {
+  playlist=()
+  [ -f "$playlist_file" ] || return 1
+  playlist=("${(@f)$(<"$playlist_file")}")
+  [ "${#playlist[@]}" -gt 0 ] || return 1
+  return 0
+}
+
+_range_find_index() {
+  local needle="$1" entry
+  range_idx=0
+  [ "${#playlist[@]}" -gt 0 ] || return 1
+  local -i idx=1
+  for entry in "${playlist[@]}"; do
+    if [[ "$entry" == "$needle" ]]; then
+      range_idx=$idx
+      return 0
+    fi
+    (( idx++ ))
+  done
+  return 1
+}
+
+_range_stage_selection() {
+  local file="$1" mark current
+  if [ ! -f "$playlist_file" ]; then
+    _range_warn "диапазон доступен только при запуске через sx"
+    return 1
+  fi
+  if [ ! -f "$range_file" ]; then
+    _range_warn "сначала поставь метку диапазона (Shift+m)"
+    return 1
+  fi
+  mark="$(<"$range_file")"
+  [ -n "$mark" ] || { _range_warn "метка пуста"; return 1; }
+  _range_load_playlist || { _range_warn "не удалось загрузить список файлов"; return 1; }
+  mark="$(_resolve_realpath "$mark")"
+  current="$(_resolve_realpath "$file")"
+  if ! _range_find_index "$mark"; then
+    _range_warn "метка не найдена в активном списке"
+    return 1
+  fi
+  local -i start_idx=$range_idx
+  if ! _range_find_index "$current"; then
+    _range_warn "текущий файл не найден в активном списке"
+    return 1
+  fi
+  local -i end_idx=$range_idx
+  local -i lower=$start_idx upper=$end_idx tmp
+  if (( lower > upper )); then
+    tmp=$lower
+    lower=$upper
+    upper=$tmp
+  fi
+  >"$ff"
+  if (( lower > 0 && upper > 0 )); then
+    printf '%s\n' "${playlist[$lower,$upper]}" >"$ff"
+    return 0
+  fi
+  return 1
 }
 
 # ---- IPC helpers -----------------------------------------------------------
@@ -196,37 +280,50 @@ choose_dest() {
     | sed "s:^~:$HOME:"
 }
 
-proc() { # mv/cp with remembered last dest
-  cmd="$1"; file="$2"; dest="${3:-}"
-  printf '%s\n' "$file" | tee "$ff" >/dev/null
+_proc_apply_list() { # _proc_apply_list <cmd> [dest]
+  local cmd="$1" dest="${2:-}"
+  local -i moved=0
 
   if [ -z "${dest}" ]; then
     dest="$(choose_dest "$cmd" || true)"
   fi
-  [ -z "${dest}" ] && exit 0
-  # Block operations on VCS paths (source or destination)
-  if _is_vcs_path "$file"; then
-    printf 'swayimg-actions: refusing to %s from VCS dir: %s\n' "$cmd" "$file" >&2
-    exit 0
-  fi
+  [ -n "${dest}" ] || return 0
   if _is_vcs_path "$dest"; then
     printf 'swayimg-actions: refusing to %s to VCS dir: %s\n' "$cmd" "$dest" >&2
-    exit 0
+    return 0
   fi
   if [ -d "$dest" ]; then
-    # Avoid swayimg crash when current list ends after move: switch away first
     if [ "$cmd" = "mv" ]; then
       _ipc_send "prev_file"
     fi
-    while read -r line; do
+    local line
+    while IFS= read -r line || [ -n "$line" ]; do
+      [ -n "$line" ] || continue
+      if _is_vcs_path "$line"; then
+        printf 'swayimg-actions: skip %s source in VCS dir: %s\n' "$cmd" "$line" >&2
+        continue
+      fi
       "$cmd" "$(realpath "$line")" "$dest"
+      moved=1
     done <"$ff"
-    command -v zoxide >/dev/null 2>&1 && zoxide add "$dest" || true
-    {
-      printf '%s\n' "$cmd"
-      printf '%s\n' "$dest"
-    } >"$last_file"
+    if (( moved > 0 )); then
+      command -v zoxide >/dev/null 2>&1 && zoxide add "$dest" || true
+      {
+        printf '%s\n' "$cmd"
+        printf '%s\n' "$dest"
+      } >"$last_file"
+    fi
   fi
+}
+
+proc() { # mv/cp with remembered last dest
+  cmd="$1"; file="$2"; dest="${3:-}"
+  printf '%s\n' "$file" | tee "$ff" >/dev/null
+  if _is_vcs_path "$file"; then
+    printf 'swayimg-actions: refusing to %s from VCS dir: %s\n' "$cmd" "$file" >&2
+    return 0
+  fi
+  _proc_apply_list "$cmd" "$dest"
 }
 
 repeat_action() { # repeat last mv/cp to same dir
@@ -244,6 +341,46 @@ repeat_action() { # repeat last mv/cp to same dir
   [ -n "$cmd" ] && [ -n "$dest" ] || exit 0
   if [ "$cmd" = "mv" ] || [ "$cmd" = "cp" ]; then
     "$cmd" "$file" "$dest"
+  fi
+}
+
+range_mark() {
+  local file="$1" current
+  if ! _range_load_playlist; then
+    _range_warn "не удалось загрузить список файлов (запусти через sx)"
+    return 0
+  fi
+  current="$(_resolve_realpath "$file")"
+  if ! _range_find_index "$current"; then
+    _range_warn "файл не найден в активном списке — диапазон недоступен"
+    return 0
+  fi
+  printf '%s\n' "$current" >| "$range_file"
+}
+
+range_clear() {
+  rm -f "$range_file"
+}
+
+range_trash() {
+  local file="$1"
+  if _range_stage_selection "$file"; then
+    _proc_apply_list "mv" "$trash"
+    rm -f "$range_file"
+  fi
+}
+
+range_mv() {
+  local file="$1"
+  if _range_stage_selection "$file"; then
+    _proc_apply_list "mv"
+  fi
+}
+
+range_cp() {
+  local file="$1"
+  if _range_stage_selection "$file"; then
+    _proc_apply_list "cp"
   fi
 }
 
@@ -282,6 +419,11 @@ case "$action" in
   rotate-ccw) printf '%s\n' "$file" | rotate -90 ;;
   copyname) copy_name "$file" ;;
   repeat) repeat_action "$file" ;;
+  range-mark) range_mark "$file" ;;
+  range-clear) range_clear "${file:-}" ;;
+  range-trash) range_trash "$file" ;;
+  range-mv) range_mv "$file" ;;
+  range-cp) range_cp "$file" ;;
   mv) proc mv "$file" "${3:-}" ;;
   cp) proc cp "$file" "${3:-}" ;;
   wall-mono) wall mono "$file" ;;
