@@ -53,9 +53,14 @@ with lib;
         (let
           mkLocalBin = import ../../../packages/lib/local-bin.nix {inherit lib;};
         in
-          mkLocalBin "swayimg" ''            #!/usr/bin/env bash
-                set -euo pipefail
-                exec ${swayimg-first}/bin/swayimg-first "$@"'')
+          lib.mkMerge [
+            (mkLocalBin "swayimg" ''            #!/usr/bin/env bash
+                  set -euo pipefail
+                  exec ${swayimg-first}/bin/swayimg-first "$@"'')
+            (mkLocalBin "sx" ''            #!/usr/bin/env bash
+                  set -euo pipefail
+                  exec ${swayimg-first}/bin/swayimg-first "$@"'')
+          ])
         # Live-editable Swayimg config via helper (guards parent dir and target)
         (xdg.mkXdgSource "swayimg" {
           source = config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/nix/.config/home-manager/modules/media/images/swayimg/conf";

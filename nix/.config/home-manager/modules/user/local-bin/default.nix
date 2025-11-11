@@ -137,7 +137,7 @@ with lib;
             name = "beet-update";
             src = ./scripts/beet-update;
           }
-          # Legacy image wrappers removed (sx, sxivnc); use swayimg-first directly
+          # Legacy image wrapper removed (sxivnc); use swayimg-first directly
           {
             name = "flacspec";
             src = ./scripts/flacspec;
