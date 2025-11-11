@@ -100,32 +100,16 @@ Scope {
                         anchors.top: leftBarBackground.top
                         anchors.left: leftBarBackground.left
                     }
-                    ShaderEffect {
+                    Rectangle {
                         id: leftSeamFill
                         width: Math.min(leftBarBackground.width, leftPanel.seamWidth)
                         height: leftBarBackground.height
                         anchors.bottom: leftBarBackground.bottom
                         anchors.right: leftBarBackground.right
-                        property color fillColor: leftPanel.barBgColor
-                        property real taperTop: 0.35
-                        property real taperBottom: 1.0
-                        fragmentShader: "
-                            uniform lowp vec4 fillColor;
-                            uniform float taperTop;
-                            uniform float taperBottom;
-                            uniform float width;
-                            uniform float height;
-                            varying highp vec2 qt_TexCoord0;
-                            void main() {
-                                if (width <= 0.0 || height <= 0.0) discard;
-                                float y = clamp(qt_TexCoord0.y, 0.0, 1.0);
-                                float x = clamp(qt_TexCoord0.x, 0.0, 1.0);
-                                float frac = mix(taperTop, taperBottom, y);
-                                frac = clamp(frac, 1e-3, 1.0);
-                                if (x > frac) discard;
-                                gl_FragColor = fillColor;
-                            }
-                        "
+                        color: leftPanel.barBgColor
+                        rotation: -7
+                        transformOrigin: Item.BottomRight
+                        antialiasing: true
                     }
 
                     Component.onCompleted: rootScope.barHeight = leftBarBackground.height
@@ -218,31 +202,16 @@ Scope {
                         anchors.top: rightBarBackground.top
                         anchors.right: rightBarBackground.right
                     }
-                    ShaderEffect {
+                    Rectangle {
                         id: rightSeamFill
                         width: Math.min(rightBarBackground.width, rightPanel.seamWidth)
                         height: rightBarBackground.height
                         anchors.bottom: rightBarBackground.bottom
                         anchors.left: rightBarBackground.left
-                        property color fillColor: rightPanel.barBgColor
-                        property real taperTop: 0.35
-                        property real taperBottom: 1.0
-                        fragmentShader: "
-                            uniform lowp vec4 fillColor;
-                            uniform float taperTop;
-                            uniform float taperBottom;
-                            uniform float width;
-                            uniform float height;
-                            varying highp vec2 qt_TexCoord0;
-                            void main() {
-                                if (width <= 0.0 || height <= 0.0) discard;
-                                float y = clamp(qt_TexCoord0.y, 0.0, 1.0);
-                                float x = clamp(qt_TexCoord0.x, 0.0, 1.0);
-                                float frac = 1.0 - clamp(mix(taperTop, taperBottom, y), 1e-3, 1.0);
-                                if (x < frac) discard;
-                                gl_FragColor = fillColor;
-                            }
-                        "
+                        color: rightPanel.barBgColor
+                        rotation: 7
+                        transformOrigin: Item.BottomLeft
+                        antialiasing: true
                     }
 
                     RowLayout {
