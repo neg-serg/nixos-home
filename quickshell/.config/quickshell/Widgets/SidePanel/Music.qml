@@ -588,13 +588,24 @@ Rectangle {
                                     // Color the middle dot with accent color; keep rest default
                                     textFormat: Text.RichText
                                     text: (function(){
-                                        const raw = MusicManager.trackQualitySummary || "";
-                                        const c = detailsCol.musicAccentCss;
-                                        // Wrap PUA icon chars and middot with accent; leave words unchanged
-                                        const wrapped = raw.replace(/[\uE000-\uF8FF]/g, function(ch){ return Rich.colorSpan(c, ch); })
-                                                           .replace(/\u00B7/g, '\u00B7');
-                                        // Escape then color middot entities
-                                        return Rich.esc(wrapped).replace(/&#183;/g, Rich.sepSpan(c, '\u00B7', true));
+                                        const raw = String(MusicManager.trackQualitySummary || "");
+                                        if (!raw) return "";
+                                        const accentCss = detailsCol.musicAccentCss;
+                                        // Manually escape while injecting spans so markup is not double-escaped
+                                        let out = "";
+                                        for (let i = 0; i < raw.length; ) {
+                                            const cp = raw.codePointAt(i);
+                                            const ch = String.fromCodePoint(cp);
+                                            if (cp >= 0xE000 && cp <= 0xF8FF) {
+                                                out += Rich.colorSpan(accentCss, ch);
+                                            } else if (ch === "\u00B7") {
+                                                out += Rich.sepSpan(accentCss, "\u00B7", true);
+                                            } else {
+                                                out += Rich.esc(ch);
+                                            }
+                                            i += (cp > 0xFFFF) ? 2 : 1;
+                                        }
+                                        return out;
                                     })()
                                     color: playerUI.musicTextColor
                                     font.family: Theme.fontFamily
