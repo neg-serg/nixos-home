@@ -24,6 +24,11 @@ the given mode.
 | `Ctrl+period` | `rotate-right` | Rotate the file 90° clockwise. |
 | `Ctrl+slash` | `rotate-180` | Rotate the file 180°. |
 | `r` | `repeat` | Replay the last `mv`/`cp` destination (uses the cached directory recorded by `proc`). |
+| `Shift+m` | `range-mark` | Mark the current file as the start/end anchor for range operations. |
+| `Shift+r` | `range-clear` | Drop the saved range anchor. |
+| `Shift+d` | `range-trash` | Move every file between the mark and the current file into the staged trash. |
+| `Shift+v` | `range-mv` | Prompt for a directory and move the marked range there. |
+| `Shift+c` | `range-cp` | Prompt for a directory and copy the marked range there. |
 
 ## Gallery Mode
 
@@ -44,15 +49,28 @@ the given mode.
 | `Ctrl+4` | `wall-tile` | Tile the highlighted image and set it as wallpaper. |
 | `Ctrl+5` | `wall-center` | Center the highlighted image on the wallpaper canvas. |
 | `Ctrl+w` | `wall-cover` | Cover the monitor with the highlighted image and set it as wallpaper. |
+| `Shift+m` | `range-mark` | Mark the current tile as the start/end anchor for range moves. |
+| `Shift+r` | `range-clear` | Drop the saved range anchor. |
+| `Shift+d` | `range-trash` | Move the marked range (inclusive) into the staged trash. |
+| `Shift+v` | `range-mv` | Prompt for a directory and move the marked range there. |
+| `Shift+c` | `range-cp` | Prompt for a directory and copy the marked range there. |
 
 ## Slideshow Mode
 
 | Key | Script action | Effect |
 | --- | ------------- | ------ |
 | `Ctrl+d` | `mv … $HOME/trash/1st-level/pic` | Move the current slide into the staged trash folder. |
+| `Shift+m` | `range-mark` | Mark the slide as a range anchor (carried into other modes). |
+| `Shift+r` | `range-clear` | Drop the saved range anchor. |
+| `Shift+d` | `range-trash` | Move the inclusive range between the mark and the current slide to trash. |
+| `Shift+v` | `range-mv` | Prompt for a directory and move the marked range there. |
+| `Shift+c` | `range-cp` | Prompt for a directory and copy the marked range there. |
 
 ### Notes
 
 - All file moves/copies are blocked on VCS directories by `_is_vcs_path` to keep repo trees intact.
 - Wallpaper helpers rely on `swww`. The script starts the daemon on demand and serializes calls via
   a lock directory so multiple instances do not collide.
+- Range actions require launching swayimg via `sx` (or the `swayimg-first.sh` wrapper) so that the
+  helper can read the per-session playlist and cache the range anchor under
+  `$XDG_DATA_HOME/swayimg/<session>.{list,range}`.
