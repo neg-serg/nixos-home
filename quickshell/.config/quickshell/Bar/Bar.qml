@@ -38,11 +38,18 @@ Scope {
                     anchors.left: true
                     anchors.right: true
                     visible: monitorEnabled
-                    implicitHeight: reservePanel.barHeightPx
+                    implicitHeight: reserveBackground.height
                     exclusionMode: ExclusionMode.Normal
                     exclusiveZone: barHeightPx
                     property real s: Theme.scale(reservePanel.screen)
                     property int barHeightPx: Math.round(Theme.panelHeight * s)
+
+                    Rectangle {
+                        id: reserveBackground
+                        width: parent.width
+                        height: reservePanel.barHeightPx
+                        color: "transparent"
+                    }
                 }
 
                 PanelWindow {
