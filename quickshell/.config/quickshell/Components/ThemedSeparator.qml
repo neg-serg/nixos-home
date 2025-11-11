@@ -49,32 +49,61 @@ Item {
                    : 12
 
     // --- Diagonal ---
-    Rectangle {
+    ShaderEffect {
         id: diag
         visible: root.kind === "diagonal"
-        anchors.centerIn: parent
-        width: Math.max(1, Math.round(root.thickness * Theme.scale(root.screen)))
-        height: Math.max(1, Math.round(Math.hypot(root.width, root.height) - root.inset * 2))
-        radius: root.radius
-        color: Qt.rgba(root.color.r, root.color.g, root.color.b, root.sepOpacity)
-        rotation: root.angleDeg
-        transformOrigin: Item.Center
-        antialiasing: false
-        layer.enabled: true
-        layer.smooth: false
+        anchors.fill: parent
+        // Base trapezoid parameters
+        property color baseColor: Qt.rgba(root.color.r, root.color.g, root.color.b, root.sepOpacity)
+        property color accentColor: Qt.rgba(root.stripeColor.r, root.stripeColor.g, root.stripeColor.b, root.stripeOpacity)
+        property bool accentEnabled: root.stripeEnabled && root.stripeRatio > 0
+        property bool accentOnRight: root.stripeOnRight
+        property real accentRatio: Utils.clamp(root.stripeRatio, 0, 1)
+        property real topInsetPx: Math.max(0, root.inset)
+        property real bottomInsetPx: 0
+        property real tiltNorm: Utils.clamp(root.angleDeg / 90.0, -1, 1)
+        fragmentShader: "
+            uniform lowp vec4 baseColor;
+            uniform lowp vec4 accentColor;
+            uniform bool accentEnabled;
+            uniform bool accentOnRight;
+            uniform float accentRatio;
+            uniform float topInsetPx;
+            uniform float bottomInsetPx;
+            uniform float tiltNorm;
+            uniform float width;
+            uniform float height;
+            varying highp vec2 qt_TexCoord0;
 
-        Rectangle {
-            id: diagStripe
-            visible: root.stripeEnabled && root.stripeRatio > 0
-            width: Math.max(1, Math.round(diag.width * Utils.clamp(root.stripeRatio, 0, 1)))
-            height: parent.height
-            color: root.stripeColor
-            opacity: root.stripeOpacity
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.left: root.stripeOnRight ? undefined : parent.left
-            anchors.right: root.stripeOnRight ? parent.right : undefined
-            antialiasing: false
-        }
+            void main() {
+                if (width <= 0.0 || height <= 0.0) discard;
+                float y = qt_TexCoord0.y * height;
+                float progress = y / height;
+                float currentInset = mix(topInsetPx, bottomInsetPx, progress);
+                currentInset = clamp(currentInset, 0.0, width * 0.49);
+                float centerShift = tiltNorm * (progress - 0.5) * width * 0.6;
+                float innerWidth = width - (currentInset * 2.0);
+                float minX = (width - innerWidth) * 0.5 + centerShift;
+                float maxX = (width + innerWidth) * 0.5 + centerShift;
+                minX = clamp(minX, 0.0, width);
+                maxX = clamp(maxX, 0.0, width);
+                if (minX >= maxX) discard;
+                float x = qt_TexCoord0.x * width;
+                if (x < minX || x > maxX) discard;
+
+                lowp vec4 color = baseColor;
+                if (accentEnabled && accentRatio > 0.0) {
+                    float inner = max(1e-4, maxX - minX);
+                    float stripeWidth = clamp(accentRatio, 0.0, 1.0) * inner;
+                    if (accentOnRight) {
+                        if (x > maxX - stripeWidth) color = accentColor;
+                    } else {
+                        if (x < minX + stripeWidth) color = accentColor;
+                    }
+                }
+                gl_FragColor = color;
+            }
+        "
     }
 
     // --- Vertical ---
