@@ -117,6 +117,7 @@ Singleton {
             property int musicPopupWidth:840     // logical px, scaled
             property int musicPopupHeight:250    // logical px, scaled (used when content height unknown)
             property int musicPopupPadding:12    // logical px, scaled (inner content padding)
+            property int musicPopupEdgeMargin:4  // logical px, scaled (distance from screen edge/panel)
 
             property int networkPingIntervalMs:30000
             property string networkNoInternetColor: "#FF6E00"

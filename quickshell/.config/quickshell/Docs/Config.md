@@ -70,6 +70,7 @@ Media side panel popup
 - musicPopupWidth: integer, default 840. Width (logical px; scaled per monitor).
 - musicPopupHeight: integer, default 250. Height (logical px; used when content doesn’t define height).
 - musicPopupPadding: integer, default 12. Inner padding (logical px).
+- musicPopupEdgeMargin: integer, default 4. Horizontal margin between popup and screen edge (logical px; scaled per monitor).
 
 Contrast & Accessibility
 - contrastThreshold: number, default 0.5. Threshold for light/dark text selection against backgrounds.

@@ -120,11 +120,16 @@ Item {
             target: toast.anchor
             function onAnchoring() {
                 const scale = Theme.scale(Screen);
-                const outer = Math.round(Theme.sidePanelPopupOuterMargin * scale) + sidebarPopup.barMarginPx;
+                const cfgMargin = (Settings.settings && Settings.settings.musicPopupEdgeMargin !== undefined)
+                                  ? Settings.settings.musicPopupEdgeMargin
+                                  : Theme.sidePanelPopupOuterMargin;
+                const baseMargin = Math.max(0, Math.round(cfgMargin * scale));
+                const marginX = baseMargin;
+                const marginY = baseMargin + sidebarPopup.barMarginPx;
 
                 // Align to the right edge of the panel window
                 const px = sidebarPopup.anchorWindow
-                         ? (sidebarPopup.anchorWindow.width - toast.implicitWidth - outer)
+                         ? (sidebarPopup.anchorWindow.width - toast.implicitWidth - marginX)
                          : 0;
 
                 // Vertical offset depending on panel edge
@@ -132,20 +137,20 @@ Item {
                 switch (String(sidebarPopup.panelEdge || "bottom").toLowerCase()) {
                 case "top":
                     // Panel at top → popup below it
-                    py = (sidebarPopup.anchorWindow ? sidebarPopup.anchorWindow.height : 0) + outer;
+                    py = (sidebarPopup.anchorWindow ? sidebarPopup.anchorWindow.height : 0) + marginY;
                     break;
                 case "bottom":
                     // Panel at bottom → popup above it
-                    py = -toast.implicitHeight - outer;
+                    py = -toast.implicitHeight - marginY;
                     break;
                 case "left":
-                    py = outer;
+                    py = marginY;
                     break;
                 case "right":
-                    py = outer;
+                    py = marginY;
                     break;
                 default:
-                    py = outer;
+                    py = marginY;
                 }
 
                 toast.anchor.rect.x = px;
@@ -163,6 +168,11 @@ Item {
                 if (sidebarPopup.anchorWindow.panelHovering) toast.pauseAutoHide();
                 else toast.resumeAutoHide();
             }
+        }
+        Connections {
+            target: Settings.settings
+            ignoreUnknownSignals: true
+            function onMusicPopupEdgeMarginChanged() { toast.anchor.updateAnchor(); }
         }
 
         // --- Public control
@@ -202,13 +212,6 @@ Item {
             anchors.fill: parent
             transform: Translate { x: toast.slideX }
 
-            // Rounded background with theme-controlled radius
-            Rectangle {
-                anchors.fill: parent
-                radius: Theme.sidePanelPopupRadius
-                color: Theme.overlayStrong
-            }
-
             FocusScope {
                 anchors.fill: parent
 
@@ -229,18 +232,22 @@ Item {
 
             ColumnLayout {
                 anchors.fill: parent
-                anchors.margins: toast.contentPaddingPx
+                anchors.leftMargin: toast.contentPaddingPx
+                anchors.rightMargin: 0
+                anchors.topMargin: toast.contentPaddingPx
+                anchors.bottomMargin: toast.contentPaddingPx
                 spacing: Theme.sidePanelPopupSpacing
 
                 RowLayout {
                     spacing: Math.round(Theme.sidePanelSpacingMedium * Theme.scale(Screen))
-                    Layout.fillWidth: false
-                    Layout.alignment: Qt.AlignHCenter
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignRight
 
                     Music {
                         id: musicWidget
                         width: toast.musicWidthPx
                         height: toast.musicHeightPx
+                        Layout.alignment: Qt.AlignRight
                     }
                 }
             }

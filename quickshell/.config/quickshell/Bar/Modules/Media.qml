@@ -387,15 +387,6 @@ Item {
                     font.pixelSize: mediaControl.musicTextPx
                     maximumLineCount: 1
                     z: 2
-                    layer.enabled: true
-                    layer.effect: MultiEffect {
-                        shadowEnabled: true
-                        shadowColor: Theme.shadow
-                        shadowOpacity: Theme.uiShadowOpacity
-                        shadowHorizontalOffset: Theme.uiShadowOffsetX
-                        shadowVerticalOffset: Theme.uiShadowOffsetY
-                        shadowBlur: Theme.uiShadowBlur
-                    }
                 }
             }
 
