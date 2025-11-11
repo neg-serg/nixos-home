@@ -6,6 +6,17 @@ if [[ "$1" == "-h" || "$1" == "--help" ]]; then
   sed -n '2,7p' "$0" | sed 's/^# \{0,1\}//'; exit 0
 fi
 
+# Run heavy actions out-of-band so swayimg doesn't block; set SWAYIMG_ACTIONS_SYNC=1 to opt out.
+if [ "${SWAYIMG_ACTIONS_SYNC:-0}" != 1 ] && [ -z "${SWAYIMG_ACTIONS_ASYNC_CHILD:-}" ]; then
+  export SWAYIMG_ACTIONS_ASYNC_CHILD=1
+  if command -v setsid >/dev/null 2>&1; then
+    setsid -f -- "$0" "$@" &!
+  else
+    "$0" "$@" &!
+  fi
+  exit 0
+fi
+
 cache="${HOME}/tmp"
 mkdir -p "${cache}"
 ff="${cache}/swayimg.$$"
@@ -60,7 +71,7 @@ _resolve_realpath() {
 }
 
 _range_warn() {
-  printf 'swayimg-actions: %s\n' "$1" >&2
+  announce_action "$1"
 }
 
 _range_load_playlist() {
@@ -157,6 +168,29 @@ _ipc_send() { # _ipc_send <command>
   fi
 }
 
+# ---- status helpers --------------------------------------------------------
+_pretty_path() {
+  local p="${1:-}"
+  if [ -z "$p" ]; then
+    printf '%s' ""
+    return 0
+  fi
+  if [ -n "${HOME:-}" ] && [[ "$p" == "$HOME"* ]]; then
+    printf '~%s' "${p#$HOME}"
+  else
+    printf '%s' "$p"
+  fi
+}
+
+announce_action() {
+  local text="${1:-}"
+  [ -n "$text" ] || return 0
+  text="${text//$'\r'/ }"
+  text="${text//$'\n'/ }"
+  printf 'swayimg-actions: %s\n' "$text" >&2
+  _ipc_send "status $text"
+}
+
 # ---- swww helpers -----------------------------------------------------------
 ensure_swww() {
   # Start swww daemon if not running
@@ -233,12 +267,19 @@ render_for_mode() {
 
 # ---- helpers ---------------------------------------------------------------
 rotate() { # modifies file in-place
-  angle="$1"
+  local angle="$1"
   shift
+  local -i rotated=0
   while read -r file; do
     _require_not_vcs "$file" rotate || continue
     mogrify -rotate "$angle" "$file"
+    (( rotated++ ))
   done
+  if (( rotated > 0 )); then
+    local suffix="s"
+    (( rotated == 1 )) && suffix=""
+    announce_action "rotated ${rotated} file${suffix} by ${angle}°"
+  fi
 }
 
 choose_dest() {
@@ -304,7 +345,7 @@ _proc_apply_list() { # _proc_apply_list <cmd> [dest]
         continue
       fi
       "$cmd" "$(realpath "$line")" "$dest"
-      moved=1
+      (( moved++ ))
     done <"$ff"
     if (( moved > 0 )); then
       command -v zoxide >/dev/null 2>&1 && zoxide add "$dest" || true
@@ -312,6 +353,15 @@ _proc_apply_list() { # _proc_apply_list <cmd> [dest]
         printf '%s\n' "$cmd"
         printf '%s\n' "$dest"
       } >"$last_file"
+      local verb dest_pretty suffix="s"
+      case "$cmd" in
+        mv) verb="moved" ;;
+        cp) verb="copied" ;;
+        *) verb="$cmd" ;;
+      esac
+      (( moved == 1 )) && suffix=""
+      dest_pretty="$(_pretty_path "$dest")"
+      announce_action "${verb} ${moved} file${suffix} → ${dest_pretty}"
     fi
   fi
 }
@@ -341,6 +391,10 @@ repeat_action() { # repeat last mv/cp to same dir
   [ -n "$cmd" ] && [ -n "$dest" ] || exit 0
   if [ "$cmd" = "mv" ] || [ "$cmd" = "cp" ]; then
     "$cmd" "$file" "$dest"
+    local base dest_pretty
+    base="$(basename "$file")"
+    dest_pretty="$(_pretty_path "$dest")"
+    announce_action "repeat ${cmd} ${base} → ${dest_pretty}"
   fi
 }
 
@@ -356,10 +410,16 @@ range_mark() {
     return 0
   fi
   printf '%s\n' "$current" >| "$range_file"
+  local -i total=${#playlist[@]}
+  local -i idx=$range_idx
+  local base
+  base="$(basename "$current")"
+  announce_action "range anchor ${idx}/${total}: ${base}"
 }
 
 range_clear() {
   rm -f "$range_file"
+  announce_action "range anchor cleared"
 }
 
 range_trash() {
@@ -385,12 +445,15 @@ range_cp() {
 }
 
 copy_name() { # copy absolute path to clipboard
-  file="$1"
+  local file="$1" path pretty
   _require_not_vcs "$file" copy || return 0
-  printf '%s\n' "$(realpath "$file")" | wl-copy
+  path="$(realpath "$file")"
+  printf '%s\n' "$path" | wl-copy
   if command -v pic-notify >/dev/null 2>&1; then
     pic-notify "$file" || true
   fi
+  pretty="$(_pretty_path "$path")"
+  announce_action "copied path → clipboard (${pretty})"
 }
 
 wall() { # wall <mode> <file> via swww
@@ -404,6 +467,9 @@ wall() { # wall <mode> <file> via swww
   swww img "${SWWW_IMAGE_OVERRIDE:-$tmp_wall}" ${SWWW_FLAGS:-} >/dev/null 2>&1 || true
   release_wl_lock
   echo "$file" >> "${XDG_DATA_HOME:-$HOME/.local/share}/wl/wallpaper.list" 2>/dev/null || true
+  local pretty
+  pretty="$(_pretty_path "$file")"
+  announce_action "wallpaper (${mode}) ← ${pretty}"
 }
 
 finish() { rm -f "$ff" "$tmp_wall" 2>/dev/null || true; }

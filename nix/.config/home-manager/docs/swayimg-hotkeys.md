@@ -5,6 +5,12 @@ Custom bindings for swayimg live in `modules/media/images/swayimg/conf/bindings.
 helper script. Unless noted otherwise, the bindings act on the file that is currently highlighted in
 the given mode.
 
+The helper now detaches from swayimg immediately, so long-running moves or wallpaper renders do not
+freeze the viewer. Every action also posts a short status message (overlay in the bottom-right
+corner) describing what is happening — e.g., how many files were moved and where they went. Set
+`SWAYIMG_ACTIONS_SYNC=1` before calling the script if you ever need to run it synchronously from a
+terminal.
+
 ## Viewer Mode
 
 | Key | Script action | Effect |
