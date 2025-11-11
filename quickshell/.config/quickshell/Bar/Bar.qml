@@ -48,7 +48,7 @@ Scope {
                         id: reserveBackground
                         width: parent.width
                         height: reservePanel.barHeightPx
-                        color: Qt.rgba(Theme.background.r, Theme.background.g, Theme.background.b, Theme.background.a * 0.5)
+                        color: "transparent"
                     }
                 }
 
@@ -70,9 +70,13 @@ Scope {
                     property int barHeightPx: Math.round(Theme.panelHeight * s)
                     property int sideMargin: Math.round(Theme.panelSideMargin * s)
                     property int widgetSpacing: Math.round(Theme.panelWidgetSpacing * s)
-                    property int sepOvershoot: Theme.panelSepOvershoot
+                    property int sepOvershoot: 0
                     property color barBgColor: Theme.background
-                    property color diagBackdropColor: Qt.rgba(barBgColor.r, barBgColor.g, barBgColor.b, barBgColor.a * 0.4)
+
+                    readonly property real contentWidth: Math.max(
+                        leftWidgetsRow.width,
+                        leftWidgetsRow.implicitWidth || leftWidgetsRow.width || 0
+                    ) + leftPanel.widgetSpacing
 
                     component DiagSep: ThemedSeparator {
                         kind: "diagonal"
@@ -82,20 +86,19 @@ Scope {
 
                     Rectangle {
                         id: leftBarBackground
-                        width: parent.width
+                        width: Math.max(1, leftPanel.width)
                         height: leftPanel.barHeightPx
-                        color: leftPanel.barBgColor
+                        color: "transparent"
                         anchors.top: parent.top
                         anchors.left: parent.left
                     }
                     Rectangle {
-                        id: leftDiagBackdrop
-                        width: Math.max(1, Math.round(leftPanel.sepOvershoot))
+                        id: leftBarFill
+                        width: Math.min(leftBarBackground.width, Math.round(leftPanel.sideMargin + leftPanel.contentWidth + leftPanel.sepOvershoot))
                         height: leftBarBackground.height
-                        color: leftPanel.diagBackdropColor
-                        anchors.bottom: leftBarBackground.bottom
-                        anchors.right: leftBarBackground.right
-                        visible: monitorEnabled
+                        color: leftPanel.barBgColor
+                        anchors.top: leftBarBackground.top
+                        anchors.left: leftBarBackground.left
                     }
 
                     Component.onCompleted: rootScope.barHeight = leftBarBackground.height
@@ -158,9 +161,13 @@ Scope {
                     property int barHeightPx: Math.round(Theme.panelHeight * s)
                     property int sideMargin: Math.round(Theme.panelSideMargin * s)
                     property int widgetSpacing: Math.round(Theme.panelWidgetSpacing * s)
-                    property int sepOvershoot: Theme.panelSepOvershoot
+                    property int sepOvershoot: 0
                     property color barBgColor: Theme.background
-                    property color diagBackdropColor: Qt.rgba(barBgColor.r, barBgColor.g, barBgColor.b, barBgColor.a * 0.4)
+
+                    readonly property real contentWidth: Math.max(
+                        rightWidgetsRow.width,
+                        rightWidgetsRow.implicitWidth || rightWidgetsRow.width || 0
+                    ) + rightPanel.widgetSpacing
 
                     component RightDiagSep: ThemedSeparator {
                         kind: "diagonal"
@@ -170,20 +177,19 @@ Scope {
 
                     Rectangle {
                         id: rightBarBackground
-                        width: parent.width
+                        width: Math.max(1, rightPanel.width)
                         height: rightPanel.barHeightPx
-                        color: rightPanel.barBgColor
+                        color: "transparent"
                         anchors.top: parent.top
-                        anchors.left: parent.left
+                        anchors.right: parent.right
                     }
                     Rectangle {
-                        id: rightDiagBackdrop
-                        width: Math.max(1, Math.round(rightPanel.sepOvershoot))
+                        id: rightBarFill
+                        width: Math.min(rightBarBackground.width, Math.round(rightPanel.sideMargin + rightPanel.contentWidth + rightPanel.sepOvershoot))
                         height: rightBarBackground.height
-                        color: rightPanel.diagBackdropColor
-                        anchors.bottom: rightBarBackground.bottom
-                        anchors.left: rightBarBackground.left
-                        visible: monitorEnabled
+                        color: rightPanel.barBgColor
+                        anchors.top: rightBarBackground.top
+                        anchors.right: rightBarBackground.right
                     }
 
                     RowLayout {
