@@ -3,8 +3,16 @@ set -euo pipefail
 uid="$(id -u)" # Unique socket path for this instance
 rt="$XDG_RUNTIME_DIR"; [ -n "$rt" ] || rt="/run/user/$uid"
 sock="$rt/swayimg-$PPID-$$-$RANDOM.sock"
-# Export socket path for child exec actions to use
+session_id="$(basename "$sock" .sock)"
+data_dir="${XDG_DATA_HOME:-$HOME/.local/share}/swayimg"
+playlist_file="$data_dir/${session_id}.list"
+range_file="$data_dir/${session_id}.range"
+mkdir -p "$data_dir"
+# Export socket path and session metadata for helper scripts
 export SWAYIMG_IPC="$sock"
+export SWAYIMG_SESSION_ID="$session_id"
+export SWAYIMG_FILELIST="$playlist_file"
+export SWAYIMG_RANGE_FILE="$range_file"
 # Pre-filter arguments to avoid VCS dirs (.git, .hg, .svn, .bzr)
 is_vcs_path() {
   case "${1%/}" in
@@ -36,6 +44,16 @@ for a in "$@"; do
   fi
 done
 
+# Persist the expanded playlist for helper scripts (one realpath per line)
+> "$playlist_file"
+if [ "${#out_args[@]}" -gt 0 ]; then
+  for arg in "${out_args[@]}"; do
+    if [ -e "$arg" ]; then
+      realpath "$arg" 2>/dev/null || true
+    fi
+  done | sed '/^[[:space:]]*$/d' >>"$playlist_file"
+fi
+
 # Start swayimg with IPC enabled
 "@SWAYIMG_BIN@" --ipc="$sock" "${out_args[@]}" &
 pid=$!
@@ -62,4 +80,5 @@ rc=$?
 if [ -S "$sock" ]; then
   rm -f "$sock"
 fi # Best-effort cleanup
+rm -f "$playlist_file" "$range_file" 2>/dev/null || true
 exit $rc
