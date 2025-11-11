@@ -163,7 +163,6 @@ Scope {
 
                     MusicPopup {
                         id: sidebarPopup
-                        barMarginPx: rootScope.barHeight
                         anchorWindow: panel
                         panelEdge: "bottom"
                     }
