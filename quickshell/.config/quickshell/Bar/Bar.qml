@@ -74,7 +74,7 @@ Scope {
 
                     Rectangle {
                         id: leftBarBackground
-                        width: parent.width
+                        width: Math.max(1, Math.round(leftPanel.sideMargin + (leftWidgetsRow.implicitWidth || 0)))
                         height: leftPanel.barHeightPx
                         color: leftPanel.barBgColor
                         anchors.top: parent.top
@@ -152,11 +152,11 @@ Scope {
 
                     Rectangle {
                         id: rightBarBackground
-                        width: parent.width
+                        width: Math.max(1, Math.round(rightPanel.sideMargin + (rightWidgetsRow.implicitWidth || 0)))
                         height: rightPanel.barHeightPx
                         color: rightPanel.barBgColor
                         anchors.top: parent.top
-                        anchors.left: parent.left
+                        anchors.right: parent.right
                     }
 
                     RowLayout {
