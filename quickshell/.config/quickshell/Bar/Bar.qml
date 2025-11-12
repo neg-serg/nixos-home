@@ -598,17 +598,7 @@ Scope {
                         anchors.fill: parent
                         z: 200000
 
-                        // Cyan frame strictly around the computed seam zone
-                        Rectangle {
-                            x: seamPanel.seamLeftMargin
-                            width: Math.max(1, seamPanel.seamWidthPx)
-                            height: seamPanel.seamHeightPx
-                            anchors.bottom: parent.bottom
-                            color: "transparent"
-                            border.color: "#ff00ffff" // cyan
-                            border.width: 1
-                            z: 100
-                        }
+                        // (cyan frame removed)
 
                         // Raw gap region [gapStart .. gapEnd]
                         Rectangle {
@@ -621,16 +611,7 @@ Scope {
                             border.width: 1
                         }
 
-                        // Intended seam box [seamLeftMargin .. seamLeftMargin + seamWidthPx]
-                        Rectangle {
-                            x: seamPanel.seamLeftMargin
-                            width: Math.max(1, seamPanel.seamWidthPx)
-                            height: seamPanel.seamHeightPx
-                            anchors.bottom: parent.bottom
-                            color: "#66ff0000" // solid-ish red to guarantee visibility
-                            border.color: "#ffff0000"
-                            border.width: 1
-                        }
+                        // (red seam box removed)
 
                         // Readable text with key numbers
                         Rectangle {
