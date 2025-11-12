@@ -87,7 +87,8 @@ Scope {
                     property real panelTintFeatherTop: 0.08
                     property real panelTintFeatherBottom: 0.35
                     // Debug: draw a right triangle above the network indicator cluster
-                    property bool debugNetTriangle: true
+                    // Now controlled by Settings
+                    property bool debugNetTriangle: Settings.settings.debugTriangleLeft
 
                     readonly property real contentWidth: Math.max(
                         leftWidgetsRow.width,
@@ -262,6 +263,8 @@ Scope {
                         // Use theme accent color from Theme; keep fully opaque
                         // If transparency is needed, prefer Canvas.opacity rather than embedding alpha in the color.
                         property color triangleColor: Theme.accentPrimary
+                        // Orientation control: slopeUp = bottom-left → top-right; otherwise top-left → bottom-right
+                        property bool slopeUp: Settings.settings.debugTriangleLeftSlopeUp
                         opacity: 1.0
                         onVisibleChanged: requestPaint()
                         onXChanged: requestPaint()
@@ -274,9 +277,17 @@ Scope {
                             ctx.fillStyle = triangleColor;
                             // Vertical edge on the right at seam boundary
                             ctx.beginPath();
-                            ctx.moveTo(0, height);      // bottom-left
-                            ctx.lineTo(width, 0);       // top-right
-                            ctx.lineTo(width, height);  // bottom-right
+                            if (slopeUp) {
+                                // bottom-left → top-right
+                                ctx.moveTo(0, height);
+                                ctx.lineTo(width, 0);
+                                ctx.lineTo(width, height);
+                            } else {
+                                // top-left → bottom-right
+                                ctx.moveTo(0, 0);
+                                ctx.lineTo(width, height);
+                                ctx.lineTo(width, 0);
+                            }
                             ctx.closePath();
                             ctx.fill();
                         }
@@ -365,7 +376,8 @@ Scope {
                         }
                         Canvas {
                             id: rightNetTriangleOverlay
-                            visible: leftPanel.debugNetTriangle && rightBarFill.visible
+                            // Separate control for the right triangle
+                            visible: Settings.settings.debugTriangleRight && rightBarFill.visible
                             antialiasing: true
                             z: 10000000
                             width: Math.max(1, rightPanel.seamWidth)
@@ -376,6 +388,8 @@ Scope {
                             anchors.topMargin: 0
                             // Theme accent color, opaque
                             property color triangleColor: Theme.accentPrimary
+                            // Orientation control for right side
+                            property bool slopeUp: Settings.settings.debugTriangleRightSlopeUp
                             opacity: 1.0
                             onVisibleChanged: requestPaint()
                             onXChanged: requestPaint()
@@ -386,12 +400,18 @@ Scope {
                                 ctx.reset();
                                 ctx.clearRect(0, 0, width, height);
                                 ctx.fillStyle = triangleColor;
-                                // Flip orientation so the resulting trapezoid looks the same direction
-                                // as on the left: keep seam boundary vertical at x=0, use descending diagonal.
                                 ctx.beginPath();
-                                ctx.moveTo(0, height);    // bottom-left (seam boundary)
-                                ctx.lineTo(width, 0);      // top-right
-                                ctx.lineTo(0, 0);          // top-left (seam boundary)
+                                if (slopeUp) {
+                                    // bottom-left → top-right (current default)
+                                    ctx.moveTo(0, height);    // seam boundary
+                                    ctx.lineTo(width, 0);
+                                    ctx.lineTo(0, 0);
+                                } else {
+                                    // top-left → bottom-right
+                                    ctx.moveTo(0, 0);         // seam boundary
+                                    ctx.lineTo(width, height);
+                                    ctx.lineTo(0, height);
+                                }
                                 ctx.closePath();
                                 ctx.fill();
                             }
