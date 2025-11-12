@@ -463,6 +463,9 @@ Scope {
                     anchors.bottom: true
                     anchors.left: true
                     anchors.right: true
+                    // Ensure the seam window has a real height; without this the window
+                    // collapses to 0px and shaders never render (stays invisible).
+                    implicitHeight: seamPanel.seamHeightPx
                     // Readiness filter: when enabled, only show seam once geometry stabilizes.
                     // Prevents early full-width flash while rows are still measuring.
                     property bool useReadinessFilter: true
