@@ -44,9 +44,9 @@ Singleton {
             // If true, diagonal goes bottom-left → top-right; if false, top-left → bottom-right
             property bool debugTriangleLeftSlopeUp: true
             property bool debugTriangleRightSlopeUp: true
-            // Triangle opacities (0.0..1.0) — полупрозрачные по умолчанию
-            property real debugTriangleLeftOpacity: 0.35
-            property real debugTriangleRightOpacity: 0.35
+            // Triangle opacities (0.0..1.0)
+            property real debugTriangleLeftOpacity: 1.0
+            property real debugTriangleRightOpacity: 1.0
             property bool strictThemeTokens: false
             property bool useFahrenheit: false
             property bool showMediaInBar: false
