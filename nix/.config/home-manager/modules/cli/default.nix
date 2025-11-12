@@ -5,6 +5,7 @@
   ...
 }:
 with lib; let
+  hasHishtory = pkgs ? hishtory;
   mkBool = desc: default: (lib.mkEnableOption desc) // {inherit default;};
   groups = rec {
     # Text/formatting/regex/CSV/TOML tools
@@ -96,9 +97,10 @@ in {
     ./tig.nix
     ./yazi.nix
   ];
-  config = {
-    programs = {
-      bat.enable = true; # ensure bat present for cat alias
+  config = lib.mkMerge [
+    {
+      programs = {
+        bat.enable = true; # ensure bat present for cat alias
       "fabric-ai".enable = true; # Fabric AI CLI
       "fabric-ai".enableYtAlias = false; # disable default yt alias to avoid conflicts
       hwatch = {enable = true;}; # better watch with history
@@ -109,19 +111,31 @@ in {
       tray-tui = {enable = true;}; # system tray in your terminal
       visidata = {enable = true;}; # interactive multitool for tabular data
     };
-    home.packages = config.lib.neg.pkgsList (
-      (config.lib.neg.mkEnabledList config.features.cli groups)
-      ++ [
-        pkgs.tealdeer # tldr replacement written in Rust
-        pkgs.neg.comma # run commands from nixpkgs by name (",") — local variant from overlay
-        pkgs.kubectl # Kubernetes CLI
-        pkgs.kubernetes-helm # Helm package manager
-        pkgs.erdtree # modern tree
-        pkgs.pigz # parallel gzip backend
-        pkgs.pbzip2 # parallel bzip2 backend
-        pkgs.fish # alternative shell
-        pkgs.powershell # pwsh
-      ]
-    );
-  };
+      home.packages = config.lib.neg.pkgsList (
+        (config.lib.neg.mkEnabledList config.features.cli groups)
+        ++ [
+          pkgs.tealdeer # tldr replacement written in Rust
+          pkgs.neg.comma # run commands from nixpkgs by name (",") — local variant from overlay
+          pkgs.kubectl # Kubernetes CLI
+          pkgs.kubernetes-helm # Helm package manager
+          pkgs.erdtree # modern tree
+          pkgs.pigz # parallel gzip backend
+          pkgs.pbzip2 # parallel bzip2 backend
+          pkgs.fish # alternative shell
+          pkgs.powershell # pwsh
+        ]
+        ++ lib.optionals hasHishtory [pkgs.hishtory]
+      );
+    }
+    (lib.mkIf hasHishtory {
+      home.sessionVariables.HISHTORY_ZSH_CONFIG = "${pkgs.hishtory}/share/hishtory/config.zsh";
+      home.activation.ensureHishtoryDir =
+        config.lib.neg.mkEnsureRealDir "${config.home.homeDirectory}/.hishtory";
+    })
+    (lib.mkIf (! hasHishtory) {
+      warnings = [
+        "hishtory is unavailable in the pinned nixpkgs; skip CLI integration."
+      ];
+    })
+  ];
 }
