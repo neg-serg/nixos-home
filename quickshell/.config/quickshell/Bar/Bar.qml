@@ -541,6 +541,8 @@ Scope {
                                 "[seam]",
                                 prefix || "",
                                 "vis=", seamPanel.visible,
+                                "h=", seamPanel.height,
+                                "ih=", seamPanel.seamHeightPx,
                                 "gapStart=", gapStart,
                                 "gapEnd=", gapEnd,
                                 "raw=", rawGapWidth,
@@ -548,6 +550,10 @@ Scope {
                                 "seamWidth=", seamWidthPx,
                                 "leftFill=", _leftFillWidth,
                                 "rightFill=", _rightFillWidth,
+                                "opBaseTop=", seamPanel.seamBaseOpacityTop,
+                                "opBaseBot=", seamPanel.seamBaseOpacityBottom,
+                                "opTint=", seamPanel.seamTintOpacity,
+                                "opEffect=", seamPanel.seamEffectOpacity,
                                 "monitor=", monitorWidth
                             )
                         } catch (e) { /* ignore */ }
@@ -683,6 +689,11 @@ Scope {
                         function onSeamWidthPxChanged() { seamPanel.logGap("seamWidth") }
                         function onGapStartChanged() { seamPanel.logGap("gapStart") }
                         function onGapEndChanged() { seamPanel.logGap("gapEnd") }
+                        function onHeightChanged() { seamPanel.logGap("height") }
+                        function onSeamBaseOpacityTopChanged() { seamPanel.logGap("baseTop") }
+                        function onSeamBaseOpacityBottomChanged() { seamPanel.logGap("baseBot") }
+                        function onSeamTintOpacityChanged() { seamPanel.logGap("tint") }
+                        function onSeamEffectOpacityChanged() { seamPanel.logGap("effect") }
                     }
                 }
 
