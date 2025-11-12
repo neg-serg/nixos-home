@@ -616,8 +616,7 @@ Scope {
                         ? 1.0 : Math.min(1.0, Math.max(0.45, Theme.uiSeparatorOpacity * 7.5))
                     property color seamFillColor: Color.mix(Theme.surfaceVariant, Theme.background, 0.35)
                     property bool seamTintEnabled: true
-                    // Use theme accent for the seam tint instead of hardcoded red
-                    property color seamTintColor: Theme.accentPrimary
+                    property color seamTintColor: "#ff3a44"
                     property real seamTintOpacity: seamPanel.debugForceVisible ? 1.0 : 0.9
                     property color seamBaseColor: Theme.background
                     property real seamBaseOpacityTop: seamPanel.debugForceVisible ? 1.0 : 0.5
