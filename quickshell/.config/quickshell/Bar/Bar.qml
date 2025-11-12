@@ -387,7 +387,9 @@ Scope {
                     // continuation of the center seam, without sampling from layershell.
                     Item {
                         id: leftSeamWedge
-                        visible: Settings.settings.debugTriangleLeft
+                        // Force‑enable for visibility while we debug placement/appearance
+                        visible: true
+                        opacity: 1.0
                         z: 9000000
                         width: Math.max(1, leftPanel.seamWidth)
                         height: leftPanel.barHeightPx
@@ -660,7 +662,9 @@ Scope {
                         // Symmetric seam wedge for the right side
                         Item {
                             id: rightSeamWedge
-                            visible: Settings.settings.debugTriangleRight
+                            // Force‑enable for visibility while we debug placement/appearance
+                            visible: true
+                            opacity: 1.0
                             z: 9000000
                             width: Math.max(1, rightPanel.seamWidth)
                             height: rightPanel.barHeightPx
