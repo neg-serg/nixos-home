@@ -81,6 +81,8 @@ with lib;
                     exe = lib.getExe' pkg "qs";
                   in "${exe}";
                   Environment = ["RUST_LOG=info,quickshell.dbus.properties=error"];
+                  # Allow a gentle config reload when requested by HM activation
+                  ExecReload = "${pkgs.coreutils}/bin/kill -HUP $MAINPID";
                   Restart = "on-failure";
                   RestartSec = "1";
                   Slice = "background-graphical.slice";
