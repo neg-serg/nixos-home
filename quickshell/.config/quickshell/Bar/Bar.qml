@@ -458,6 +458,32 @@ Scope {
                             z: 5
                         }
 
+                        // Explicit triangle to verify geometry (drawn above mask result)
+                        Canvas {
+                            id: leftWedgeDebugTriangle
+                            anchors.fill: parent
+                            visible: true
+                            z: 6
+                            onPaint: {
+                                var ctx = getContext('2d');
+                                ctx.reset();
+                                ctx.clearRect(0, 0, width, height);
+                                ctx.fillStyle = '#00ff00';
+                                ctx.beginPath();
+                                if (Settings.settings.debugTriangleLeftSlopeUp) {
+                                    ctx.moveTo(0, height);
+                                    ctx.lineTo(width, 0);
+                                    ctx.lineTo(width, height);
+                                } else {
+                                    ctx.moveTo(0, 0);
+                                    ctx.lineTo(width, height);
+                                    ctx.lineTo(width, 0);
+                                }
+                                ctx.closePath();
+                                ctx.fill();
+                            }
+                        }
+
                         // Triangular mask: white = keep wedge, black = discard
                         Canvas {
                             id: leftWedgeMask
@@ -752,6 +778,32 @@ Scope {
                                 opacity: 0.8
                                 visible: true
                                 z: 5
+                            }
+
+                            // Explicit triangle for right side
+                            Canvas {
+                                id: rightWedgeDebugTriangle
+                                anchors.fill: parent
+                                visible: true
+                                z: 6
+                                onPaint: {
+                                    var ctx = getContext('2d');
+                                    ctx.reset();
+                                    ctx.clearRect(0, 0, width, height);
+                                    ctx.fillStyle = '#00ff00';
+                                    ctx.beginPath();
+                                    if (Settings.settings.debugTriangleRightSlopeUp) {
+                                        ctx.moveTo(0, height);
+                                        ctx.lineTo(width, 0);
+                                        ctx.lineTo(0, 0);
+                                    } else {
+                                        ctx.moveTo(0, 0);
+                                        ctx.lineTo(width, height);
+                                        ctx.lineTo(0, height);
+                                    }
+                                    ctx.closePath();
+                                    ctx.fill();
+                                }
                             }
 
                             Canvas {
