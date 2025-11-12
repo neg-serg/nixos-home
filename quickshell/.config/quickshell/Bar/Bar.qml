@@ -393,7 +393,7 @@ Scope {
                         height: leftPanel.barHeightPx
                         anchors.top: parent.top
                         anchors.left: leftPanelContent.left
-                        anchors.leftMargin: Math.round(netTriangleAnchor.seamStartLocal)
+                        anchors.leftMargin: Math.round(netTriangleAnchor.seamStartLocal + leftPanel.seamWidth)
                         anchors.topMargin: 0
                         // Debug: bright green bounding box to locate the wedge
                         Rectangle {
@@ -674,7 +674,7 @@ Scope {
                             height: rightPanel.barHeightPx
                             anchors.top: parent.top
                             anchors.left: rightPanelContent.left
-                            anchors.leftMargin: Math.round(rightNetTriangleAnchor.seamStartLocal)
+                            anchors.leftMargin: Math.round(rightNetTriangleAnchor.seamStartLocal - rightPanel.seamWidth)
                             anchors.topMargin: 0
                             // Debug: bright green bounding box to locate the wedge
                             Rectangle {
