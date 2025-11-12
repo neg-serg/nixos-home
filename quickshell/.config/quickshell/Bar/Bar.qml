@@ -237,6 +237,40 @@ Scope {
                         )
                         blending: true
                     }
+
+                    // Equilateral triangle overlay, above all panel content and outside of tint capture
+                    Canvas {
+                        id: netTriangleOverlay
+                        visible: leftPanel.debugNetTriangle && netCluster.visible
+                        antialiasing: true
+                        z: 10000000
+                        // Side equals panel height; equilateral height = side * sqrt(3)/2
+                        property int side: leftPanel.barHeightPx
+                        width: side
+                        height: Math.round(side * 0.866025403784) // sqrt(3)/2
+                        anchors.top: leftBarBackground.top
+                        anchors.topMargin: Math.max(1, Math.round(1 * leftPanel.s))
+                        // Center horizontally over netCluster in the leftPanel window coords
+                        x: Math.round(netCluster.mapToItem(leftPanel, netCluster.width / 2, 0).x - width / 2)
+                        onVisibleChanged: requestPaint()
+                        onXChanged: requestPaint()
+                        onWidthChanged: requestPaint()
+                        onHeightChanged: requestPaint()
+                        onPaint: {
+                            var ctx = getContext('2d');
+                            ctx.reset();
+                            ctx.clearRect(0, 0, width, height);
+                            // White fill for maximum visibility, unaffected by panel tint
+                            ctx.fillStyle = '#ffffff';
+                            // Equilateral triangle pointing downward (base on top edge)
+                            ctx.beginPath();
+                            ctx.moveTo(0, 0);
+                            ctx.lineTo(width, 0);
+                            ctx.lineTo(width / 2, height);
+                            ctx.closePath();
+                            ctx.fill();
+                        }
+                    }
                 }
 
                 PanelWindow {
