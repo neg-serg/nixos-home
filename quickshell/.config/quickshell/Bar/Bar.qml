@@ -395,6 +395,15 @@ Scope {
                         anchors.left: leftPanelContent.left
                         anchors.leftMargin: Math.round(netTriangleAnchor.seamStartLocal)
                         anchors.topMargin: 0
+                        // Debug: bright green bounding box to locate the wedge
+                        Rectangle {
+                            anchors.fill: parent
+                            color: "transparent"
+                            border.color: "#00ff00"
+                            border.width: 2
+                            visible: true
+                            z: 1
+                        }
 
                         // Hidden visuals that replicate the seam look (base fill + tint)
                         Item {
@@ -667,6 +676,15 @@ Scope {
                             anchors.left: rightPanelContent.left
                             anchors.leftMargin: Math.round(rightNetTriangleAnchor.seamStartLocal)
                             anchors.topMargin: 0
+                            // Debug: bright green bounding box to locate the wedge
+                            Rectangle {
+                                anchors.fill: parent
+                                color: "transparent"
+                                border.color: "#00ff00"
+                                border.width: 2
+                                visible: true
+                                z: 1
+                            }
 
                             Item {
                                 id: rightWedgeVisuals
