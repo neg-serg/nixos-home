@@ -381,8 +381,8 @@
       "scale": 0.9
     },
     "colors": {
-      "bg": "#ef000000",
-      "hoverBg": "#14222f",
+      "bg": "#00000000",
+      "hoverBg": "#26000000",
       "text": "#CBD6E5",
       "icon": "#AEB9C8"
     }

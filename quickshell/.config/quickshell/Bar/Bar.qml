@@ -9,6 +9,7 @@ import "Modules" as LocalMods
 import qs.Services
 import qs.Settings
 import qs.Widgets.SidePanel
+import "../Helpers/Color.js" as Color
 
 Scope {
     id: rootScope
@@ -72,6 +73,14 @@ Scope {
                     property int widgetSpacing: Math.round(Theme.panelWidgetSpacing * s)
                     property int seamWidth: Math.max(8, Math.round(Theme.uiDiagonalSeparatorImplicitWidth * s))
                     property color barBgColor: Theme.background
+                    property real seamTaperTop: 0.25
+                    property real seamTaperBottom: 0.9
+                    property real seamOpacity: Math.min(1.0, Math.max(0.35, Theme.uiSeparatorOpacity * 3))
+                    property color seamFillColor: Color.withAlpha(
+                        Color.mix(Theme.surfaceVariant, Theme.background, 0.45),
+                        seamOpacity
+                    )
+                    readonly property real seamSlackWidth: Math.max(0, leftBarBackground.width - leftBarFill.width)
 
                     readonly property real contentWidth: Math.max(
                         leftWidgetsRow.width,
@@ -100,16 +109,21 @@ Scope {
                         anchors.top: leftBarBackground.top
                         anchors.left: leftBarBackground.left
                     }
-                    Rectangle {
+                    Item {
                         id: leftSeamFill
                         width: Math.min(leftBarBackground.width, leftPanel.seamWidth)
                         height: leftBarBackground.height
                         anchors.bottom: leftBarBackground.bottom
                         anchors.right: leftBarBackground.right
-                        color: leftPanel.barBgColor
-                        rotation: -7
-                        transformOrigin: Item.BottomRight
-                        antialiasing: true
+                        z: 1000
+                        ShaderEffect {
+                            anchors.fill: parent
+                            fragmentShader: Qt.resolvedUrl("../shaders/seam.frag.qsb")
+                            property color baseColor: leftPanel.seamFillColor
+                            // params0: tilt, taperTop, taperBottom, opacity
+                            property vector4d params0: Qt.vector4d(1, leftPanel.seamTaperTop, leftPanel.seamTaperBottom, leftPanel.seamOpacity)
+                            blending: true
+                        }
                     }
 
                     Component.onCompleted: rootScope.barHeight = leftBarBackground.height
@@ -174,6 +188,14 @@ Scope {
                     property int widgetSpacing: Math.round(Theme.panelWidgetSpacing * s)
                     property int seamWidth: Math.max(8, Math.round(Theme.uiDiagonalSeparatorImplicitWidth * s))
                     property color barBgColor: Theme.background
+                    property real seamTaperTop: 0.25
+                    property real seamTaperBottom: 0.9
+                    property real seamOpacity: Math.min(1.0, Math.max(0.35, Theme.uiSeparatorOpacity * 3))
+                    property color seamFillColor: Color.withAlpha(
+                        Color.mix(Theme.surfaceVariant, Theme.background, 0.45),
+                        seamOpacity
+                    )
+                    readonly property real seamSlackWidth: Math.max(0, rightBarBackground.width - rightBarFill.width)
 
                     readonly property real contentWidth: Math.max(
                         rightWidgetsRow.width,
@@ -202,16 +224,20 @@ Scope {
                         anchors.top: rightBarBackground.top
                         anchors.right: rightBarBackground.right
                     }
-                    Rectangle {
+                    Item {
                         id: rightSeamFill
                         width: Math.min(rightBarBackground.width, rightPanel.seamWidth)
                         height: rightBarBackground.height
                         anchors.bottom: rightBarBackground.bottom
                         anchors.left: rightBarBackground.left
-                        color: rightPanel.barBgColor
-                        rotation: 7
-                        transformOrigin: Item.BottomLeft
-                        antialiasing: true
+                        z: 1000
+                        ShaderEffect {
+                            anchors.fill: parent
+                            fragmentShader: Qt.resolvedUrl("../shaders/seam.frag.qsb")
+                            property color baseColor: rightPanel.seamFillColor
+                            property vector4d params0: Qt.vector4d(-1, rightPanel.seamTaperTop, rightPanel.seamTaperBottom, rightPanel.seamOpacity)
+                            blending: true
+                        }
                     }
 
                     RowLayout {
@@ -330,6 +356,71 @@ Scope {
                     }
 
                 }
+
+                PanelWindow {
+                    id: seamPanel
+                    screen: modelData
+                    color: "transparent"
+                    anchors.bottom: true
+                    anchors.left: true
+                    anchors.right: true
+                    visible: monitorEnabled && seamPanel.rawGapWidth > 0
+                    exclusionMode: ExclusionMode.Ignore
+                    exclusiveZone: 0
+                    WlrLayershell.namespace: "quickshell-bar-seam"
+                    WlrLayershell.layer: WlrLayer.Top
+                    property real s: Theme.scale(seamPanel.screen)
+                    property int seamHeightPx: Math.round(Theme.panelHeight * s)
+                    property real seamTaperTop: 0.12
+                    property real seamTaperBottom: 0.65
+                    property real seamEffectOpacity: Math.min(1.0, Math.max(0.45, Theme.uiSeparatorOpacity * 7.5))
+                    property color seamFillColor: Color.mix(Theme.surfaceVariant, Theme.background, 0.35)
+
+                    readonly property real _leftFillWidth: leftBarFill ? leftBarFill.width : seamPanel.width / 2
+                    readonly property real _rightFillWidth: rightBarFill ? rightBarFill.width : seamPanel.width / 2
+                    readonly property real gapStart: Math.max(0, Math.min(seamPanel.width, _leftFillWidth))
+                    readonly property real gapEnd: Math.max(gapStart, seamPanel.width - Math.min(seamPanel.width, _rightFillWidth))
+                    readonly property real rawGapWidth: Math.max(0, gapEnd - gapStart)
+                    readonly property real seamWidthPx: Math.min(
+                        seamPanel.width,
+                        Math.max(Math.round(Theme.uiDiagonalSeparatorImplicitWidth * seamPanel.s * 3), rawGapWidth)
+                    )
+                    readonly property real seamLeftMargin: Math.max(
+                        0,
+                        Math.min(
+                            seamPanel.width - seamPanel.seamWidthPx,
+                            gapStart - Math.max(0, (seamPanel.seamWidthPx - rawGapWidth) / 2)
+                        )
+                    )
+
+                    Item {
+                        width: seamPanel.seamWidthPx
+                        height: seamPanel.seamHeightPx
+                        anchors.bottom: parent.bottom
+                        anchors.left: parent.left
+                        anchors.leftMargin: seamPanel.seamLeftMargin
+                        Row {
+                            anchors.fill: parent
+                            ShaderEffect {
+                                width: parent.width / 2
+                                height: parent.height
+                                fragmentShader: Qt.resolvedUrl("../shaders/seam.frag.qsb")
+                                property color baseColor: seamPanel.seamFillColor
+                                property vector4d params0: Qt.vector4d(-1, seamPanel.seamTaperTop, seamPanel.seamTaperBottom, seamPanel.seamEffectOpacity)
+                                blending: true
+                            }
+                            ShaderEffect {
+                                width: parent.width / 2
+                                height: parent.height
+                                fragmentShader: Qt.resolvedUrl("../shaders/seam.frag.qsb")
+                                property color baseColor: seamPanel.seamFillColor
+                                property vector4d params0: Qt.vector4d(1, seamPanel.seamTaperTop, seamPanel.seamTaperBottom, seamPanel.seamEffectOpacity)
+                                blending: true
+                            }
+                        }
+                    }
+                }
+
             }
         }
     }
