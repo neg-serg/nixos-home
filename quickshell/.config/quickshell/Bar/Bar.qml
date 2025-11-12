@@ -443,7 +443,8 @@ Scope {
                     exclusionMode: ExclusionMode.Ignore
                     exclusiveZone: 0
                     WlrLayershell.namespace: "quickshell-bar-seam"
-                    WlrLayershell.layer: WlrLayer.Top
+                    // Place seam below panel elements so debug fill shows through the center gap only
+                    WlrLayershell.layer: WlrLayer.Bottom
                     property real s: Theme.scale(seamPanel.screen)
                     property int seamHeightPx: Math.round(Theme.panelHeight * s)
                     property real seamTaperTop: 0.12
