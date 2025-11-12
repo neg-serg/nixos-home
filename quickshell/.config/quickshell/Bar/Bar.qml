@@ -122,6 +122,52 @@ Scope {
                             anchors.top: leftBarBackground.top
                             anchors.left: leftBarBackground.left
                         }
+                        // Cut a triangular window from the right edge of leftBarFill
+                        // so the underlying seam (in seamPanel) shows through exactly.
+                        ShaderEffectSource {
+                            id: leftBarFillSource
+                            anchors.fill: leftBarFill
+                            sourceItem: leftBarFill
+                            hideSource: true
+                            live: true
+                            recursive: true
+                        }
+                        Canvas {
+                            id: leftFillMask
+                            anchors.fill: leftBarFill
+                            visible: false
+                            onPaint: {
+                                var ctx = getContext('2d');
+                                ctx.reset();
+                                ctx.clearRect(0, 0, width, height);
+                                // keep everything by default
+                                ctx.fillStyle = '#ffffffff';
+                                ctx.fillRect(0, 0, width, height);
+                                // cut the wedge at the right edge
+                                var w = Math.max(1, Math.min(width, leftPanel.seamWidth));
+                                var x0 = width - w;
+                                ctx.fillStyle = '#000000ff';
+                                ctx.beginPath();
+                                if (Settings.settings.debugTriangleLeftSlopeUp) {
+                                    // bottom-left → top-right
+                                    ctx.moveTo(x0, height);
+                                    ctx.lineTo(width, 0);
+                                    ctx.lineTo(width, height);
+                                } else {
+                                    // top-left → bottom-right
+                                    ctx.moveTo(x0, 0);
+                                    ctx.lineTo(width, height);
+                                    ctx.lineTo(width, 0);
+                                }
+                                ctx.closePath();
+                                ctx.fill();
+                            }
+                        }
+                        GE.OpacityMask {
+                            anchors.fill: leftBarFill
+                            source: leftBarFillSource
+                            maskSource: leftFillMask
+                        }
                         Item {
                             id: leftSeamFill
                             width: Math.min(leftBarBackground.width, leftPanel.seamWidth)
@@ -363,6 +409,51 @@ Scope {
                             color: rightPanel.barBgColor
                             anchors.top: rightBarBackground.top
                             anchors.right: rightBarBackground.right
+                        }
+                        // Cut a triangular window from the left edge of rightBarFill
+                        // so the underlying seam (in seamPanel) shows through exactly.
+                        ShaderEffectSource {
+                            id: rightBarFillSource
+                            anchors.fill: rightBarFill
+                            sourceItem: rightBarFill
+                            hideSource: true
+                            live: true
+                            recursive: true
+                        }
+                        Canvas {
+                            id: rightFillMask
+                            anchors.fill: rightBarFill
+                            visible: false
+                            onPaint: {
+                                var ctx = getContext('2d');
+                                ctx.reset();
+                                ctx.clearRect(0, 0, width, height);
+                                // keep everything by default
+                                ctx.fillStyle = '#ffffffff';
+                                ctx.fillRect(0, 0, width, height);
+                                // cut the wedge at the left edge
+                                var w = Math.max(1, Math.min(width, rightPanel.seamWidth));
+                                ctx.fillStyle = '#000000ff';
+                                ctx.beginPath();
+                                if (Settings.settings.debugTriangleRightSlopeUp) {
+                                    // bottom-left → top-right (vertical edge at x=0)
+                                    ctx.moveTo(0, height);
+                                    ctx.lineTo(w, 0);
+                                    ctx.lineTo(0, 0);
+                                } else {
+                                    // top-left → bottom-right (vertical edge at x=0)
+                                    ctx.moveTo(0, 0);
+                                    ctx.lineTo(w, height);
+                                    ctx.lineTo(0, height);
+                                }
+                                ctx.closePath();
+                                ctx.fill();
+                            }
+                        }
+                        GE.OpacityMask {
+                            anchors.fill: rightBarFill
+                            source: rightBarFillSource
+                            maskSource: rightFillMask
                         }
                         // Mirrored debug triangle on the right side: aligns to the left edge
                         // of the right panel's seam (i.e., the left edge of rightBarFill).
@@ -749,60 +840,9 @@ Scope {
                             }
                         }
 
-                        // Mask: white=keep seam; black=cut (let wallpaper show)
-                        Canvas {
-                            id: seamMask
-                            anchors.fill: parent
-                            visible: false
-                            onPaint: {
-                                var ctx = getContext('2d');
-                                ctx.reset();
-                                ctx.clearRect(0, 0, width, height);
-                                ctx.fillStyle = '#ffffffff';
-                                ctx.fillRect(0, 0, width, height);
-
-                                if (Settings.settings.debugTriangleLeft) {
-                                    var wL = Math.max(1, Math.min(width, leftPanel.seamWidth));
-                                    ctx.fillStyle = '#000000ff';
-                                    ctx.beginPath();
-                                    if (Settings.settings.debugTriangleLeftSlopeUp) {
-                                        ctx.moveTo(0, height);
-                                        ctx.lineTo(wL, 0);
-                                        ctx.lineTo(wL, height);
-                                    } else {
-                                        ctx.moveTo(0, 0);
-                                        ctx.lineTo(wL, height);
-                                        ctx.lineTo(wL, 0);
-                                    }
-                                    ctx.closePath();
-                                    ctx.fill();
-                                }
-
-                                if (Settings.settings.debugTriangleRight) {
-                                    var wR = Math.max(1, Math.min(width, rightPanel.seamWidth));
-                                    var x0 = width - wR;
-                                    ctx.fillStyle = '#000000ff';
-                                    ctx.beginPath();
-                                    if (Settings.settings.debugTriangleRightSlopeUp) {
-                                        ctx.moveTo(x0, height);
-                                        ctx.lineTo(width, 0);
-                                        ctx.lineTo(width, height);
-                                    } else {
-                                        ctx.moveTo(x0, 0);
-                                        ctx.lineTo(width, height);
-                                        ctx.lineTo(width, 0);
-                                    }
-                                    ctx.closePath();
-                                    ctx.fill();
-                                }
-                            }
-                        }
-
-                        GE.OpacityMask {
-                            anchors.fill: parent
-                            source: seamVisuals
-                            maskSource: seamMask
-                        }
+                        // (removed) Previously we punched holes in the seam visuals.
+                        // The new approach is to mask panel fills instead, so the seam
+                        // remains intact and shows through the wedges.
                     }
 
                     // Debug overlay: visualize computed regions with solid boxes always visible
