@@ -16,8 +16,6 @@ Scope {
     property var shell
     property alias visible: barRootItem.visible
     property real barHeight: 0 // Expose current bar height for other components (e.g. window mirroring)
-    // Debug: toggle drawing of bounding boxes for key items
-    property bool debugBounds: true
 
     Item {
         id: barRootItem
@@ -277,50 +275,6 @@ Scope {
                             ctx.fill();
                         }
                     }
-
-                    // Debug bounding boxes for left panel content
-                    Item {
-                        visible: rootScope.debugBounds
-                        anchors.fill: parent
-                        z: 9000000
-                        // Panel background
-                        Rectangle { visible: leftBarBackground.visible; color: "transparent"; border.color: "#80b0e0ff"; border.width: 1; x: leftBarBackground.x; y: leftBarBackground.y; width: leftBarBackground.width; height: leftBarBackground.height }
-                        // Panel fill
-                        Rectangle { visible: leftBarFill.visible; color: "transparent"; border.color: "#8000ff00"; border.width: 1; x: leftBarFill.x; y: leftBarFill.y; width: leftBarFill.width; height: leftBarFill.height }
-                        // Widgets row
-                        Rectangle { visible: leftWidgetsRow.visible; color: "transparent"; border.color: "#80ff00ff"; border.width: 1; x: leftWidgetsRow.x; y: leftWidgetsRow.y; width: leftWidgetsRow.width; height: leftWidgetsRow.height }
-                        // Per-widget boxes mapped into panel coords
-                        Rectangle {
-                            visible: wsindicator.visible
-                            color: "transparent"; border.color: "#ffff8800"; border.width: 1
-                            property var p: wsindicator.mapToItem(leftPanelContent, 0, 0)
-                            x: p.x; y: p.y; width: wsindicator.width; height: wsindicator.height
-                        }
-                        Rectangle {
-                            visible: kbIndicator.visible
-                            color: "transparent"; border.color: "#ff00ffff"; border.width: 1
-                            property var p: kbIndicator.mapToItem(leftPanelContent, 0, 0)
-                            x: p.x; y: p.y; width: kbIndicator.width; height: kbIndicator.height
-                        }
-                        Rectangle {
-                            visible: amneziaVpn.visible
-                            color: "transparent"; border.color: "#ff66ff66"; border.width: 1
-                            property var p: amneziaVpn.mapToItem(leftPanelContent, 0, 0)
-                            x: p.x; y: p.y; width: amneziaVpn.width; height: amneziaVpn.height
-                        }
-                        Rectangle {
-                            visible: net.visible
-                            color: "transparent"; border.color: "#ffffff00"; border.width: 1
-                            property var p: net.mapToItem(leftPanelContent, 0, 0)
-                            x: p.x; y: p.y; width: net.width; height: net.height
-                        }
-                        Rectangle {
-                            visible: netCluster.visible
-                            color: "transparent"; border.color: "#ffff0000"; border.width: 1
-                            property var p: netCluster.mapToItem(leftPanelContent, 0, 0)
-                            x: p.x; y: p.y; width: netCluster.width; height: netCluster.height
-                        }
-                    }
                 }
 
                 PanelWindow {
@@ -482,46 +436,6 @@ Scope {
                             0
                         )
                         blending: true
-                    }
-
-                    // Debug bounding boxes for right panel content
-                    Item {
-                        visible: rootScope.debugBounds
-                        anchors.fill: parent
-                        z: 9000000
-                        Rectangle { visible: rightBarBackground.visible; color: "transparent"; border.color: "#80b0e0ff"; border.width: 1; x: rightBarBackground.x; y: rightBarBackground.y; width: rightBarBackground.width; height: rightBarBackground.height }
-                        Rectangle { visible: rightBarFill.visible; color: "transparent"; border.color: "#8000ff00"; border.width: 1; x: rightBarFill.x; y: rightBarFill.y; width: rightBarFill.width; height: rightBarFill.height }
-                        Rectangle { visible: rightWidgetsRow.visible; color: "transparent"; border.color: "#80ff00ff"; border.width: 1; x: rightWidgetsRow.x; y: rightWidgetsRow.y; width: rightWidgetsRow.width; height: rightWidgetsRow.height }
-                        Rectangle {
-                            visible: mediaModule.visible
-                            color: "transparent"; border.color: "#ffff8800"; border.width: 1
-                            property var p: mediaModule.mapToItem(rightPanelContent, 0, 0)
-                            x: p.x; y: p.y; width: mediaModule.width; height: mediaModule.height
-                        }
-                        Rectangle {
-                            visible: mpdFlagsBar.visible
-                            color: "transparent"; border.color: "#ff00ffff"; border.width: 1
-                            property var p: mpdFlagsBar.mapToItem(rightPanelContent, 0, 0)
-                            x: p.x; y: p.y; width: mpdFlagsBar.width; height: mpdFlagsBar.height
-                        }
-                        Rectangle {
-                            visible: systemTrayModule.visible
-                            color: "transparent"; border.color: "#ffff0000"; border.width: 1
-                            property var p: systemTrayModule.mapToItem(rightPanelContent, 0, 0)
-                            x: p.x; y: p.y; width: systemTrayModule.width; height: systemTrayModule.height
-                        }
-                        Rectangle {
-                            visible: widgetsMicrophone.visible
-                            color: "transparent"; border.color: "#ffffff00"; border.width: 1
-                            property var p: widgetsMicrophone.mapToItem(rightPanelContent, 0, 0)
-                            x: p.x; y: p.y; width: widgetsMicrophone.width; height: widgetsMicrophone.height
-                        }
-                        Rectangle {
-                            visible: widgetsVolume.visible
-                            color: "transparent"; border.color: "#ff66ff66"; border.width: 1
-                            property var p: widgetsVolume.mapToItem(rightPanelContent, 0, 0)
-                            x: p.x; y: p.y; width: widgetsVolume.width; height: widgetsVolume.height
-                        }
                     }
 
                     property string _lastAlbum: ""
