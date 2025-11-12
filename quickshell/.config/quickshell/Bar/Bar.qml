@@ -262,6 +262,7 @@ Scope {
                         // Use theme accent color from Theme; keep fully opaque
                         // If transparency is needed, prefer Canvas.opacity rather than embedding alpha in the color.
                         property color triangleColor: Theme.accentPrimary
+                        opacity: 1.0
                         onVisibleChanged: requestPaint()
                         onXChanged: requestPaint()
                         onWidthChanged: requestPaint()
@@ -639,7 +640,7 @@ Scope {
                             )
                             property color baseColor: seamPanel.seamBaseColor
                             blending: true
-                            Component.onCompleted: console.log("[seam-panel]", "shader ready", seamPanel.seamWidthPx, seamPanel.seamTintColor)
+                        Component.onCompleted: if (Settings.settings.debugLogs) console.log("[seam-panel]", "shader ready", seamPanel.seamWidthPx, seamPanel.seamTintColor)
                         }
                         Row {
                             z: 10
@@ -677,7 +678,8 @@ Scope {
                             width: Math.max(1, seamPanel.rawGapWidth)
                             height: seamPanel.seamHeightPx
                             anchors.bottom: parent.bottom
-                            color: "#3300ff00" // translucent green fill (no border)
+                            // Use theme accent for the raw gap overlay instead of hardcoded green
+                            color: Color.withAlpha(Theme.accentPrimary, 0.20)
                         }
 
                         // (red seam box removed)
