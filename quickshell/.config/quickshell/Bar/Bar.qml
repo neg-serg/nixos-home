@@ -251,7 +251,7 @@ Scope {
                         property real seamPosFraction: 0.25
                         x: Math.round(
                             (netCluster && netCluster.visible && netCluster.width > 0)
-                                ? (netCluster.mapToItem(leftPanel, netCluster.width, 0).x - width)
+                                ? (netCluster.mapToItem(leftPanelContent, netCluster.width, 0).x - width)
                                 : ((seamPanel ? (seamPanel.gapStart + Math.max(0, seamPanel.seamWidthPx * seamPosFraction)) : leftPanel.width) - width)
                         )
                         // Green, semi-transparent like seam; reuse leftPanel.seamOpacity as alpha
