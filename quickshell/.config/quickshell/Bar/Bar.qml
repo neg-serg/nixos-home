@@ -728,8 +728,10 @@ Scope {
                         recursive: true
                     }
 
+                    // Panel tint (right) drawn offscreen and masked to keep seam wedge clear
                     ShaderEffect {
-                        anchors.fill: parent
+                        id: rightPanelTintFX
+                        anchors.fill: rightBarFill
                         visible: rightPanel.panelTintEnabled
                         fragmentShader: Qt.resolvedUrl("../shaders/panel_tint_mix.frag.qsb")
                         property var sourceSampler: rightPanelSource
@@ -741,6 +743,46 @@ Scope {
                             0
                         )
                         blending: true
+                    }
+                    ShaderEffectSource {
+                        id: rightPanelTintSource
+                        anchors.fill: rightBarFill
+                        sourceItem: rightPanelTintFX
+                        hideSource: true
+                        live: true
+                        recursive: true
+                    }
+                    Canvas {
+                        id: rightPanelTintMask
+                        anchors.fill: rightBarFill
+                        visible: false
+                        onPaint: {
+                            var ctx = getContext('2d');
+                            ctx.reset();
+                            ctx.clearRect(0, 0, width, height);
+                            ctx.fillStyle = '#ffffffff';
+                            ctx.fillRect(0, 0, width, height);
+                            var w = Math.max(1, Math.min(width, rightPanel.seamWidth));
+                            ctx.fillStyle = '#000000ff';
+                            ctx.beginPath();
+                            if (Settings.settings.debugTriangleRightSlopeUp) {
+                                ctx.moveTo(0, height);
+                                ctx.lineTo(w, 0);
+                                ctx.lineTo(0, 0);
+                            } else {
+                                ctx.moveTo(0, 0);
+                                ctx.lineTo(w, height);
+                                ctx.lineTo(0, height);
+                            }
+                            ctx.closePath();
+                            ctx.fill();
+                        }
+                    }
+                    GE.OpacityMask {
+                        anchors.fill: rightBarFill
+                        visible: rightPanel.panelTintEnabled
+                        source: rightPanelTintSource
+                        maskSource: rightPanelTintMask
                     }
 
                     property string _lastAlbum: ""
