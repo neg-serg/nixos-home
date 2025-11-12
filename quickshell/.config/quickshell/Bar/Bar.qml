@@ -606,9 +606,7 @@ Scope {
                             width: Math.max(1, seamPanel.rawGapWidth)
                             height: seamPanel.seamHeightPx
                             anchors.bottom: parent.bottom
-                            color: "#3300ff00" // translucent green fill
-                            border.color: "#ff00ff00"
-                            border.width: 1
+                            color: "#3300ff00" // translucent green fill (no border)
                         }
 
                         // (red seam box removed)
