@@ -259,8 +259,9 @@ Scope {
                         anchors.left: leftPanelContent.left
                         anchors.leftMargin: Math.round(netTriangleAnchor.seamStartLocal)
                         anchors.topMargin: 0
-                        // Use theme accent color with the same opacity as seam
-                        property color triangleColor: Color.withAlpha(Theme.accentPrimary, leftPanel.seamOpacity)
+                        // Use theme accent color from Theme; keep fully opaque
+                        // If transparency is needed, prefer Canvas.opacity rather than embedding alpha in the color.
+                        property color triangleColor: Theme.accentPrimary
                         onVisibleChanged: requestPaint()
                         onXChanged: requestPaint()
                         onWidthChanged: requestPaint()
