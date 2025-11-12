@@ -176,6 +176,7 @@ Scope {
                             anchors.right: leftBarBackground.right
                             z: 1000
                             ShaderEffect {
+                                id: leftSeamFX
                                 anchors.fill: parent
                                 fragmentShader: Qt.resolvedUrl("../shaders/seam.frag.qsb")
                                 property color baseColor: leftPanel.seamFillColor
@@ -190,7 +191,7 @@ Scope {
                         ShaderEffectSource {
                             id: leftSeamSource
                             anchors.fill: leftSeamFill
-                            sourceItem: leftSeamFill
+                            sourceItem: leftSeamFX
                             hideSource: true
                             live: true
                             recursive: true
@@ -310,8 +311,10 @@ Scope {
                         recursive: true
                     }
 
+                    // Panel tint (left): offscreen + masked so wedge stays transparent to reveal seam
                     ShaderEffect {
-                        anchors.fill: parent
+                        id: leftPanelTintFX
+                        anchors.fill: leftBarFill
                         visible: leftPanel.panelTintEnabled
                         fragmentShader: Qt.resolvedUrl("../shaders/panel_tint_mix.frag.qsb")
                         property var sourceSampler: leftPanelSource
@@ -323,6 +326,47 @@ Scope {
                             0
                         )
                         blending: true
+                    }
+                    ShaderEffectSource {
+                        id: leftPanelTintSource
+                        anchors.fill: leftBarFill
+                        sourceItem: leftPanelTintFX
+                        hideSource: true
+                        live: true
+                        recursive: true
+                    }
+                    Canvas {
+                        id: leftPanelTintMask
+                        anchors.fill: leftBarFill
+                        visible: false
+                        onPaint: {
+                            var ctx = getContext('2d');
+                            ctx.reset();
+                            ctx.clearRect(0, 0, width, height);
+                            ctx.fillStyle = '#ffffffff';
+                            ctx.fillRect(0, 0, width, height);
+                            var w = Math.max(1, Math.min(width, leftPanel.seamWidth));
+                            var x0 = width - w;
+                            ctx.fillStyle = '#000000ff';
+                            ctx.beginPath();
+                            if (Settings.settings.debugTriangleLeftSlopeUp) {
+                                ctx.moveTo(x0, height);
+                                ctx.lineTo(width, 0);
+                                ctx.lineTo(width, height);
+                            } else {
+                                ctx.moveTo(x0, 0);
+                                ctx.lineTo(width, height);
+                                ctx.lineTo(width, 0);
+                            }
+                            ctx.closePath();
+                            ctx.fill();
+                        }
+                    }
+                    GE.OpacityMask {
+                        anchors.fill: leftBarFill
+                        visible: leftPanel.panelTintEnabled
+                        source: leftPanelTintSource
+                        maskSource: leftPanelTintMask
                     }
 
                     Item {
@@ -567,6 +611,7 @@ Scope {
                             anchors.left: rightBarBackground.left
                             z: 1000
                             ShaderEffect {
+                                id: rightSeamFX
                                 anchors.fill: parent
                                 fragmentShader: Qt.resolvedUrl("../shaders/seam.frag.qsb")
                                 property color baseColor: rightPanel.seamFillColor
@@ -579,7 +624,7 @@ Scope {
                         ShaderEffectSource {
                             id: rightSeamSource
                             anchors.fill: rightSeamFill
-                            sourceItem: rightSeamFill
+                            sourceItem: rightSeamFX
                             hideSource: true
                             live: true
                             recursive: true
