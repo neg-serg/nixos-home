@@ -444,25 +444,40 @@ Scope {
                     property real seamEffectOpacity: Math.min(1.0, Math.max(0.45, Theme.uiSeparatorOpacity * 7.5))
                     property color seamFillColor: Color.mix(Theme.surfaceVariant, Theme.background, 0.35)
                     property bool seamTintEnabled: true
-                    property color seamTintColor: Color.withAlpha("#ff3a44", 0.82)
-                    property real seamTintOpacity: Math.min(1.0, Math.max(0.35, Theme.uiSeparatorOpacity * 5.5))
+                    property color seamTintColor: "#ff3a44"
+                    property real seamTintOpacity: 0.9
+                    property color seamBaseColor: Theme.background
+                    property real seamBaseOpacityTop: 0.5
+                    property real seamBaseOpacityBottom: 0.65
                     property real seamTintTopInsetPx: Math.round(Theme.panelWidgetSpacing * 0.55 * s)
                     property real seamTintBottomInsetPx: Math.round(Theme.panelWidgetSpacing * 0.2 * s)
                     property real seamTintFeatherPx: Math.max(1, Math.round(Theme.uiRadiusSmall * 0.35 * s))
+                    readonly property real monitorWidth: seamPanel.screen ? seamPanel.screen.width : seamPanel.width
+                    // Debug: enable to overlay bounding boxes and logs
+                    property bool debugSeam: true
 
-                    readonly property real _leftFillWidth: leftBarFill ? leftBarFill.width : seamPanel.width / 2
-                    readonly property real _rightFillWidth: rightBarFill ? rightBarFill.width : seamPanel.width / 2
-                    readonly property real gapStart: Math.max(0, Math.min(seamPanel.width, _leftFillWidth))
-                    readonly property real gapEnd: Math.max(gapStart, seamPanel.width - Math.min(seamPanel.width, _rightFillWidth))
+                    readonly property real _leftFillWidth: leftBarFill ? leftBarFill.width : seamPanel.monitorWidth / 2
+                    readonly property real _rightFillWidth: rightBarFill ? rightBarFill.width : seamPanel.monitorWidth / 2
+                    readonly property real _leftVisibleEdge: Math.max(
+                        0,
+                        Math.min(seamPanel.monitorWidth, _leftFillWidth - Math.max(0, leftPanel.seamWidth || 0))
+                    )
+                    readonly property real _rightFillVisibleWidth: Math.max(0, _rightFillWidth - Math.max(0, rightPanel.seamWidth || 0))
+                    readonly property real _rightVisibleEdge: Math.max(
+                        _leftVisibleEdge,
+                        seamPanel.monitorWidth - Math.min(seamPanel.monitorWidth, _rightFillVisibleWidth)
+                    )
+                    readonly property real gapStart: _leftVisibleEdge
+                    readonly property real gapEnd: _rightVisibleEdge
                     readonly property real rawGapWidth: Math.max(0, gapEnd - gapStart)
                     readonly property real seamWidthPx: Math.min(
-                        seamPanel.width,
+                        seamPanel.monitorWidth,
                         Math.max(Math.round(Theme.uiDiagonalSeparatorImplicitWidth * seamPanel.s * 3), rawGapWidth)
                     )
                     readonly property real seamLeftMargin: Math.max(
                         0,
                         Math.min(
-                            seamPanel.width - seamPanel.seamWidthPx,
+                            seamPanel.monitorWidth - seamPanel.seamWidthPx,
                             gapStart - Math.max(0, (seamPanel.seamWidthPx - rawGapWidth) / 2)
                         )
                     )
@@ -472,6 +487,24 @@ Scope {
                     readonly property real seamTintRightBottom: 1 - seamPanel.seamTintLeftBottom
                     readonly property real seamTintFeatherLeft: seamPanel._normalizedFeather(seamPanel.seamTintFeatherPx)
                     readonly property real seamTintFeatherRight: seamPanel.seamTintFeatherLeft
+
+                    function logGap(prefix) {
+                        try {
+                            console.log(
+                                "[seam]",
+                                prefix || "",
+                                "vis=", seamPanel.visible,
+                                "gapStart=", gapStart,
+                                "gapEnd=", gapEnd,
+                                "raw=", rawGapWidth,
+                                "seamLeft=", seamLeftMargin,
+                                "seamWidth=", seamWidthPx,
+                                "leftFill=", _leftFillWidth,
+                                "rightFill=", _rightFillWidth,
+                                "monitor=", monitorWidth
+                            )
+                        } catch (e) { /* ignore */ }
+                    }
 
                     function _normalizedInset(px) {
                         const width = Math.max(1, seamPanel.seamWidthPx);
@@ -484,11 +517,23 @@ Scope {
                     }
 
                     Item {
-                        width: seamPanel.seamWidthPx
+                        width: seamPanel.seamWidthPx + 2
                         height: seamPanel.seamHeightPx
                         anchors.bottom: parent.bottom
                         anchors.left: parent.left
-                        anchors.leftMargin: seamPanel.seamLeftMargin
+                        anchors.leftMargin: Math.max(0, seamPanel.seamLeftMargin - 1)
+                        ShaderEffect {
+                            z: 0
+                            anchors.fill: parent
+                            fragmentShader: Qt.resolvedUrl("../shaders/seam_fill.frag.qsb")
+                            property color baseColor: seamPanel.seamBaseColor
+                            property vector4d params0: Qt.vector4d(
+                                seamPanel.seamBaseOpacityTop,
+                                seamPanel.seamBaseOpacityBottom,
+                                0,
+                                0
+                            )
+                        }
                         ShaderEffect {
                             z: 50
                             visible: seamPanel.seamTintEnabled
@@ -507,7 +552,9 @@ Scope {
                                 seamPanel.seamTintOpacity,
                                 0
                             )
+                            property color baseColor: seamPanel.seamBaseColor
                             blending: true
+                            Component.onCompleted: console.log("[seam-panel]", "shader ready", seamPanel.seamWidthPx, seamPanel.seamTintColor)
                         }
                         Row {
                             z: 10
@@ -529,6 +576,81 @@ Scope {
                                 blending: true
                             }
                         }
+                    }
+
+                    // Debug overlay: visualize computed regions with solid boxes always visible
+                    Item {
+                        visible: seamPanel.debugSeam
+                        anchors.fill: parent
+                        z: 200000
+
+                        // Entire seamPanel bounds
+                        Rectangle {
+                            anchors.fill: parent
+                            color: "transparent"
+                            border.color: "#ff00ffff" // magenta
+                            border.width: 1
+                        }
+
+                        // Raw gap region [gapStart .. gapEnd]
+                        Rectangle {
+                            x: seamPanel.gapStart
+                            width: Math.max(1, seamPanel.rawGapWidth)
+                            height: seamPanel.seamHeightPx
+                            anchors.bottom: parent.bottom
+                            color: "#3300ff00" // translucent green fill
+                            border.color: "#ff00ff00"
+                            border.width: 1
+                        }
+
+                        // Intended seam box [seamLeftMargin .. seamLeftMargin + seamWidthPx]
+                        Rectangle {
+                            x: seamPanel.seamLeftMargin
+                            width: Math.max(1, seamPanel.seamWidthPx)
+                            height: seamPanel.seamHeightPx
+                            anchors.bottom: parent.bottom
+                            color: "#66ff0000" // solid-ish red to guarantee visibility
+                            border.color: "#ffff0000"
+                            border.width: 1
+                        }
+
+                        // Readable text with key numbers
+                        Rectangle {
+                            anchors.left: parent.left
+                            anchors.bottom: parent.bottom
+                            color: "#a0000000"
+                            radius: 4
+                            border.color: "#80ffffff"
+                            border.width: 1
+                            width: debugText.implicitWidth + 12
+                            height: debugText.implicitHeight + 8
+                            Text {
+                                id: debugText
+                                anchors.margins: 4
+                                anchors.fill: parent
+                                color: "#ffff66"
+                                font.pixelSize: 12
+                                text: "gap=" + Math.round(seamPanel.rawGapWidth)
+                                      + " leftFill=" + Math.round(seamPanel._leftFillWidth)
+                                      + " rightFill=" + Math.round(seamPanel._rightFillWidth)
+                                      + " seamLeft=" + Math.round(seamPanel.seamLeftMargin)
+                                      + " seamW=" + Math.round(seamPanel.seamWidthPx)
+                                      + " monW=" + Math.round(seamPanel.monitorWidth)
+                            }
+                        }
+                    }
+
+                    // Keep logs updated on changes important to geometry
+                    Component.onCompleted: seamPanel.logGap("completed")
+                    Connections { target: leftBarFill; function onWidthChanged() { seamPanel.logGap("leftFill") } }
+                    Connections { target: rightBarFill; function onWidthChanged() { seamPanel.logGap("rightFill") } }
+                    Connections {
+                        target: seamPanel
+                        function onVisibleChanged() { seamPanel.logGap("visible") }
+                        function onSeamLeftMarginChanged() { seamPanel.logGap("seamLeft") }
+                        function onSeamWidthPxChanged() { seamPanel.logGap("seamWidth") }
+                        function onGapStartChanged() { seamPanel.logGap("gapStart") }
+                        function onGapEndChanged() { seamPanel.logGap("gapEnd") }
                     }
                 }
 
