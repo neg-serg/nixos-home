@@ -448,6 +448,16 @@ Scope {
                             recursive: true
                         }
 
+                        // Debug bright fill to localize the wedge on screen
+                        Rectangle {
+                            id: leftWedgeDebugFill
+                            anchors.fill: parent
+                            color: "#00ff00"
+                            opacity: 0.8
+                            visible: true
+                            z: 5
+                        }
+
                         // Triangular mask: white = keep wedge, black = discard
                         Canvas {
                             id: leftWedgeMask
@@ -480,7 +490,8 @@ Scope {
                         }
                         GE.OpacityMask {
                             anchors.fill: parent
-                            source: leftWedgeSource
+                            // Use the bright debug fill as the source so the wedge is clearly visible
+                            source: leftWedgeDebugFill
                             maskSource: leftWedgeMask
                         }
                     }
@@ -733,6 +744,16 @@ Scope {
                                 recursive: true
                             }
 
+                            // Debug bright fill to localize the wedge on screen
+                            Rectangle {
+                                id: rightWedgeDebugFill
+                                anchors.fill: parent
+                                color: "#00ff00"
+                                opacity: 0.8
+                                visible: true
+                                z: 5
+                            }
+
                             Canvas {
                                 id: rightWedgeMask
                                 anchors.fill: parent
@@ -764,7 +785,8 @@ Scope {
                             }
                             GE.OpacityMask {
                                 anchors.fill: parent
-                                source: rightWedgeSource
+                                // Use the bright debug fill as the source so the wedge is clearly visible
+                                source: rightWedgeDebugFill
                                 maskSource: rightWedgeMask
                             }
                         }
