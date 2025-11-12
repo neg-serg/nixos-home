@@ -238,19 +238,12 @@ Scope {
                         width: 0
                         height: 0
                         anchors.top: parent.top
-                        property real seamPosFraction: 0.25
+                        // Compute seam start in local coords: end of left fill minus seam width
+                        readonly property int _seamWidth: Math.max(1, leftPanel.seamWidth)
                         readonly property real _fillWidth: leftBarFill ? leftBarFill.width : leftPanelContent.width
-                        readonly property real _seamWidth: seamPanel
-                          ? Math.max(8, Math.min(_fillWidth, seamPanel.seamWidthPx))
-                          : Math.max(8, leftPanel.seamWidth || 0)
-                        readonly property real _fallbackEdge: Math.max(
-                          0,
-                          Math.min(leftPanelContent.width, _fillWidth - _seamWidth)
-                        )
-                        x: Math.round(
-                          (netCluster && netCluster.visible && netCluster.width > 0)
-                            ? netCluster.mapToItem(leftPanelContent, netCluster.width, 0).x
-                            : (_fallbackEdge + Math.max(0, _seamWidth * seamPosFraction))
+                        readonly property real seamStartLocal: Math.max(
+                            0,
+                            Math.min(leftPanelContent.width - _seamWidth, _fillWidth - _seamWidth)
                         )
                     }
 
@@ -260,16 +253,12 @@ Scope {
                         visible: leftPanel.debugNetTriangle && netCluster.visible
                         antialiasing: true
                         z: 10000000
-                        // Make one side equal to panel height; use that as canvas height.
-                        // Width equals height for a 45-45-90 right triangle footprint.
-                        property int side: leftPanel.barHeightPx
-                        width: side
-                        height: side
+                        width: Math.max(1, leftPanel.seamWidth)
+                        height: leftPanel.barHeightPx
                         anchors.top: parent.top
-                        anchors.right: netTriangleAnchor.right
-                        anchors.topMargin: Math.max(1, Math.round(1 * leftPanel.s))
-                        anchors.rightMargin: 0
-                        // Green, semi-transparent like seam; reuse leftPanel.seamOpacity as alpha
+                        anchors.left: leftPanelContent.left
+                        anchors.leftMargin: Math.round(netTriangleAnchor.seamStartLocal)
+                        anchors.topMargin: 0
                         property color triangleColor: Color.withAlpha("#00FF00", leftPanel.seamOpacity)
                         onVisibleChanged: requestPaint()
                         onXChanged: requestPaint()
@@ -279,12 +268,11 @@ Scope {
                             var ctx = getContext('2d');
                             ctx.reset();
                             ctx.clearRect(0, 0, width, height);
-                            // Green transparent fill, independent of panel tint
                             ctx.fillStyle = triangleColor;
-                            // Right-angled triangle; right angle at top-right corner.
+                            // Vertical edge on the right at seam boundary
                             ctx.beginPath();
                             ctx.moveTo(0, height);      // bottom-left
-                            ctx.lineTo(width, 0);       // top-right (right angle corner)
+                            ctx.lineTo(width, 0);       // top-right
                             ctx.lineTo(width, height);  // bottom-right
                             ctx.closePath();
                             ctx.fill();
