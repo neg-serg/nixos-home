@@ -183,7 +183,7 @@ Scope {
                             id: netTriangle
                             visible: leftPanel.debugNetTriangle && netCluster.visible
                             antialiasing: true
-                            z: 20001
+                            z: 100000
                             property int sz: Math.max(8, Math.round(Theme.uiRadiusSmall * 1.5 * leftPanel.s))
                             width: sz
                             height: sz
@@ -195,7 +195,8 @@ Scope {
                                 var ctx = getContext('2d');
                                 ctx.reset();
                                 ctx.clearRect(0, 0, width, height);
-                                ctx.fillStyle = '#ffcc00'; // visible debug color
+                                // Same green tint as the gap debug fill
+                                ctx.fillStyle = '#3300ff00';
                                 // Right triangle with right angle at bottom-right
                                 ctx.beginPath();
                                 ctx.moveTo(0, height);
