@@ -3,6 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
+import Qt5Compat.GraphicalEffects as GE
 import qs.Bar.Modules
 import qs.Components
 import "Modules" as LocalMods
@@ -686,59 +687,121 @@ Scope {
                         anchors.bottom: parent.bottom
                         anchors.left: parent.left
                         anchors.leftMargin: Math.max(0, seamPanel.seamLeftMargin - 1)
-                        ShaderEffect {
-                            z: 0
+
+                        // Hidden visuals (used as source for mask)
+                        Item {
+                            id: seamVisuals
                             anchors.fill: parent
-                            fragmentShader: Qt.resolvedUrl("../shaders/seam_fill.frag.qsb")
-                            property color baseColor: seamPanel.seamBaseColor
-                            property vector4d params0: Qt.vector4d(
-                                seamPanel.seamBaseOpacityTop,
-                                seamPanel.seamBaseOpacityBottom,
-                                0,
-                                0
-                            )
-                        }
-                        ShaderEffect {
-                            z: 50
-                            visible: seamPanel.seamTintEnabled
-                            anchors.fill: parent
-                            fragmentShader: Qt.resolvedUrl("../shaders/seam_tint.frag.qsb")
-                            property color tintColor: seamPanel.seamTintColor
-                            property vector4d params0: Qt.vector4d(
-                                seamPanel.seamTintLeftTop,
-                                seamPanel.seamTintLeftBottom,
-                                seamPanel.seamTintRightTop,
-                                seamPanel.seamTintRightBottom
-                            )
-                            property vector4d params1: Qt.vector4d(
-                                seamPanel.seamTintFeatherLeft,
-                                seamPanel.seamTintFeatherRight,
-                                seamPanel.seamTintOpacity,
-                                0
-                            )
-                            property color baseColor: seamPanel.seamBaseColor
-                            blending: true
-                        Component.onCompleted: if (Settings.settings.debugLogs) console.log("[seam-panel]", "shader ready", seamPanel.seamWidthPx, seamPanel.seamTintColor)
-                        }
-                        Row {
-                            z: 10
-                            anchors.fill: parent
+                            visible: false
                             ShaderEffect {
-                                width: parent.width / 2
-                                height: parent.height
-                                fragmentShader: Qt.resolvedUrl("../shaders/seam.frag.qsb")
-                                property color baseColor: seamPanel.seamFillColor
-                                property vector4d params0: Qt.vector4d(-1, seamPanel.seamTaperTop, seamPanel.seamTaperBottom, seamPanel.seamEffectOpacity)
-                                blending: true
+                                z: 0
+                                anchors.fill: parent
+                                fragmentShader: Qt.resolvedUrl("../shaders/seam_fill.frag.qsb")
+                                property color baseColor: seamPanel.seamBaseColor
+                                property vector4d params0: Qt.vector4d(
+                                    seamPanel.seamBaseOpacityTop,
+                                    seamPanel.seamBaseOpacityBottom,
+                                    0,
+                                    0
+                                )
                             }
                             ShaderEffect {
-                                width: parent.width / 2
-                                height: parent.height
-                                fragmentShader: Qt.resolvedUrl("../shaders/seam.frag.qsb")
-                                property color baseColor: seamPanel.seamFillColor
-                                property vector4d params0: Qt.vector4d(1, seamPanel.seamTaperTop, seamPanel.seamTaperBottom, seamPanel.seamEffectOpacity)
+                                z: 50
+                                visible: seamPanel.seamTintEnabled
+                                anchors.fill: parent
+                                fragmentShader: Qt.resolvedUrl("../shaders/seam_tint.frag.qsb")
+                                property color tintColor: seamPanel.seamTintColor
+                                property vector4d params0: Qt.vector4d(
+                                    seamPanel.seamTintLeftTop,
+                                    seamPanel.seamTintLeftBottom,
+                                    seamPanel.seamTintRightTop,
+                                    seamPanel.seamTintRightBottom
+                                )
+                                property vector4d params1: Qt.vector4d(
+                                    seamPanel.seamTintFeatherLeft,
+                                    seamPanel.seamTintFeatherRight,
+                                    seamPanel.seamTintOpacity,
+                                    0
+                                )
+                                property color baseColor: seamPanel.seamBaseColor
                                 blending: true
+                            Component.onCompleted: if (Settings.settings.debugLogs) console.log("[seam-panel]", "shader ready", seamPanel.seamWidthPx, seamPanel.seamTintColor)
                             }
+                            Row {
+                                z: 10
+                                anchors.fill: parent
+                                ShaderEffect {
+                                    width: parent.width / 2
+                                    height: parent.height
+                                    fragmentShader: Qt.resolvedUrl("../shaders/seam.frag.qsb")
+                                    property color baseColor: seamPanel.seamFillColor
+                                    property vector4d params0: Qt.vector4d(-1, seamPanel.seamTaperTop, seamPanel.seamTaperBottom, seamPanel.seamEffectOpacity)
+                                    blending: true
+                                }
+                                ShaderEffect {
+                                    width: parent.width / 2
+                                    height: parent.height
+                                    fragmentShader: Qt.resolvedUrl("../shaders/seam.frag.qsb")
+                                    property color baseColor: seamPanel.seamFillColor
+                                    property vector4d params0: Qt.vector4d(1, seamPanel.seamTaperTop, seamPanel.seamTaperBottom, seamPanel.seamEffectOpacity)
+                                    blending: true
+                                }
+                            }
+                        }
+
+                        // Mask: white=keep seam; black=cut (let wallpaper show)
+                        Canvas {
+                            id: seamMask
+                            anchors.fill: parent
+                            visible: false
+                            onPaint: {
+                                var ctx = getContext('2d');
+                                ctx.reset();
+                                ctx.clearRect(0, 0, width, height);
+                                ctx.fillStyle = '#ffffffff';
+                                ctx.fillRect(0, 0, width, height);
+
+                                if (Settings.settings.debugTriangleLeft) {
+                                    var wL = Math.max(1, Math.min(width, leftPanel.seamWidth));
+                                    ctx.fillStyle = '#000000ff';
+                                    ctx.beginPath();
+                                    if (Settings.settings.debugTriangleLeftSlopeUp) {
+                                        ctx.moveTo(0, height);
+                                        ctx.lineTo(wL, 0);
+                                        ctx.lineTo(wL, height);
+                                    } else {
+                                        ctx.moveTo(0, 0);
+                                        ctx.lineTo(wL, height);
+                                        ctx.lineTo(wL, 0);
+                                    }
+                                    ctx.closePath();
+                                    ctx.fill();
+                                }
+
+                                if (Settings.settings.debugTriangleRight) {
+                                    var wR = Math.max(1, Math.min(width, rightPanel.seamWidth));
+                                    var x0 = width - wR;
+                                    ctx.fillStyle = '#000000ff';
+                                    ctx.beginPath();
+                                    if (Settings.settings.debugTriangleRightSlopeUp) {
+                                        ctx.moveTo(x0, height);
+                                        ctx.lineTo(width, 0);
+                                        ctx.lineTo(width, height);
+                                    } else {
+                                        ctx.moveTo(x0, 0);
+                                        ctx.lineTo(width, height);
+                                        ctx.lineTo(width, 0);
+                                    }
+                                    ctx.closePath();
+                                    ctx.fill();
+                                }
+                            }
+                        }
+
+                        GE.OpacityMask {
+                            anchors.fill: parent
+                            source: seamVisuals
+                            maskSource: seamMask
                         }
                     }
 
