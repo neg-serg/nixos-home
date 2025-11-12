@@ -45,9 +45,9 @@ Singleton {
             property bool debugTriangleLeftSlopeUp: true
             property bool debugTriangleRightSlopeUp: true
             // Triangle opacities (0.0..1.0)
-            // Default 0.0: fully transparent (triangles act as windows only)
-            property real debugTriangleLeftOpacity: 0.0
-            property real debugTriangleRightOpacity: 0.0
+            // Default 1.0: fully opaque overlay (multiplied by seam tint opacity)
+            property real debugTriangleLeftOpacity: 1.0
+            property real debugTriangleRightOpacity: 1.0
             property bool strictThemeTokens: false
             property bool useFahrenheit: false
             property bool showMediaInBar: false
