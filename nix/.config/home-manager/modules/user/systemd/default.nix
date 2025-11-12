@@ -2,6 +2,7 @@
   pkgs,
   lib,
   config,
+  systemdUser,
   ...
 }:
 with lib;
@@ -90,7 +91,7 @@ with lib;
                 };
                 Unit.PartOf = ["graphical-session.target"];
               }
-              (config.lib.neg.systemdUser.mkUnitFromPresets {presets = ["graphical"];})
+              (systemdUser.mkUnitFromPresets {presets = ["graphical"];})
             ];
           })
           {
@@ -108,7 +109,7 @@ with lib;
                   RestartSec = "1";
                 };
               }
-              (config.lib.neg.systemdUser.mkUnitFromPresets {presets = ["defaultWanted"];})
+              (systemdUser.mkUnitFromPresets {presets = ["defaultWanted"];})
             ];
 
             # Pyprland daemon (Hyprland helper)
@@ -142,7 +143,7 @@ with lib;
                 };
                 Unit.PartOf = ["graphical-session.target"];
               }
-              (config.lib.neg.systemdUser.mkUnitFromPresets {presets = ["graphical"];})
+              (systemdUser.mkUnitFromPresets {presets = ["graphical"];})
             ];
 
             # OpenRGB daemon
@@ -161,7 +162,7 @@ with lib;
                   RestartSec = "30";
                 };
               }
-              (config.lib.neg.systemdUser.mkUnitFromPresets {
+              (systemdUser.mkUnitFromPresets {
                 presets = ["dbusSocket" "graphical"];
               })
             ];
@@ -180,7 +181,7 @@ with lib;
                   SuccessExitStatus = ["0"]; # explicit for clarity
                 };
               }
-              (config.lib.neg.systemdUser.mkUnitFromPresets {presets = ["graphical"];})
+              (systemdUser.mkUnitFromPresets {presets = ["graphical"];})
             ];
           }
         ];
@@ -204,7 +205,7 @@ with lib;
               Unit = "pyprland-watch.service";
             };
           }
-          (config.lib.neg.systemdUser.mkUnitFromPresets {presets = ["graphical"];})
+          (systemdUser.mkUnitFromPresets {presets = ["graphical"];})
         ];
       }))
   ]

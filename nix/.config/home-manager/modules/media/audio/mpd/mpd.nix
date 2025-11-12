@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  systemdUser,
   ...
 }: let
   inherit (lib) mkOption types;
@@ -59,7 +60,7 @@ in {
               RestartSec = "2";
             };
           }
-          (config.lib.neg.systemdUser.mkUnitFromPresets {
+          (systemdUser.mkUnitFromPresets {
             # wait for sops-nix to provision the secret; defaultWanted for login start
             presets = ["sops" "defaultWanted"];
             after = ["sound.target"]; # preserve additional ordering

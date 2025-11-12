@@ -3,6 +3,7 @@
   pkgs,
   config,
   xdg,
+  systemdUser,
   ...
 }:
 with lib;
@@ -41,7 +42,7 @@ with lib;
             in "${exe} ${lib.escapeShellArgs args}";
           };
         }
-        (config.lib.neg.systemdUser.mkUnitFromPresets {presets = ["netOnline"];})
+        (systemdUser.mkUnitFromPresets {presets = ["netOnline"];})
       ];
       systemd.user.timers."mbsync-gmail" = lib.mkMerge [
         {
@@ -52,7 +53,7 @@ with lib;
             Persistent = true;
           };
         }
-        (config.lib.neg.systemdUser.mkUnitFromPresets {presets = ["timers"];})
+        (systemdUser.mkUnitFromPresets {presets = ["timers"];})
       ];
     }
     (xdg.mkXdgText "isync/mbsyncrc" (builtins.readFile ./mbsyncrc))

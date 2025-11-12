@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  systemdUser,
   ...
 }:
 with lib;
@@ -57,7 +58,7 @@ with lib;
     {
       systemd.user.services.flameshot = lib.mkMerge [
         { Service.Environment = [ "QT_QPA_PLATFORM=wayland" ]; }
-        (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["graphical"]; })
+        (systemdUser.mkUnitFromPresets { presets = ["graphical"]; })
       ];
     }
   ])

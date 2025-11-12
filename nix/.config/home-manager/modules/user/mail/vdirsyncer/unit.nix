@@ -2,6 +2,7 @@
   lib,
   pkgs,
   config,
+  systemdUser,
   ...
 }:
 with lib;
@@ -21,6 +22,6 @@ with lib;
           in "${exe} ${lib.escapeShellArgs args}";
         };
       }
-      (config.lib.neg.systemdUser.mkUnitFromPresets {presets = ["netOnline"];})
+      (systemdUser.mkUnitFromPresets {presets = ["netOnline"];})
     ];
   }

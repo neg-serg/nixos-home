@@ -2,6 +2,7 @@
   lib,
   config,
   pkgs,
+  systemdUser,
   ...
 }: let
   featureEnabled = config.features.media.audio.mpd.enable or false;
@@ -25,7 +26,7 @@ in {
       }
 
       (lib.mkIf (cantataCfg.autostart && guiEnabled) (
-        config.lib.neg.systemdUser.mkSimpleService {
+        systemdUser.mkSimpleService {
           name = "cantata";
           description = "Cantata MPD client";
           execStart = lib.getExe cantataPkg;

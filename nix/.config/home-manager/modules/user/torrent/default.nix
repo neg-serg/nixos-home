@@ -2,6 +2,7 @@
   pkgs,
   lib,
   config,
+  systemdUser,
   ...
 }: let
   transmissionPkg = pkgs.transmission_4;
@@ -59,7 +60,7 @@ in
             RestartSec = "10s";
           };
         }
-        (config.lib.neg.systemdUser.mkUnitFromPresets {presets = ["netOnline" "defaultWanted"];})
+        (systemdUser.mkUnitFromPresets {presets = ["netOnline" "defaultWanted"];})
       ];
     }
     {
@@ -82,7 +83,7 @@ in
             ExecReload = let kill = lib.getExe' pkgs.util-linux "kill"; in "${kill} -s HUP $MAINPID";
           };
         }
-        (config.lib.neg.systemdUser.mkUnitFromPresets {presets = ["net" "defaultWanted"];})
+        (systemdUser.mkUnitFromPresets {presets = ["net" "defaultWanted"];})
       ];
     }
     # Local bin wrapper installed to ~/.local/bin (avoid config.* to prevent recursion)
@@ -155,7 +156,7 @@ in
             ExecStart = "${config.home.homeDirectory}/.local/bin/transmission-add-trackers";
           };
         }
-        (config.lib.neg.systemdUser.mkUnitFromPresets {presets = ["netOnline"];})
+        (systemdUser.mkUnitFromPresets {presets = ["netOnline"];})
       ];
 
       # Daily timer with persistence (runs missed executions on boot)
@@ -169,7 +170,7 @@ in
             Unit = "transmission-trackers-update.service";
           };
         }
-        (config.lib.neg.systemdUser.mkUnitFromPresets {presets = ["timers"];})
+        (systemdUser.mkUnitFromPresets {presets = ["timers"];})
       ];
     }
     # Soft migration warning removed; defaults and docs are sufficient

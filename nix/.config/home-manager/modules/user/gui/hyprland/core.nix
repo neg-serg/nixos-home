@@ -5,6 +5,7 @@
   xdg,
   hy3, # provided via mkHMArgs (wraps pkgs.hyprlandPlugins.hy3)
   raiseProvider ? null,
+  systemdUser,
   ...
 }:
 with lib; let
@@ -120,7 +121,7 @@ in
             RestartSec = "2s";
           };
         }
-        (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["graphical"]; })
+        (systemdUser.mkUnitFromPresets { presets = ["graphical"]; })
       ];
     }
     # Core config files from repo

@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  systemdUser,
   ...
 }:
 with lib;
@@ -14,6 +15,6 @@ with lib;
           Unit = "vdirsyncer.service";
         };
       }
-      (config.lib.neg.systemdUser.mkUnitFromPresets {presets = ["timers"];})
+      (systemdUser.mkUnitFromPresets {presets = ["timers"];})
     ];
   }
