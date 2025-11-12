@@ -86,6 +86,8 @@ Scope {
                     property real panelTintStrength: 1.0
                     property real panelTintFeatherTop: 0.08
                     property real panelTintFeatherBottom: 0.35
+                    // Debug: draw a right triangle above the network indicator cluster
+                    property bool debugNetTriangle: true
 
                     readonly property real contentWidth: Math.max(
                         leftWidgetsRow.width,
@@ -174,6 +176,34 @@ Scope {
                             DiagSep { visible: Settings.settings.showWeatherInBar === true; Layout.alignment: Qt.AlignVCenter }
                             LocalMods.WeatherButton { visible: Settings.settings.showWeatherInBar === true; Layout.alignment: Qt.AlignVCenter }
                             DiagSep { stripeEnabled: false; visible: Settings.settings.showWeatherInBar === true; Layout.alignment: Qt.AlignVCenter }
+                        }
+
+                        // Right triangle above the network indicator cluster
+                        Canvas {
+                            id: netTriangle
+                            visible: leftPanel.debugNetTriangle && netCluster.visible
+                            antialiasing: true
+                            z: 20001
+                            property int sz: Math.max(8, Math.round(Theme.uiRadiusSmall * 1.5 * leftPanel.s))
+                            width: sz
+                            height: sz
+                            anchors.bottom: leftBarBackground.top
+                            anchors.bottomMargin: Math.round(2 * leftPanel.s)
+                            // Center horizontally over netCluster
+                            x: Math.round(netCluster.mapToItem(leftPanelContent, netCluster.width / 2, 0).x - width / 2)
+                            onPaint: {
+                                var ctx = getContext('2d');
+                                ctx.reset();
+                                ctx.clearRect(0, 0, width, height);
+                                ctx.fillStyle = '#ffcc00'; // visible debug color
+                                // Right triangle with right angle at bottom-right
+                                ctx.beginPath();
+                                ctx.moveTo(0, height);
+                                ctx.lineTo(width, height);
+                                ctx.lineTo(width, 0);
+                                ctx.closePath();
+                                ctx.fill();
+                            }
                         }
                     }
 
