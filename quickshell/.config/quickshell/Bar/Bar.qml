@@ -195,8 +195,8 @@ Scope {
                                 var ctx = getContext('2d');
                                 ctx.reset();
                                 ctx.clearRect(0, 0, width, height);
-                                // Same green tint as the gap debug fill
-                                ctx.fillStyle = '#3300ff00';
+                                // Make it fully white for maximum visibility
+                                ctx.fillStyle = '#ffffff';
                                 // Right triangle with right angle at bottom-right
                                 ctx.beginPath();
                                 ctx.moveTo(0, height);
