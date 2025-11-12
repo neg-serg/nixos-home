@@ -246,12 +246,12 @@ Scope {
                         height: side
                         anchors.top: parent.top
                         anchors.topMargin: Math.max(1, Math.round(1 * leftPanel.s))
-                        // Place the triangle right after the network cluster (logical position in row),
-                        // falling back to the left part of the seam if the slot is absent.
+                        // Place the triangle right after the network cluster (visual right edge),
+                        // fall back to the left part of the seam if the cluster is unavailable.
                         property real seamPosFraction: 0.25
                         x: Math.round(
-                            netTriangleSlot && netTriangleSlot.visible
-                                ? (netTriangleSlot.mapToItem(leftPanel, netTriangleSlot.width, 0).x - width)
+                            (netCluster && netCluster.visible && netCluster.width > 0)
+                                ? (netCluster.mapToItem(leftPanel, netCluster.width, 0).x - width)
                                 : ((seamPanel ? (seamPanel.gapStart + Math.max(0, seamPanel.seamWidthPx * seamPosFraction)) : leftPanel.width) - width)
                         )
                         // Green, semi-transparent like seam; reuse leftPanel.seamOpacity as alpha
