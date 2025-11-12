@@ -598,12 +598,16 @@ Scope {
                         anchors.fill: parent
                         z: 200000
 
-                        // Entire seamPanel bounds
+                        // Cyan frame strictly around the computed seam zone
                         Rectangle {
-                            anchors.fill: parent
+                            x: seamPanel.seamLeftMargin
+                            width: Math.max(1, seamPanel.seamWidthPx)
+                            height: seamPanel.seamHeightPx
+                            anchors.bottom: parent.bottom
                             color: "transparent"
-                            border.color: "#ff00ffff" // magenta
+                            border.color: "#ff00ffff" // cyan
                             border.width: 1
+                            z: 100
                         }
 
                         // Raw gap region [gapStart .. gapEnd]
