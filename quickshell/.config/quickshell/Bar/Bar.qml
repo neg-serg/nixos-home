@@ -88,8 +88,6 @@ Scope {
                     property real panelTintFeatherBottom: 0.35
                     // Debug: draw a right triangle above the network indicator cluster
                     property bool debugNetTriangle: true
-                    // Toggle for showing legacy diagonal separators between widgets
-                    property bool showDelimiters: false
 
                     readonly property real contentWidth: Math.max(
                         leftWidgetsRow.width,
@@ -152,11 +150,11 @@ Scope {
                             anchors.leftMargin: leftPanel.sideMargin
                             spacing: leftPanel.widgetSpacing
                             ClockWidget { Layout.alignment: Qt.AlignVCenter }
-                            DiagSep { stripeEnabled: false; Layout.alignment: Qt.AlignVCenter; visible: leftPanel.showDelimiters }
+                            DiagSep { stripeEnabled: false; Layout.alignment: Qt.AlignVCenter }
                             WsIndicator { id: wsindicator; Layout.alignment: Qt.AlignVCenter }
-                            DiagSep { Layout.alignment: Qt.AlignVCenter; visible: leftPanel.showDelimiters }
+                            DiagSep { Layout.alignment: Qt.AlignVCenter }
                             KeyboardLayoutHypr { id: kbIndicator; Layout.alignment: Qt.AlignVCenter }
-                            DiagSep { Layout.alignment: Qt.AlignVCenter; visible: leftPanel.showDelimiters }
+                            DiagSep { Layout.alignment: Qt.AlignVCenter }
                             Row {
                                 id: netCluster
                                 Layout.alignment: Qt.AlignVCenter
@@ -181,11 +179,11 @@ Scope {
                                 Layout.preferredHeight: leftBarBackground.height
                                 height: Layout.preferredHeight
                                 stripeEnabled: false
-                                visible: leftPanel.showDelimiters && netCluster.visible
+                                visible: netCluster.visible
                             }
-                            DiagSep { visible: leftPanel.showDelimiters && Settings.settings.showWeatherInBar === true; Layout.alignment: Qt.AlignVCenter }
+                            DiagSep { visible: Settings.settings.showWeatherInBar === true; Layout.alignment: Qt.AlignVCenter }
                             LocalMods.WeatherButton { visible: Settings.settings.showWeatherInBar === true; Layout.alignment: Qt.AlignVCenter }
-                            DiagSep { stripeEnabled: false; visible: leftPanel.showDelimiters && Settings.settings.showWeatherInBar === true; Layout.alignment: Qt.AlignVCenter }
+                            DiagSep { stripeEnabled: false; visible: Settings.settings.showWeatherInBar === true; Layout.alignment: Qt.AlignVCenter }
                         }
 
                         // Legacy debug triangle inside content (disabled)
@@ -327,7 +325,6 @@ Scope {
                     property real panelTintStrength: 1.0
                     property real panelTintFeatherTop: 0.08
                     property real panelTintFeatherBottom: 0.35
-                    property bool showDelimiters: false
 
                     readonly property real contentWidth: Math.max(
                         rightWidgetsRow.width,
@@ -384,7 +381,7 @@ Scope {
                             spacing: rightPanel.widgetSpacing
                             RightDiagSep {
                                 Layout.alignment: Qt.AlignVCenter
-                                visible: rightPanel.showDelimiters && mediaModule.visible
+                                visible: mediaModule.visible
                             }
                             Media {
                                 id: mediaModule
