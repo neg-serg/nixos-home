@@ -492,11 +492,9 @@ Scope {
                             onPaint: {
                                 var ctx = getContext('2d');
                                 ctx.reset();
+                                // Start fully transparent (mask alpha = 0 everywhere)
                                 ctx.clearRect(0, 0, width, height);
-                                // default: cut everything
-                                ctx.fillStyle = '#000000ff';
-                                ctx.fillRect(0, 0, width, height);
-                                // keep triangular wedge adjacent to the right edge (seam boundary)
+                                // Keep only the triangular wedge: draw opaque white (mask alpha = 1)
                                 ctx.fillStyle = '#ffffffff';
                                 ctx.beginPath();
                                 if (Settings.settings.debugTriangleLeftSlopeUp) {
@@ -813,11 +811,9 @@ Scope {
                                 onPaint: {
                                     var ctx = getContext('2d');
                                     ctx.reset();
+                                    // Start fully transparent (mask alpha = 0 everywhere)
                                     ctx.clearRect(0, 0, width, height);
-                                    // default: cut everything
-                                    ctx.fillStyle = '#000000ff';
-                                    ctx.fillRect(0, 0, width, height);
-                                    // keep triangular wedge adjacent to the left edge (seam boundary)
+                                    // Keep only the triangular wedge: draw opaque white (mask alpha = 1)
                                     ctx.fillStyle = '#ffffffff';
                                     ctx.beginPath();
                                     if (Settings.settings.debugTriangleRightSlopeUp) {
