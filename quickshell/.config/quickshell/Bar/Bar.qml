@@ -81,6 +81,11 @@ Scope {
                         seamOpacity
                     )
                     readonly property real seamSlackWidth: Math.max(0, leftBarBackground.width - leftBarFill.width)
+                    property bool panelTintEnabled: true
+                    property color panelTintColor: Color.withAlpha("#ff2a36", 0.75)
+                    property real panelTintStrength: 1.0
+                    property real panelTintFeatherTop: 0.08
+                    property real panelTintFeatherBottom: 0.35
 
                     readonly property real contentWidth: Math.max(
                         leftWidgetsRow.width,
@@ -93,78 +98,107 @@ Scope {
                         height: Layout.preferredHeight
                     }
 
-                    Rectangle {
-                        id: leftBarBackground
-                        width: Math.max(1, leftPanel.width)
-                        height: leftPanel.barHeightPx
-                        color: "transparent"
-                        anchors.top: parent.top
-                        anchors.left: parent.left
-                    }
-                    Rectangle {
-                        id: leftBarFill
-                        width: Math.min(leftBarBackground.width, Math.round(leftPanel.sideMargin + leftPanel.contentWidth))
-                        height: leftBarBackground.height
-                        color: leftPanel.barBgColor
-                        anchors.top: leftBarBackground.top
-                        anchors.left: leftBarBackground.left
-                    }
                     Item {
-                        id: leftSeamFill
-                        width: Math.min(leftBarBackground.width, leftPanel.seamWidth)
-                        height: leftBarBackground.height
-                        anchors.bottom: leftBarBackground.bottom
-                        anchors.right: leftBarBackground.right
-                        z: 1000
-                        ShaderEffect {
-                            anchors.fill: parent
-                            fragmentShader: Qt.resolvedUrl("../shaders/seam.frag.qsb")
-                            property color baseColor: leftPanel.seamFillColor
-                            // params0: tilt, taperTop, taperBottom, opacity
-                            property vector4d params0: Qt.vector4d(1, leftPanel.seamTaperTop, leftPanel.seamTaperBottom, leftPanel.seamOpacity)
-                            blending: true
+                        id: leftPanelContent
+                        anchors.fill: parent
+
+                        Rectangle {
+                            id: leftBarBackground
+                            width: Math.max(1, leftPanel.width)
+                            height: leftPanel.barHeightPx
+                            color: "transparent"
+                            anchors.top: parent.top
+                            anchors.left: parent.left
                         }
-                    }
-
-                    Component.onCompleted: rootScope.barHeight = leftBarBackground.height
-                    Connections {
-                        target: leftBarBackground
-                        function onHeightChanged() { rootScope.barHeight = leftBarBackground.height }
-                    }
-
-                    RowLayout {
-                        id: leftWidgetsRow
-                        anchors.verticalCenter: leftBarBackground.verticalCenter
-                        anchors.left: leftBarBackground.left
-                        anchors.leftMargin: leftPanel.sideMargin
-                        spacing: leftPanel.widgetSpacing
-                        ClockWidget { Layout.alignment: Qt.AlignVCenter }
-                        DiagSep { stripeEnabled: false; Layout.alignment: Qt.AlignVCenter }
-                        WsIndicator { id: wsindicator; Layout.alignment: Qt.AlignVCenter }
-                        DiagSep { Layout.alignment: Qt.AlignVCenter }
-                        KeyboardLayoutHypr { id: kbIndicator; Layout.alignment: Qt.AlignVCenter }
-                        DiagSep { Layout.alignment: Qt.AlignVCenter }
-                        Row {
-                            id: netCluster
-                            Layout.alignment: Qt.AlignVCenter
-                            spacing: Math.round(Theme.panelNetClusterSpacing * leftPanel.s)
-                            LocalMods.VpnAmneziaIndicator {
-                                id: amneziaVpn
-                                showLabel: false
-                                iconRounded: true
+                        Rectangle {
+                            id: leftBarFill
+                            width: Math.min(leftBarBackground.width, Math.round(leftPanel.sideMargin + leftPanel.contentWidth))
+                            height: leftBarBackground.height
+                            color: leftPanel.barBgColor
+                            anchors.top: leftBarBackground.top
+                            anchors.left: leftBarBackground.left
+                        }
+                        Item {
+                            id: leftSeamFill
+                            width: Math.min(leftBarBackground.width, leftPanel.seamWidth)
+                            height: leftBarBackground.height
+                            anchors.bottom: leftBarBackground.bottom
+                            anchors.right: leftBarBackground.right
+                            z: 1000
+                            ShaderEffect {
+                                anchors.fill: parent
+                                fragmentShader: Qt.resolvedUrl("../shaders/seam.frag.qsb")
+                                property color baseColor: leftPanel.seamFillColor
+                                // params0: tilt, taperTop, taperBottom, opacity
+                                property vector4d params0: Qt.vector4d(1, leftPanel.seamTaperTop, leftPanel.seamTaperBottom, leftPanel.seamOpacity)
+                                blending: true
                             }
-                            NetworkUsage { id: net }
                         }
-                        DiagSep {
-                            Layout.alignment: Qt.AlignVCenter
-                            Layout.preferredHeight: leftBarBackground.height
-                            height: Layout.preferredHeight
-                            stripeEnabled: false
-                            visible: netCluster.visible
+
+                        Component.onCompleted: rootScope.barHeight = leftBarBackground.height
+                        Connections {
+                            target: leftBarBackground
+                            function onHeightChanged() { rootScope.barHeight = leftBarBackground.height }
                         }
-                        DiagSep { visible: Settings.settings.showWeatherInBar === true; Layout.alignment: Qt.AlignVCenter }
-                        LocalMods.WeatherButton { visible: Settings.settings.showWeatherInBar === true; Layout.alignment: Qt.AlignVCenter }
-                        DiagSep { stripeEnabled: false; visible: Settings.settings.showWeatherInBar === true; Layout.alignment: Qt.AlignVCenter }
+
+                        RowLayout {
+                            id: leftWidgetsRow
+                            anchors.verticalCenter: leftBarBackground.verticalCenter
+                            anchors.left: leftBarBackground.left
+                            anchors.leftMargin: leftPanel.sideMargin
+                            spacing: leftPanel.widgetSpacing
+                            ClockWidget { Layout.alignment: Qt.AlignVCenter }
+                            DiagSep { stripeEnabled: false; Layout.alignment: Qt.AlignVCenter }
+                            WsIndicator { id: wsindicator; Layout.alignment: Qt.AlignVCenter }
+                            DiagSep { Layout.alignment: Qt.AlignVCenter }
+                            KeyboardLayoutHypr { id: kbIndicator; Layout.alignment: Qt.AlignVCenter }
+                            DiagSep { Layout.alignment: Qt.AlignVCenter }
+                            Row {
+                                id: netCluster
+                                Layout.alignment: Qt.AlignVCenter
+                                spacing: Math.round(Theme.panelNetClusterSpacing * leftPanel.s)
+                                LocalMods.VpnAmneziaIndicator {
+                                    id: amneziaVpn
+                                    showLabel: false
+                                    iconRounded: true
+                                }
+                                NetworkUsage { id: net }
+                            }
+                            DiagSep {
+                                Layout.alignment: Qt.AlignVCenter
+                                Layout.preferredHeight: leftBarBackground.height
+                                height: Layout.preferredHeight
+                                stripeEnabled: false
+                                visible: netCluster.visible
+                            }
+                            DiagSep { visible: Settings.settings.showWeatherInBar === true; Layout.alignment: Qt.AlignVCenter }
+                            LocalMods.WeatherButton { visible: Settings.settings.showWeatherInBar === true; Layout.alignment: Qt.AlignVCenter }
+                            DiagSep { stripeEnabled: false; visible: Settings.settings.showWeatherInBar === true; Layout.alignment: Qt.AlignVCenter }
+                        }
+                    }
+
+                    ShaderEffectSource {
+                        id: leftPanelSource
+                        anchors.fill: parent
+                        sourceItem: leftPanelContent
+                        hideSource: false
+                        live: true
+                        recursive: true
+                    }
+
+                    ShaderEffect {
+                        anchors.fill: parent
+                        visible: leftPanel.panelTintEnabled
+                        fragmentShader: Qt.resolvedUrl("../shaders/panel_tint_mix.frag.qsb")
+                        property var sourceSampler: leftPanelSource
+                        property color tintColor: leftPanel.panelTintColor
+                        property vector4d params0: Qt.vector4d(
+                            leftPanel.panelTintStrength,
+                            leftPanel.panelTintFeatherTop,
+                            leftPanel.panelTintFeatherBottom,
+                            0
+                        )
+                        blending: true
                     }
                 }
 
@@ -196,6 +230,11 @@ Scope {
                         seamOpacity
                     )
                     readonly property real seamSlackWidth: Math.max(0, rightBarBackground.width - rightBarFill.width)
+                    property bool panelTintEnabled: true
+                    property color panelTintColor: Color.withAlpha("#ff2a36", 0.75)
+                    property real panelTintStrength: 1.0
+                    property real panelTintFeatherTop: 0.08
+                    property real panelTintFeatherBottom: 0.35
 
                     readonly property real contentWidth: Math.max(
                         rightWidgetsRow.width,
@@ -208,91 +247,120 @@ Scope {
                         height: Layout.preferredHeight
                     }
 
-                    Rectangle {
-                        id: rightBarBackground
-                        width: Math.max(1, rightPanel.width)
-                        height: rightPanel.barHeightPx
-                        color: "transparent"
-                        anchors.top: parent.top
-                        anchors.right: parent.right
-                    }
-                    Rectangle {
-                        id: rightBarFill
-                        width: Math.min(rightBarBackground.width, Math.round(rightPanel.sideMargin + rightPanel.contentWidth))
-                        height: rightBarBackground.height
-                        color: rightPanel.barBgColor
-                        anchors.top: rightBarBackground.top
-                        anchors.right: rightBarBackground.right
-                    }
                     Item {
-                        id: rightSeamFill
-                        width: Math.min(rightBarBackground.width, rightPanel.seamWidth)
-                        height: rightBarBackground.height
-                        anchors.bottom: rightBarBackground.bottom
-                        anchors.left: rightBarBackground.left
-                        z: 1000
-                        ShaderEffect {
-                            anchors.fill: parent
-                            fragmentShader: Qt.resolvedUrl("../shaders/seam.frag.qsb")
-                            property color baseColor: rightPanel.seamFillColor
-                            property vector4d params0: Qt.vector4d(-1, rightPanel.seamTaperTop, rightPanel.seamTaperBottom, rightPanel.seamOpacity)
-                            blending: true
+                        id: rightPanelContent
+                        anchors.fill: parent
+
+                        Rectangle {
+                            id: rightBarBackground
+                            width: Math.max(1, rightPanel.width)
+                            height: rightPanel.barHeightPx
+                            color: "transparent"
+                            anchors.top: parent.top
+                            anchors.right: parent.right
+                        }
+                        Rectangle {
+                            id: rightBarFill
+                            width: Math.min(rightBarBackground.width, Math.round(rightPanel.sideMargin + rightPanel.contentWidth))
+                            height: rightBarBackground.height
+                            color: rightPanel.barBgColor
+                            anchors.top: rightBarBackground.top
+                            anchors.right: rightBarBackground.right
+                        }
+                        Item {
+                            id: rightSeamFill
+                            width: Math.min(rightBarBackground.width, rightPanel.seamWidth)
+                            height: rightBarBackground.height
+                            anchors.bottom: rightBarBackground.bottom
+                            anchors.left: rightBarBackground.left
+                            z: 1000
+                            ShaderEffect {
+                                anchors.fill: parent
+                                fragmentShader: Qt.resolvedUrl("../shaders/seam.frag.qsb")
+                                property color baseColor: rightPanel.seamFillColor
+                                property vector4d params0: Qt.vector4d(-1, rightPanel.seamTaperTop, rightPanel.seamTaperBottom, rightPanel.seamOpacity)
+                                blending: true
+                            }
+                        }
+
+                        RowLayout {
+                            id: rightWidgetsRow
+                            anchors.verticalCenter: rightBarBackground.verticalCenter
+                            anchors.right: rightBarBackground.right
+                            anchors.rightMargin: rightPanel.sideMargin
+                            spacing: rightPanel.widgetSpacing
+                            RightDiagSep {
+                                Layout.alignment: Qt.AlignVCenter
+                                visible: mediaModule.visible
+                            }
+                            Media {
+                                id: mediaModule
+                                Layout.alignment: Qt.AlignVCenter
+                                Layout.fillWidth: true
+                                sidePanelPopup: sidebarPopup
+                            }
+                            LocalMods.MpdFlags {
+                                id: mpdFlagsBar
+                                Layout.alignment: Qt.AlignVCenter
+                                property bool _mediaVisible: (
+                                    Settings.settings.showMediaInBar
+                                    && MusicManager.currentPlayer
+                                    && !MusicManager.isStopped
+                                    && (MusicManager.isPlaying || MusicManager.isPaused || (MusicManager.trackTitle && MusicManager.trackTitle.length > 0))
+                                )
+                                enabled: _mediaVisible && MusicManager.isCurrentMpdPlayer()
+                                iconPx: Math.round(Theme.fontSizeSmall * Theme.scale(rightPanel.screen) * Theme.mpdFlagsIconScale)
+                                iconColor: Theme.textPrimary
+                            }
+                            
+                            SystemTray {
+                                id: systemTrayModule
+                                shell: rootScope.shell
+                                screen: modelData
+                                Layout.alignment: Qt.AlignVCenter
+                                trayMenu: externalTrayMenu
+                            }
+                            CustomTrayMenu { id: externalTrayMenu }
+                            Microphone {
+                                id: widgetsMicrophone
+                                Layout.alignment: Qt.AlignVCenter
+                            }
+                            Volume {
+                                id: widgetsVolume
+                                Layout.alignment: Qt.AlignVCenter
+                            }
+
+                        }
+
+                        MusicPopup {
+                            id: sidebarPopup
+                            anchorWindow: rightPanel
+                            panelEdge: "bottom"
                         }
                     }
 
-                    RowLayout {
-                        id: rightWidgetsRow
-                        anchors.verticalCenter: rightBarBackground.verticalCenter
-                        anchors.right: rightBarBackground.right
-                        anchors.rightMargin: rightPanel.sideMargin
-                        spacing: rightPanel.widgetSpacing
-                        RightDiagSep {
-                            Layout.alignment: Qt.AlignVCenter
-                            visible: mediaModule.visible
-                        }
-                        Media {
-                            id: mediaModule
-                            Layout.alignment: Qt.AlignVCenter
-                            Layout.fillWidth: true
-                            sidePanelPopup: sidebarPopup
-                        }
-                        LocalMods.MpdFlags {
-                            id: mpdFlagsBar
-                            Layout.alignment: Qt.AlignVCenter
-                            property bool _mediaVisible: (
-                                Settings.settings.showMediaInBar
-                                && MusicManager.currentPlayer
-                                && !MusicManager.isStopped
-                                && (MusicManager.isPlaying || MusicManager.isPaused || (MusicManager.trackTitle && MusicManager.trackTitle.length > 0))
-                            )
-                            enabled: _mediaVisible && MusicManager.isCurrentMpdPlayer()
-                            iconPx: Math.round(Theme.fontSizeSmall * Theme.scale(rightPanel.screen) * Theme.mpdFlagsIconScale)
-                            iconColor: Theme.textPrimary
-                        }
-                        
-                        SystemTray {
-                            id: systemTrayModule
-                            shell: rootScope.shell
-                            screen: modelData
-                            Layout.alignment: Qt.AlignVCenter
-                            trayMenu: externalTrayMenu
-                        }
-                        CustomTrayMenu { id: externalTrayMenu }
-                        Microphone {
-                            id: widgetsMicrophone
-                            Layout.alignment: Qt.AlignVCenter
-                        }
-                        Volume {
-                            id: widgetsVolume
-                            Layout.alignment: Qt.AlignVCenter
-                        }
-
+                    ShaderEffectSource {
+                        id: rightPanelSource
+                        anchors.fill: parent
+                        sourceItem: rightPanelContent
+                        hideSource: false
+                        live: true
+                        recursive: true
                     }
 
-                    MusicPopup {
-                        id: sidebarPopup
-                        anchorWindow: rightPanel
-                        panelEdge: "bottom"
+                    ShaderEffect {
+                        anchors.fill: parent
+                        visible: rightPanel.panelTintEnabled
+                        fragmentShader: Qt.resolvedUrl("../shaders/panel_tint_mix.frag.qsb")
+                        property var sourceSampler: rightPanelSource
+                        property color tintColor: rightPanel.panelTintColor
+                        property vector4d params0: Qt.vector4d(
+                            rightPanel.panelTintStrength,
+                            rightPanel.panelTintFeatherTop,
+                            rightPanel.panelTintFeatherBottom,
+                            0
+                        )
+                        blending: true
                     }
 
                     property string _lastAlbum: ""
@@ -316,8 +384,8 @@ Scope {
 
                     MouseArea {
                         id: trayHotZone
-                        anchors.right: rightBarBackground.right
-                        anchors.bottom: rightBarBackground.bottom
+                        anchors.right: rightPanelContent.right
+                        anchors.bottom: rightPanelContent.bottom
                         width: Math.round(Theme.panelHotzoneWidth * rightPanel.s)
                         height: Math.round(Theme.panelHotzoneHeight * rightPanel.s)
                         anchors.rightMargin: Math.round(width * Theme.panelHotzoneRightShift)
@@ -337,7 +405,7 @@ Scope {
 
                     MouseArea {
                         id: barHoverTracker
-                        anchors.fill: rightBarBackground
+                        anchors.fill: rightPanelContent
                         hoverEnabled: true
                         acceptedButtons: Qt.NoButton
                         propagateComposedEvents: true
@@ -375,6 +443,12 @@ Scope {
                     property real seamTaperBottom: 0.65
                     property real seamEffectOpacity: Math.min(1.0, Math.max(0.45, Theme.uiSeparatorOpacity * 7.5))
                     property color seamFillColor: Color.mix(Theme.surfaceVariant, Theme.background, 0.35)
+                    property bool seamTintEnabled: true
+                    property color seamTintColor: Color.withAlpha("#ff3a44", 0.82)
+                    property real seamTintOpacity: Math.min(1.0, Math.max(0.35, Theme.uiSeparatorOpacity * 5.5))
+                    property real seamTintTopInsetPx: Math.round(Theme.panelWidgetSpacing * 0.55 * s)
+                    property real seamTintBottomInsetPx: Math.round(Theme.panelWidgetSpacing * 0.2 * s)
+                    property real seamTintFeatherPx: Math.max(1, Math.round(Theme.uiRadiusSmall * 0.35 * s))
 
                     readonly property real _leftFillWidth: leftBarFill ? leftBarFill.width : seamPanel.width / 2
                     readonly property real _rightFillWidth: rightBarFill ? rightBarFill.width : seamPanel.width / 2
@@ -392,6 +466,22 @@ Scope {
                             gapStart - Math.max(0, (seamPanel.seamWidthPx - rawGapWidth) / 2)
                         )
                     )
+                    readonly property real seamTintLeftTop: seamPanel._normalizedInset(seamPanel.seamTintTopInsetPx)
+                    readonly property real seamTintLeftBottom: seamPanel._normalizedInset(seamPanel.seamTintBottomInsetPx)
+                    readonly property real seamTintRightTop: 1 - seamPanel.seamTintLeftTop
+                    readonly property real seamTintRightBottom: 1 - seamPanel.seamTintLeftBottom
+                    readonly property real seamTintFeatherLeft: seamPanel._normalizedFeather(seamPanel.seamTintFeatherPx)
+                    readonly property real seamTintFeatherRight: seamPanel.seamTintFeatherLeft
+
+                    function _normalizedInset(px) {
+                        const width = Math.max(1, seamPanel.seamWidthPx);
+                        return Math.min(0.49, Math.max(0, px / width));
+                    }
+
+                    function _normalizedFeather(px) {
+                        const width = Math.max(1, seamPanel.seamWidthPx);
+                        return Math.min(0.25, Math.max(0.005, px / width));
+                    }
 
                     Item {
                         width: seamPanel.seamWidthPx
@@ -399,7 +489,28 @@ Scope {
                         anchors.bottom: parent.bottom
                         anchors.left: parent.left
                         anchors.leftMargin: seamPanel.seamLeftMargin
+                        ShaderEffect {
+                            z: 50
+                            visible: seamPanel.seamTintEnabled
+                            anchors.fill: parent
+                            fragmentShader: Qt.resolvedUrl("../shaders/seam_tint.frag.qsb")
+                            property color tintColor: seamPanel.seamTintColor
+                            property vector4d params0: Qt.vector4d(
+                                seamPanel.seamTintLeftTop,
+                                seamPanel.seamTintLeftBottom,
+                                seamPanel.seamTintRightTop,
+                                seamPanel.seamTintRightBottom
+                            )
+                            property vector4d params1: Qt.vector4d(
+                                seamPanel.seamTintFeatherLeft,
+                                seamPanel.seamTintFeatherRight,
+                                seamPanel.seamTintOpacity,
+                                0
+                            )
+                            blending: true
+                        }
                         Row {
+                            z: 10
                             anchors.fill: parent
                             ShaderEffect {
                                 width: parent.width / 2
