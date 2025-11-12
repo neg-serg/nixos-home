@@ -45,9 +45,9 @@ Singleton {
             property bool debugTriangleLeftSlopeUp: true
             property bool debugTriangleRightSlopeUp: true
             // Triangle opacities (0.0..1.0)
-            // Default 0.5: semi‑transparent overlay to make wedge visible
-            property real debugTriangleLeftOpacity: 0.5
-            property real debugTriangleRightOpacity: 0.5
+            // Default 0.3: lighter semi‑transparent overlay
+            property real debugTriangleLeftOpacity: 0.3
+            property real debugTriangleRightOpacity: 0.3
             property bool strictThemeTokens: false
             property bool useFahrenheit: false
             property bool showMediaInBar: false
