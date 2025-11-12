@@ -20,6 +20,7 @@ with lib;
           size = "30% 95%";
           position = "69% 2%";
           lazy = true;
+          multi = true;
         };
         discord = {
           animation = "fromRight";
@@ -27,6 +28,7 @@ with lib;
           class = "vesktop";
           size = "50% 40%";
           lazy = true;
+          multi = true;
         };
         music = {
           animation = "";
@@ -62,6 +64,7 @@ with lib;
           lazy = true;
           size = "40% 90%";
           unfocus = "hide";
+          multi = true;
         };
       };
     }
