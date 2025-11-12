@@ -37,7 +37,7 @@ Singleton {
             property bool debugLogs: false
             property bool debugNetwork: false
             // Quickshell bar seam debug overlay: fill full width instead of only the gap
-            property bool debugSeamFullWidth: false
+            property bool debugSeamFullWidth: true
             // Debug triangles near the seam (left/right) and their orientation
             property bool debugTriangleLeft: true
             property bool debugTriangleRight: true
