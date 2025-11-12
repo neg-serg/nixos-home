@@ -386,11 +386,12 @@ Scope {
                                 ctx.reset();
                                 ctx.clearRect(0, 0, width, height);
                                 ctx.fillStyle = triangleColor;
-                                // Vertical edge on the left at seam boundary (mirrored)
+                                // Flip orientation so the resulting trapezoid looks the same direction
+                                // as on the left: keep seam boundary vertical at x=0, use descending diagonal.
                                 ctx.beginPath();
-                                ctx.moveTo(0, 0);        // top-left (seam boundary)
-                                ctx.lineTo(width, height); // bottom-right
-                                ctx.lineTo(0, height);     // bottom-left (seam boundary)
+                                ctx.moveTo(0, height);    // bottom-left (seam boundary)
+                                ctx.lineTo(width, 0);      // top-right
+                                ctx.lineTo(0, 0);          // top-left (seam boundary)
                                 ctx.closePath();
                                 ctx.fill();
                             }
