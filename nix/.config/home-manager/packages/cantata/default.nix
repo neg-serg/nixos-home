@@ -11,6 +11,7 @@
   qtwayland ? qt6Packages.qtwayland,
   wrapQtAppsHook ? qt6Packages.wrapQtAppsHook,
   perl,
+  python3,
 
   # Cantata doesn't build with cdparanoia enabled right now.
   withCdda ? false,
@@ -104,6 +105,21 @@ in
       patchShebangs playlists
       substituteInPlace gui/main.cpp \
         --replace "file.open(QIODevice::WriteOnly);" "(void)file.open(QIODevice::WriteOnly);"
+      substituteInPlace mpd-interface/cuefile.cpp \
+        --replace "f.open(QIODevice::ReadOnly | QIODevice::Text);" \
+                  "if (!f.open(QIODevice::ReadOnly | QIODevice::Text)) { return false; }"
+      python3 - <<'PY'
+import re
+from pathlib import Path
+pat = re.compile(r'^(\s*)invalidateFilter\(\);\s*$', re.MULTILINE)
+for path in Path(".").rglob("*.cpp"):
+    text = path.read_text()
+    if "invalidateFilter();" not in text:
+        continue
+    new_text = pat.sub(lambda m: f"{m.group(1)}beginFilterChange();\n{m.group(1)}endFilterChange();", text)
+    if new_text != text:
+        path.write_text(new_text)
+PY
     '';
 
     buildInputs =
@@ -120,6 +136,7 @@ in
       pkg-config
       qttools
       wrapQtAppsHook
+      python3
     ];
 
     cmakeFlags = lib.flatten (map (opt: map (name: fstat opt.enable name) opt.names) options);
