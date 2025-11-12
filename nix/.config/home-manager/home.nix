@@ -3,6 +3,7 @@
   config,
   pkgs,
   caches,
+  systemdUser,
   ...
 }: let
   # Reuse flake-provided caches passed via mkHMArgs (single source of truth)
@@ -106,7 +107,7 @@ in {
         RestartSec = "2s";
       };
     }
-    (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["defaultWanted"]; })
+    (systemdUser.mkUnitFromPresets { presets = ["defaultWanted"]; })
   ];
   xdg.stateHome = "${config.home.homeDirectory}/.local/state";
   home = {

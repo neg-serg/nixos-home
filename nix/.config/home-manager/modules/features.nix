@@ -36,6 +36,9 @@ in {
     hack.enable = mkBool "enable Hack/security tooling stack" true;
     dev = {
       enable = mkBool "enable Dev stack (toolchains, editors, hack tooling)" true;
+      emacs = {
+        enable = mkBool "enable custom Emacs stack (emacs-overlay build + user service)" true;
+      };
       ai = {
         enable = mkBool "enable AI tools (e.g., LM Studio)" true;
       };
@@ -62,6 +65,10 @@ in {
       prefs = {
         fastfox.enable = mkBool "enable FastFox-like perf prefs for Mozilla browsers" true;
       };
+    };
+
+    finance = {
+      tws.enable = mkBool "enable Trader Workstation (IBKR) desktop client" false;
     };
 
     media = {

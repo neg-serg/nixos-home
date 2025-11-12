@@ -2,6 +2,7 @@
   lib,
   config,
   pkgs,
+  systemdUser,
   ...
 }: let
   cfg = config.features.cli.nixIndexDB;
@@ -42,7 +43,7 @@ in {
             Unit = "nix-index-update.service";
           };
         }
-        (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["timers"]; })
+        (systemdUser.mkUnitFromPresets { presets = ["timers"]; })
       ];
     }
   ]);

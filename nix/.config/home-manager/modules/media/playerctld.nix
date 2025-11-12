@@ -2,6 +2,7 @@
   pkgs,
   lib,
   config,
+  systemdUser,
   ...
 }:
 with lib;
@@ -19,6 +20,6 @@ with lib;
           RestartSec = "2";
         };
       }
-      (config.lib.neg.systemdUser.mkUnitFromPresets {presets = ["defaultWanted"];})
+      (systemdUser.mkUnitFromPresets {presets = ["defaultWanted"];})
     ];
   }

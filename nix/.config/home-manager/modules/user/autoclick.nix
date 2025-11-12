@@ -2,6 +2,7 @@
   lib,
   config,
   pkgs,
+  systemdUser,
   ...
 }:
 with lib; let
@@ -25,7 +26,7 @@ in
             NoNewPrivileges = false;
           };
         }
-        (config.lib.neg.systemdUser.mkUnitFromPresets {presets = ["defaultWanted"];})
+        (systemdUser.mkUnitFromPresets {presets = ["defaultWanted"];})
       ];
     }
     (mkLocalBin "autoclick-toggle" scriptText)

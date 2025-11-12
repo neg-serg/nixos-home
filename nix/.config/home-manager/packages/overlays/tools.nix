@@ -54,5 +54,8 @@ in {
     # Rofi plugins / desktop helpers
     rofi_games = call ../rofi-games {};
     "rofi-games" = rofi_games;
+
+    # Trader Workstation (IBKR) packaged from upstream installer
+    tws = call ../tws {};
   };
 }

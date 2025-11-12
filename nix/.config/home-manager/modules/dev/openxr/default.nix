@@ -3,6 +3,7 @@
   pkgs,
   config,
   xdg,
+  systemdUser,
   ...
 }: let
   cfg = config.features.dev.openxr or {};
@@ -73,7 +74,7 @@ in {
               Unit = {Description = "Monado OpenXR Runtime Service";};
               Service.ExecStart = let exe = lib.getExe' pkgs.monado "monado-service"; in "${exe}";
             }
-            (config.lib.neg.systemdUser.mkUnitFromPresets {presets = ["graphical"];})
+            (systemdUser.mkUnitFromPresets {presets = ["graphical"];})
           ];
         })
         {

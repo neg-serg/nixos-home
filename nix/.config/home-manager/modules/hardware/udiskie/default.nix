@@ -1,4 +1,4 @@
-{ lib, config, ... }: {
+{ lib, config, systemdUser, ... }: {
   services = {
     udiskie = {
       enable = true;
@@ -15,6 +15,6 @@
         RestartSec = 2;
       };
     }
-    (config.lib.neg.systemdUser.mkUnitFromPresets { presets = ["graphical"]; })
+    (systemdUser.mkUnitFromPresets { presets = ["graphical"]; })
   ];
 }

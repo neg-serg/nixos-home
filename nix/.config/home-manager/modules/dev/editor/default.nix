@@ -8,6 +8,7 @@ with lib; {
   imports = [
     ./neovim
     ./helix
+    ./emacs
   ];
   config = lib.mkMerge [
     (mkIf config.features.dev.enable {

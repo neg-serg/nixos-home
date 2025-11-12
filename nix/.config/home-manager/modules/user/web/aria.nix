@@ -3,6 +3,7 @@
   lib,
   pkgs,
   xdg,
+  systemdUser,
   ...
 }: let
   inherit (lib) getExe';
@@ -48,7 +49,7 @@ in {
             TimeoutStopSec = "5s";
           };
         }
-        (config.lib.neg.systemdUser.mkUnitFromPresets {presets = ["graphical"];})
+        (systemdUser.mkUnitFromPresets {presets = ["graphical"];})
       ];
     })
   ]);

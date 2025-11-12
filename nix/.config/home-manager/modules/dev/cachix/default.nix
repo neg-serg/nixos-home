@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  systemdUser,
   ...
 }: let
   cfg = config.services.cachix.watchStore;
@@ -116,7 +117,7 @@ in {
             RestrictAddressFamilies = lib.mkIf cfg.hardening.enable ["AF_INET" "AF_INET6"];
           };
         }
-        (config.lib.neg.systemdUser.mkUnitFromPresets {presets = ["netOnline" "sops" "defaultWanted"];})
+        (systemdUser.mkUnitFromPresets {presets = ["netOnline" "sops" "defaultWanted"];})
       ];
     })
   ]);

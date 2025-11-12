@@ -107,6 +107,15 @@ in {
       url = "github:neg-serg/raise";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    emacs-overlay = {
+      url = "github:nix-community/emacs-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs-stable.follows = "nixpkgs";
+    };
+    nix-qml-support = {
+      url = "git+https://git.outfoxxed.me/outfoxxed/nix-qml-support";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs @ {
@@ -147,6 +156,8 @@ in {
     hmInputs = let
       selected = {
         inherit (inputs) nupm;
+        emacsOverlay = inputs."emacs-overlay";
+        nixQmlSupport = inputs."nix-qml-support";
       };
     in
       builtins.mapAttrs (_: input: input // {type = "derivation";}) selected;

@@ -11,5 +11,6 @@
     ./rofi.nix
     ./wayland.nix
     ./quickshell.nix
+    ./tws.nix
   ];
 }

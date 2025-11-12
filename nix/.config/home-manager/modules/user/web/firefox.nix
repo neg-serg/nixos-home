@@ -5,11 +5,10 @@
   faProvider ? null,
   ...
 }:
-with lib;
 let
-  firefoxEnabled = config.features.web.enable && config.features.web.firefox.enable;
-in
-  if firefoxEnabled then
+  firefoxEnabled = (config.features.web.enable or false) && (config.features.web.firefox.enable or false);
+in {
+  config = lib.mkIf firefoxEnabled (
     let
       common = import ./mozilla-common-lib.nix {inherit lib pkgs config faProvider;};
       inherit (import ./firefox/prefgroups.nix {inherit lib;}) modules prefgroups;
@@ -299,7 +298,7 @@ in
 
       firefoxBase = baseModule.programs.firefox or {};
     in
-      mkMerge [
+      lib.mkMerge [
         baseModule
         {
           programs.firefox =
@@ -309,5 +308,5 @@ in
             };
         }
       ]
-  else
-    {}
+  );
+}
