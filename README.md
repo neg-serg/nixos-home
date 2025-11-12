@@ -76,6 +76,8 @@ Common flags (set in `home.nix` or via module overlays)
 - GUI: `features.gui.enable`, `features.gui.qt.enable`
 - Web: `features.web.enable`,
   `features.web.default = "floorp" | "firefox" | "librewolf" | "nyxt" | "yandex"`
+- Editors: `features.dev.emacs.enable` builds a custom emacs-overlay `emacs30-pgtk` (extra
+  tree-sitter/QML grammars) and starts `services.emacs`.
 
 Optional: Nyxt QtWebEngine provider
 
@@ -88,6 +90,10 @@ Optional: Nyxt QtWebEngine provider
     `# nyxtQt = { url = "github:<owner>/<repo>"; };`
   - The module will pick it up via `nyxt4` special arg.
 - Audio: `features.media.audio.core/apps/creation/mpd.enable`
+  - MPD stack ships the TUI client `rmpc`, the patched Qt client `pkgs.neg.cantata`, exports
+    `MPD_HOST`/`MPD_PORT`, and can autostart Cantata with
+    `media.audio.mpd.cantata.autostart = true;`.
+- Trading: `features.finance.tws.enable` installs Interactive Brokers Trader Workstation (off by default).
 - Emulators: `features.emulators.retroarch.full`
 - GPG: `features.gpg.enable`
 - Exclude packages (by pname) from curated lists: `features.excludePkgs = [ "name" ... ]`
