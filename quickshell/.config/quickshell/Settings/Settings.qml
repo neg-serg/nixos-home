@@ -36,6 +36,8 @@ Singleton {
             // Unified logging toggle for low-importance debug logs
             property bool debugLogs: false
             property bool debugNetwork: false
+            // Quickshell bar seam debug overlay: fill full width instead of only the gap
+            property bool debugSeamFullWidth: false
             property bool strictThemeTokens: false
             property bool useFahrenheit: false
             property bool showMediaInBar: false
