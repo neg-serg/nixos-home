@@ -45,9 +45,9 @@ Singleton {
             property bool debugTriangleLeftSlopeUp: true
             property bool debugTriangleRightSlopeUp: true
             // Triangle opacities (0.0..1.0)
-            // Default 0.2: subtle accent over wallpaper while mask reveals background under wedges
-            property real debugTriangleLeftOpacity: 0.2
-            property real debugTriangleRightOpacity: 0.2
+            // Default 0.35: slightly stronger accent over wallpaper
+            property real debugTriangleLeftOpacity: 0.35
+            property real debugTriangleRightOpacity: 0.35
             property bool strictThemeTokens: false
             property bool useFahrenheit: false
             property bool showMediaInBar: false
