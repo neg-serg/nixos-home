@@ -178,10 +178,10 @@ Scope {
                             DiagSep { stripeEnabled: false; visible: Settings.settings.showWeatherInBar === true; Layout.alignment: Qt.AlignVCenter }
                         }
 
-                        // Right triangle above the network indicator cluster (kept INSIDE panel surface)
+                        // Legacy debug triangle inside content (disabled)
                         Canvas {
                             id: netTriangle
-                            visible: leftPanel.debugNetTriangle && netCluster.visible
+                            visible: false && leftPanel.debugNetTriangle && netCluster.visible
                             antialiasing: true
                             z: 100000
                             property int sz: Math.max(8, Math.round(Theme.uiRadiusSmall * 1.5 * leftPanel.s))
@@ -197,20 +197,7 @@ Scope {
                             onXChanged: requestPaint()
                             onWidthChanged: requestPaint()
                             onHeightChanged: requestPaint()
-                            onPaint: {
-                                var ctx = getContext('2d');
-                                ctx.reset();
-                                ctx.clearRect(0, 0, width, height);
-                                // Make it fully white for maximum visibility
-                                ctx.fillStyle = '#ffffff';
-                                // Right triangle with right angle at bottom-right
-                                ctx.beginPath();
-                                ctx.moveTo(0, height);
-                                ctx.lineTo(width, height);
-                                ctx.lineTo(width, 0);
-                                ctx.closePath();
-                                ctx.fill();
-                            }
+                            onPaint: { /* disabled */ }
                         }
                     }
 
@@ -238,20 +225,23 @@ Scope {
                         blending: true
                     }
 
-                    // Equilateral triangle overlay, above all panel content and outside of tint capture
+                    // Right-angled (rectangular) triangle overlay, above all panel content and outside tint capture
                     Canvas {
                         id: netTriangleOverlay
                         visible: leftPanel.debugNetTriangle && netCluster.visible
                         antialiasing: true
                         z: 10000000
-                        // Side equals panel height; equilateral height = side * sqrt(3)/2
+                        // Make one side equal to panel height; use that as canvas height.
+                        // Width equals height for a 45-45-90 right triangle footprint.
                         property int side: leftPanel.barHeightPx
                         width: side
-                        height: Math.round(side * 0.866025403784) // sqrt(3)/2
+                        height: side
                         anchors.top: leftBarBackground.top
                         anchors.topMargin: Math.max(1, Math.round(1 * leftPanel.s))
-                        // Center horizontally over netCluster in the leftPanel window coords
-                        x: Math.round(netCluster.mapToItem(leftPanel, netCluster.width / 2, 0).x - width / 2)
+                        // Position by the right edge of NetworkUsage (more stable than the whole cluster)
+                        x: Math.round(net.mapToItem(leftPanel, net.width, 0).x - width)
+                        // Green, semi-transparent like seam; reuse leftPanel.seamOpacity as alpha
+                        property color triangleColor: Color.withAlpha("#00FF00", leftPanel.seamOpacity)
                         onVisibleChanged: requestPaint()
                         onXChanged: requestPaint()
                         onWidthChanged: requestPaint()
@@ -260,13 +250,13 @@ Scope {
                             var ctx = getContext('2d');
                             ctx.reset();
                             ctx.clearRect(0, 0, width, height);
-                            // White fill for maximum visibility, unaffected by panel tint
-                            ctx.fillStyle = '#ffffff';
-                            // Equilateral triangle pointing downward (base on top edge)
+                            // Green transparent fill, independent of panel tint
+                            ctx.fillStyle = triangleColor;
+                            // Right-angled triangle; right angle at top-right corner.
                             ctx.beginPath();
-                            ctx.moveTo(0, 0);
-                            ctx.lineTo(width, 0);
-                            ctx.lineTo(width / 2, height);
+                            ctx.moveTo(0, height);      // bottom-left
+                            ctx.lineTo(width, 0);       // top-right (right angle corner)
+                            ctx.lineTo(width, height);  // bottom-right
                             ctx.closePath();
                             ctx.fill();
                         }
