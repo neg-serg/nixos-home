@@ -80,6 +80,7 @@ Scope {
                         Color.mix(Theme.surfaceVariant, Theme.background, 0.45),
                         seamOpacity
                     )
+                    readonly property real seamSlackWidth: Math.max(0, leftBarBackground.width - leftBarFill.width)
                     property bool panelTintEnabled: true
                     property color panelTintColor: Color.withAlpha("#ff2a36", 0.75)
                     property real panelTintStrength: 1.0
@@ -87,11 +88,19 @@ Scope {
                     property real panelTintFeatherBottom: 0.35
                     // Debug: draw a right triangle above the network indicator cluster
                     property bool debugNetTriangle: true
+                    // Toggle for showing legacy diagonal separators between widgets
+                    property bool showDelimiters: false
 
                     readonly property real contentWidth: Math.max(
                         leftWidgetsRow.width,
                         leftWidgetsRow.implicitWidth || leftWidgetsRow.width || 0
                     ) + leftPanel.widgetSpacing
+
+                    component DiagSep: ThemedSeparator {
+                        kind: "diagonal"
+                        Layout.preferredHeight: leftBarBackground.height
+                        height: Layout.preferredHeight
+                    }
 
                     Item {
                         id: leftPanelContent
@@ -113,6 +122,22 @@ Scope {
                             anchors.top: leftBarBackground.top
                             anchors.left: leftBarBackground.left
                         }
+                        Item {
+                            id: leftSeamFill
+                            width: Math.min(leftBarBackground.width, leftPanel.seamWidth)
+                            height: leftBarBackground.height
+                            anchors.bottom: leftBarBackground.bottom
+                            anchors.right: leftBarBackground.right
+                            z: 1000
+                            ShaderEffect {
+                                anchors.fill: parent
+                                fragmentShader: Qt.resolvedUrl("../shaders/seam.frag.qsb")
+                                property color baseColor: leftPanel.seamFillColor
+                                // params0: tilt, taperTop, taperBottom, opacity
+                                property vector4d params0: Qt.vector4d(1, leftPanel.seamTaperTop, leftPanel.seamTaperBottom, leftPanel.seamOpacity)
+                                blending: true
+                            }
+                        }
 
                         Component.onCompleted: rootScope.barHeight = leftBarBackground.height
                         Connections {
@@ -127,8 +152,11 @@ Scope {
                             anchors.leftMargin: leftPanel.sideMargin
                             spacing: leftPanel.widgetSpacing
                             ClockWidget { Layout.alignment: Qt.AlignVCenter }
+                            DiagSep { stripeEnabled: false; Layout.alignment: Qt.AlignVCenter; visible: leftPanel.showDelimiters }
                             WsIndicator { id: wsindicator; Layout.alignment: Qt.AlignVCenter }
+                            DiagSep { Layout.alignment: Qt.AlignVCenter; visible: leftPanel.showDelimiters }
                             KeyboardLayoutHypr { id: kbIndicator; Layout.alignment: Qt.AlignVCenter }
+                            DiagSep { Layout.alignment: Qt.AlignVCenter; visible: leftPanel.showDelimiters }
                             Row {
                                 id: netCluster
                                 Layout.alignment: Qt.AlignVCenter
@@ -148,7 +176,16 @@ Scope {
                                 Layout.preferredWidth: 0
                                 visible: netCluster.visible
                             }
+                            DiagSep {
+                                Layout.alignment: Qt.AlignVCenter
+                                Layout.preferredHeight: leftBarBackground.height
+                                height: Layout.preferredHeight
+                                stripeEnabled: false
+                                visible: leftPanel.showDelimiters && netCluster.visible
+                            }
+                            DiagSep { visible: leftPanel.showDelimiters && Settings.settings.showWeatherInBar === true; Layout.alignment: Qt.AlignVCenter }
                             LocalMods.WeatherButton { visible: Settings.settings.showWeatherInBar === true; Layout.alignment: Qt.AlignVCenter }
+                            DiagSep { stripeEnabled: false; visible: leftPanel.showDelimiters && Settings.settings.showWeatherInBar === true; Layout.alignment: Qt.AlignVCenter }
                         }
 
                         // Legacy debug triangle inside content (disabled)
@@ -284,16 +321,24 @@ Scope {
                         Color.mix(Theme.surfaceVariant, Theme.background, 0.45),
                         seamOpacity
                     )
+                    readonly property real seamSlackWidth: Math.max(0, rightBarBackground.width - rightBarFill.width)
                     property bool panelTintEnabled: true
                     property color panelTintColor: Color.withAlpha("#ff2a36", 0.75)
                     property real panelTintStrength: 1.0
                     property real panelTintFeatherTop: 0.08
                     property real panelTintFeatherBottom: 0.35
+                    property bool showDelimiters: false
 
                     readonly property real contentWidth: Math.max(
                         rightWidgetsRow.width,
                         rightWidgetsRow.implicitWidth || rightWidgetsRow.width || 0
                     ) + rightPanel.widgetSpacing
+
+                    component RightDiagSep: ThemedSeparator {
+                        kind: "diagonal"
+                        Layout.preferredHeight: rightBarBackground.height
+                        height: Layout.preferredHeight
+                    }
 
                     Item {
                         id: rightPanelContent
@@ -315,6 +360,21 @@ Scope {
                             anchors.top: rightBarBackground.top
                             anchors.right: rightBarBackground.right
                         }
+                        Item {
+                            id: rightSeamFill
+                            width: Math.min(rightBarBackground.width, rightPanel.seamWidth)
+                            height: rightBarBackground.height
+                            anchors.bottom: rightBarBackground.bottom
+                            anchors.left: rightBarBackground.left
+                            z: 1000
+                            ShaderEffect {
+                                anchors.fill: parent
+                                fragmentShader: Qt.resolvedUrl("../shaders/seam.frag.qsb")
+                                property color baseColor: rightPanel.seamFillColor
+                                property vector4d params0: Qt.vector4d(-1, rightPanel.seamTaperTop, rightPanel.seamTaperBottom, rightPanel.seamOpacity)
+                                blending: true
+                            }
+                        }
 
                         RowLayout {
                             id: rightWidgetsRow
@@ -322,6 +382,10 @@ Scope {
                             anchors.right: rightBarBackground.right
                             anchors.rightMargin: rightPanel.sideMargin
                             spacing: rightPanel.widgetSpacing
+                            RightDiagSep {
+                                Layout.alignment: Qt.AlignVCenter
+                                visible: rightPanel.showDelimiters && mediaModule.visible
+                            }
                             Media {
                                 id: mediaModule
                                 Layout.alignment: Qt.AlignVCenter
