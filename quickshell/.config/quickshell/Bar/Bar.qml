@@ -382,6 +382,95 @@ Scope {
                         )
                     }
 
+                    // Alternative approach: render a local copy of the seam (fill + tint)
+                    // and clip it to a triangular wedge so it looks like a direct
+                    // continuation of the center seam, without sampling from layershell.
+                    Item {
+                        id: leftSeamWedge
+                        visible: Settings.settings.debugTriangleLeft
+                        z: 9000000
+                        width: Math.max(1, leftPanel.seamWidth)
+                        height: leftPanel.barHeightPx
+                        anchors.top: parent.top
+                        anchors.left: leftPanelContent.left
+                        anchors.leftMargin: Math.round(netTriangleAnchor.seamStartLocal)
+                        anchors.topMargin: 0
+
+                        // Hidden visuals that replicate the seam look (base fill + tint)
+                        Item {
+                            id: leftWedgeVisuals
+                            anchors.fill: parent
+                            visible: false
+                            ShaderEffect {
+                                anchors.fill: parent
+                                fragmentShader: Qt.resolvedUrl("../shaders/seam_fill.frag.qsb")
+                                property color baseColor: seamPanel.seamBaseColor
+                                property vector4d params0: Qt.vector4d(
+                                    seamPanel.seamBaseOpacityTop,
+                                    seamPanel.seamBaseOpacityBottom,
+                                    0,
+                                    0
+                                )
+                            }
+                            ShaderEffect {
+                                visible: seamPanel.seamTintEnabled
+                                anchors.fill: parent
+                                fragmentShader: Qt.resolvedUrl("../shaders/seam_tint.frag.qsb")
+                                property color tintColor: seamPanel.seamTintColor
+                                property vector4d params0: Qt.vector4d(
+                                    seamPanel.seamTintLeftTop,
+                                    seamPanel.seamTintLeftBottom,
+                                    seamPanel.seamTintRightTop,
+                                    seamPanel.seamTintRightBottom
+                                )
+                                property vector4d params1: Qt.vector4d(
+                                    seamPanel.seamTintFeatherLeft,
+                                    seamPanel.seamTintFeatherRight,
+                                    seamPanel.seamTintOpacity,
+                                    0
+                                )
+                                property color baseColor: seamPanel.seamBaseColor
+                                blending: true
+                            }
+                        }
+
+                        // Triangular mask: white = keep wedge, black = discard
+                        Canvas {
+                            id: leftWedgeMask
+                            anchors.fill: parent
+                            visible: false
+                            onPaint: {
+                                var ctx = getContext('2d');
+                                ctx.reset();
+                                ctx.clearRect(0, 0, width, height);
+                                // default: cut everything
+                                ctx.fillStyle = '#000000ff';
+                                ctx.fillRect(0, 0, width, height);
+                                // keep triangular wedge adjacent to the right edge (seam boundary)
+                                ctx.fillStyle = '#ffffffff';
+                                ctx.beginPath();
+                                if (Settings.settings.debugTriangleLeftSlopeUp) {
+                                    // bottom-left → top-right
+                                    ctx.moveTo(0, height);
+                                    ctx.lineTo(width, 0);
+                                    ctx.lineTo(width, height);
+                                } else {
+                                    // top-left → bottom-right
+                                    ctx.moveTo(0, 0);
+                                    ctx.lineTo(width, height);
+                                    ctx.lineTo(width, 0);
+                                }
+                                ctx.closePath();
+                                ctx.fill();
+                            }
+                        }
+                        GE.OpacityMask {
+                            anchors.fill: parent
+                            source: leftWedgeVisuals
+                            maskSource: leftWedgeMask
+                        }
+                    }
+
                     // Right-angled (rectangular) triangle overlay, above all panel content and outside tint capture
                     Canvas {
                         id: netTriangleOverlay
@@ -612,6 +701,91 @@ Scope {
                                 0,
                                 Math.min(rightPanelContent.width - _seamWidth, rightPanelContent.width - _fillWidth)
                             )
+                        }
+
+                        // Symmetric seam wedge for the right side
+                        Item {
+                            id: rightSeamWedge
+                            visible: Settings.settings.debugTriangleRight
+                            z: 9000000
+                            width: Math.max(1, rightPanel.seamWidth)
+                            height: rightPanel.barHeightPx
+                            anchors.top: parent.top
+                            anchors.left: rightPanelContent.left
+                            anchors.leftMargin: Math.round(rightNetTriangleAnchor.seamStartLocal)
+                            anchors.topMargin: 0
+
+                            Item {
+                                id: rightWedgeVisuals
+                                anchors.fill: parent
+                                visible: false
+                                ShaderEffect {
+                                    anchors.fill: parent
+                                    fragmentShader: Qt.resolvedUrl("../shaders/seam_fill.frag.qsb")
+                                    property color baseColor: seamPanel.seamBaseColor
+                                    property vector4d params0: Qt.vector4d(
+                                        seamPanel.seamBaseOpacityTop,
+                                        seamPanel.seamBaseOpacityBottom,
+                                        0,
+                                        0
+                                    )
+                                }
+                                ShaderEffect {
+                                    visible: seamPanel.seamTintEnabled
+                                    anchors.fill: parent
+                                    fragmentShader: Qt.resolvedUrl("../shaders/seam_tint.frag.qsb")
+                                    property color tintColor: seamPanel.seamTintColor
+                                    property vector4d params0: Qt.vector4d(
+                                        seamPanel.seamTintLeftTop,
+                                        seamPanel.seamTintLeftBottom,
+                                        seamPanel.seamTintRightTop,
+                                        seamPanel.seamTintRightBottom
+                                    )
+                                    property vector4d params1: Qt.vector4d(
+                                        seamPanel.seamTintFeatherLeft,
+                                        seamPanel.seamTintFeatherRight,
+                                        seamPanel.seamTintOpacity,
+                                        0
+                                    )
+                                    property color baseColor: seamPanel.seamBaseColor
+                                    blending: true
+                                }
+                            }
+
+                            Canvas {
+                                id: rightWedgeMask
+                                anchors.fill: parent
+                                visible: false
+                                onPaint: {
+                                    var ctx = getContext('2d');
+                                    ctx.reset();
+                                    ctx.clearRect(0, 0, width, height);
+                                    // default: cut everything
+                                    ctx.fillStyle = '#000000ff';
+                                    ctx.fillRect(0, 0, width, height);
+                                    // keep triangular wedge adjacent to the left edge (seam boundary)
+                                    ctx.fillStyle = '#ffffffff';
+                                    ctx.beginPath();
+                                    if (Settings.settings.debugTriangleRightSlopeUp) {
+                                        // bottom-left → top-right (vertical edge at x=0)
+                                        ctx.moveTo(0, height);
+                                        ctx.lineTo(width, 0);
+                                        ctx.lineTo(0, 0);
+                                    } else {
+                                        // top-left → bottom-right (vertical edge at x=0)
+                                        ctx.moveTo(0, 0);
+                                        ctx.lineTo(width, height);
+                                        ctx.lineTo(0, height);
+                                    }
+                                    ctx.closePath();
+                                    ctx.fill();
+                                }
+                            }
+                            GE.OpacityMask {
+                                anchors.fill: parent
+                                source: rightWedgeVisuals
+                                maskSource: rightWedgeMask
+                            }
                         }
                         Canvas {
                             id: rightNetTriangleOverlay
