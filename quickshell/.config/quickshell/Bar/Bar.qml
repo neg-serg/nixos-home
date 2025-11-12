@@ -185,6 +185,50 @@ Scope {
                             }
                         }
 
+                        // Mask the left seam fill so its visible area becomes a triangle
+                        // matching the wedge; this prevents rectangular seam blocks.
+                        ShaderEffectSource {
+                            id: leftSeamSource
+                            anchors.fill: leftSeamFill
+                            sourceItem: leftSeamFill
+                            hideSource: true
+                            live: true
+                            recursive: true
+                        }
+                        Canvas {
+                            id: leftSeamMask
+                            anchors.fill: leftSeamFill
+                            visible: false
+                            onPaint: {
+                                var ctx = getContext('2d');
+                                ctx.reset();
+                                ctx.clearRect(0, 0, width, height);
+                                ctx.fillStyle = '#ffffffff';
+                                ctx.fillRect(0, 0, width, height);
+                                // Cut triangle adjacent to the seam boundary (x = 0 in this local space)
+                                ctx.fillStyle = '#000000ff';
+                                ctx.beginPath();
+                                if (Settings.settings.debugTriangleLeftSlopeUp) {
+                                    // bottom-left → top-right
+                                    ctx.moveTo(0, height);
+                                    ctx.lineTo(width, 0);
+                                    ctx.lineTo(width, height);
+                                } else {
+                                    // top-left → bottom-right
+                                    ctx.moveTo(0, 0);
+                                    ctx.lineTo(width, height);
+                                    ctx.lineTo(width, 0);
+                                }
+                                ctx.closePath();
+                                ctx.fill();
+                            }
+                        }
+                        GE.OpacityMask {
+                            anchors.fill: leftSeamFill
+                            source: leftSeamSource
+                            maskSource: leftSeamMask
+                        }
+
                         Component.onCompleted: rootScope.barHeight = leftBarBackground.height
                         Connections {
                             target: leftBarBackground
@@ -529,6 +573,49 @@ Scope {
                                 property vector4d params0: Qt.vector4d(-1, rightPanel.seamTaperTop, rightPanel.seamTaperBottom, rightPanel.seamOpacity)
                                 blending: true
                             }
+                        }
+
+                        // Mask the right seam fill similarly to form a triangular visible area.
+                        ShaderEffectSource {
+                            id: rightSeamSource
+                            anchors.fill: rightSeamFill
+                            sourceItem: rightSeamFill
+                            hideSource: true
+                            live: true
+                            recursive: true
+                        }
+                        Canvas {
+                            id: rightSeamMask
+                            anchors.fill: rightSeamFill
+                            visible: false
+                            onPaint: {
+                                var ctx = getContext('2d');
+                                ctx.reset();
+                                ctx.clearRect(0, 0, width, height);
+                                ctx.fillStyle = '#ffffffff';
+                                ctx.fillRect(0, 0, width, height);
+                                // Cut triangle adjacent to the seam boundary (x = width in this local space)
+                                ctx.fillStyle = '#000000ff';
+                                ctx.beginPath();
+                                if (Settings.settings.debugTriangleRightSlopeUp) {
+                                    // bottom-left → top-right (vertical seam edge at the right)
+                                    ctx.moveTo(width, height);
+                                    ctx.lineTo(0, 0);
+                                    ctx.lineTo(0, height);
+                                } else {
+                                    // top-left → bottom-right
+                                    ctx.moveTo(width, 0);
+                                    ctx.lineTo(0, height);
+                                    ctx.lineTo(0, 0);
+                                }
+                                ctx.closePath();
+                                ctx.fill();
+                            }
+                        }
+                        GE.OpacityMask {
+                            anchors.fill: rightSeamFill
+                            source: rightSeamSource
+                            maskSource: rightSeamMask
                         }
 
                         RowLayout {
