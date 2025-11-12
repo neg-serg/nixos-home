@@ -168,6 +168,63 @@ Scope {
                             source: leftBarFillSource
                             maskSource: leftFillMask
                         }
+                        // Panel tint (left) drawn and masked within leftPanelContent so anchors are valid siblings
+                        ShaderEffect {
+                            id: leftPanelTintFX
+                            anchors.fill: leftBarFill
+                            visible: leftPanel.panelTintEnabled
+                            fragmentShader: Qt.resolvedUrl("../shaders/panel_tint_mix.frag.qsb")
+                            property var sourceSampler: leftPanelSource
+                            property color tintColor: leftPanel.panelTintColor
+                            property vector4d params0: Qt.vector4d(
+                                leftPanel.panelTintStrength,
+                                leftPanel.panelTintFeatherTop,
+                                leftPanel.panelTintFeatherBottom,
+                                0
+                            )
+                            blending: true
+                        }
+                        ShaderEffectSource {
+                            id: leftPanelTintSource
+                            anchors.fill: leftBarFill
+                            sourceItem: leftPanelTintFX
+                            hideSource: true
+                            live: true
+                            recursive: true
+                        }
+                        Canvas {
+                            id: leftPanelTintMask
+                            anchors.fill: leftBarFill
+                            visible: false
+                            onPaint: {
+                                var ctx = getContext('2d');
+                                ctx.reset();
+                                ctx.clearRect(0, 0, width, height);
+                                ctx.fillStyle = '#ffffffff';
+                                ctx.fillRect(0, 0, width, height);
+                                var w = Math.max(1, Math.min(width, leftPanel.seamWidth));
+                                var x0 = width - w;
+                                ctx.fillStyle = '#000000ff';
+                                ctx.beginPath();
+                                if (Settings.settings.debugTriangleLeftSlopeUp) {
+                                    ctx.moveTo(x0, height);
+                                    ctx.lineTo(width, 0);
+                                    ctx.lineTo(width, height);
+                                } else {
+                                    ctx.moveTo(x0, 0);
+                                    ctx.lineTo(width, height);
+                                    ctx.lineTo(width, 0);
+                                }
+                                ctx.closePath();
+                                ctx.fill();
+                            }
+                        }
+                        GE.OpacityMask {
+                            anchors.fill: leftBarFill
+                            visible: leftPanel.panelTintEnabled
+                            source: leftPanelTintSource
+                            maskSource: leftPanelTintMask
+                        }
                         Item {
                             id: leftSeamFill
                             width: Math.min(leftBarBackground.width, leftPanel.seamWidth)
@@ -309,64 +366,6 @@ Scope {
                         hideSource: false
                         live: true
                         recursive: true
-                    }
-
-                    // Panel tint (left): offscreen + masked so wedge stays transparent to reveal seam
-                    ShaderEffect {
-                        id: leftPanelTintFX
-                        anchors.fill: leftBarFill
-                        visible: leftPanel.panelTintEnabled
-                        fragmentShader: Qt.resolvedUrl("../shaders/panel_tint_mix.frag.qsb")
-                        property var sourceSampler: leftPanelSource
-                        property color tintColor: leftPanel.panelTintColor
-                        property vector4d params0: Qt.vector4d(
-                            leftPanel.panelTintStrength,
-                            leftPanel.panelTintFeatherTop,
-                            leftPanel.panelTintFeatherBottom,
-                            0
-                        )
-                        blending: true
-                    }
-                    ShaderEffectSource {
-                        id: leftPanelTintSource
-                        anchors.fill: leftBarFill
-                        sourceItem: leftPanelTintFX
-                        hideSource: true
-                        live: true
-                        recursive: true
-                    }
-                    Canvas {
-                        id: leftPanelTintMask
-                        anchors.fill: leftBarFill
-                        visible: false
-                        onPaint: {
-                            var ctx = getContext('2d');
-                            ctx.reset();
-                            ctx.clearRect(0, 0, width, height);
-                            ctx.fillStyle = '#ffffffff';
-                            ctx.fillRect(0, 0, width, height);
-                            var w = Math.max(1, Math.min(width, leftPanel.seamWidth));
-                            var x0 = width - w;
-                            ctx.fillStyle = '#000000ff';
-                            ctx.beginPath();
-                            if (Settings.settings.debugTriangleLeftSlopeUp) {
-                                ctx.moveTo(x0, height);
-                                ctx.lineTo(width, 0);
-                                ctx.lineTo(width, height);
-                            } else {
-                                ctx.moveTo(x0, 0);
-                                ctx.lineTo(width, height);
-                                ctx.lineTo(width, 0);
-                            }
-                            ctx.closePath();
-                            ctx.fill();
-                        }
-                    }
-                    GE.OpacityMask {
-                        anchors.fill: leftBarFill
-                        visible: leftPanel.panelTintEnabled
-                        source: leftPanelTintSource
-                        maskSource: leftPanelTintMask
                     }
 
                     Item {
@@ -542,6 +541,62 @@ Scope {
                             anchors.fill: rightBarFill
                             source: rightBarFillSource
                             maskSource: rightFillMask
+                        }
+                        // Panel tint (right) drawn and masked within rightPanelContent so anchors are valid siblings
+                        ShaderEffect {
+                            id: rightPanelTintFX
+                            anchors.fill: rightBarFill
+                            visible: rightPanel.panelTintEnabled
+                            fragmentShader: Qt.resolvedUrl("../shaders/panel_tint_mix.frag.qsb")
+                            property var sourceSampler: rightPanelSource
+                            property color tintColor: rightPanel.panelTintColor
+                            property vector4d params0: Qt.vector4d(
+                                rightPanel.panelTintStrength,
+                                rightPanel.panelTintFeatherTop,
+                                rightPanel.panelTintFeatherBottom,
+                                0
+                            )
+                            blending: true
+                        }
+                        ShaderEffectSource {
+                            id: rightPanelTintSource
+                            anchors.fill: rightBarFill
+                            sourceItem: rightPanelTintFX
+                            hideSource: true
+                            live: true
+                            recursive: true
+                        }
+                        Canvas {
+                            id: rightPanelTintMask
+                            anchors.fill: rightBarFill
+                            visible: false
+                            onPaint: {
+                                var ctx = getContext('2d');
+                                ctx.reset();
+                                ctx.clearRect(0, 0, width, height);
+                                ctx.fillStyle = '#ffffffff';
+                                ctx.fillRect(0, 0, width, height);
+                                var w = Math.max(1, Math.min(width, rightPanel.seamWidth));
+                                ctx.fillStyle = '#000000ff';
+                                ctx.beginPath();
+                                if (Settings.settings.debugTriangleRightSlopeUp) {
+                                    ctx.moveTo(0, height);
+                                    ctx.lineTo(w, 0);
+                                    ctx.lineTo(0, 0);
+                                } else {
+                                    ctx.moveTo(0, 0);
+                                    ctx.lineTo(w, height);
+                                    ctx.lineTo(0, height);
+                                }
+                                ctx.closePath();
+                                ctx.fill();
+                            }
+                        }
+                        GE.OpacityMask {
+                            anchors.fill: rightBarFill
+                            visible: rightPanel.panelTintEnabled
+                            source: rightPanelTintSource
+                            maskSource: rightPanelTintMask
                         }
                         // Mirrored debug triangle on the right side: aligns to the left edge
                         // of the right panel's seam (i.e., the left edge of rightBarFill).
@@ -726,63 +781,6 @@ Scope {
                         hideSource: false
                         live: true
                         recursive: true
-                    }
-
-                    // Panel tint (right) drawn offscreen and masked to keep seam wedge clear
-                    ShaderEffect {
-                        id: rightPanelTintFX
-                        anchors.fill: rightBarFill
-                        visible: rightPanel.panelTintEnabled
-                        fragmentShader: Qt.resolvedUrl("../shaders/panel_tint_mix.frag.qsb")
-                        property var sourceSampler: rightPanelSource
-                        property color tintColor: rightPanel.panelTintColor
-                        property vector4d params0: Qt.vector4d(
-                            rightPanel.panelTintStrength,
-                            rightPanel.panelTintFeatherTop,
-                            rightPanel.panelTintFeatherBottom,
-                            0
-                        )
-                        blending: true
-                    }
-                    ShaderEffectSource {
-                        id: rightPanelTintSource
-                        anchors.fill: rightBarFill
-                        sourceItem: rightPanelTintFX
-                        hideSource: true
-                        live: true
-                        recursive: true
-                    }
-                    Canvas {
-                        id: rightPanelTintMask
-                        anchors.fill: rightBarFill
-                        visible: false
-                        onPaint: {
-                            var ctx = getContext('2d');
-                            ctx.reset();
-                            ctx.clearRect(0, 0, width, height);
-                            ctx.fillStyle = '#ffffffff';
-                            ctx.fillRect(0, 0, width, height);
-                            var w = Math.max(1, Math.min(width, rightPanel.seamWidth));
-                            ctx.fillStyle = '#000000ff';
-                            ctx.beginPath();
-                            if (Settings.settings.debugTriangleRightSlopeUp) {
-                                ctx.moveTo(0, height);
-                                ctx.lineTo(w, 0);
-                                ctx.lineTo(0, 0);
-                            } else {
-                                ctx.moveTo(0, 0);
-                                ctx.lineTo(w, height);
-                                ctx.lineTo(0, height);
-                            }
-                            ctx.closePath();
-                            ctx.fill();
-                        }
-                    }
-                    GE.OpacityMask {
-                        anchors.fill: rightBarFill
-                        visible: rightPanel.panelTintEnabled
-                        source: rightPanelTintSource
-                        maskSource: rightPanelTintMask
                     }
 
                     property string _lastAlbum: ""
