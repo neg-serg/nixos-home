@@ -298,7 +298,7 @@ Scope {
                     // Right-angled (rectangular) triangle overlay, above all panel content and outside tint capture
                     Canvas {
                         id: netTriangleOverlay
-                        visible: leftPanel.debugNetTriangle && netCluster.visible
+                        visible: leftPanel.debugNetTriangle && netCluster.visible && opacity > 0
                         antialiasing: true
                         z: 10000000
                         width: Math.max(1, leftPanel.seamWidth)
@@ -473,7 +473,7 @@ Scope {
                         Canvas {
                             id: rightNetTriangleOverlay
                             // Separate control for the right triangle
-                            visible: Settings.settings.debugTriangleRight && rightBarFill.visible
+                            visible: Settings.settings.debugTriangleRight && rightBarFill.visible && opacity > 0
                             antialiasing: true
                             z: 10000000
                             width: Math.max(1, rightPanel.seamWidth)
