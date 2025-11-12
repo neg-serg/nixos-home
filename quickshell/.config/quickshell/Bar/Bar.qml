@@ -348,6 +348,53 @@ Scope {
                             anchors.top: rightBarBackground.top
                             anchors.right: rightBarBackground.right
                         }
+                        // Mirrored debug triangle on the right side: aligns to the left edge
+                        // of the right panel's seam (i.e., the left edge of rightBarFill).
+                        Item {
+                            id: rightNetTriangleAnchor
+                            width: 0
+                            height: 0
+                            anchors.top: parent.top
+                            readonly property int _seamWidth: Math.max(1, rightPanel.seamWidth)
+                            readonly property real _fillWidth: rightBarFill ? rightBarFill.width : rightPanelContent.width
+                            // Seam start measured from the left of rightPanelContent
+                            readonly property real seamStartLocal: Math.max(
+                                0,
+                                Math.min(rightPanelContent.width - _seamWidth, rightPanelContent.width - _fillWidth)
+                            )
+                        }
+                        Canvas {
+                            id: rightNetTriangleOverlay
+                            visible: leftPanel.debugNetTriangle && rightBarFill.visible
+                            antialiasing: true
+                            z: 10000000
+                            width: Math.max(1, rightPanel.seamWidth)
+                            height: rightPanel.barHeightPx
+                            anchors.top: parent.top
+                            anchors.left: rightPanelContent.left
+                            anchors.leftMargin: Math.round(rightNetTriangleAnchor.seamStartLocal)
+                            anchors.topMargin: 0
+                            // Theme accent color, opaque
+                            property color triangleColor: Theme.accentPrimary
+                            opacity: 1.0
+                            onVisibleChanged: requestPaint()
+                            onXChanged: requestPaint()
+                            onWidthChanged: requestPaint()
+                            onHeightChanged: requestPaint()
+                            onPaint: {
+                                var ctx = getContext('2d');
+                                ctx.reset();
+                                ctx.clearRect(0, 0, width, height);
+                                ctx.fillStyle = triangleColor;
+                                // Vertical edge on the left at seam boundary (mirrored)
+                                ctx.beginPath();
+                                ctx.moveTo(0, 0);        // top-left (seam boundary)
+                                ctx.lineTo(width, height); // bottom-right
+                                ctx.lineTo(0, height);     // bottom-left (seam boundary)
+                                ctx.closePath();
+                                ctx.fill();
+                            }
+                        }
                         Item {
                             id: rightSeamFill
                             width: Math.min(rightBarBackground.width, rightPanel.seamWidth)
