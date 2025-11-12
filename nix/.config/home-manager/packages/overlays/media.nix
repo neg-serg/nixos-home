@@ -13,7 +13,7 @@ _final: prev: let
     # Media-related tools
     mkvcleaner = call ../mkvcleaner {};
     rmpc = call ../rmpc {};
-    cantata = call ../cantata {};
+    cantata = call ../cantata { qt6Packages = prev.qt6Packages; };
     "blissify-rs" = blissify_rs;
     "laion-clap" = laion_clap_pkg;
     laion_clap = laion_clap_pkg;

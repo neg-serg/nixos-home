@@ -4,11 +4,12 @@
   fetchFromGitHub,
   cmake,
   pkg-config,
-  qtbase,
-  qtsvg,
-  qttools,
-  qtwayland,
-  wrapQtAppsHook,
+  qt6Packages,
+  qtbase ? qt6Packages.qtbase,
+  qtsvg ? qt6Packages.qtsvg,
+  qttools ? qt6Packages.qttools,
+  qtwayland ? qt6Packages.qtwayland,
+  wrapQtAppsHook ? qt6Packages.wrapQtAppsHook,
   perl,
 
   # Cantata doesn't build with cdparanoia enabled right now.
@@ -25,7 +26,7 @@
   taglib,
   taglib_extras,
   withHttpStream ? true,
-  qtmultimedia,
+  qtmultimedia ? qt6Packages.qtmultimedia,
   gst_all_1,
   withReplaygain ? true,
   ffmpeg,
@@ -40,17 +41,18 @@
   withHttpServer ? true,
   withLibVlc ? false,
   libvlc,
-  withStreams ? true,
+  withStreams ? true
 }: let
   # Inter-dependencies.
-  _ = assert withCddb -> withCdda && withTaglib;
-  _ = assert withCdda -> withCddb && withMusicbrainz;
-  _ = assert withLame -> withCdda && withTaglib;
-  _ = assert withMtp -> withTaglib;
-  _ = assert withMusicbrainz -> withCdda && withTaglib;
-  _ = assert withOnlineServices -> withTaglib;
-  _ = assert withReplaygain -> withTaglib;
-  _ = assert withLibVlc -> withHttpStream;
+  assertDep = cond: msg: lib.asserts.assertMsg cond msg;
+  _assertCddb = assertDep (withCddb -> withCdda && withTaglib) "Cantata: CDDB requires CDDA + Taglib";
+  _assertCdda = assertDep (withCdda -> withCddb && withMusicbrainz) "Cantata: CDDA requires CDDB + MusicBrainz";
+  _assertLame = assertDep (withLame -> withCdda && withTaglib) "Cantata: LAME requires CDDA + Taglib";
+  _assertMtp = assertDep (withMtp -> withTaglib) "Cantata: MTP requires Taglib";
+  _assertMusicbrainz = assertDep (withMusicbrainz -> withCdda && withTaglib) "Cantata: MusicBrainz requires CDDA + Taglib";
+  _assertOnline = assertDep (withOnlineServices -> withTaglib) "Cantata: Online services require Taglib";
+  _assertReplaygain = assertDep (withReplaygain -> withTaglib) "Cantata: Replaygain requires Taglib";
+  _assertLibVlc = assertDep (withLibVlc -> withHttpStream) "Cantata: LibVLC requires HTTP stream playback";
 
   fstat = enabled: flag: "-DENABLE_${flag}=${if enabled then "ON" else "OFF"}";
   withUdisks = withTaglib && withDevices;

@@ -6,7 +6,6 @@
 with lib; {
   # Provide xdg helpers once; modules can use `xdg` from args
   _module.args.xdg = import ./lib/xdg-helpers.nix {inherit lib pkgs;};
-  _module.args.systemdUser = import ./lib/systemd-user.nix {inherit lib;};
 
   imports = [
     ./lib/neg.nix

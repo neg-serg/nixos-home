@@ -100,4 +100,5 @@ in {
     inherit lib;
     inherit (perSystem.${system}) pkgs;
   };
+  systemdUser = import ../modules/lib/systemd-user.nix {inherit lib;};
 }
