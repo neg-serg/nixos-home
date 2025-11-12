@@ -584,30 +584,6 @@ Scope {
                     readonly property real seamTintFeatherLeft: seamPanel._normalizedFeather(seamPanel.seamTintFeatherPx)
                     readonly property real seamTintFeatherRight: seamPanel.seamTintFeatherLeft
 
-                    function logGap(prefix) {
-                        try {
-                            console.log(
-                                "[seam]",
-                                prefix || "",
-                                "vis=", seamPanel.visible,
-                                "h=", seamPanel.height,
-                                "ih=", seamPanel.seamHeightPx,
-                                "gapStart=", gapStart,
-                                "gapEnd=", gapEnd,
-                                "raw=", rawGapWidth,
-                                "seamLeft=", seamLeftMargin,
-                                "seamWidth=", seamWidthPx,
-                                "leftFill=", _leftFillWidth,
-                                "rightFill=", _rightFillWidth,
-                                "opBaseTop=", seamPanel.seamBaseOpacityTop,
-                                "opBaseBot=", seamPanel.seamBaseOpacityBottom,
-                                "opTint=", seamPanel.seamTintOpacity,
-                                "opEffect=", seamPanel.seamEffectOpacity,
-                                "monitor=", monitorWidth
-                            )
-                        } catch (e) { /* ignore */ }
-                    }
-
                     function _normalizedInset(px) {
                         const width = Math.max(1, seamPanel.seamWidthPx);
                         return Math.min(0.49, Math.max(0, px / width));
@@ -727,23 +703,7 @@ Scope {
                         }
                     }
 
-                    // Keep logs updated on changes important to geometry
-                    Component.onCompleted: seamPanel.logGap("completed")
-                    Connections { target: leftBarFill; function onWidthChanged() { seamPanel.logGap("leftFill") } }
-                    Connections { target: rightBarFill; function onWidthChanged() { seamPanel.logGap("rightFill") } }
-                    Connections {
-                        target: seamPanel
-                        function onVisibleChanged() { seamPanel.logGap("visible") }
-                        function onSeamLeftMarginChanged() { seamPanel.logGap("seamLeft") }
-                        function onSeamWidthPxChanged() { seamPanel.logGap("seamWidth") }
-                        function onGapStartChanged() { seamPanel.logGap("gapStart") }
-                        function onGapEndChanged() { seamPanel.logGap("gapEnd") }
-                        function onHeightChanged() { seamPanel.logGap("height") }
-                        function onSeamBaseOpacityTopChanged() { seamPanel.logGap("baseTop") }
-                        function onSeamBaseOpacityBottomChanged() { seamPanel.logGap("baseBot") }
-                        function onSeamTintOpacityChanged() { seamPanel.logGap("tint") }
-                        function onSeamEffectOpacityChanged() { seamPanel.logGap("effect") }
-                    }
+                    // (debug logging removed)
                 }
 
             }
