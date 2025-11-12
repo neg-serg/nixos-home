@@ -148,9 +148,10 @@ lib.genAttrs systems (
         hmCfg = homeManagerInput.lib.homeManagerConfiguration {
           inherit (perSystem.${s}) pkgs;
           extraSpecialArgs = mkHMArgs s;
-          modules = hmBaseModules { inherit profile extra; };
+          modules = hmBaseModules {inherit profile extra;};
         };
-      in perSystem.${s}.pkgs.writeText
+      in
+        perSystem.${s}.pkgs.writeText
         "hm-eval-neg-hy3-on-retro-off.json"
         (builtins.toJSON hmCfg.config.features);
     }
