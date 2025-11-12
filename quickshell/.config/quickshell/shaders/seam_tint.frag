@@ -4,6 +4,7 @@ layout(location = 0) out vec4 fragColor;
 
 layout(std140, binding = 0) uniform qt_ubuf {
     vec4 tintColor;
+    vec4 baseColor;
     vec4 params0; // x=leftTop, y=leftBottom, z=rightTop, w=rightBottom
     vec4 params1; // x=featherLeft, y=featherRight, z=opacity
 };
@@ -34,10 +35,8 @@ void main() {
     float rightMask = edgeMask(x, rightEdge, rightFeather, false);
     float mask = clamp(min(leftMask, rightMask), 0.0, 1.0);
 
-    float alpha = tintColor.a * opacity * mask;
-    if (alpha <= 0.0001) {
-        discard;
-    }
-
-    fragColor = vec4(tintColor.rgb, alpha);
+    float alpha = clamp(tintColor.a * opacity * mask, 0.0, 1.0);
+    vec3 filled = mix(baseColor.rgb, tintColor.rgb, alpha);
+    // Ensure seam tint contributes visible alpha even on transparent panel backgrounds.
+    fragColor = vec4(filled, max(baseColor.a, alpha));
 }

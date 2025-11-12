@@ -24,6 +24,10 @@ void main() {
     float fadeBottom = featherMix(params0.z, 1.0 - y);
     float feather = min(fadeTop, fadeBottom);
 
-    vec3 tinted = mix(base.rgb, tintColor.rgb, clamp(tintColor.a * strength * feather, 0.0, 1.0));
-    fragColor = vec4(tinted, base.a);
+    float overlay = clamp(tintColor.a * strength * feather, 0.0, 1.0);
+    vec3 tinted = mix(base.rgb, tintColor.rgb, overlay);
+    // Important: do NOT inherit alpha from the base when the panel is transparent.
+    // Ensure the tint contributes visible alpha so it shows on transparent panels.
+    float outA = max(base.a, overlay);
+    fragColor = vec4(tinted, outA);
 }

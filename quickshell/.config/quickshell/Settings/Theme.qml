@@ -346,7 +346,8 @@ Singleton {
     property int panelHeight: val('panel.height', 28)
     property int panelSideMargin: val('panel.sideMargin', 18)
     property int panelWidgetSpacing: val('panel.widgetSpacing', 12)
-    property int panelSepOvershoot: val('panel.sepOvershoot', 60)
+    // Temporarily disable sepOvershoot usage; keep token but force default to 0.
+    property int panelSepOvershoot: val('panel.sepOvershoot', 0)
     // Panel icon sizing
     property int panelIconSize: val('panel.icons.iconSize', 24)
     property int panelIconSizeSmall: val('panel.icons.iconSizeSmall', 16)

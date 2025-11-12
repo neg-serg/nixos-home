@@ -24,7 +24,7 @@
     "height": 28,
     "sideMargin": 18,
     "widgetSpacing": 12,
-    "sepOvershoot": 60,
+    "sepOvershoot": 0,
     "icons": {
       "iconSize": 24,
       "iconSizeSmall": 16
