@@ -600,6 +600,8 @@ Scope {
                     readonly property real monitorWidth: seamPanel.screen ? seamPanel.screen.width : seamPanel.width
                     // Debug: enable to overlay bounding boxes and logs
                     property bool debugSeam: true
+                    // Debug: when true, the accent debug overlay fills the entire panel width
+                    property bool debugFillFullWidth: true
                     // Consider geometry "ready" only when left/right fills are measured and gap is sane
                     readonly property bool leftReady: _leftFillWidth > Math.max(8, leftPanel.sideMargin + leftPanel.widgetSpacing)
                     readonly property bool rightReady: _rightFillWidth > Math.max(8, rightPanel.sideMargin + rightPanel.widgetSpacing)
@@ -722,8 +724,8 @@ Scope {
 
                         // Raw gap region [gapStart .. gapEnd]
                         Rectangle {
-                            x: seamPanel.gapStart
-                            width: Math.max(1, seamPanel.rawGapWidth)
+                            x: seamPanel.debugFillFullWidth ? 0 : seamPanel.gapStart
+                            width: seamPanel.debugFillFullWidth ? parent.width : Math.max(1, seamPanel.rawGapWidth)
                             height: seamPanel.seamHeightPx
                             anchors.bottom: parent.bottom
                             // Use theme accent for the raw gap overlay instead of hardcoded green
