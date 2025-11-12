@@ -471,54 +471,7 @@ Scope {
                         }
                     }
 
-                    // Right-angled (rectangular) triangle overlay, above all panel content and outside tint capture
-                    Canvas {
-                        id: netTriangleOverlay
-                        visible: leftPanel.debugNetTriangle && netCluster.visible && opacity > 0
-                        antialiasing: true
-                        z: 10000000
-                        width: Math.max(1, leftPanel.seamWidth)
-                        height: leftPanel.barHeightPx
-                        anchors.top: parent.top
-                        anchors.left: leftPanelContent.left
-                        anchors.leftMargin: Math.round(netTriangleAnchor.seamStartLocal)
-                        anchors.topMargin: 0
-                        // Use theme accent color from Theme; keep fully opaque
-                        // If transparency is needed, prefer Canvas.opacity rather than embedding alpha in the color.
-                        // Match seam tint when enabled; fallback to seam base fill
-                        property color triangleColor: seamPanel.seamTintEnabled ? seamPanel.seamTintColor : seamPanel.seamFillColor
-                        // Orientation control: slopeUp = bottom-left → top-right; otherwise top-left → bottom-right
-                        property bool slopeUp: Settings.settings.debugTriangleLeftSlopeUp
-                        // Opacity matches seam tint strength (scaled by user factor)
-                        opacity: Math.max(0.0, Math.min(1.0,
-                            seamPanel.seamTintOpacity * Settings.settings.debugTriangleLeftOpacity
-                        ))
-                        onVisibleChanged: requestPaint()
-                        onXChanged: requestPaint()
-                        onWidthChanged: requestPaint()
-                        onHeightChanged: requestPaint()
-                        onPaint: {
-                            var ctx = getContext('2d');
-                            ctx.reset();
-                            ctx.clearRect(0, 0, width, height);
-                            ctx.fillStyle = triangleColor;
-                            // Vertical edge on the right at seam boundary
-                            ctx.beginPath();
-                            if (slopeUp) {
-                                // bottom-left → top-right
-                                ctx.moveTo(0, height);
-                                ctx.lineTo(width, 0);
-                                ctx.lineTo(width, height);
-                            } else {
-                                // top-left → bottom-right
-                                ctx.moveTo(0, 0);
-                                ctx.lineTo(width, height);
-                                ctx.lineTo(width, 0);
-                            }
-                            ctx.closePath();
-                            ctx.fill();
-                        }
-                    }
+                    // (old Canvas triangle overlay removed to avoid blue tint overlay)
                 }
 
                 PanelWindow {
@@ -787,51 +740,7 @@ Scope {
                                 maskSource: rightWedgeMask
                             }
                         }
-                        Canvas {
-                            id: rightNetTriangleOverlay
-                            // Separate control for the right triangle
-                            visible: Settings.settings.debugTriangleRight && rightBarFill.visible && opacity > 0
-                            antialiasing: true
-                            z: 10000000
-                            width: Math.max(1, rightPanel.seamWidth)
-                            height: rightPanel.barHeightPx
-                            anchors.top: parent.top
-                            anchors.left: rightPanelContent.left
-                            anchors.leftMargin: Math.round(rightNetTriangleAnchor.seamStartLocal)
-                            anchors.topMargin: 0
-                            // Match seam tint when enabled; fallback to seam base fill
-                            property color triangleColor: seamPanel.seamTintEnabled ? seamPanel.seamTintColor : seamPanel.seamFillColor
-                            // Opacity matches seam tint strength (scaled by user factor)
-                            opacity: Math.max(0.0, Math.min(1.0,
-                                seamPanel.seamTintOpacity * Settings.settings.debugTriangleRightOpacity
-                            ))
-                            // Orientation control for right side
-                            property bool slopeUp: Settings.settings.debugTriangleRightSlopeUp
-                            onVisibleChanged: requestPaint()
-                            onXChanged: requestPaint()
-                            onWidthChanged: requestPaint()
-                            onHeightChanged: requestPaint()
-                            onPaint: {
-                                var ctx = getContext('2d');
-                                ctx.reset();
-                                ctx.clearRect(0, 0, width, height);
-                                ctx.fillStyle = triangleColor;
-                                ctx.beginPath();
-                                if (slopeUp) {
-                                    // bottom-left → top-right (current default)
-                                    ctx.moveTo(0, height);    // seam boundary
-                                    ctx.lineTo(width, 0);
-                                    ctx.lineTo(0, 0);
-                                } else {
-                                    // top-left → bottom-right
-                                    ctx.moveTo(0, 0);         // seam boundary
-                                    ctx.lineTo(width, height);
-                                    ctx.lineTo(0, height);
-                                }
-                                ctx.closePath();
-                                ctx.fill();
-                            }
-                        }
+                        // (old right Canvas triangle overlay removed)
                         Item {
                             id: rightSeamFill
                             width: Math.min(rightBarBackground.width, rightPanel.seamWidth)
