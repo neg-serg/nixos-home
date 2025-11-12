@@ -1,19 +1,4 @@
 _final: prev: {
-  kitty = prev.kitty.overrideAttrs (old: let
-    lib = prev.lib;
-    disablePatch = "disable-test_ssh_bootstrap_with_different_launchers.patch";
-    filteredPatches =
-      lib.filter (patch: !(lib.hasSuffix disablePatch (toString patch))) (old.patches or []);
-  in {
-    version = "${old.version or "0.44.0"}-mamkin-2025-02-07";
-    src = prev.fetchFromGitHub {
-      owner = "mamkin-skuf";
-      repo = "kitty";
-      rev = "c3ed945a93f6ca2b56dfd25d7558f951be49e15a";
-      hash = "sha256-kf6MkFhZgOKFYDJY93EXw+0ZMXIG1dSIGAjN5j8DsWk=";
-    };
-    patches = filteredPatches ++ [ ../patches/kitty-disable-zsh-launcher.patch ];
-  });
   # Force hyprland-qtutils to a known-good version (0.1.5)
   hyprland-qtutils = prev.hyprland-qtutils.overrideAttrs (old: let
     version = "0.1.5";
