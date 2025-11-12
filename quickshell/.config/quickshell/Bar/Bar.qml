@@ -178,7 +178,7 @@ Scope {
                             DiagSep { stripeEnabled: false; visible: Settings.settings.showWeatherInBar === true; Layout.alignment: Qt.AlignVCenter }
                         }
 
-                        // Right triangle above the network indicator cluster
+                        // Right triangle above the network indicator cluster (kept INSIDE panel surface)
                         Canvas {
                             id: netTriangle
                             visible: leftPanel.debugNetTriangle && netCluster.visible
@@ -187,10 +187,16 @@ Scope {
                             property int sz: Math.max(8, Math.round(Theme.uiRadiusSmall * 1.5 * leftPanel.s))
                             width: sz
                             height: sz
-                            anchors.bottom: leftBarBackground.top
-                            anchors.bottomMargin: Math.round(2 * leftPanel.s)
+                            // Important: anchor to the top edge so the triangle stays within the panel surface
+                            // (when anchored to bottom of top edge it could land outside of the surface and be clipped).
+                            anchors.top: leftBarBackground.top
+                            anchors.topMargin: Math.round(1 * leftPanel.s)
                             // Center horizontally over netCluster
                             x: Math.round(netCluster.mapToItem(leftPanelContent, netCluster.width / 2, 0).x - width / 2)
+                            onVisibleChanged: requestPaint()
+                            onXChanged: requestPaint()
+                            onWidthChanged: requestPaint()
+                            onHeightChanged: requestPaint()
                             onPaint: {
                                 var ctx = getContext('2d');
                                 ctx.reset();

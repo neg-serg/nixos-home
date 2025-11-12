@@ -102,6 +102,8 @@ in
 
     postPatch = ''
       patchShebangs playlists
+      substituteInPlace gui/main.cpp \
+        --replace "file.open(QIODevice::WriteOnly);" "(void)file.open(QIODevice::WriteOnly);"
     '';
 
     buildInputs =
