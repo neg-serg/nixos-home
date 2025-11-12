@@ -432,7 +432,14 @@ Scope {
                     anchors.bottom: true
                     anchors.left: true
                     anchors.right: true
-                    visible: monitorEnabled && seamPanel.rawGapWidth > 0
+                    // Readiness filter: when enabled, only show seam once geometry stabilizes.
+                    // Prevents early full-width flash while rows are still measuring.
+                    property bool useReadinessFilter: true
+                    visible: monitorEnabled && (
+                        !seamPanel.useReadinessFilter
+                        ? (seamPanel.rawGapWidth > 0)
+                        : (seamPanel.geometryReady)
+                    )
                     exclusionMode: ExclusionMode.Ignore
                     exclusiveZone: 0
                     WlrLayershell.namespace: "quickshell-bar-seam"
@@ -587,7 +594,7 @@ Scope {
 
                     // Debug overlay: visualize computed regions with solid boxes always visible
                     Item {
-                        visible: seamPanel.debugSeam
+                        visible: seamPanel.debugSeam && (!seamPanel.useReadinessFilter || seamPanel.geometryReady)
                         anchors.fill: parent
                         z: 200000
 
