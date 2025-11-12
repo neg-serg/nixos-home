@@ -9,7 +9,7 @@ with lib;
 let
   firefoxEnabled = config.features.web.enable && config.features.web.firefox.enable;
 in
-  mkIf firefoxEnabled (
+  if firefoxEnabled then
     let
       common = import ./mozilla-common-lib.nix {inherit lib pkgs config faProvider;};
       inherit (import ./firefox/prefgroups.nix {inherit lib;}) modules prefgroups;
@@ -258,18 +258,21 @@ in
             nomime = true;
           };
         };
-        desktopItems = builtins.attrValues (builtins.mapAttrs (n: entry:
-          pkg.desktopItem.override (item: {
-            inherit name;
-            desktopName = entry.name;
-            mimeTypes =
-              if (entry.nomime or false)
-              then []
-              else item.mimeTypes;
-            actions = {};
-            exec =
-              "${item.exec} ${if (entry.noremote or false) then "-no-remote" else ""} -P ${entry.profile}";
-          }) entries));
+        desktopItems = builtins.attrValues (
+          (builtins.mapAttrs (n: entry:
+            pkg.desktopItem.override (item: {
+              name = n;
+              desktopName = entry.name;
+              mimeTypes =
+                if (entry.nomime or false)
+                then []
+                else item.mimeTypes;
+              actions = {};
+              exec =
+                "${item.exec} ${if (entry.noremote or false) then "-no-remote" else ""} -P ${entry.profile}";
+            })
+          ) entries)
+        );
       in {
         buildCommand = ''
           ${pkg.buildCommand}
@@ -306,4 +309,5 @@ in
             };
         }
       ]
-  );
+  else
+    {}

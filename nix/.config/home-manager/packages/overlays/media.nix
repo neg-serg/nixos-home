@@ -1,9 +1,9 @@
 _final: prev: let
   call = prev.callPackage;
-  python313 = _final.python313Packages;
+  python313 = prev.python313Packages;
   laion_clap_pkg = call ../laion-clap {
     python3Packages = python313;
-    fetchurl = _final.fetchurl;
+    fetchurl = prev.fetchurl;
   };
   in {
     neg = let
@@ -13,6 +13,7 @@ _final: prev: let
     # Media-related tools
     mkvcleaner = call ../mkvcleaner {};
     rmpc = call ../rmpc {};
+    cantata = call ../cantata {};
     "blissify-rs" = blissify_rs;
     "laion-clap" = laion_clap_pkg;
     laion_clap = laion_clap_pkg;
