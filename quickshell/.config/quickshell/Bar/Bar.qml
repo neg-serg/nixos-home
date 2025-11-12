@@ -267,7 +267,6 @@ Scope {
                         property bool slopeUp: Settings.settings.debugTriangleLeftSlopeUp
                         // Make triangle translucent in sync with seam
                         opacity: leftPanel.seamOpacity
-                        opacity: 1.0
                         onVisibleChanged: requestPaint()
                         onXChanged: requestPaint()
                         onWidthChanged: requestPaint()
@@ -394,7 +393,6 @@ Scope {
                             opacity: rightPanel.seamOpacity
                             // Orientation control for right side
                             property bool slopeUp: Settings.settings.debugTriangleRightSlopeUp
-                            opacity: 1.0
                             onVisibleChanged: requestPaint()
                             onXChanged: requestPaint()
                             onWidthChanged: requestPaint()
