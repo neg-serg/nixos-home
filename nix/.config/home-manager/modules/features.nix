@@ -103,6 +103,14 @@ in {
       enable = mkBool "enable Torrent stack (Transmission, tools, services)" true;
     };
 
+    zapret = {
+      enable = mkBool "enable zapret DPI bypass service (NixOS-only)" false;
+    };
+
+    network = {
+      doh.enable = mkBool "enable dnscrypt-proxy (DoH) stack (NixOS-only)" false;
+    };
+
     # Fun/extras (e.g., curated art assets) that are nice-to-have
     fun = {
       enable = mkBool "enable fun extras (art collections, etc.)" true;
