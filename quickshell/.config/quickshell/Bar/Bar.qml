@@ -238,10 +238,13 @@ Scope {
                         height: side
                         anchors.top: parent.top
                         anchors.topMargin: Math.max(1, Math.round(1 * leftPanel.s))
-                        // Align the triangle to the LEFT edge of the central green seam (gapStart)
-                        // Place the triangle so its right edge coincides with seamPanel.gapStart
-                        // (both windows share screen origin at x=0)
-                        x: Math.round((seamPanel ? seamPanel.gapStart : leftPanel.width) - width)
+                        // Place the triangle over the LEFT PART of the seam.
+                        // Right edge sits at gapStart + seamWidth * fraction (default 0.25 for left quarter).
+                        property real seamPosFraction: 0.25
+                        x: Math.round(
+                            (seamPanel ? (seamPanel.gapStart + Math.max(0, seamPanel.seamWidthPx * seamPosFraction)) : leftPanel.width)
+                            - width
+                        )
                         // Green, semi-transparent like seam; reuse leftPanel.seamOpacity as alpha
                         property color triangleColor: Color.withAlpha("#00FF00", leftPanel.seamOpacity)
                         onVisibleChanged: requestPaint()
