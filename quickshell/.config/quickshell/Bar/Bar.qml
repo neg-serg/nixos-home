@@ -262,8 +262,8 @@ Scope {
                         anchors.topMargin: 0
                         // Use theme accent color from Theme; keep fully opaque
                         // If transparency is needed, prefer Canvas.opacity rather than embedding alpha in the color.
-                        // Match seam tint color when enabled; fallback to base fill
-                        property color triangleColor: seamPanel.seamTintEnabled ? seamPanel.seamTintColor : seamPanel.seamFillColor
+                        // Match seam fill color for seamless continuation
+                        property color triangleColor: seamPanel.seamFillColor
                         // Orientation control: slopeUp = bottom-left → top-right; otherwise top-left → bottom-right
                         property bool slopeUp: Settings.settings.debugTriangleLeftSlopeUp
                         // Opacity follows seam effect strength scaled by user factor
@@ -390,8 +390,8 @@ Scope {
                             anchors.left: rightPanelContent.left
                             anchors.leftMargin: Math.round(rightNetTriangleAnchor.seamStartLocal)
                             anchors.topMargin: 0
-                            // Match seam tint color when enabled; fallback to base fill
-                            property color triangleColor: seamPanel.seamTintEnabled ? seamPanel.seamTintColor : seamPanel.seamFillColor
+                            // Match seam fill color for seamless continuation
+                            property color triangleColor: seamPanel.seamFillColor
                             // Opacity follows seam effect strength scaled by user factor
                             opacity: Math.max(0.0, Math.min(1.0,
                                 seamPanel.seamEffectOpacity * Settings.settings.debugTriangleRightOpacity
