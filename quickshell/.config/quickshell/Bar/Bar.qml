@@ -166,6 +166,14 @@ Scope {
                                 }
                                 NetworkUsage { id: net }
                             }
+                            // Logical anchor position for the custom triangle placed "after network"
+                            // This doesn't consume layout width (preferredWidth=0), it's used only to compute x
+                            Item {
+                                id: netTriangleSlot
+                                Layout.alignment: Qt.AlignVCenter
+                                Layout.preferredWidth: 0
+                                visible: netCluster.visible
+                            }
                             DiagSep {
                                 Layout.alignment: Qt.AlignVCenter
                                 Layout.preferredHeight: leftBarBackground.height
@@ -238,12 +246,13 @@ Scope {
                         height: side
                         anchors.top: parent.top
                         anchors.topMargin: Math.max(1, Math.round(1 * leftPanel.s))
-                        // Place the triangle over the LEFT PART of the seam.
-                        // Right edge sits at gapStart + seamWidth * fraction (default 0.25 for left quarter).
+                        // Place the triangle right after the network cluster (logical position in row),
+                        // falling back to the left part of the seam if the slot is absent.
                         property real seamPosFraction: 0.25
                         x: Math.round(
-                            (seamPanel ? (seamPanel.gapStart + Math.max(0, seamPanel.seamWidthPx * seamPosFraction)) : leftPanel.width)
-                            - width
+                            netTriangleSlot && netTriangleSlot.visible
+                                ? (netTriangleSlot.mapToItem(leftPanel, netTriangleSlot.width, 0).x - width)
+                                : ((seamPanel ? (seamPanel.gapStart + Math.max(0, seamPanel.seamWidthPx * seamPosFraction)) : leftPanel.width) - width)
                         )
                         // Green, semi-transparent like seam; reuse leftPanel.seamOpacity as alpha
                         property color triangleColor: Color.withAlpha("#00FF00", leftPanel.seamOpacity)
