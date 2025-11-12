@@ -238,8 +238,9 @@ Scope {
                         height: side
                         anchors.top: leftBarBackground.top
                         anchors.topMargin: Math.max(1, Math.round(1 * leftPanel.s))
-                        // Position by the right edge of NetworkUsage (more stable than the whole cluster)
-                        x: Math.round(net.mapToItem(leftPanel, net.width, 0).x - width)
+                        // Pin to the rightmost edge of the left panel window
+                        anchors.right: leftBarBackground.right
+                        anchors.rightMargin: 0
                         // Green, semi-transparent like seam; reuse leftPanel.seamOpacity as alpha
                         property color triangleColor: Color.withAlpha("#00FF00", leftPanel.seamOpacity)
                         onVisibleChanged: requestPaint()
