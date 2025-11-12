@@ -469,10 +469,14 @@ Scope {
                     // Readiness filter: when enabled, only show seam once geometry stabilizes.
                     // Prevents early full-width flash while rows are still measuring.
                     property bool useReadinessFilter: true
+                    // Debug switch: force seam visible regardless of readiness to verify rendering/ordering
+                    property bool debugForceVisible: true
                     visible: monitorEnabled && (
-                        !seamPanel.useReadinessFilter
-                        ? (seamPanel.rawGapWidth > 0)
-                        : (seamPanel.geometryReady)
+                        seamPanel.debugForceVisible || (
+                            !seamPanel.useReadinessFilter
+                            ? (seamPanel.rawGapWidth > 0)
+                            : (seamPanel.geometryReady)
+                        )
                     )
                     exclusionMode: ExclusionMode.Ignore
                     exclusiveZone: 0
@@ -483,14 +487,15 @@ Scope {
                     property int seamHeightPx: Math.round(Theme.panelHeight * s)
                     property real seamTaperTop: 0.12
                     property real seamTaperBottom: 0.65
-                    property real seamEffectOpacity: Math.min(1.0, Math.max(0.45, Theme.uiSeparatorOpacity * 7.5))
+                    property real seamEffectOpacity: seamPanel.debugForceVisible
+                        ? 1.0 : Math.min(1.0, Math.max(0.45, Theme.uiSeparatorOpacity * 7.5))
                     property color seamFillColor: Color.mix(Theme.surfaceVariant, Theme.background, 0.35)
                     property bool seamTintEnabled: true
                     property color seamTintColor: "#ff3a44"
-                    property real seamTintOpacity: 0.9
+                    property real seamTintOpacity: seamPanel.debugForceVisible ? 1.0 : 0.9
                     property color seamBaseColor: Theme.background
-                    property real seamBaseOpacityTop: 0.5
-                    property real seamBaseOpacityBottom: 0.65
+                    property real seamBaseOpacityTop: seamPanel.debugForceVisible ? 1.0 : 0.5
+                    property real seamBaseOpacityBottom: seamPanel.debugForceVisible ? 1.0 : 0.65
                     property real seamTintTopInsetPx: Math.round(Theme.panelWidgetSpacing * 0.55 * s)
                     property real seamTintBottomInsetPx: Math.round(Theme.panelWidgetSpacing * 0.2 * s)
                     property real seamTintFeatherPx: Math.max(1, Math.round(Theme.uiRadiusSmall * 0.35 * s))
