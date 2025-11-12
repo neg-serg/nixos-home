@@ -403,7 +403,8 @@ Scope {
                         Item {
                             id: leftWedgeVisuals
                             anchors.fill: parent
-                            visible: false
+                            // Keep visible so ShaderEffectSource can capture it; we hide via hideSource below
+                            visible: true
                             ShaderEffect {
                                 anchors.fill: parent
                                 fragmentShader: Qt.resolvedUrl("../shaders/seam_fill.frag.qsb")
@@ -435,6 +436,16 @@ Scope {
                                 property color baseColor: seamPanel.seamBaseColor
                                 blending: true
                             }
+                        }
+
+                        // Route visuals through a ShaderEffectSource so OpacityMask always has a renderable source
+                        ShaderEffectSource {
+                            id: leftWedgeSource
+                            anchors.fill: parent
+                            sourceItem: leftWedgeVisuals
+                            hideSource: true
+                            live: true
+                            recursive: true
                         }
 
                         // Triangular mask: white = keep wedge, black = discard
@@ -469,7 +480,7 @@ Scope {
                         }
                         GE.OpacityMask {
                             anchors.fill: parent
-                            source: leftWedgeVisuals
+                            source: leftWedgeSource
                             maskSource: leftWedgeMask
                         }
                     }
@@ -677,7 +688,8 @@ Scope {
                             Item {
                                 id: rightWedgeVisuals
                                 anchors.fill: parent
-                                visible: false
+                                // Keep visible so ShaderEffectSource can capture it; we hide via hideSource below
+                                visible: true
                                 ShaderEffect {
                                     anchors.fill: parent
                                     fragmentShader: Qt.resolvedUrl("../shaders/seam_fill.frag.qsb")
@@ -711,6 +723,16 @@ Scope {
                                 }
                             }
 
+                            // Route visuals through a ShaderEffectSource so OpacityMask always has a renderable source
+                            ShaderEffectSource {
+                                id: rightWedgeSource
+                                anchors.fill: parent
+                                sourceItem: rightWedgeVisuals
+                                hideSource: true
+                                live: true
+                                recursive: true
+                            }
+
                             Canvas {
                                 id: rightWedgeMask
                                 anchors.fill: parent
@@ -742,7 +764,7 @@ Scope {
                             }
                             GE.OpacityMask {
                                 anchors.fill: parent
-                                source: rightWedgeVisuals
+                                source: rightWedgeSource
                                 maskSource: rightWedgeMask
                             }
                         }
