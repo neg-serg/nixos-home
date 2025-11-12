@@ -5,10 +5,12 @@
   ...
 }:
 with lib; let
+  hmEval = config ? home;
   zapretEnabled = config.features.zapret.enable;
   zapretAvailable =
-    (options ? services)
-    && (options.services ? zapret);
+    if hmEval
+    then false
+    else (options ? services) && (options.services ? zapret);
 in {
   config = mkMerge [
     (mkIf (zapretEnabled && zapretAvailable) {
@@ -42,4 +44,3 @@ in {
     })
   ];
 }
-

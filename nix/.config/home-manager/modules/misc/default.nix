@@ -12,7 +12,5 @@ in {
       ./unfree-auto.nix
       ./fun-art.nix
       ./rustmission.nix
-    ]
-    ++ optionalPath ./doh
-    ++ optionalPath ./zapret;
+    ];
 }

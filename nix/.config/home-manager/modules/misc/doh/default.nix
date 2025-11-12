@@ -5,16 +5,23 @@
   ...
 }:
 with lib; let
+  hmEval = config ? home;
   dohEnabled = config.features.network.doh.enable;
-  dnscryptAvailable = (options ? services) && (options.services ? dnscrypt-proxy2);
-  networkingAvailable = options ? networking;
-  missingWarnings =
-    (if dohEnabled && !dnscryptAvailable then [
+  dnscryptAvailable =
+    if hmEval
+    then false
+    else (options ? services) && (options.services ? dnscrypt-proxy2);
+  networkingAvailable =
+    if hmEval
+    then false
+    else options ? networking;
+  warningMessages =
+    (lib.optional (dohEnabled && !dnscryptAvailable) (
       "features.network.doh.enable is set, but services.dnscrypt-proxy2 is unavailable in this evaluation. Import this module from a NixOS system configuration."
-    ] else [ ])
-    ++ (if dohEnabled && !networkingAvailable then [
+    ))
+    ++ (lib.optional (dohEnabled && !networkingAvailable) (
       "features.network.doh.enable is set, but networking options are unavailable in this evaluation."
-    ] else [ ]);
+    ));
 in {
   config = mkMerge [
     (mkIf (dohEnabled && dnscryptAvailable) {
@@ -67,9 +74,6 @@ in {
         wireless.iwd.settings.Network.NameResolvingService = "none";
       };
     })
-    (optionalAttrs (missingWarnings != [ ]) {
-      warnings = missingWarnings;
-    })
+    (optionalAttrs (warningMessages != []) {warnings = warningMessages;})
   ];
 }
-
