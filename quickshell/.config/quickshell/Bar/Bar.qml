@@ -265,6 +265,8 @@ Scope {
                         property color triangleColor: Theme.accentPrimary
                         // Orientation control: slopeUp = bottom-left → top-right; otherwise top-left → bottom-right
                         property bool slopeUp: Settings.settings.debugTriangleLeftSlopeUp
+                        // Make triangle translucent in sync with seam
+                        opacity: leftPanel.seamOpacity
                         opacity: 1.0
                         onVisibleChanged: requestPaint()
                         onXChanged: requestPaint()
@@ -386,8 +388,10 @@ Scope {
                             anchors.left: rightPanelContent.left
                             anchors.leftMargin: Math.round(rightNetTriangleAnchor.seamStartLocal)
                             anchors.topMargin: 0
-                            // Theme accent color, opaque
+                            // Theme accent color
                             property color triangleColor: Theme.accentPrimary
+                            // Make triangle translucent in sync with seam
+                            opacity: rightPanel.seamOpacity
                             // Orientation control for right side
                             property bool slopeUp: Settings.settings.debugTriangleRightSlopeUp
                             opacity: 1.0
