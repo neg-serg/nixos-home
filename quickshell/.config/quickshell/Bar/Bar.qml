@@ -455,6 +455,11 @@ Scope {
                     readonly property real monitorWidth: seamPanel.screen ? seamPanel.screen.width : seamPanel.width
                     // Debug: enable to overlay bounding boxes and logs
                     property bool debugSeam: true
+                    // Consider geometry "ready" only when left/right fills are measured and gap is sane
+                    readonly property bool leftReady: _leftFillWidth > Math.max(8, leftPanel.sideMargin + leftPanel.widgetSpacing)
+                    readonly property bool rightReady: _rightFillWidth > Math.max(8, rightPanel.sideMargin + rightPanel.widgetSpacing)
+                    readonly property bool gapSane: rawGapWidth < (monitorWidth * 0.98)
+                    readonly property bool geometryReady: leftReady && rightReady && gapSane
 
                     readonly property real _leftFillWidth: leftBarFill ? leftBarFill.width : seamPanel.monitorWidth / 2
                     readonly property real _rightFillWidth: rightBarFill ? rightBarFill.width : seamPanel.monitorWidth / 2
@@ -517,6 +522,8 @@ Scope {
                     }
 
                     Item {
+                        // Render shader content only after geometry stabilizes
+                        visible: seamPanel.geometryReady
                         width: seamPanel.seamWidthPx + 2
                         height: seamPanel.seamHeightPx
                         anchors.bottom: parent.bottom
