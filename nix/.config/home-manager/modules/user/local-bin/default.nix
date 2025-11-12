@@ -94,6 +94,10 @@ with lib;
             src = ./scripts/main-menu.sh;
           }
           {
+            name = "hypr-shortcuts";
+            src = ./scripts/hypr-shortcuts.sh;
+          }
+          {
             name = "mpd-add";
             src = ./scripts/mpd-add.sh;
           }

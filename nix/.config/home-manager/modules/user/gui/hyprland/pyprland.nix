@@ -10,28 +10,8 @@ with lib;
       pyprland.plugins = [
         "fetch_client_menu"
         "scratchpads"
-        "shortcuts_menu"
         "toggle_special"
       ];
-      shortcuts_menu.entries = {
-        "Fetch window" = "pypr fetch_client_menu";
-        "Hyprland socket" = ''kitty  socat - "UNIX-CONNECT:$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock"'';
-        "Hyprland logs" = ''kitty tail -f $XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/hyprland.log'';
-        "Copy password" = [
-          {
-            name = "what";
-            command = "gopass ls --flat";
-          }
-          "gopass show -c [what]"
-        ];
-        "Update/Change password" = [
-          {
-            name = "what";
-            command = "gopass ls --flat";
-          }
-          ''kitty -- gopass generate -s --strict -t '[what]' && gopass show -c '[what]'"''
-        ];
-      };
       scratchpads = {
         im = {
           animation = "";
