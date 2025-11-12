@@ -236,10 +236,10 @@ Scope {
                         property int side: leftPanel.barHeightPx
                         width: side
                         height: side
-                        anchors.top: leftBarBackground.top
+                        anchors.top: parent.top
                         anchors.topMargin: Math.max(1, Math.round(1 * leftPanel.s))
                         // Pin to the rightmost edge of the left panel window
-                        anchors.right: leftBarBackground.right
+                        anchors.right: parent.right
                         anchors.rightMargin: 0
                         // Green, semi-transparent like seam; reuse leftPanel.seamOpacity as alpha
                         property color triangleColor: Color.withAlpha("#00FF00", leftPanel.seamOpacity)
