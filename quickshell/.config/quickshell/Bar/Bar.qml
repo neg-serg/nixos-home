@@ -233,6 +233,27 @@ Scope {
                         blending: true
                     }
 
+                    Item {
+                        id: netTriangleAnchor
+                        width: 0
+                        height: 0
+                        anchors.top: parent.top
+                        property real seamPosFraction: 0.25
+                        readonly property real _fillWidth: leftBarFill ? leftBarFill.width : leftPanelContent.width
+                        readonly property real _seamWidth: seamPanel
+                          ? Math.max(8, Math.min(_fillWidth, seamPanel.seamWidthPx))
+                          : Math.max(8, leftPanel.seamWidth || 0)
+                        readonly property real _fallbackEdge: Math.max(
+                          0,
+                          Math.min(leftPanelContent.width, _fillWidth - _seamWidth)
+                        )
+                        x: Math.round(
+                          (netCluster && netCluster.visible && netCluster.width > 0)
+                            ? netCluster.mapToItem(leftPanelContent, netCluster.width, 0).x
+                            : (_fallbackEdge + Math.max(0, _seamWidth * seamPosFraction))
+                        )
+                    }
+
                     // Right-angled (rectangular) triangle overlay, above all panel content and outside tint capture
                     Canvas {
                         id: netTriangleOverlay
@@ -245,15 +266,9 @@ Scope {
                         width: side
                         height: side
                         anchors.top: parent.top
+                        anchors.right: netTriangleAnchor.right
                         anchors.topMargin: Math.max(1, Math.round(1 * leftPanel.s))
-                        // Place the triangle right after the network cluster (visual right edge),
-                        // fall back to the left part of the seam if the cluster is unavailable.
-                        property real seamPosFraction: 0.25
-                        x: Math.round(
-                            (netCluster && netCluster.visible && netCluster.width > 0)
-                                ? (netCluster.mapToItem(leftPanelContent, netCluster.width, 0).x - width)
-                                : ((seamPanel ? (seamPanel.gapStart + Math.max(0, seamPanel.seamWidthPx * seamPosFraction)) : leftPanel.width) - width)
-                        )
+                        anchors.rightMargin: 0
                         // Green, semi-transparent like seam; reuse leftPanel.seamOpacity as alpha
                         property color triangleColor: Color.withAlpha("#00FF00", leftPanel.seamOpacity)
                         onVisibleChanged: requestPaint()
