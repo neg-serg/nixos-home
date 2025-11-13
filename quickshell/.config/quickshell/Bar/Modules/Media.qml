@@ -360,14 +360,14 @@ Item {
                     textFormat: Text.RichText
                     renderType: Text.NativeRendering
                     wrapMode: Text.NoWrap
-                    // Brackets reuse the same accent as the time markers
+                    // Brackets use the same accent as the separator (minus)
                     property string timeColor: (function(){
                         var c = MusicManager.isPlaying ? Theme.textPrimary : Theme.textSecondary;
                         var a = MusicManager.isPlaying ? Theme.mediaTimeAlphaPlaying : Theme.mediaTimeAlphaPaused;
                         return Format.colorCss(c, a);
                     })()
                     property string titlePart: (MusicManager.trackArtist || MusicManager.trackTitle)
-                        ? [MusicManager.trackArtist, MusicManager.trackTitle].filter(function(x){return !!x;}).join(" ")
+                        ? [MusicManager.trackArtist, MusicManager.trackTitle].filter(function(x){return !!x;}).join(" - ")
                         : ""
                     // Bind against accent so changes retrigger (same color for minus and brackets)
                     property string _accentCss: (mediaControl.mediaAccentCss ? mediaControl.mediaAccentCss : Format.colorCss(Theme.accentPrimary, 1))
@@ -375,22 +375,30 @@ Item {
                     property int _accentVer: mediaControl.accentVersion
                     text: (function(){
                         if (!trackText.titlePart) return "";
+                        const sepChar = (Settings.settings.mediaTitleSeparator || '—');
                         let _v = trackText._accentVer; // force re-eval when accent changes
-                        let t = Rich.esc(trackText.titlePart);
+                        let t = Rich.esc(trackText.titlePart)
+                                   .replace(/\s(?:-|–|—)\s/g, function(){
+                                        return trackText._accentReady
+                                            ? ("&#8201;" + Rich.sepSpan(trackText._accentCss, sepChar) + "&#8201;")
+                                            : ("&#8201;" + Rich.esc(sepChar) + "&#8201;");
+                                   });
                         const cur = Format.fmtTime(MusicManager.currentPosition || 0);
                         const tot = Format.fmtTime(Time.mprisToMs(MusicManager.trackLength || 0));
                         const bp = Rich.bracketPair(Settings.settings.timeBracketStyle || "square");
-                        const ofLabel = qsTr("of");
-                        const timeSummary = cur && tot ? (cur + " " + ofLabel + " " + tot) : (cur || tot);
                         if (trackText._accentReady) {
                             return t
                                    + " &#8201;" + Rich.bracketSpan(trackText._accentCss, bp.l)
-                                   + Rich.timeSpan(trackText.timeColor, timeSummary)
+                                   + Rich.timeSpan(trackText.timeColor, cur)
+                                   + Rich.sepSpan(trackText._accentCss, '/')
+                                   + Rich.timeSpan(trackText.timeColor, tot)
                                    + Rich.bracketSpan(trackText._accentCss, bp.r);
                         } else {
                             return t
                                    + " &#8201;" + Rich.esc(bp.l)
-                                   + Rich.timeSpan(trackText.timeColor, timeSummary)
+                                   + Rich.timeSpan(trackText.timeColor, cur)
+                                   + Rich.esc('/')
+                                   + Rich.timeSpan(trackText.timeColor, tot)
                                    + Rich.esc(bp.r);
                         }
                     })()
