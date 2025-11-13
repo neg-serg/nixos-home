@@ -9,14 +9,10 @@ import qs.Services as Services
 OverlayToggleCapsule {
     id: root
     readonly property real capsuleScale: capsule.capsuleScale
-    property int padding: capsule.capsulePadding
     readonly property int iconBox: capsule.capsuleInner
     capsule.backgroundKey: "weather"
-    capsule.paddingScale: capsule.paddingScaleFor(root.padding)
-    capsule.verticalPaddingScale: capsule.paddingScaleFor(root.padding)
     capsule.centerContent: true
     capsule.cursorShape: Qt.PointingHandCursor
-    capsule.forceHeightFromMetrics: true
     capsuleVisible: true
     autoToggleOnTap: false
     overlayNamespace: "sideleft-weather"
