@@ -6,30 +6,22 @@ import qs.Settings
 import qs.Widgets.SidePanel
 import qs.Services as Services
 
-Item {
+OverlayToggleCapsule {
     id: root
-    readonly property bool expanded: weatherOverlay.expanded
     readonly property real capsuleScale: capsule.capsuleScale
-    readonly property var capsuleMetrics: capsule.capsuleMetrics
     property int padding: capsule.capsulePadding
     readonly property int iconBox: capsule.capsuleInner
-    readonly property alias capsule: capsule
-
-    width: capsule.capsuleHeight
-    height: capsule.capsuleHeight
-    implicitWidth: width
-    implicitHeight: height
-
-    WidgetCapsule {
-        id: capsule
-        anchors.fill: parent
-        backgroundKey: "weather"
-        paddingScale: capsule.paddingScaleFor(root.padding)
-        verticalPaddingScale: paddingScale
-        centerContent: true
-        cursorShape: Qt.PointingHandCursor
-        contentYOffset: 0
-    }
+    capsule.backgroundKey: "weather"
+    capsule.paddingScale: capsule.paddingScaleFor(root.padding)
+    capsule.verticalPaddingScale: capsule.paddingScaleFor(root.padding)
+    capsule.centerContent: true
+    capsule.cursorShape: Qt.PointingHandCursor
+    capsule.forceHeightFromMetrics: true
+    capsuleVisible: true
+    autoToggleOnTap: false
+    overlayNamespace: "sideleft-weather"
+    onOpened: { try { Services.Weather.start(); } catch (e) {} }
+    onDismissed: { try { Services.Weather.stop(); } catch (e) {} }
 
     IconButton {
         id: weatherBtn
@@ -40,22 +32,14 @@ Item {
         accentColor: Theme.accentPrimary
         iconNormalColor: Theme.textPrimary
         iconHoverColor: Theme.onAccent
-        onClicked: root.toggle()
+        onClicked: root.toggle("weather")
         hoverEnabled: true
         onEntered: {
             try { weather.startWeatherFetch(); } catch (e) {}
         }
     }
 
-    function toggle() {
-        weatherOverlay.toggle("weather");
-    }
-
-    OverlayToggle {
-        id: weatherOverlay
-        overlayNamespace: "sideleft-weather"
-        onOpened: { try { Services.Weather.start(); } catch (e) {} }
-        onDismissed: { try { Services.Weather.stop(); } catch (e) {} }
+    overlayChildren: [
         Rectangle {
             id: popup
             radius: Math.round(Theme.panelOverlayRadius * capsuleScale)
@@ -73,7 +57,7 @@ Item {
                 height: Math.round(Theme.sidePanelWeatherHeight * capsuleScale)
             }
         }
-    }
+    ]
 
     StyledTooltip {
         id: weatherTip

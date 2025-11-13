@@ -62,8 +62,10 @@ Row {
     property color inlineBgColor: Theme.background
     property color inlineBorderColor: Theme.borderSubtle
 
-    OverlayToggle {
+    OverlayToggleCapsule {
         id: trayOverlay
+        capsuleVisible: false
+        autoToggleOnTap: false
         screen: root.screen
         showOverlay: false
         overlayColor: showOverlay ? Theme.overlayStrong : "transparent"
