@@ -75,6 +75,9 @@ This document summarizes how shaders are used in this Quickshell setup, how the 
    ```
    Должны появиться сплошные полупрозрачные подсветки поверх панелей.
 4) Если ShaderEffect виден, но треугольник не «вырезается», увеличить ширину: `QS_WEDGE_WIDTH_PCT=60` (или 80) и сменить наклон в `Settings.json`.
+5) Убедиться, что источники скрываются: `ShaderEffectSource.hideSource` привязан к активности соответствующего `Loader` (иначе оригинальные прямоугольники поверх/под шейдером скрывают «дырку»).
+
+Скриншот (Wayland): `grim -g "$(slurp)" wedge.png`.
 
 ### Ограничения/заметки
 
@@ -171,6 +174,9 @@ Slope direction can be changed in settings: `debugTriangleLeftSlopeUp`, `debugTr
    QS_ENABLE_WEDGE_CLIP=1 QS_WEDGE_DEBUG=1 QS_WEDGE_TINT_TEST=1 qs
    ```
 4) If ShaderEffect is visible but the wedge is not obvious, increase width: `QS_WEDGE_WIDTH_PCT=60` (or 80) and flip slope flags in settings if needed.
+5) Ensure sources are hidden: bind `ShaderEffectSource.hideSource` to the corresponding clip `Loader.active`, otherwise the original rectangles over/under the effect will visually fill the “hole”.
+
+Wayland screenshot: `grim -g "$(slurp)" wedge.png`.
 
 ### Notes / limitations
 
@@ -185,14 +191,17 @@ Slope direction can be changed in settings: `debugTriangleLeftSlopeUp`, `debugTr
   - Most common: the original bar fill/tint rectangles still render under/over the shader and visually cover the hole. Hide them when the shader path is active and show only the ShaderEffect variants. Also ensure all `OpacityMask` fallbacks are disabled in shader mode.
   - Verify ShaderEffect is actually painting: `QS_WEDGE_SHADER_TEST=1` (magenta over the whole rect).
   - Confirm the bar windows are visible: `QS_WEDGE_TINT_TEST=1`. During debug it can help to place the bars on `WlrLayer.Overlay`.
+  - Z-order during debug: raise the clip Loaders (e.g., `z: 50`) so their output is not hidden; avoid seam overlays on top while validating.
+  - Logging: enable `Settings.json` → `"debugLogs": true` to get lines like `[bar:left] wedge shader active: true …` and overlay geometry logs.
 - Zero-height shader window — the seam window may collapse to 0px; nothing renders. Fix: give it `implicitHeight` and show after geometry readiness.
 - Working directory confusion — invoking `scripts/compile_shaders.sh` outside the config dir fails. Fix: run it from `~/.config/quickshell` or `cd` there first.
 - Opposite wedge slope — wrong slope flags. Fix: flip `debugTriangleLeftSlopeUp` / `debugTriangleRightSlopeUp` in `Settings.json`.
 
 ### Next steps
 
-1) Hide original bar fill/tint rectangles when the shader path is active (keep only the ShaderEffect version).  
-2) After validation, remove Canvas/OpacityMask fallbacks and return bar layers from Overlay to Top.  
-3) Optionally expose wedge width and slope in Settings (instead of env).  
-4) Improve performance: limit `ShaderEffectSource` to the wedge area and reduce `live/recursive` where possible.  
-5) Extend docs with a concise troubleshooting checklist and Wayland screenshot examples (`grim`, `slurp`).
+1) Keep the shader-only path; leave debug/test flags off by default.  
+2) Optionally expose wedge width and slope in persistent Settings (not only env).  
+3) Improve performance: reduce `ShaderEffectSource` region to the wedge strip; review `live/recursive`.  
+4) Polish visuals: tune `feather` using theme radius/scale; keep left/right in sync.  
+5) Add a small Settings toggle to reset width/slope env overrides.  
+6) Keep `scripts/compile_shaders.sh` documented as the canonical rebuild step.
