@@ -6,15 +6,11 @@ import "../../Helpers/Utils.js" as Utils
 import qs.Services as Services
 
 // Amnezia VPN status indicator (polls `ip -j -br a`)
-CenteredCapsuleRow {
+ConnectivityCapsule {
     id: root
 
-    // Match network usage label size with standard small font
-    property int labelPixelSize: Math.round(Theme.fontSizeSmall * capsuleScale)
     property bool useTheme:true
     property bool showLabel:true
-    property int iconSpacingPx:Theme.vpnIconSpacing
-    property int textPaddingPx:Theme.vpnTextPadding
     property int iconBaselineAdjustPx:Theme.vpnIconVAdjust
     property real iconScaleFactor:Theme.vpnIconScale
     property string iconName: "verified_user"
@@ -32,14 +28,12 @@ CenteredCapsuleRow {
     property real disconnectedOpacity: Theme.vpnDisconnectedOpacity
     property bool connected: false
     property string matchedIf: ""
-    property int horizontalPadding: Math.max(4, Math.round(Theme.panelRowSpacingSmall * capsuleScale))
     backgroundKey: "vpn"
-    paddingScale: paddingScaleFor(horizontalPadding)
     visible: connected
     desiredInnerHeight: capsuleInner
     fontPixelSize: root.labelPixelSize
-    textPadding: root.textPaddingPx
-    iconSpacing: root.iconSpacingPx
+    textPadding: Theme.vpnTextPadding
+    iconSpacing: Theme.vpnIconSpacing
     iconMode: "material"
     materialIconName: root.iconName
     materialIconRounded: root.iconRounded

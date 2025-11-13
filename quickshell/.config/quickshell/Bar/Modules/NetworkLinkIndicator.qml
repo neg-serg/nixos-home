@@ -5,17 +5,11 @@ import qs.Settings
 import "../../Helpers/ConnectivityUi.js" as ConnUi
 
 // Standalone indicator for physical link / internet availability
-CenteredCapsuleRow {
+ConnectivityCapsule {
     id: root
-
-    property var screen: null
-    property int labelPixelSize: Math.round(Theme.fontSizeSmall * capsuleScale)
 
     property bool showLabel: false
     property string labelTextValue: "NET"
-    property int iconSpacingPx: Theme.panelRowSpacingSmall
-    property int textPaddingPx: Theme.panelRowSpacingSmall
-
     property real iconScaleFactor: Theme.networkLinkIconScale
     property int iconVAdjustPx: Theme.networkLinkIconVAdjust
     // Icon selection pool (Material Symbols names). Picked randomly on init.
@@ -35,11 +29,7 @@ CenteredCapsuleRow {
     readonly property color errorColor: ConnUi.errorColor(Settings.settings, Theme)
     property bool hasLink: Services.Connectivity.hasLink
     property bool hasInternet: Services.Connectivity.hasInternet
-    property int horizontalPadding: Math.max(4, Math.round(Theme.panelRowSpacingSmall * capsuleScale))
     backgroundKey: "networkLink"
-    paddingScale: paddingScaleFor(horizontalPadding)
-    desiredInnerHeight: capsuleInner
-    fontPixelSize: root.labelPixelSize
     iconMode: "material"
     materialIconName: currentIconName()
     iconAutoTune: true
@@ -49,9 +39,6 @@ CenteredCapsuleRow {
     labelVisible: root.showLabel
     labelText: root.labelTextValue
     labelColor: currentIconColor()
-    labelFontFamily: Theme.fontFamily
-    textPadding: root.textPaddingPx
-    iconSpacing: root.iconSpacingPx
 
     function currentIconName() {
         if (useStatusFallbackIcons) {
