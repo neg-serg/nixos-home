@@ -132,6 +132,10 @@ Scope {
                             color: leftPanel.barBgColor
                             anchors.top: leftBarBackground.top
                             anchors.left: leftBarBackground.left
+                            // Hide the uncut base fill when shader clip is active,
+                            // otherwise it will repaint under the clipped result and
+                            // visually "close" the wedge hole.
+                            visible: leftFaceClipLoader.active !== true
                         }
                         // Cut a triangular window from the right edge of leftBarFill
                         // so the underlying seam (in seamPanel) shows through exactly.
@@ -185,7 +189,9 @@ Scope {
                         ShaderEffect {
                             id: leftPanelTintFX
                             anchors.fill: leftBarFill
-                            visible: leftPanel.panelTintEnabled
+                            // Hide the raw tint pass when shader clip is active to prevent
+                            // double painting under the clipped tint output.
+                            visible: leftPanel.panelTintEnabled && leftFaceClipLoader.active !== true
                             fragmentShader: Qt.resolvedUrl("../shaders/panel_tint_mix.frag.qsb")
                             property var sourceSampler: leftPanelSource
                             property color tintColor: leftPanel.panelTintColor
@@ -732,6 +738,9 @@ Scope {
                             color: rightPanel.barBgColor
                             anchors.top: rightBarBackground.top
                             anchors.right: rightBarBackground.right
+                            // Hide the uncut base fill when shader clip is active to avoid
+                            // covering the wedge hole under the clipped result.
+                            visible: rightFaceClipLoader.active !== true
                         }
                         // Cut a triangular window from the left edge of rightBarFill
                         // so the underlying seam (in seamPanel) shows through exactly.
@@ -784,7 +793,9 @@ Scope {
                         ShaderEffect {
                             id: rightPanelTintFX
                             anchors.fill: rightBarFill
-                            visible: rightPanel.panelTintEnabled
+                            // Hide the raw tint when shader clip is active; the clipped
+                            // tint is rendered by rightTintClipLoader instead.
+                            visible: rightPanel.panelTintEnabled && rightFaceClipLoader.active !== true
                             fragmentShader: Qt.resolvedUrl("../shaders/panel_tint_mix.frag.qsb")
                             property var sourceSampler: rightPanelSource
                             property color tintColor: rightPanel.panelTintColor
