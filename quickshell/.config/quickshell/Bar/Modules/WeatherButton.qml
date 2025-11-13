@@ -25,7 +25,7 @@ OverlayToggleCapsule {
 
     IconButton {
         id: weatherBtn
-        anchors.centerIn: capsule
+        anchors.centerIn: parent
         size: iconBox
         icon: "partly_cloudy_day"
         cornerRadius: Theme.cornerRadiusSmall

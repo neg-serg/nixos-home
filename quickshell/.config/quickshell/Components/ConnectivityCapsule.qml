@@ -1,5 +1,6 @@
 import QtQuick
 import qs.Components
+import qs.Settings
 
 /*!
  * ConnectivityCapsule standardizes padding, font sizing, and capsule metrics for
