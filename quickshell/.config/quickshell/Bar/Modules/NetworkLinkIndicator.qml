@@ -1,14 +1,11 @@
 import QtQuick
-import QtQuick.Controls
 import qs.Components
 import qs.Services as Services
 import qs.Settings
-import "../../Helpers/Color.js" as Color
-import "../../Helpers/WidgetBg.js" as WidgetBg
 import "../../Helpers/CapsuleMetrics.js" as Capsule
 
 // Standalone indicator for physical link / internet availability
-Rectangle {
+WidgetCapsule {
     id: root
 
     property var screen: null
@@ -37,9 +34,6 @@ Rectangle {
     property string iconDisconnected: "link_off"
     property bool useStatusFallbackIcons: false
     property string _selectedIcon: "schema"
-    property color bgColor: WidgetBg.color(Settings.settings, "networkLink", "rgba(10, 12, 20, 0.2)")
-    readonly property real hoverMixAmount: 0.18
-    readonly property color hoverColor: Color.mix(bgColor, Qt.rgba(1, 1, 1, 1), hoverMixAmount)
 
     readonly property color connectedColor: Theme.textSecondary
     readonly property color warningColor: (Settings.settings.networkNoInternetColor || Theme.warning)
@@ -47,23 +41,13 @@ Rectangle {
     property bool hasLink: Services.Connectivity.hasLink
     property bool hasInternet: Services.Connectivity.hasInternet
     property int horizontalPadding: Math.max(4, Math.round(Theme.panelRowSpacingSmall * _scale))
-
-    implicitHeight: capsuleHeight
-    implicitWidth: inlineView.implicitWidth + 2 * horizontalPadding
-    width: implicitWidth
-    height: implicitHeight
-    color: hoverHandler.hovered ? hoverColor : bgColor
-    radius: Theme.cornerRadiusSmall
-    border.width: Theme.uiBorderWidth
-    border.color: Color.withAlpha(Theme.textPrimary, 0.08)
-    antialiasing: true
-
-    HoverHandler { id: hoverHandler }
+    backgroundKey: "networkLink"
+    paddingScale: capsuleMetrics.padding > 0
+        ? horizontalPadding / capsuleMetrics.padding
+        : 1
 
     SmallInlineStat {
         id: inlineView
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.horizontalCenter: parent.horizontalCenter
         desiredHeight: Math.max(1, capsuleMetrics.inner)
         fontPixelSize: root.fontPixelSize
         textPadding: root.textPadding

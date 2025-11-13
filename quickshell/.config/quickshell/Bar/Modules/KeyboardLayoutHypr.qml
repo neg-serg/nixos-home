@@ -76,36 +76,24 @@ Item {
     implicitWidth: Math.max(Math.round(Theme.keyboardMinWidth * sc()), Math.ceil(row.implicitWidth + 2 * horizontalPadding))
     implicitHeight: capsuleHeight
 
-    Rectangle {
+    WidgetCapsule {
         id: capsule
-        readonly property bool hovered: ma.containsMouse
         width: parent.width
         height: parent.height
         anchors.centerIn: parent
         anchors.verticalCenterOffset: kb.yNudge
-        color: hovered ? kb.hoverBgColor : kb.bgColor
-        radius: Math.round(Theme.keyboardRadius * sc())
-        border.width: Theme.uiBorderWidth
-        border.color: widgetBorderColor
-        antialiasing: true
-
-        Item {
-            id: contentBox
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.leftMargin: horizontalPadding
-            anchors.rightMargin: horizontalPadding
-            anchors.topMargin: verticalPadding
-            anchors.bottomMargin: verticalPadding
-        }
+        backgroundColorOverride: kb.bgColor
+        hoverColorOverride: kb.hoverBgColor
+        borderColorOverride: widgetBorderColor
+        borderWidthOverride: Theme.uiBorderWidth
+        cornerRadiusOverride: Math.round(Theme.keyboardRadius * sc())
+        paddingScale: capsulePadding > 0 ? horizontalPadding / capsulePadding : 1
+        verticalPaddingScale: capsulePadding > 0 ? verticalPadding / capsulePadding : 1
+        backgroundKey: "keyboard"
+        contentYOffset: kb.yNudge
 
         Row {
             id: row
-            anchors.horizontalCenter: contentBox.horizontalCenter
-            anchors.verticalCenter: contentBox.verticalCenter
-            anchors.verticalCenterOffset: kb.yNudge
             spacing: kb.iconSpacing * sc()
 
             // Metrics used for baseline alignment
@@ -137,18 +125,18 @@ Item {
             }
         }
 
-        MouseArea {
-            id: ma
-            anchors.fill: parent
-            hoverEnabled: true
-            cursorShape: Qt.PointingHandCursor
-            onClicked: {
-                // Switch only the current keyboard for minimal overhead.
-                // Using hyprctl directly (no shell) is measurably faster and avoids pulling
-                // bash into the process tree on every click.
+        TapHandler {
+            target: capsule
+            acceptedButtons: Qt.LeftButton
+            gesturePolicy: TapHandler.ReleaseWithinBounds
+            onTapped: {
                 switchProc.cmd = ["hyprctl", "switchxkblayout", "current", "next"]
                 switchProc.start()
             }
+        }
+        HoverHandler {
+            target: capsule
+            cursorShape: Qt.PointingHandCursor
         }
     }
 

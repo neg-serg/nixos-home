@@ -1,15 +1,13 @@
 import QtQuick
-import QtQuick.Controls
+import qs.Settings
 import qs.Components
 import "../../Helpers/Color.js" as Color
-import qs.Settings
 import "../../Helpers/Utils.js" as Utils
 import qs.Services as Services
-import "../../Helpers/WidgetBg.js" as WidgetBg
 import "../../Helpers/CapsuleMetrics.js" as Capsule
 
 // Amnezia VPN status indicator (polls `ip -j -br a`)
-Rectangle {
+WidgetCapsule {
     id: root
 
     readonly property real _scale: Theme.scale(Screen)
@@ -26,9 +24,6 @@ Rectangle {
     property int textPadding:Theme.vpnTextPadding
     property int iconVAdjust:Theme.vpnIconVAdjust
     property real iconScale:Theme.vpnIconScale
-    property color bgColor: WidgetBg.color(Settings.settings, "vpn", "rgba(10, 12, 20, 0.2)")
-    readonly property real hoverMixAmount: 0.18
-    readonly property color hoverColor: Color.mix(bgColor, Qt.rgba(1, 1, 1, 1), hoverMixAmount)
     property string iconName: "verified_user"
     property bool iconRounded:false
 
@@ -45,22 +40,15 @@ Rectangle {
     property bool connected: false
     property string matchedIf: ""
     property int horizontalPadding: Math.max(4, Math.round(Theme.panelRowSpacingSmall * _scale))
+    backgroundKey: "vpn"
+    paddingScale: capsuleMetrics.padding > 0
+        ? horizontalPadding / capsuleMetrics.padding
+        : 1
 
     visible: connected
-    implicitHeight: capsuleHeight
-    implicitWidth: inlineView.implicitWidth + 2 * horizontalPadding
-    width: implicitWidth
-    height: implicitHeight
-    color: hovered ? hoverColor : root.bgColor
-    radius: Theme.cornerRadiusSmall
-    border.width: Theme.uiBorderWidth
-    border.color: Color.withAlpha(Theme.textPrimary, 0.08)
-    antialiasing: true
 
     SmallInlineStat {
         id: inlineView
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.horizontalCenter: parent.horizontalCenter
         desiredHeight: Math.max(1, capsuleHeight - capsulePadding * 2)
         fontPixelSize: root.fontPixelSize
         textPadding: root.textPadding
@@ -120,20 +108,10 @@ Rectangle {
     }
 
     property bool muted:true
-    property bool hovered:false
-    opacity: hovered ? 1.0 : (connected ? connectedOpacity : disconnectedOpacity)
+    opacity: root.hovered ? 1.0 : (connected ? connectedOpacity : disconnectedOpacity)
     function iconColor() {
         if (!connected) return offColor
         return accentColor
-    }
-
-    MouseArea {
-        anchors.fill: parent
-        hoverEnabled: true
-        acceptedButtons: Qt.NoButton
-        onEntered: root.hovered = true
-        onExited: root.hovered = false
-        cursorShape: Qt.ArrowCursor
     }
 
     Component.onCompleted: { try { checkInterfaces(Services.Connectivity.interfaces) } catch (_) {} }
