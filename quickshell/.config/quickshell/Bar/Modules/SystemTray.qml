@@ -41,9 +41,8 @@ Row {
     property var shell
     property var screen
     property var trayMenu
-    property bool programmaticOverlayDismiss: false
     // Collapse delay handled by TrayController service
-    function dismissOverlayNow() { root.programmaticOverlayDismiss = true; trayOverlay.dismiss(); root.programmaticOverlayDismiss = false }
+    function dismissOverlayNow(reason = "programmatic") { trayOverlay.close(reason); }
     readonly property real _scale: Theme.scale(root.screen || Screen)
     readonly property var capsuleMetrics: CapsuleMetrics.metrics(Theme, _scale)
     readonly property int capsuleInnerSize: capsuleMetrics.inner
@@ -63,26 +62,20 @@ Row {
     property color inlineBgColor: Theme.background
     property color inlineBorderColor: Theme.borderSubtle
 
-    PanelWithOverlay {
+    OverlayToggle {
         id: trayOverlay
         screen: root.screen
-        visible: false
         showOverlay: false
         overlayColor: showOverlay ? Theme.overlayStrong : "transparent"
-        onVisibleChanged: {
-            if (!visible) {
-                if (trayMenu && trayMenu.visible) trayMenu.hideMenu();
-                if (root.expanded) {
-                    if (root.holdOpen || root.hotHover || root.panelHover || (trayMenu && trayMenu.visible)) {
-                    } else {
-                        if (!root.programmaticOverlayDismiss) {
-                            Services.TrayController.startCollapseDelay();
-                        } else {
-                            Services.TrayController.stopCollapseDelay();
-                            root.expanded = false;
-                        }
-                    }
-                }
+        onDismissed: reason => {
+            if (trayMenu && trayMenu.visible) trayMenu.hideMenu();
+            if (!root.expanded) return;
+            if (root.holdOpen || root.hotHover || root.panelHover || (trayMenu && trayMenu.visible)) return;
+            if (reason === "programmatic") {
+                Services.TrayController.stopCollapseDelay();
+                root.expanded = false;
+            } else {
+                Services.TrayController.startCollapseDelay();
             }
         }
     }
@@ -147,7 +140,7 @@ Row {
                             anchors.centerIn: parent
                             size: Math.max(10, capsuleInnerSize - Theme.panelTrayInlinePadding * 1.5)
                             source: modelData?.icon || ""
-                            grayscale: trayOverlay.visible
+                            grayscale: trayOverlay.expanded
                             opacity: ready ? 1 : 0
                         }
                     }
@@ -176,7 +169,7 @@ Row {
                                     const menuY = height + Math.round(Services.TrayController.menuYOffset * root._scale);
                                     trayMenu.menu = modelData.menu;
                                     trayMenu.showAt(parent, menuX, menuY);
-                                    trayOverlay.show();
+                                    trayOverlay.open("tray-menu");
                                     try { trayOverlay.showOverlay = true; } catch (e) {}
                                 }
                             }
@@ -203,7 +196,7 @@ Row {
         onClicked: {
             expanded = !expanded;
             if (expanded) { openGuard = true; Services.TrayController.startGuard(); }
-            if (expanded) { trayOverlay.show(); try { trayOverlay.showOverlay = false; } catch (e) {} }
+            if (expanded) { trayOverlay.open("tray-expanded"); try { trayOverlay.showOverlay = false; } catch (e) {} }
             else root.dismissOverlayNow();
         }
     }
@@ -246,23 +239,23 @@ Row {
 
             // No animations - static display
 
-            Rectangle {
-                anchors.centerIn: parent
-                width: Math.round(Theme.panelIconSizeSmall * root._scale)
-                height: Math.round(Theme.panelIconSizeSmall * root._scale)
-                radius: Theme.cornerRadiusSmall
-                color: "transparent"
-                clip: true
+                    Rectangle {
+                        anchors.centerIn: parent
+                        width: Math.round(Theme.panelIconSizeSmall * root._scale)
+                        height: Math.round(Theme.panelIconSizeSmall * root._scale)
+                        radius: Theme.cornerRadiusSmall
+                        color: "transparent"
+                        clip: true
 
-                TrayIcon {
-                    id: trayIcon
-                    anchors.centerIn: parent
-                    size: Math.round(Theme.panelIconSizeSmall * root._scale)
-                    source: modelData?.icon || ""
-                    grayscale: trayOverlay.visible
-                    opacity: ready ? 1 : 0
-                }
-            }
+                        TrayIcon {
+                            id: trayIcon
+                            anchors.centerIn: parent
+                            size: Math.round(Theme.panelIconSizeSmall * root._scale)
+                            source: modelData?.icon || ""
+                            grayscale: trayOverlay.expanded
+                            opacity: ready ? 1 : 0
+                        }
+                    }
 
             MouseArea {
                 id: trayMouseArea
@@ -295,7 +288,7 @@ Row {
                         // If menu is already visible, close it
                         if (trayMenu && trayMenu.visible) {
                             trayMenu.hideMenu();
-                            trayOverlay.dismiss();
+                            trayOverlay.close("programmatic");
                             return;
                         }
 
@@ -305,7 +298,7 @@ Row {
                             const menuY = height + Math.round(Services.TrayController.menuYOffset * root._scale);
                             trayMenu.menu = modelData.menu;
                             trayMenu.showAt(parent, menuX, menuY);
-                            trayOverlay.show();
+                            trayOverlay.open("tray-menu");
                             try { trayOverlay.showOverlay = false; } catch (e) {}
                         } else
                         

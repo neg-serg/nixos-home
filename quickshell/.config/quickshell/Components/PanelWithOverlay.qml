@@ -8,8 +8,11 @@ PanelWindow {
     property bool showOverlay: Settings.settings.dimPanels
     property int topMargin: Math.round(Theme.panelModuleHeight * Theme.scale(screen))
     property int bottomMargin: Math.round(Theme.panelModuleHeight * Theme.scale(screen))
-    WlrLayershell.namespace: "quickshell"
+    property string layerNamespace: "quickshell"
+    WlrLayershell.namespace: layerNamespace
     property color overlayColor: showOverlay ? Theme.overlayStrong : "transparent"
+    property bool closeOnBackgroundClick: true
+    signal backgroundClicked()
     
     function dismiss() {
         visible = false;
@@ -34,7 +37,12 @@ PanelWindow {
 
     MouseArea {
         anchors.fill: parent
-        onClicked: outerPanel.dismiss()
+        enabled: outerPanel.closeOnBackgroundClick
+        acceptedButtons: Qt.AllButtons
+        onClicked: {
+            outerPanel.backgroundClicked();
+            outerPanel.dismiss();
+        }
     }
 
     Behavior on color { enabled: showOverlay; ColorRippleBehavior {} }

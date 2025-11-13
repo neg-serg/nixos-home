@@ -8,7 +8,7 @@ import qs.Services as Services
 
 Item {
     id: root
-    property bool expanded: false
+    readonly property bool expanded: weatherOverlay.expanded
     readonly property real capsuleScale: capsule.capsuleScale
     readonly property var capsuleMetrics: capsule.capsuleMetrics
     property int padding: capsule.capsulePadding
@@ -48,19 +48,14 @@ Item {
     }
 
     function toggle() {
-        expanded = !expanded;
-        if (expanded) {
-            weatherOverlay.show();
-        } else {
-            weatherOverlay.dismiss();
-        }
+        weatherOverlay.toggle("weather");
     }
 
-    PanelWithOverlay {
+    OverlayToggle {
         id: weatherOverlay
-        visible: false
-        WlrLayershell.namespace: "sideleft-weather"
-        onVisibleChanged: { if (visible) { try { Services.Weather.start() } catch (e) {} } else { try { Services.Weather.stop() } catch (e) {} } }
+        overlayNamespace: "sideleft-weather"
+        onOpened: { try { Services.Weather.start(); } catch (e) {} }
+        onDismissed: { try { Services.Weather.stop(); } catch (e) {} }
         Rectangle {
             id: popup
             radius: Math.round(Theme.panelOverlayRadius * capsuleScale)
@@ -77,11 +72,6 @@ Item {
                 width: Math.round(Theme.sidePanelWeatherWidth * capsuleScale)
                 height: Math.round(Theme.sidePanelWeatherHeight * capsuleScale)
             }
-        }
-        MouseArea {
-            anchors.fill: parent
-            z: -1
-            onClicked: { root.expanded = false; weatherOverlay.dismiss(); }
         }
     }
 

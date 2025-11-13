@@ -2,14 +2,14 @@ import "../../Helpers/Holidays.js" as Holidays
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
- 
+
 import qs.Components
 import qs.Settings
 import "../../Helpers/Color.js" as Color
 
-PanelWithOverlay {
+OverlayToggle {
     id: calendarOverlay
-    
+    visible: false
     showOverlay: false
 
     Rectangle {
@@ -122,15 +122,12 @@ PanelWithOverlay {
                 Component.onCompleted: updateHolidays()
 
                 Connections {
-                    function onVisibleChanged() {
-                        if (calendarOverlay.visible) {
-                            calendar.month = Time.date.getMonth();
-                            calendar.year = Time.date.getFullYear();
-                            calendar.updateHolidays();
-                        }
-                    }
-
                     target: calendarOverlay
+                    function onOpened() {
+                        calendar.month = Time.date.getMonth();
+                        calendar.year = Time.date.getFullYear();
+                        calendar.updateHolidays();
+                    }
                 }
 
                 delegate: Rectangle {

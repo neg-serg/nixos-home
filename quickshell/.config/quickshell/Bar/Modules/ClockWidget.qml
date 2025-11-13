@@ -18,11 +18,10 @@ CenteredCapsuleRow {
     labelFontWeight: Theme.timeFontWeight
 
     interactive: true
-    onClicked: calendar.visible = !calendar.visible
+    onClicked: calendar.toggle()
 
     Calendar {
         id: calendar
         screen: clockWidget.screen
-        visible: false
     }
 }
