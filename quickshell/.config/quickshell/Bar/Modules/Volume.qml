@@ -1,18 +1,18 @@
 import QtQuick
-import QtQuick.Layouts
 import qs.Settings
 import qs.Components
-import qs.Bar.Modules
-import qs.Services as Services
-import "../../Helpers/Utils.js" as Utils
 
-AudioLevelCapsule {
+AudioEndpointCapsule {
     id: volumeDisplay
     settingsKey: "volume"
     iconOff: "volume_off"
     iconLow: "volume_down"
     iconHigh: "volume_up"
     labelSuffix: "%"
+    levelProperty: "volume"
+    mutedProperty: "muted"
+    changeMethod: "changeVolume"
+    toggleOnClick: false
 
     // Stub ioSelector to avoid reference errors if advanced UI isn't present
     Item {
@@ -31,11 +31,6 @@ AudioLevelCapsule {
         delay: Theme.tooltipDelayMs
     }
 
-    onWheelStep: direction => {
-        let step = Services.Audio.step || 5;
-        Services.Audio.changeVolume(direction > 0 ? step : -step);
-    }
-
     onClicked: {
         if (ioSelector.visible) {
             ioSelector.dismiss();
@@ -44,20 +39,4 @@ AudioLevelCapsule {
         }
     }
 
-    Connections {
-        target: Services.Audio
-        function onVolumeChanged() {
-            if (Services.Audio.volume === undefined) return;
-            volumeDisplay.updateFrom(Utils.clamp(Services.Audio.volume, 0, 100), Services.Audio.muted);
-        }
-        function onMutedChanged() {
-            volumeDisplay.updateFrom(volumeDisplay.level, Services.Audio.muted);
-        }
-    }
-
-    Component.onCompleted: {
-        if (Services.Audio && Services.Audio.volume !== undefined) {
-            volumeDisplay.updateFrom(Utils.clamp(Services.Audio.volume, 0, 100), Services.Audio.muted || false);
-        }
-    }
 }
