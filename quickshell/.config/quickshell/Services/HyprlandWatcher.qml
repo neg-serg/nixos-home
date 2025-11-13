@@ -2,6 +2,7 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import qs.Components
+import qs.Settings
 
 Item {
     id: root
@@ -125,7 +126,6 @@ Item {
             if (name.startsWith("name:")) name = name.substring(5);
             if (!isNaN(idVal)) root.activeWorkspaceId = idVal;
             root.activeWorkspaceName = name || "";
-            root.workspaceUpdated(root.activeWorkspaceId, root.activeWorkspaceName);
             return;
         }
         if (key === "workspace") {
