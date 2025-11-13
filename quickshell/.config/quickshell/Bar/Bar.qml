@@ -88,7 +88,12 @@ Scope {
                     exclusiveZone: 0
                     property real s: Theme.scale(leftPanel.screen)
                     property int barHeightPx: Math.round(Theme.panelHeight * s)
-                    property int sideMargin: Math.round(Theme.panelSideMargin * s)
+                    readonly property real _sideMarginBase: (
+                        Settings.settings.panelSideMarginPx !== undefined
+                        && Settings.settings.panelSideMarginPx !== null
+                        && isFinite(Settings.settings.panelSideMarginPx)
+                    ) ? Settings.settings.panelSideMarginPx : Theme.panelSideMargin
+                    property int sideMargin: Math.round(_sideMarginBase * s)
                     property int widgetSpacing: Math.round(Theme.panelWidgetSpacing * s)
                     // Provide extra spacing between widgets now that decorative separators are gone
                     property int interWidgetSpacing: Math.max(widgetSpacing, Math.round(widgetSpacing * 1.35))
@@ -678,7 +683,12 @@ Scope {
                     exclusiveZone: 0
                     property real s: Theme.scale(rightPanel.screen)
                     property int barHeightPx: Math.round(Theme.panelHeight * s)
-                    property int sideMargin: Math.round(Theme.panelSideMargin * s)
+                    readonly property real _sideMarginBase: (
+                        Settings.settings.panelSideMarginPx !== undefined
+                        && Settings.settings.panelSideMarginPx !== null
+                        && isFinite(Settings.settings.panelSideMarginPx)
+                    ) ? Settings.settings.panelSideMarginPx : Theme.panelSideMargin
+                    property int sideMargin: Math.round(_sideMarginBase * s)
                     property int widgetSpacing: Math.round(Theme.panelWidgetSpacing * s)
                     property int interWidgetSpacing: Math.max(widgetSpacing, Math.round(widgetSpacing * 1.35))
                     property int seamWidth: Math.max(8, Math.round(widgetSpacing * 0.85))
