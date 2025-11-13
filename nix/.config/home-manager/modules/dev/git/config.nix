@@ -23,10 +23,11 @@ with lib;
               pager = "delta";
               whitespace = "trailing-space,cr-at-eol";
               excludesfile = "${config.xdg.configHome}/git/ignore";
-              editor = "nvim";
+              editor = "nvim -f";
               untrackedCache = true;
               sshCommand = "ssh -i ~/.ssh/id_neg";
             };
+            sequence.editor = "nvim -f";
             color = {
               grep = "auto";
               showbranch = "auto";

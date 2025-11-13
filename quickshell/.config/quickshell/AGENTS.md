@@ -36,3 +36,11 @@ Style / contribution
 - Keep changes minimal and focused; follow existing QML/JS style.
 - Do not introduce unrelated changes; mention known unrelated issues separately.
 - Update Docs when behavior or workflow changes; the docs are considered part of the contract for this config.
+
+Commit style
+- Use bracketed scope prefix consistent with this repo’s history, for example: `[gui/quickshell] Bar: …`, `[gui/quickshell] Settings: …`, `[gui/quickshell] Docs: …`.
+- Keep the subject in imperative mood, short and specific; no trailing period.
+- Examples:
+  - `[gui/quickshell] Feature: add wedge_clip shader and compile script`
+  - `[gui/quickshell] Docs: add SHADERS quick checklist and top-level README links`
+  - `[gui/quickshell] Fix: hide base fill and tint when wedge shader is active`
