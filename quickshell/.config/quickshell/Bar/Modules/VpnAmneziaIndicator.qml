@@ -30,8 +30,6 @@ ConnectivityCapsule {
     property string matchedIf: ""
     backgroundKey: "vpn"
     visible: connected
-    desiredInnerHeight: capsuleInner
-    fontPixelSize: root.labelPixelSize
     textPadding: Theme.vpnTextPadding
     iconSpacing: Theme.vpnIconSpacing
     iconMode: "material"
