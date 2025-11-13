@@ -28,3 +28,9 @@ Migration Log
 - 2025-11: `Components/InlineTrayCapsule.qml` holds the inline SystemTray background/border defaults. Reuse it for any other inline reveal capsules instead of repeating the configuration block.
 - 2025-11: `Helpers/ConnectivityUi.js` centralizes сетевые цвета и форматтеры (`formatThroughput`, `iconColor`), so VPN/link/usage modules stay in sync.
 - 2025-11: Connectivity UI changes — VPN, the new standalone `NetworkLinkIndicator`, and `NetworkUsage` must live inside the “net cluster” (left bar). The indicator picks a random Material icon from the `graph-*` / `schema` / `family_*` pool on each launch. Only the icon changes color (orange for “no internet”, pink for “no link”); throughput text stays neutral.
+
+Systemd user service (single instance)
+1. Copy the unit file: `mkdir -p ~/.config/systemd/user && cp Tools/systemd/quickshell-panel.service ~/.config/systemd/user/`.
+2. Reload units: `systemctl --user daemon-reload`.
+3. Enable + start: `systemctl --user enable --now quickshell-panel.service`.
+4. Afterwards control the panel with `systemctl --user restart quickshell-panel.service` instead of launching `qs` manually — systemd keeps only one instance alive and auto-restarts on crashes.
