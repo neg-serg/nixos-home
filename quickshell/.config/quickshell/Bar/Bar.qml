@@ -1156,11 +1156,6 @@ Scope {
                                 Layout.fillWidth: true
                                 sidePanelPopup: sidebarPopup
                             }
-                            PanelSeparator {
-                                scaleFactor: rightPanel.s
-                                panelHeightPx: rightPanel.barHeightPx
-                                visible: mediaModule.visible && Settings.settings.showMediaInBar
-                            }
                             LocalMods.MpdFlags {
                                 id: mpdFlagsBar
                                 Layout.alignment: Qt.AlignVCenter
@@ -1173,11 +1168,6 @@ Scope {
                                 enabled: _mediaVisible && MusicManager.isCurrentMpdPlayer()
                                 iconPx: Math.round(Theme.fontSizeSmall * Theme.scale(rightPanel.screen) * Theme.mpdFlagsIconScale)
                                 iconColor: Theme.textPrimary
-                            }
-                            PanelSeparator {
-                                scaleFactor: rightPanel.s
-                                panelHeightPx: rightPanel.barHeightPx
-                                visible: mpdFlagsBar.enabled
                             }
                             Item {
                                 id: systemTrayWrapper
@@ -1227,18 +1217,9 @@ Scope {
                                 }
                             }
                             CustomTrayMenu { id: externalTrayMenu }
-                            PanelSeparator {
-                                scaleFactor: rightPanel.s
-                                panelHeightPx: rightPanel.barHeightPx
-                            }
                             Microphone {
                                 id: widgetsMicrophone
                                 Layout.alignment: Qt.AlignVCenter
-                            }
-                            PanelSeparator {
-                                scaleFactor: rightPanel.s
-                                panelHeightPx: rightPanel.barHeightPx
-                                visible: widgetsMicrophone.visible
                             }
                             Volume {
                                 id: widgetsVolume
