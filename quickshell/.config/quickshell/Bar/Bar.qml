@@ -1179,14 +1179,6 @@ Scope {
                                 iconPx: Math.round(Theme.fontSizeSmall * Theme.scale(rightPanel.screen) * Theme.mpdFlagsIconScale)
                                 iconColor: Theme.textPrimary
                             }
-                            Microphone {
-                                id: widgetsMicrophone
-                                Layout.alignment: Qt.AlignVCenter
-                            }
-                            Volume {
-                                id: widgetsVolume
-                                Layout.alignment: Qt.AlignVCenter
-                            }
                             Item {
                                 id: systemTrayWrapper
                                 Layout.alignment: Qt.AlignVCenter
@@ -1235,6 +1227,14 @@ Scope {
                                 }
                             }
                             CustomTrayMenu { id: externalTrayMenu }
+                            Microphone {
+                                id: widgetsMicrophone
+                                Layout.alignment: Qt.AlignVCenter
+                            }
+                            Volume {
+                                id: widgetsVolume
+                                Layout.alignment: Qt.AlignVCenter
+                            }
                         }
 
                         MusicPopup {
