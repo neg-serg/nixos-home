@@ -81,6 +81,26 @@ This document summarizes how shaders are used in this Quickshell setup, how the 
 - Миграция на чистый шейдер‑путь: после успешной верификации можно удалить старые Canvas/OpacityMask‑fallback.
 - Производительность: эффекты работают поверх панелей; все источники идут через `ShaderEffectSource` (live, recursive), что имеет накладные расходы — держать логи включенными только на отладку.
 
+### Что уже поймали (проблемы и решения)
+
+- Ошибка `Failed to find shader … .qsb` — шейдер не собран или путь указан неверно. Решение: запустить сборку из каталога `~/.config/quickshell` или дать полный путь к скрипту. Убедиться, что `fragmentShader: Qt.resolvedUrl("../shaders/<name>.frag.qsb")`.
+- Ошибка `qsb: Unknown options: vk, sl` — в вашей версии `qsb` нет флагов Vulkan/Spir-V. Решение: использовать только `--glsl "100es,120,150"`.
+- «Ничего не меняется» — клин не виден, хотя `QS_ENABLE_WEDGE_CLIP=1`:
+  - Частая причина — базовые прямоугольники панелей (`leftBarFill/rightBarFill`) и/или их тинты всё ещё рисуются под/над шейдером и визуально закрывают «дырку». Нужно отключать исходные слои, когда активен шейдер, и оставлять только шейдерную версию. Аналогично — выключать fallback `OpacityMask` в этом режиме.
+  - Убедиться, что `ShaderEffect` действительно отрисовывается: `QS_WEDGE_SHADER_TEST=1` (в этом режиме маджента закрашивает всю область эффекта).
+  - Проверить видимость самих окон панелей: `QS_WEDGE_TINT_TEST=1` (полупрозрачная заливка поверх панелей должна быть видна). На время отладки можно поднять слой: `WlrLayer.Overlay`.
+- Нулевая высота окна с шейдерами — Seam панель может «схлопнуться» до 0px и шейдеры становятся невидимыми. Решение: дать `implicitHeight` и показывать её после «готовности геометрии».
+- Путаемся с рабочим каталогом — вызов `scripts/compile_shaders.sh` вне каталога конфигурации приводит к `No such file or directory`. Решение: запускать из `~/.config/quickshell` или явно `cd ~/.config/quickshell && scripts/compile_shaders.sh`.
+- Диагональ не в ту сторону — включены противоположные флаги наклона. Решение: переключить `debugTriangleLeftSlopeUp` / `debugTriangleRightSlopeUp` в `Settings.json`.
+
+### План доработок
+
+1) Спрятать исходные прямоугольники заливки/тинтов, когда активен путь шейдера (оставить только ShaderEffect-версии).  
+2) После подтверждения визуального результата удалить Canvas/OpacityMask‑fallback и вернуть слои панелей с Overlay на обычный Top.  
+3) Экспонировать ширину клина и наклон через `Settings` (перенести с env при желании).  
+4) Подточить производительность: ограничить `ShaderEffectSource` по области, снизить `live/recursive`, если это допустимо.  
+5) В документации закрепить «чек‑лист» отладки и добавить примеры команд для скриншотов (Wayland: `grim`, `slurp`).
+
 ---
 
 ## English (EN)
@@ -157,3 +177,22 @@ Slope direction can be changed in settings: `debugTriangleLeftSlopeUp`, `debugTr
 - After validation, prefer the shader-only path and remove the legacy Canvas/OpacityMask fallbacks.
 - Performance: ShaderEffect/ShaderEffectSource are live and recursive; keep verbose debug disabled outside troubleshooting.
 
+### Issues we hit (and fixes)
+
+- `Failed to find shader … .qsb` — shader not built or wrong path. Fix: run the build from `~/.config/quickshell` (or use the full path) and ensure `fragmentShader` points to `../shaders/<name>.frag.qsb`.
+- `qsb: Unknown options: vk, sl` — your `qsb` doesn’t support Vulkan/Spir-V flags. Fix: use GLSL only `--glsl "100es,120,150"`.
+- “Nothing changes” even with `QS_ENABLE_WEDGE_CLIP=1`:
+  - Most common: the original bar fill/tint rectangles still render under/over the shader and visually cover the hole. Hide them when the shader path is active and show only the ShaderEffect variants. Also ensure all `OpacityMask` fallbacks are disabled in shader mode.
+  - Verify ShaderEffect is actually painting: `QS_WEDGE_SHADER_TEST=1` (magenta over the whole rect).
+  - Confirm the bar windows are visible: `QS_WEDGE_TINT_TEST=1`. During debug it can help to place the bars on `WlrLayer.Overlay`.
+- Zero-height shader window — the seam window may collapse to 0px; nothing renders. Fix: give it `implicitHeight` and show after geometry readiness.
+- Working directory confusion — invoking `scripts/compile_shaders.sh` outside the config dir fails. Fix: run it from `~/.config/quickshell` or `cd` there first.
+- Opposite wedge slope — wrong slope flags. Fix: flip `debugTriangleLeftSlopeUp` / `debugTriangleRightSlopeUp` in `Settings.json`.
+
+### Next steps
+
+1) Hide original bar fill/tint rectangles when the shader path is active (keep only the ShaderEffect version).  
+2) After validation, remove Canvas/OpacityMask fallbacks and return bar layers from Overlay to Top.  
+3) Optionally expose wedge width and slope in Settings (instead of env).  
+4) Improve performance: limit `ShaderEffectSource` to the wedge area and reduce `live/recursive` where possible.  
+5) Extend docs with a concise troubleshooting checklist and Wayland screenshot examples (`grim`, `slurp`).
