@@ -132,10 +132,8 @@ Scope {
                             color: leftPanel.barBgColor
                             anchors.top: leftBarBackground.top
                             anchors.left: leftBarBackground.left
-                            // Hide the uncut base fill when shader clip is active,
-                            // otherwise it will repaint under the clipped result and
-                            // visually "close" the wedge hole.
-                            visible: leftFaceClipLoader.active !== true
+                            // Keep visible; ShaderEffectSource will hide it from the scene
+                            // only when the shader clip is active (via hideSource binding).
                         }
                         // Cut a triangular window from the right edge of leftBarFill
                         // so the underlying seam (in seamPanel) shows through exactly.
@@ -143,7 +141,9 @@ Scope {
                             id: leftBarFillSource
                             anchors.fill: leftBarFill
                             sourceItem: leftBarFill
-                            hideSource: true
+                            // Hide the source item only when we are actually using
+                            // the shader clip. Otherwise allow the base fill to draw.
+                            hideSource: leftFaceClipLoader.active === true
                             live: true
                             recursive: true
                         }
@@ -152,9 +152,10 @@ Scope {
                         ShaderEffect {
                             id: leftPanelTintFX
                             anchors.fill: leftBarFill
-                            // Hide the raw tint pass when shader clip is active to prevent
-                            // double painting under the clipped tint output.
-                            visible: leftPanel.panelTintEnabled && leftFaceClipLoader.active !== true
+                            // Keep the tint effect enabled when panelTintEnabled.
+                            // ShaderEffectSource below hides it from the scene when the
+                            // clipped-tint path is active.
+                            visible: leftPanel.panelTintEnabled
                             fragmentShader: Qt.resolvedUrl("../shaders/panel_tint_mix.frag.qsb")
                             property var sourceSampler: leftPanelSource
                             property color tintColor: leftPanel.panelTintColor
@@ -170,7 +171,8 @@ Scope {
                             id: leftPanelTintSource
                             anchors.fill: leftBarFill
                             sourceItem: leftPanelTintFX
-                            hideSource: true
+                            // Hide the tint effect when the clipped tint path is active.
+                            hideSource: leftTintClipLoader.active === true
                             live: true
                             recursive: true
                         }
@@ -667,9 +669,8 @@ Scope {
                             color: rightPanel.barBgColor
                             anchors.top: rightBarBackground.top
                             anchors.right: rightBarBackground.right
-                            // Hide the uncut base fill when shader clip is active to avoid
-                            // covering the wedge hole under the clipped result.
-                            visible: rightFaceClipLoader.active !== true
+                            // Keep visible; ShaderEffectSource will hide it from the scene
+                            // only when the shader clip is active (via hideSource binding).
                         }
                         // Cut a triangular window from the left edge of rightBarFill
                         // so the underlying seam (in seamPanel) shows through exactly.
@@ -677,7 +678,9 @@ Scope {
                             id: rightBarFillSource
                             anchors.fill: rightBarFill
                             sourceItem: rightBarFill
-                            hideSource: true
+                            // Hide the source item only when we are actually using the shader
+                            // clip. Otherwise allow the base fill to draw.
+                            hideSource: rightFaceClipLoader.active === true
                             live: true
                             recursive: true
                         }
@@ -686,9 +689,10 @@ Scope {
                         ShaderEffect {
                             id: rightPanelTintFX
                             anchors.fill: rightBarFill
-                            // Hide the raw tint when shader clip is active; the clipped
-                            // tint is rendered by rightTintClipLoader instead.
-                            visible: rightPanel.panelTintEnabled && rightFaceClipLoader.active !== true
+                            // Keep the tint effect enabled when panelTintEnabled. The
+                            // ShaderEffectSource below hides it when the clipped-tint path
+                            // is active.
+                            visible: rightPanel.panelTintEnabled
                             fragmentShader: Qt.resolvedUrl("../shaders/panel_tint_mix.frag.qsb")
                             property var sourceSampler: rightPanelSource
                             property color tintColor: rightPanel.panelTintColor
@@ -704,7 +708,8 @@ Scope {
                             id: rightPanelTintSource
                             anchors.fill: rightBarFill
                             sourceItem: rightPanelTintFX
-                            hideSource: true
+                            // Hide the tint effect when the clipped tint path is active.
+                            hideSource: rightTintClipLoader.active === true
                             live: true
                             recursive: true
                         }
