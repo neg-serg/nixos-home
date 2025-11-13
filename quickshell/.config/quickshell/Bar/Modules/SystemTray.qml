@@ -7,6 +7,7 @@ import Quickshell.Widgets
 import qs.Settings
 import qs.Components
 import qs.Services as Services
+import "../../Helpers/CapsuleMetrics.js" as Capsule
 
 Row {
     id: root
@@ -43,8 +44,14 @@ Row {
     property bool programmaticOverlayDismiss: false
     // Collapse delay handled by TrayController service
     function dismissOverlayNow() { root.programmaticOverlayDismiss = true; trayOverlay.dismiss(); root.programmaticOverlayDismiss = false }
-    spacing: Math.round(Theme.panelRowSpacing * Theme.scale(Screen))
+    readonly property real _scale: Theme.scale(Screen)
+    readonly property var capsuleMetrics: Capsule.metrics(Theme, _scale)
+    readonly property int capsuleInnerSize: capsuleMetrics.inner
+    spacing: Math.max(2, Math.round(Theme.panelRowSpacing * _scale * 0.5))
     Layout.alignment: Qt.AlignVCenter
+    readonly property int capsuleHeight: capsuleMetrics.height
+    height: capsuleHeight
+    Layout.preferredHeight: capsuleHeight
 
     property bool containsMouse: false
     property var systemTray: SystemTray
@@ -117,16 +124,16 @@ Row {
             Repeater {
                 model: systemTray.items
                 delegate: Item {
-                    width: Math.round(Theme.panelIconSize * Theme.scale(Screen))
-                    height: Math.round(Theme.panelIconSize * Theme.scale(Screen))
+                    width: capsuleInnerSize
+                    height: capsuleInnerSize
                     visible: modelData
                     // No per-icon animation; show immediately
                     opacity: 1
                     x: 0
                     Rectangle {
                         anchors.centerIn: parent
-                        width: Math.round(Theme.panelIconSizeSmall * Theme.scale(Screen))
-                        height: Math.round(Theme.panelIconSizeSmall * Theme.scale(Screen))
+                        width: Math.max(10, capsuleInnerSize - Theme.panelTrayInlinePadding)
+                        height: Math.max(10, capsuleInnerSize - Theme.panelTrayInlinePadding)
                         radius: Theme.cornerRadiusSmall
                         // Use a dark overlay for hover to avoid white-ish look
                         color: trayItemMouseArea.containsMouse ? Theme.overlayWeak : "transparent"
@@ -134,7 +141,7 @@ Row {
                         TrayIcon {
                             id: icon
                             anchors.centerIn: parent
-                            size: Math.round(Theme.panelIconSizeSmall * Theme.scale(Screen))
+                            size: Math.max(10, capsuleInnerSize - Theme.panelTrayInlinePadding * 1.5)
                             source: modelData?.icon || ""
                             grayscale: trayOverlay.visible
                             opacity: ready ? 1 : 0

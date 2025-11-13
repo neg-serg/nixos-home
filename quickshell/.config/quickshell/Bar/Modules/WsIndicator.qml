@@ -10,6 +10,7 @@ import "../../Helpers/RichText.js" as Rich
 import "../../Helpers/WsIconMap.js" as WsMap
 import "../../Helpers/WidgetBg.js" as WidgetBg
 import "../../Helpers/Color.js" as Color
+import "../../Helpers/CapsuleMetrics.js" as Capsule
 
 Rectangle {
     id: root
@@ -34,15 +35,20 @@ Rectangle {
     property int iconSpacing:Theme.wsIconSpacing
 
     readonly property real _scale: Theme.scale(Screen)
+    readonly property var capsuleMetrics: Capsule.metrics(Theme, _scale)
     property int horizontalPadding: Math.max(4, Math.round(Theme.panelRowSpacingSmall * _scale))
-    property int verticalPadding: Math.max(2, Math.round(Theme.uiSpacingXSmall * _scale))
+    property int verticalPadding: capsuleMetrics.padding
+    readonly property color capsuleColor: WidgetBg.color(Settings.settings, "workspaces", "rgba(10, 12, 20, 0.2)")
+    readonly property real hoverMixAmount: 0.18
+    readonly property color capsuleHoverColor: Color.mix(capsuleColor, Qt.rgba(1, 1, 1, 1), hoverMixAmount)
     implicitWidth: lineBox.implicitWidth + 2 * horizontalPadding
-    implicitHeight: lineBox.implicitHeight + 2 * verticalPadding
-    color: WidgetBg.color(Settings.settings, "workspaces", "rgba(10, 12, 20, 0.2)")
+    implicitHeight: capsuleMetrics.height
+    color: hoverTracker.hovered ? capsuleHoverColor : capsuleColor
     radius: Math.round(Theme.cornerRadiusSmall * _scale)
     border.width: Theme.uiBorderWidth
     border.color: Color.withAlpha(Theme.textPrimary, 0.08)
     antialiasing: true
+    HoverHandler { id: hoverTracker }
 
     // Hyprland environment
     function hyprSig() { return Quickshell.env("HYPRLAND_INSTANCE_SIGNATURE") || ""; }

@@ -15,6 +15,8 @@ Item {
     property string lastVolIconCategory: 'up'
     visible: false
     property color pillBgColor: WidgetBg.color(Settings.settings, "microphone", Theme.panelPillBackground)
+    readonly property real hoverMixAmount: 0.18
+    readonly property color hoverColor: Color.mix(pillBgColor, Qt.rgba(1, 1, 1, 1), hoverMixAmount)
     readonly property real _scale: Theme.scale(Screen)
     property int horizontalPadding: Math.max(4, Math.round(Theme.panelRowSpacingSmall * _scale * 0.8))
     property int verticalPadding: Math.max(2, Math.round(Theme.uiSpacingXSmall * _scale))
@@ -39,7 +41,7 @@ Item {
     Rectangle {
         anchors.fill: parent
         radius: Theme.cornerRadiusSmall
-        color: pillBgColor
+        color: micDisplay.containsMouse ? hoverColor : pillBgColor
         border.width: Theme.uiBorderWidth
         border.color: Color.withAlpha(Theme.textPrimary, 0.08)
         visible: micDisplay.visible

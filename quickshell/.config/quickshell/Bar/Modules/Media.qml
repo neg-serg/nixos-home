@@ -12,12 +12,16 @@ import qs.Settings
 import qs.Services
 import qs.Components
 import "../../Helpers/WidgetBg.js" as WidgetBg
+import "../../Helpers/CapsuleMetrics.js" as Capsule
 
 Item {
     id: mediaControl
     property var sidePanelPopup: null
-    property int surfacePadding: Math.max(6, Math.round(Theme.panelRowSpacingSmall * Theme.scale(Screen)))
-    property int baseHeight: Math.round((Theme.panelModuleHeight !== undefined ? Theme.panelModuleHeight : 36) * Theme.scale(Screen))
+    readonly property real _scale: Theme.scale(Screen)
+    readonly property var capsuleMetrics: Capsule.metrics(Theme, _scale)
+    property int surfacePadding: capsuleMetrics.padding
+    property int baseHeight: capsuleMetrics.height
+    readonly property int capsuleInnerSize: capsuleMetrics.inner
     implicitWidth: mediaRow.implicitWidth + surfacePadding * 2
     height: baseHeight
     implicitHeight: height
@@ -28,7 +32,7 @@ Item {
                  || MusicManager.isPaused
                  || (MusicManager.trackTitle && MusicManager.trackTitle.length > 0))
 
-    property int musicTextPx: Math.round(Theme.fontSizeSmall * Theme.scale(Screen))
+    property int musicTextPx: Math.round(Theme.fontSizeSmall * _scale)
     // Accent derived from current cover art (dominant color)
     property color mediaAccent: Theme.accentPrimary
     property string mediaAccentCss: Format.colorCss(mediaAccent, 1)
@@ -77,11 +81,14 @@ Item {
                               : null
     Timer { id: accentRetry; interval: Theme.mediaAccentRetryMs; repeat: false; onTriggered: { colorSampler.requestPaint(); if (!mediaControl.accentReady && mediaControl._accentRetryCount < Theme.mediaAccentRetryMax) { mediaControl._accentRetryCount++; start() } else { mediaControl._accentRetryCount = 0 } } }
     property color backgroundColor: WidgetBg.color(Settings.settings, "media", "rgba(10, 12, 20, 0.2)")
+    readonly property real hoverMixAmount: 0.18
+    readonly property color hoverColor: Color.mix(backgroundColor, Qt.rgba(1, 1, 1, 1), hoverMixAmount)
+    HoverHandler { id: hoverTracker }
 
     Rectangle {
         anchors.fill: parent
-        radius: Theme.cornerRadiusMedium
-        color: backgroundColor
+        radius: Theme.cornerRadiusSmall
+        color: hoverTracker.hovered ? hoverColor : backgroundColor
         antialiasing: true
         border.width: Theme.uiBorderWidth
         border.color: Color.withAlpha(Theme.textPrimary, 0.08)
@@ -91,20 +98,20 @@ Item {
         id: mediaRow
         anchors.fill: parent
         anchors.margins: surfacePadding
-        spacing: Math.round(Theme.panelWidgetSpacing * Theme.scale(Screen))
+        spacing: Math.max(4, Math.round(Theme.panelWidgetSpacing * _scale * 0.6))
 
         // Legacy inline dividers removed due to rendering issues
 
         Item {
             id: albumArtContainer
-            width: Math.round(Theme.panelIconSize * Theme.scale(Screen))
-            height: Math.round(Theme.panelIconSize * Theme.scale(Screen))
+            width: capsuleInnerSize
+            height: capsuleInnerSize
             Layout.alignment: Qt.AlignVCenter
 
             Rectangle {
                 id: albumArtwork
-                width: Math.round(Theme.panelIconSize * Theme.scale(Screen))
-                height: Math.round(Theme.panelIconSize * Theme.scale(Screen))
+                width: capsuleInnerSize
+                height: capsuleInnerSize
                 anchors.centerIn: parent
                 color: Theme.surface
                 border.color: "transparent"
@@ -192,7 +199,7 @@ Item {
                     id: fallbackIcon
                     anchors.centerIn: parent
                     icon: "music_note"
-                    size: Math.round(Theme.panelIconSizeSmall * Theme.scale(Screen))
+                    size: Math.max(12, Math.round(capsuleInnerSize * 0.6))
                     color: Color.withAlpha(Theme.textPrimary, Theme.mediaAlbumArtFallbackOpacity)
                     visible: !cover.visible
                 }
@@ -203,12 +210,12 @@ Item {
                     color: Theme.overlayWeak
                     visible: playButton.containsMouse
                     z: 2
-                    MaterialIcon {
-                        anchors.centerIn: parent
-                        icon: MusicManager.isPlaying ? "pause" : "play_arrow"
-                        size: Math.round(Theme.panelIconSizeSmall * Theme.scale(Screen))
-                        color: Theme.onAccent
-                    }
+                   MaterialIcon {
+                       anchors.centerIn: parent
+                       icon: MusicManager.isPlaying ? "pause" : "play_arrow"
+                        size: Math.max(12, Math.round(capsuleInnerSize * 0.6))
+                       color: Theme.onAccent
+                   }
                 }
 
                 MouseArea {

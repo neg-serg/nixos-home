@@ -1180,15 +1180,32 @@ Scope {
                                 id: systemTrayWrapper
                                 Layout.alignment: Qt.AlignVCenter
                                 readonly property int padding: Math.max(2, Math.round(rightPanel.widgetSpacing * 0.45))
+                                readonly property color capsuleColor: WidgetBg.color(Settings.settings, "systemTray", "rgba(10, 12, 20, 0.2)")
+                                readonly property real hoverMixAmount: 0.18
+                                readonly property color capsuleHoverColor: Color.mix(
+                                                                           capsuleColor,
+                                                                           Qt.rgba(1, 1, 1, 1),
+                                                                           hoverMixAmount)
+                                readonly property real trayContentHeight: (
+                                    systemTrayModule.capsuleHeight !== undefined
+                                        ? systemTrayModule.capsuleHeight
+                                        : (systemTrayModule.implicitHeight || systemTrayModule.height || 0)
+                                )
+                                readonly property bool hovered: trayHover.hovered
+                                                                 || systemTrayModule.panelHover
+                                                                 || systemTrayModule.hotHover
+                                                                 || systemTrayModule.expanded
                                 implicitWidth: systemTrayBackground.width
                                 implicitHeight: systemTrayBackground.height
+                                HoverHandler { id: trayHover }
 
                                 Rectangle {
                                     id: systemTrayBackground
                                     radius: Theme.cornerRadiusSmall
-                                    color: WidgetBg.color(Settings.settings, "systemTray", "rgba(10, 12, 20, 0.2)")
+                                    color: systemTrayWrapper.hovered ? systemTrayWrapper.capsuleHoverColor
+                                                                     : systemTrayWrapper.capsuleColor
                                     width: Math.max(1, systemTrayModule.implicitWidth) + systemTrayWrapper.padding * 2
-                                    height: Math.max(1, systemTrayModule.implicitHeight) + systemTrayWrapper.padding * 2
+                                    height: Math.max(1, systemTrayWrapper.trayContentHeight) + systemTrayWrapper.padding * 2
                                     border.width: Theme.uiBorderWidth
                                     border.color: Color.withAlpha(Theme.textPrimary, 0.08)
                                     antialiasing: true

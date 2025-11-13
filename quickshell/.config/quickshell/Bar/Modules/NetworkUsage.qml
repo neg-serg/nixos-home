@@ -6,15 +6,21 @@ import qs.Components
 import qs.Services as Services
 import "../../Helpers/WidgetBg.js" as WidgetBg
 import "../../Helpers/Color.js" as Color
+import "../../Helpers/CapsuleMetrics.js" as Capsule
 
 Rectangle {
     id: root
     property var screen:null
-    property int desiredHeight:Math.round(Theme.panelHeight * Theme.scale(Screen))
-    // Use standard small font size to match other bar text
-    property int fontPixelSize:Math.round(Theme.fontSizeSmall * Theme.scale(Screen))
+    readonly property real _scale: Theme.scale(Screen)
+    readonly property var capsuleMetrics: Capsule.metrics(Theme, _scale)
+    property int fontPixelSize:Math.round(Theme.fontSizeSmall * _scale)
+    readonly property int capsulePadding: capsuleMetrics.padding
+    property int desiredHeight: capsuleMetrics.inner
+    readonly property int capsuleHeight: capsuleMetrics.height
     property color textColor:Theme.textPrimary
-    property color bgColor:WidgetBg.color(Settings.settings, "network", "rgba(10, 12, 20, 0.2)")
+    property color bgColor: WidgetBg.color(Settings.settings, "network", "rgba(10, 12, 20, 0.2)")
+    readonly property real hoverMixAmount: 0.18
+    readonly property color hoverColor: Color.mix(bgColor, Qt.rgba(1, 1, 1, 1), hoverMixAmount)
     property int iconSpacing:Theme.panelRowSpacingSmall
     property string deviceMatch: ""
     property string displayText: "0"
@@ -30,19 +36,17 @@ Rectangle {
     property string iconStyleName: "Solid"
 
     property int textPadding:Theme.panelRowSpacingSmall
-    readonly property real _scale: Theme.scale(Screen)
     property int horizontalPadding: Math.max(4, Math.round(Theme.panelRowSpacingSmall * _scale))
-    property int verticalPadding: Math.max(2, Math.round(Theme.uiSpacingXSmall * _scale))
-
-    implicitHeight: Math.max(desiredHeight, inlineView.implicitHeight + 2 * verticalPadding)
+    implicitHeight: capsuleHeight
     implicitWidth: inlineView.implicitWidth + 2 * horizontalPadding
     width: implicitWidth
     height: implicitHeight
-    color: bgColor
+    color: hoverTracker.hovered ? hoverColor : bgColor
     radius: Theme.cornerRadiusSmall
     border.width: Theme.uiBorderWidth
     border.color: Color.withAlpha(Theme.textPrimary, 0.08)
     antialiasing: true
+    HoverHandler { id: hoverTracker }
 
     readonly property int computedFontPx: fontPixelSize > 0
         ? fontPixelSize
@@ -53,7 +57,7 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left
         anchors.leftMargin: horizontalPadding
-        desiredHeight: root.desiredHeight
+        desiredHeight: Math.max(1, capsuleMetrics.inner)
         fontPixelSize: root.fontPixelSize
         textPadding: root.textPadding
         iconSpacing: root.iconSpacing

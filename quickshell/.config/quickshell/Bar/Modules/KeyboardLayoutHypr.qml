@@ -8,13 +8,14 @@ import qs.Settings
 import "../../Helpers/Utils.js" as Utils
 import "../../Helpers/WidgetBg.js" as WidgetBg
 import "../../Helpers/Color.js" as Color
+import "../../Helpers/CapsuleMetrics.js" as Capsule
 
 Item {
     id: kb
 
     property string deviceMatch: ""
     property alias fontPixelSize:label.font.pixelSize
-    property int desiredHeight:Math.round(Theme.keyboardHeight * Theme.scale(Screen))
+    property int desiredHeight: capsuleMetrics.inner
     property var screen:null
     property bool useTheme:true
     property int yNudge:0
@@ -66,11 +67,14 @@ Item {
         return s ? Theme.scale(s) : 1
     }
 
+    readonly property var capsuleMetrics: Capsule.metrics(Theme, sc())
+    readonly property int capsulePadding: capsuleMetrics.padding
     property int horizontalPadding: Math.max(4, Math.round(Theme.keyboardMargin * sc()))
-    property int verticalPadding: Math.max(2, Math.round(Theme.keyboardMargin * 0.8 * sc()))
+    property int verticalPadding: Math.max(capsulePadding, Math.round(Theme.keyboardMargin * 0.8 * sc()))
+    readonly property int capsuleHeight: capsuleMetrics.height
 
     implicitWidth: Math.max(Math.round(Theme.keyboardMinWidth * sc()), Math.ceil(row.implicitWidth + 2 * horizontalPadding))
-    implicitHeight: Math.max(kb.desiredHeight, Math.ceil(row.implicitHeight + 2 * verticalPadding))
+    implicitHeight: capsuleHeight
 
     Rectangle {
         id: capsule

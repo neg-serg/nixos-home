@@ -7,24 +7,30 @@ import qs.Widgets.SidePanel
 import qs.Services as Services
 import "../../Helpers/WidgetBg.js" as WidgetBg
 import "../../Helpers/Color.js" as Color
+import "../../Helpers/CapsuleMetrics.js" as Capsule
 
 Item {
     id: root
     property bool expanded: false
     property color backgroundColor: WidgetBg.color(Settings.settings, "weather", "rgba(10, 12, 20, 0.2)")
+    readonly property real hoverMixAmount: 0.18
+    readonly property color hoverColor: Color.mix(backgroundColor, Qt.rgba(1, 1, 1, 1), hoverMixAmount)
     readonly property real _scale: Theme.scale(Screen)
-    property int padding: Math.max(4, Math.round(Theme.panelRowSpacingSmall * _scale * 0.75))
-    readonly property int iconBox: Math.round(Theme.panelIconSize * _scale)
+    readonly property var capsuleMetrics: Capsule.metrics(Theme, _scale)
+    property int padding: capsuleMetrics.padding
+    readonly property int iconBox: capsuleMetrics.inner
+    readonly property bool hovered: hoverTracker.hovered || weatherBtn.hovering
 
-    height: iconBox + padding * 2
-    width: iconBox + padding * 2
+    height: capsuleMetrics.height
+    width: capsuleMetrics.height
     implicitHeight: height
     implicitWidth: width
+    HoverHandler { id: hoverTracker }
 
     Rectangle {
         anchors.fill: parent
         radius: Theme.cornerRadiusSmall
-        color: backgroundColor
+        color: hovered ? hoverColor : backgroundColor
         border.width: Theme.uiBorderWidth
         border.color: Color.withAlpha(Theme.textPrimary, 0.08)
     }

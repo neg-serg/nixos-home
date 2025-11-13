@@ -8,6 +8,7 @@ import qs.Services
 import "../../Helpers/Utils.js" as Utils
 import "../../Helpers/WidgetBg.js" as WidgetBg
 import "../../Helpers/Color.js" as Color
+import "../../Helpers/CapsuleMetrics.js" as Capsule
 
 Rectangle {
     id: root
@@ -18,20 +19,26 @@ Rectangle {
     property string cmd: "(mpc status || rmpc status)"
     property var activeFlags: [] // [{ key, icon, title }]
     property string mpdState: "unknown" // playing | paused | stopped | unknown
-    property int padX: Math.round(Theme.panelRowSpacingSmall * Theme.scale(Screen))
-    property int padY: Math.round(Theme.uiGapTiny * Theme.scale(Screen))
-    property int cornerRadius: Math.round(Theme.cornerRadiusSmall * Theme.scale(Screen))
+    readonly property real _scale: Theme.scale(Screen)
+    readonly property var capsuleMetrics: Capsule.metrics(Theme, _scale)
+    property int padX: Math.round(Theme.panelRowSpacingSmall * _scale)
+    property int padY: capsuleMetrics.padding
+    property int cornerRadius: Math.round(Theme.cornerRadiusSmall * _scale)
     implicitWidth: content.implicitWidth + 2 * padX
-    implicitHeight: Utils.clamp(content.implicitHeight + 2 * padY, iconPx + 2 * padY, content.implicitHeight + 2 * padY)
+    implicitHeight: capsuleMetrics.height
     // Ensure the item actually occupies its implicit size
     width: implicitWidth
     height: implicitHeight
     visible: enabled && activeFlags.length > 0
-    color: WidgetBg.color(Settings.settings, "mpdFlags", "rgba(10, 12, 20, 0.2)")
+    readonly property color capsuleColor: WidgetBg.color(Settings.settings, "mpdFlags", "rgba(10, 12, 20, 0.2)")
+    readonly property real hoverMixAmount: 0.18
+    readonly property color capsuleHoverColor: Color.mix(capsuleColor, Qt.rgba(1, 1, 1, 1), hoverMixAmount)
+    color: hoverTracker.hovered ? capsuleHoverColor : capsuleColor
     radius: cornerRadius
     border.width: Theme.uiBorderWidth
     border.color: Color.withAlpha(Theme.textPrimary, 0.08)
     antialiasing: true
+    HoverHandler { id: hoverTracker }
 
     function parseStatus(text) {
         try {
