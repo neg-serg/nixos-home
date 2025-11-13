@@ -77,11 +77,23 @@ Scope {
                     property int sideMargin: Math.round(Theme.panelSideMargin * s)
                     property int widgetSpacing: Math.round(Theme.panelWidgetSpacing * s)
                     property int seamWidth: Math.max(8, Math.round(Theme.uiDiagonalSeparatorImplicitWidth * s))
-                    // Make the base panel background 5x more transparent
+                    // Panel background transparency is configurable via Settings:
+                    // - panelBgAlphaScale: 0..1 multiplier (preferred)
+                    // - panelBgAlphaFactor: >0 divisor (fallback), e.g. 5 means 5x more transparent
                     property color barBgColor: (function(){
                         var h = Color.toHsl(Theme.background);
                         var a = (h && h.a !== undefined) ? h.a : 1.0;
-                        return Color.withAlpha(Theme.background, Math.max(0.0, Math.min(1.0, a / 5.0)));
+                        var scale;
+                        if (Settings.settings.panelBgAlphaScale !== undefined) {
+                            scale = Number(Settings.settings.panelBgAlphaScale);
+                            if (!(scale >= 0 && scale <= 1)) scale = 0.2; // default ~5x
+                        } else if (Settings.settings.panelBgAlphaFactor !== undefined) {
+                            var f = Number(Settings.settings.panelBgAlphaFactor);
+                            scale = (f > 0) ? (1.0 / f) : 0.2;
+                        } else {
+                            scale = 0.2; // default ~5x
+                        }
+                        return Color.withAlpha(Theme.background, Math.max(0.0, Math.min(1.0, a * scale)));
                     })()
                     property real seamTaperTop: 0.25
                     property real seamTaperBottom: 0.9
@@ -655,11 +667,23 @@ Scope {
                     property int sideMargin: Math.round(Theme.panelSideMargin * s)
                     property int widgetSpacing: Math.round(Theme.panelWidgetSpacing * s)
                     property int seamWidth: Math.max(8, Math.round(Theme.uiDiagonalSeparatorImplicitWidth * s))
-                    // Make the base panel background 5x more transparent
+                    // Panel background transparency is configurable via Settings:
+                    // - panelBgAlphaScale: 0..1 multiplier (preferred)
+                    // - panelBgAlphaFactor: >0 divisor (fallback), e.g. 5 means 5x more transparent
                     property color barBgColor: (function(){
                         var h = Color.toHsl(Theme.background);
                         var a = (h && h.a !== undefined) ? h.a : 1.0;
-                        return Color.withAlpha(Theme.background, Math.max(0.0, Math.min(1.0, a / 5.0)));
+                        var scale;
+                        if (Settings.settings.panelBgAlphaScale !== undefined) {
+                            scale = Number(Settings.settings.panelBgAlphaScale);
+                            if (!(scale >= 0 && scale <= 1)) scale = 0.2; // default ~5x
+                        } else if (Settings.settings.panelBgAlphaFactor !== undefined) {
+                            var f = Number(Settings.settings.panelBgAlphaFactor);
+                            scale = (f > 0) ? (1.0 / f) : 0.2;
+                        } else {
+                            scale = 0.2; // default ~5x
+                        }
+                        return Color.withAlpha(Theme.background, Math.max(0.0, Math.min(1.0, a * scale)));
                     })()
                     property real seamTaperTop: 0.25
                     property real seamTaperBottom: 0.9
