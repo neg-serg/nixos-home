@@ -219,10 +219,24 @@ announce_action() {
 # ---- swww helpers -----------------------------------------------------------
 ensure_swww() {
   # Start swww daemon if not running
-  if ! swww query >/dev/null 2>&1; then
-    swww init >/dev/null 2>&1 || true
-    sleep 0.05
+  if swww query >/dev/null 2>&1; then
+    return 0
   fi
+  if ! command -v swww-daemon >/dev/null 2>&1; then
+    printf 'swayimg-actions: swww-daemon not found on PATH; wallpapers unavailable\n' >&2
+    return 1
+  fi
+  local -a daemon_cmd
+  daemon_cmd=(swww-daemon)
+  if [ -n "${SWWW_DAEMON_FLAGS:-}" ]; then
+    daemon_cmd+=("${(z)SWWW_DAEMON_FLAGS}")
+  fi
+  if command -v setsid >/dev/null 2>&1; then
+    setsid -f -- "${daemon_cmd[@]}" >/dev/null 2>&1 || true
+  else
+    "${daemon_cmd[@]}" >/dev/null 2>&1 &!
+  fi
+  sleep 0.1
 }
 
 # Serialize wallpaper changes across different callers (queue behavior)
