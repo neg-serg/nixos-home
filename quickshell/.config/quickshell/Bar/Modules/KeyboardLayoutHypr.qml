@@ -1,7 +1,6 @@
 import QtQuick
 import QtQuick.Controls
 import Quickshell
-import Quickshell.Hyprland
 import qs.Components
 import qs.Settings
 import qs.Services as Services
@@ -108,55 +107,18 @@ Item {
         }
     }
 
-    // Event path: prefer payload for snappy UI; fallback snapshot only for non‑main events.
-    Connections {
-        target: Hyprland
-        function onRawEvent(a, b) {
-            // Accept (eventName, payload), payload, or object { signal, data }
-            let eventName =
-                (typeof a === "string" && typeof b === "string") ? a :
-                (a && typeof a === "object" && typeof a.signal === "string") ? a.signal :
-                ""
-            let payload =
-                (typeof a === "string" && typeof b === "string") ? b :
-                (typeof a === "string" && b === undefined)       ? a :
-                (a && typeof a === "object")                     ? a.data :
-                null
-            if (!payload) return
-
-            // Prefer explicit signal; otherwise heuristically treat payload as keyboard-layout if it matches known keyboards
-            let isKbEvent = false
-            if (eventName) {
-                const ev = String(eventName).toLowerCase()
-                isKbEvent = ev.indexOf("keyboard-layout") !== -1
-            } else {
-                const j = payload.indexOf(",")
-                if (j > 0) {
-                    const maybeKbd = payload.slice(0, j)
-                    isKbEvent = kb.knownKeyboards.length ? kb.knownKeyboards.some(n => n === maybeKbd) : true
-                }
-            }
-            if (!isKbEvent) return
-
-            const i = payload.indexOf(","); if (i < 0) return
-            const kbd = payload.slice(0, i)
-            const layout = payload.slice(i + 1)
-
-            const fromMain = (norm(kbd) === kb.mainDeviceNeedle)
-
-            // Immediate UI update from event payload for snappy response
-            const evTxt = shortenLayout(layout)
-            if (evTxt && evTxt !== kb.layoutText) kb.layoutText = evTxt
-
-            // If the event is not from the main keyboard, confirm quickly via devices snapshot
-            // to correct a rare stale payload without penalizing the fast path.
-            if (!fromMain) Services.HyprlandWatcher.refreshDevices()
-        }
-    }
-
     Connections {
         target: Services.HyprlandWatcher
         function onKeyboardDevicesChanged() { kb.applyDeviceSnapshot(Services.HyprlandWatcher.keyboardDevices); }
+        // Event path: prefer payload from HyprlandWatcher for snappy UI; fallback snapshot only for non-main events.
+        function onKeyboardLayoutEvent(deviceName, layoutName) {
+            const kbd = String(deviceName || "")
+            const layout = String(layoutName || "")
+            const fromMain = (norm(kbd) === kb.mainDeviceNeedle)
+            const evTxt = shortenLayout(layout)
+            if (evTxt && evTxt !== kb.layoutText) kb.layoutText = evTxt
+            if (!fromMain) Services.HyprlandWatcher.refreshDevices()
+        }
     }
 
     Component.onCompleted: {

@@ -21,6 +21,8 @@ Item {
     property string currentSubmap: ""
     property var binds: []
     property var keyboardDevices: []
+    property string lastKeyboardDevice: ""
+    property string lastKeyboardLayout: ""
     readonly property int restartBackoffMs: (typeof Theme !== "undefined" && Theme.networkRestartBackoffMs !== undefined)
         ? Theme.networkRestartBackoffMs
         : 1500
@@ -28,6 +30,8 @@ Item {
         ? Theme.wsRefreshDebounceMs
         : 120
 
+    signal hyprEvent(string eventName, string payload)
+    signal keyboardLayoutEvent(string deviceName, string layoutName)
     signal focusedMonitorEvent()
 
     ProcessRunner {
@@ -108,8 +112,13 @@ Item {
     function _handleSocketLine(lineRaw) {
         const line = String(lineRaw || "").trim();
         if (!line) return;
-        if (line.startsWith("workspacev2>>")) {
-            const payload = line.substring(13);
+        const sep = line.indexOf(">>");
+        if (sep <= 0) return;
+        const eventName = line.substring(0, sep);
+        const payload = line.substring(sep + 2);
+        root.hyprEvent(eventName, payload);
+        const key = eventName.toLowerCase();
+        if (key === "workspacev2") {
             const parts = payload.split(",", 2);
             const idVal = parseInt(parts[0]);
             let name = (parts[1] || "").trim();
@@ -117,24 +126,42 @@ Item {
             if (!isNaN(idVal)) root.activeWorkspaceId = idVal;
             root.activeWorkspaceName = name || "";
             root.workspaceUpdated(root.activeWorkspaceId, root.activeWorkspaceName);
-        } else if (line.startsWith("workspace>>")) {
-            const id = parseInt(line.substring(11).trim());
-            if (!isNaN(id)) {
-                root.activeWorkspaceId = id;
-            }
-        } else if (line.startsWith("submap>>")) {
-            root._updateSubmap(line.substring(8).trim());
-        } else if (line.startsWith("submapv2>>")) {
-            root._updateSubmap(line.substring(10).trim());
-        } else if (line.startsWith("focusedmon>>") || line.startsWith("focusedmonv2>>")) {
+            return;
+        }
+        if (key === "workspace") {
+            const id = parseInt(payload.trim());
+            if (!isNaN(id)) root.activeWorkspaceId = id;
+            return;
+        }
+        if (key === "submap" || key === "submapv2") {
+            root._updateSubmap(payload.trim());
+            return;
+        }
+        if (key === "focusedmon" || key === "focusedmonv2") {
             root.focusedMonitorEvent();
             workspaceDebounce.restart();
+            return;
+        }
+        if (key === "keyboard-layout" || key === "keyboard_layout") {
+            root._handleKeyboardLayout(payload);
+            return;
         }
     }
 
     function _updateSubmap(raw) {
         const name = (!raw || raw === "default" || raw === "reset") ? "" : raw;
         root.currentSubmap = name;
+    }
+
+    function _handleKeyboardLayout(payload) {
+        const text = String(payload || "");
+        const idx = text.indexOf(",");
+        if (idx < 0) return;
+        const device = text.substring(0, idx);
+        const layout = text.substring(idx + 1);
+        root.lastKeyboardDevice = device;
+        root.lastKeyboardLayout = layout;
+        root.keyboardLayoutEvent(device, layout);
     }
 
     Component.onCompleted: {
