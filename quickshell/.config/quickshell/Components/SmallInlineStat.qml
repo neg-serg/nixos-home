@@ -18,7 +18,9 @@ Item {
     property bool materialIconRounded: false
     property real iconScale: 1.0
     property int iconVAdjust: 0
+    property bool iconAutoTune: false
     property color iconColor: Theme.textSecondary
+    property bool centerContent: false
     property bool labelVisible: true
     property string labelText: ""
     property color labelColor: Theme.textPrimary
@@ -44,39 +46,24 @@ Item {
         spacing: iconSpacing
         anchors.verticalCenter: parent.verticalCenter
         anchors.verticalCenterOffset: root.centerOffset
-        anchors.left: parent.left
+        anchors.horizontalCenter: root.centerContent ? parent.horizontalCenter : undefined
+        anchors.left: root.centerContent ? undefined : parent.left
 
-        Item {
-            id: iconBox
+        BaselineAlignedIcon {
+            id: baselineIcon
             implicitHeight: root.desiredHeight
-            implicitWidth: iconGlyphItem.implicitWidth
-
-            Text {
-                id: glyphItem
-                visible: root.iconMode === "glyph"
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.verticalCenterOffset: root.iconVAdjust
-                text: root.iconGlyph
-                color: root.iconColor
-                font.family: root.iconFontFamily
-                font.styleName: root.iconStyleName
-                font.weight: Font.Normal
-                font.pixelSize: Utils.clamp(Math.round(root.computedFontPx * root.iconScale), 8, 2048)
-                renderType: Text.NativeRendering
-            }
-
-            MaterialIcon {
-                id: materialItem
-                visible: root.iconMode === "material"
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.verticalCenterOffset: root.iconVAdjust
-                icon: root.materialIconName
-                rounded: root.materialIconRounded
-                size: Utils.clamp(Math.round(root.computedFontPx * root.iconScale), 8, 2048)
-                color: root.iconColor
-            }
-
-            Item { id: iconGlyphItem; implicitWidth: (root.iconMode === "glyph" ? glyphItem.implicitWidth : materialItem.width) }
+            labelRef: label
+            mode: root.iconMode === "material" ? "material" : "text"
+            text: root.iconGlyph
+            fontFamily: root.iconFontFamily
+            fontStyleName: root.iconStyleName
+            color: root.iconColor
+            icon: root.materialIconName
+            rounded: root.materialIconRounded
+            screen: root.screen
+            scale: root.iconScale
+            autoTune: root.iconAutoTune
+            baselineAdjust: root.iconVAdjust
         }
 
         Label {
@@ -87,7 +74,9 @@ Item {
             color: root.labelColor
             font.family: root.labelFontFamily
             font.pixelSize: root.computedFontPx
-            padding: textPadding
+            padding: 0
+            leftPadding: textPadding
+            rightPadding: textPadding
             verticalAlignment: Text.AlignVCenter
         }
     }

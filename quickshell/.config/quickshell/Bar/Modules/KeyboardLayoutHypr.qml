@@ -89,13 +89,23 @@ Item {
         border.color: widgetBorderColor
         antialiasing: true
 
-        Row {
-            id: row
-            anchors.fill: parent
+        Item {
+            id: contentBox
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
             anchors.leftMargin: horizontalPadding
             anchors.rightMargin: horizontalPadding
             anchors.topMargin: verticalPadding
             anchors.bottomMargin: verticalPadding
+        }
+
+        Row {
+            id: row
+            anchors.horizontalCenter: contentBox.horizontalCenter
+            anchors.verticalCenter: contentBox.verticalCenter
+            anchors.verticalCenterOffset: kb.yNudge
             spacing: kb.iconSpacing * sc()
 
             // Metrics used for baseline alignment

@@ -60,8 +60,7 @@ Rectangle {
     SmallInlineStat {
         id: inlineView
         anchors.verticalCenter: parent.verticalCenter
-        anchors.left: parent.left
-        anchors.leftMargin: horizontalPadding
+        anchors.horizontalCenter: parent.horizontalCenter
         desiredHeight: Math.max(1, capsuleHeight - capsulePadding * 2)
         fontPixelSize: root.fontPixelSize
         textPadding: root.textPadding
@@ -75,6 +74,8 @@ Rectangle {
         labelVisible: root.showLabel
         labelText: "VPN"
         labelColor: root.iconColor()
+        centerContent: true
+        iconAutoTune: true
     }
 
     Connections {

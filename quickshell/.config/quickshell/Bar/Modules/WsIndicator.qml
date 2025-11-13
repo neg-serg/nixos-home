@@ -125,17 +125,19 @@ Rectangle {
                                    : decorateName(fallbackText)
 
     // UI
-    Row {
-        id: lineBox
-        spacing: iconSpacing
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
+    Item {
+        id: contentBox
+        anchors.fill: parent
         anchors.leftMargin: horizontalPadding
         anchors.rightMargin: horizontalPadding
         anchors.topMargin: verticalPadding
         anchors.bottomMargin: verticalPadding
+    }
+
+    Row {
+        id: lineBox
+        spacing: iconSpacing
+        anchors.centerIn: contentBox
 
         BaselineAlignedIcon {
             visible: root.submapName && root.submapName.length > 0
