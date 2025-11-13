@@ -31,6 +31,15 @@ Singleton {
         }
         JsonAdapter {
             id: settingAdapter
+            // Bar / Panel visuals
+            // Panel background transparency controls:
+            // - panelBgAlphaScale: 0..1 multiplier (preferred). Example: 0.2 = ~5x more transparent.
+            // - panelBgAlphaFactor: >0 divisor (fallback). Example: 5 = ~5x more transparent.
+            property real panelBgAlphaScale: 0.2
+            property real panelBgAlphaFactor: 0
+
+            // Enable wedge clip ShaderEffect path (env vars can override in debug)
+            property bool enableWedgeClipShader: false
             property string weatherCity: "Moscow"
             property string userAgent: "NegPanel"
             // Unified logging toggle for low-importance debug logs
