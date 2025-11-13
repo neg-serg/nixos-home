@@ -10,7 +10,6 @@ import "../../Helpers/RichText.js" as Rich
 import "../../Helpers/WsIconMap.js" as WsMap
 WidgetCapsule {
     id: root
-    CapsuleContext { id: capsuleCtx }
     property string wsName: "?"
     property int wsId: -1
     property string submapName: ""
@@ -31,13 +30,11 @@ WidgetCapsule {
     property int iconBaselineOffset:Theme.wsIconBaselineOffset
     property int iconSpacing:Theme.wsIconSpacing
 
-    readonly property real _scale: capsuleCtx.scale
-    readonly property var capsuleMetrics: capsuleCtx.metrics
-    property int horizontalPadding: Math.max(4, Math.round(Theme.panelRowSpacingSmall * _scale))
-    property int verticalPadding: capsuleMetrics.padding
+    property int horizontalPadding: Math.max(4, Math.round(Theme.panelRowSpacingSmall * capsuleScale))
+    property int verticalPadding: capsulePadding
     backgroundKey: "workspaces"
-    paddingScale: capsuleMetrics.padding > 0 ? horizontalPadding / capsuleMetrics.padding : 1
-    verticalPaddingScale: capsuleMetrics.padding > 0 ? verticalPadding / capsuleMetrics.padding : 1
+    paddingScale: paddingScaleFor(horizontalPadding)
+    verticalPaddingScale: paddingScaleFor(verticalPadding)
 
     // Hyprland environment
     function hyprSig() { return Quickshell.env("HYPRLAND_INSTANCE_SIGNATURE") || ""; }
@@ -154,7 +151,7 @@ WidgetCapsule {
             text: decoratedText
             font.family: Theme.fontFamily
             font.weight: Font.Medium
-            font.pixelSize: Theme.fontSizeSmall * root._scale
+            font.pixelSize: Theme.fontSizeSmall * root.capsuleScale
             color: Theme.textPrimary
             padding: Theme.wsLabelPadding
             leftPadding: (root.isTerminalWs ? Theme.wsLabelLeftPaddingTerminal : Theme.wsLabelLeftPadding)

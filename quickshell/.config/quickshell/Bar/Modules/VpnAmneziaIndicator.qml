@@ -9,12 +9,8 @@ import qs.Services as Services
 CenteredCapsuleRow {
     id: root
 
-    CapsuleContext { id: capsuleCtx; screen: Screen }
-    readonly property real _scale: capsuleCtx.scale
-    readonly property var capsuleMetrics: capsuleCtx.metrics
-
     // Match network usage label size with standard small font
-    property int labelPixelSize:Math.round(Theme.fontSizeSmall * _scale)
+    property int labelPixelSize: Math.round(Theme.fontSizeSmall * capsuleScale)
     property bool useTheme:true
     property bool showLabel:true
     property int iconSpacingPx:Theme.vpnIconSpacing
@@ -36,13 +32,11 @@ CenteredCapsuleRow {
     property real disconnectedOpacity: Theme.vpnDisconnectedOpacity
     property bool connected: false
     property string matchedIf: ""
-    property int horizontalPadding: Math.max(4, Math.round(Theme.panelRowSpacingSmall * _scale))
+    property int horizontalPadding: Math.max(4, Math.round(Theme.panelRowSpacingSmall * capsuleScale))
     backgroundKey: "vpn"
-    paddingScale: capsuleMetrics.padding > 0
-        ? horizontalPadding / capsuleMetrics.padding
-        : 1
+    paddingScale: paddingScaleFor(horizontalPadding)
     visible: connected
-    desiredInnerHeight: capsuleCtx.inner
+    desiredInnerHeight: capsuleInner
     fontPixelSize: root.labelPixelSize
     textPadding: root.textPaddingPx
     iconSpacing: root.iconSpacingPx

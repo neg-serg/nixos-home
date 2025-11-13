@@ -9,23 +9,20 @@ import "../../Helpers/Utils.js" as Utils
 
 WidgetCapsule {
     id: root
-    CapsuleContext { id: capsuleCtx }
     property bool enabled: false
     property int fallbackIntervalMs:Theme.mpdFlagsFallbackMs
     property color iconColor: Theme.textPrimary
-    property int iconPx: Math.round(Theme.fontSizeSmall * _scale)
+    property int iconPx: Math.round(Theme.fontSizeSmall * capsuleScale)
     property string cmd: "(mpc status || rmpc status)"
     property var activeFlags: [] // [{ key, icon, title }]
     property string mpdState: "unknown" // playing | paused | stopped | unknown
-    readonly property real _scale: capsuleCtx.scale
-    readonly property var capsuleMetrics: capsuleCtx.metrics
-    property int padX: Math.round(Theme.panelRowSpacingSmall * _scale)
-    property int padY: capsuleMetrics.padding
-    property int cornerRadius: Math.round(Theme.cornerRadiusSmall * _scale)
+    property int padX: Math.round(Theme.panelRowSpacingSmall * capsuleScale)
+    property int padY: capsulePadding
+    property int cornerRadius: Math.round(Theme.cornerRadiusSmall * capsuleScale)
     visible: enabled && activeFlags.length > 0
     backgroundKey: "mpdFlags"
-    paddingScale: capsuleMetrics.padding > 0 ? padX / capsuleMetrics.padding : 1
-    verticalPaddingScale: capsuleMetrics.padding > 0 ? padY / capsuleMetrics.padding : 1
+    paddingScale: paddingScaleFor(padX)
+    verticalPaddingScale: paddingScaleFor(padY)
     cornerRadiusOverride: cornerRadius
 
     function parseStatus(text) {
@@ -140,7 +137,7 @@ WidgetCapsule {
     // Icon row
     Row {
         id: content
-        spacing: Math.round(Theme.panelRowSpacingSmall * _scale)
+        spacing: Math.round(Theme.panelRowSpacingSmall * capsuleScale)
         Repeater {
             model: activeFlags
             delegate: MaterialIcon {

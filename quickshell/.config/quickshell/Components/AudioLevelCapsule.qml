@@ -7,7 +7,6 @@ import "../Helpers/WidgetBg.js" as WidgetBg
 
 LocalComponents.WidgetCapsule {
     id: root
-    LocalComponents.CapsuleContext { id: capsuleCtx }
 
     property string settingsKey: ""
     property color pillBackground: WidgetBg.color(Settings.settings, settingsKey, Theme.panelPillBackground)
@@ -35,13 +34,11 @@ LocalComponents.WidgetCapsule {
     signal wheelStep(int direction)
     signal clicked()
 
-    readonly property real _scale: capsuleCtx.scale
-    readonly property var capsuleMetrics: capsuleCtx.metrics
-    property int horizontalPadding: Math.max(4, Math.round(Theme.panelRowSpacingSmall * _scale * 0.8))
-    property int verticalPadding: Math.max(2, Math.round(Theme.uiSpacingXSmall * _scale))
+    property int horizontalPadding: Math.max(4, Math.round(Theme.panelRowSpacingSmall * capsuleScale * 0.8))
+    property int verticalPadding: Math.max(2, Math.round(Theme.uiSpacingXSmall * capsuleScale))
 
-    paddingScale: capsuleMetrics.padding > 0 ? horizontalPadding / capsuleMetrics.padding : 1
-    verticalPaddingScale: capsuleMetrics.padding > 0 ? verticalPadding / capsuleMetrics.padding : 1
+    paddingScale: paddingScaleFor(horizontalPadding)
+    verticalPaddingScale: paddingScaleFor(verticalPadding)
     backgroundKey: settingsKey
     centerContent: true
 

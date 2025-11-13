@@ -7,6 +7,7 @@ import "../Helpers/Color.js" as ColorHelpers
 Rectangle {
     id: root
 
+    property var screen: null
     property string backgroundKey: ""
     property color fallbackColor: Qt.rgba(10/255, 12/255, 20/255, 0.2)
     property color backgroundColorOverride: "transparent"
@@ -27,9 +28,13 @@ Rectangle {
     property real contentYOffset: 0
     property int cursorShape: Qt.ArrowCursor
 
-    readonly property real _scale: Theme.scale(Screen)
+    readonly property real _scale: Theme.scale(screen || Screen)
     readonly property var _metrics: Capsule.metrics(Theme, _scale)
     readonly property var capsuleMetrics: _metrics
+    readonly property real capsuleScale: _scale
+    readonly property int capsulePadding: _metrics.padding
+    readonly property int capsuleInner: _metrics.inner
+    readonly property int capsuleHeight: _metrics.height
     readonly property color _baseColor: backgroundColorOverride.a > 0
             ? backgroundColorOverride
             : WidgetBg.color(Settings.settings, backgroundKey, fallbackColor)
@@ -77,4 +82,9 @@ Rectangle {
     }
 
     default property alias content: contentArea.data
+
+    function paddingScaleFor(paddingPx) {
+        if (!_metrics || !_metrics.padding) return 1;
+        return paddingPx / _metrics.padding;
+    }
 }

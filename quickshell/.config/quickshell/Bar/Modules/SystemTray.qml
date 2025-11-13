@@ -7,10 +7,10 @@ import Quickshell.Widgets
 import qs.Settings
 import qs.Components
 import qs.Services as Services
+import "../../Helpers/CapsuleMetrics.js" as CapsuleMetrics
 
 Row {
     id: root
-    CapsuleContext { id: capsuleCtx; screen: root.screen }
     property bool panelHover: false
     property bool hotHover: false
     property bool holdOpen: false
@@ -44,8 +44,8 @@ Row {
     property bool programmaticOverlayDismiss: false
     // Collapse delay handled by TrayController service
     function dismissOverlayNow() { root.programmaticOverlayDismiss = true; trayOverlay.dismiss(); root.programmaticOverlayDismiss = false }
-    readonly property real _scale: capsuleCtx.scale
-    readonly property var capsuleMetrics: capsuleCtx.metrics
+    readonly property real _scale: Theme.scale(root.screen || Screen)
+    readonly property var capsuleMetrics: CapsuleMetrics.metrics(Theme, _scale)
     readonly property int capsuleInnerSize: capsuleMetrics.inner
     spacing: Math.max(2, Math.round(Theme.panelRowSpacing * _scale * 0.5))
     Layout.alignment: Qt.AlignVCenter

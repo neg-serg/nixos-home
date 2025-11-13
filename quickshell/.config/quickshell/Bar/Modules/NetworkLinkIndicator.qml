@@ -9,11 +9,7 @@ CenteredCapsuleRow {
     id: root
 
     property var screen: null
-    CapsuleContext { id: capsuleCtx; screen: root.screen || Screen }
-    readonly property real _scale: capsuleCtx.scale
-    readonly property var capsuleMetrics: capsuleCtx.metrics
-    readonly property int capsulePadding: capsuleMetrics.padding
-    property int labelPixelSize: Math.round(Theme.fontSizeSmall * _scale)
+    property int labelPixelSize: Math.round(Theme.fontSizeSmall * capsuleScale)
 
     property bool showLabel: false
     property string labelTextValue: "NET"
@@ -39,12 +35,10 @@ CenteredCapsuleRow {
     readonly property color errorColor: ConnUi.errorColor(Settings.settings, Theme)
     property bool hasLink: Services.Connectivity.hasLink
     property bool hasInternet: Services.Connectivity.hasInternet
-    property int horizontalPadding: Math.max(4, Math.round(Theme.panelRowSpacingSmall * _scale))
+    property int horizontalPadding: Math.max(4, Math.round(Theme.panelRowSpacingSmall * capsuleScale))
     backgroundKey: "networkLink"
-    paddingScale: capsuleMetrics.padding > 0
-        ? horizontalPadding / capsuleMetrics.padding
-        : 1
-    desiredInnerHeight: capsuleCtx.inner
+    paddingScale: paddingScaleFor(horizontalPadding)
+    desiredInnerHeight: capsuleInner
     fontPixelSize: root.labelPixelSize
     iconMode: "material"
     materialIconName: currentIconName()

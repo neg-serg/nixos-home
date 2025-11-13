@@ -14,14 +14,13 @@ import qs.Components
 
 Item {
     id: mediaControl
-    CapsuleContext { id: capsuleCtx }
     property var sidePanelPopup: null
-    readonly property real _scale: capsuleCtx.scale
-    readonly property var capsuleMetrics: capsuleCtx.metrics
-    property int horizontalPadding: capsuleMetrics.padding
+    readonly property real capsuleScale: capsule.capsuleScale
+    readonly property var capsuleMetrics: capsule.capsuleMetrics
+    property int horizontalPadding: capsule.capsulePadding
     property int verticalPadding: Math.max(4, Math.round(capsuleMetrics.padding * 0.8))
-    property int baseHeight: capsuleMetrics.height
-    readonly property int capsuleInnerSize: capsuleMetrics.inner
+    property int baseHeight: capsule.capsuleHeight
+    readonly property int capsuleInnerSize: capsule.capsuleInner
     implicitWidth: mediaRow ? (mediaRow.implicitWidth + horizontalPadding * 2) : baseHeight
     height: baseHeight
     implicitHeight: baseHeight
@@ -32,7 +31,7 @@ Item {
                  || MusicManager.isPaused
                  || (MusicManager.trackTitle && MusicManager.trackTitle.length > 0))
 
-    property int musicTextPx: Math.round(Theme.fontSizeSmall * _scale)
+    property int musicTextPx: Math.round(Theme.fontSizeSmall * capsuleScale)
     // Accent derived from current cover art (dominant color)
     property color mediaAccent: Theme.accentPrimary
     property string mediaAccentCss: Format.colorCss(mediaAccent, 1)
@@ -84,14 +83,14 @@ Item {
         id: capsule
         anchors.fill: parent
         backgroundKey: "media"
-        paddingScale: capsuleMetrics.padding > 0 ? horizontalPadding / capsuleMetrics.padding : 1
-        verticalPaddingScale: capsuleMetrics.padding > 0 ? verticalPadding / capsuleMetrics.padding : 1
+        paddingScale: paddingScaleFor(mediaControl.horizontalPadding)
+        verticalPaddingScale: paddingScaleFor(mediaControl.verticalPadding)
         centerContent: false
 
         RowLayout {
             id: mediaRow
             anchors.fill: parent
-            spacing: Math.max(4, Math.round(Theme.panelWidgetSpacing * _scale * 0.6))
+            spacing: Math.max(4, Math.round(Theme.panelWidgetSpacing * mediaControl.capsuleScale * 0.6))
 
             // Legacy inline dividers removed due to rendering issues
 
@@ -299,7 +298,7 @@ Item {
                           : ""
                     font.family: Theme.fontFamily
                     font.weight: Font.Medium
-                    font.pixelSize: Theme.fontSizeSmall * _scale
+                    font.pixelSize: Theme.fontSizeSmall * mediaControl.capsuleScale
                 }
 
                 LinearSpectrum {
@@ -326,8 +325,8 @@ Item {
                     amplitudeScale: 1.0
                     barGap: (((_vizProfile && _vizProfile.spectrumBarGap !== undefined)
                                ? _vizProfile.spectrumBarGap
-                               : Settings.settings.spectrumBarGap)) * _scale
-                    minBarWidth: 2 * _scale
+                               : Settings.settings.spectrumBarGap)) * mediaControl.capsuleScale
+                    minBarWidth: 2 * mediaControl.capsuleScale
                     mirror: ((_vizProfile && _vizProfile.spectrumMirror !== undefined) ? _vizProfile.spectrumMirror : Settings.settings.spectrumMirror)
                     drawTop: ((_vizProfile && _vizProfile.showSpectrumTopHalf !== undefined) ? _vizProfile.showSpectrumTopHalf : Settings.settings.showSpectrumTopHalf)
                     drawBottom: true

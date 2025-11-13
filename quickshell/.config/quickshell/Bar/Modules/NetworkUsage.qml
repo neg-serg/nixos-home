@@ -7,23 +7,18 @@ import "../../Helpers/ConnectivityUi.js" as ConnUi
 CenteredCapsuleRow {
     id: root
     property var screen:null
-    CapsuleContext { id: capsuleCtx; screen: root.screen || Screen }
-    readonly property real _scale: capsuleCtx.scale
-    readonly property var capsuleMetrics: capsuleCtx.metrics
-    property int labelPixelSize:Math.round(Theme.fontSizeSmall * _scale)
+    property int labelPixelSize: Math.round(Theme.fontSizeSmall * capsuleScale)
     property color textColor:Theme.textPrimary
     property string deviceMatch: ""
     property string displayText: "0"
     property bool hasLink:Services.Connectivity.hasLink
     property bool hasInternet:Services.Connectivity.hasInternet
     backgroundKey: "network"
-    desiredInnerHeight: capsuleCtx.inner
+    desiredInnerHeight: capsuleInner
     fontPixelSize: root.labelPixelSize
     property int textPaddingPx:Theme.panelRowSpacingSmall
-    readonly property int desiredHorizontalPadding: Math.max(4, Math.round(Theme.panelRowSpacingSmall * _scale))
-    paddingScale: capsuleMetrics.padding > 0
-        ? desiredHorizontalPadding / capsuleMetrics.padding
-        : 1
+    readonly property int desiredHorizontalPadding: Math.max(4, Math.round(Theme.panelRowSpacingSmall * capsuleScale))
+    paddingScale: paddingScaleFor(desiredHorizontalPadding)
     labelText: displayText
     labelColor: textColor
     iconVisible: false

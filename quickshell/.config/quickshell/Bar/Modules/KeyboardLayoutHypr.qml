@@ -11,7 +11,7 @@ Item {
 
     property string deviceMatch: ""
     property int fontPixelSize: Math.round(Theme.fontSizeSmall * sc())
-    property int desiredHeight: capsuleCtx.inner
+    property int desiredHeight: capsule.capsuleInner
     property var screen:null
     property int yNudge:0
 
@@ -55,20 +55,15 @@ Item {
         ? kb.screen
         : ((Quickshell.screens && Quickshell.screens.length) ? Quickshell.screens[0] : null)
 
-    CapsuleContext {
-        id: capsuleCtx
-        screen: resolvedScreen
-    }
-
     function sc() {
-        return capsuleCtx.scale
+        return capsule.capsuleScale
     }
 
-    readonly property var capsuleMetrics: capsuleCtx.metrics
-    readonly property int capsulePadding: capsuleCtx.padding
+    readonly property var capsuleMetrics: capsule.capsuleMetrics
+    readonly property int capsulePadding: capsule.capsulePadding
     property int horizontalPadding: Math.max(4, Math.round(Theme.keyboardMargin * sc()))
     property int verticalPadding: Math.max(capsulePadding, Math.round(Theme.keyboardMargin * 0.8 * sc()))
-    readonly property int capsuleHeight: capsuleCtx.height
+    readonly property int capsuleHeight: capsule.capsuleHeight
 
     implicitWidth: Math.max(Math.round(Theme.keyboardMinWidth * sc()), Math.ceil(capsule.row.implicitWidth + 2 * horizontalPadding))
     implicitHeight: capsuleHeight
@@ -84,7 +79,7 @@ Item {
         backgroundKey: "keyboard"
         contentYOffset: kb.yNudge
         cursorShape: Qt.PointingHandCursor
-        desiredInnerHeight: capsuleCtx.inner
+        desiredInnerHeight: capsule.capsuleInner
         centerRow: true
         iconMode: "glyph"
         iconGlyph: "\uf11c"

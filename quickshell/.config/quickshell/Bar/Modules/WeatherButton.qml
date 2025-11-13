@@ -9,15 +9,14 @@ import qs.Services as Services
 Item {
     id: root
     property bool expanded: false
-    CapsuleContext { id: capsuleCtx }
-    readonly property real _scale: capsuleCtx.scale
-    readonly property var capsuleMetrics: capsuleCtx.metrics
-    property int padding: capsuleMetrics.padding
-    readonly property int iconBox: capsuleMetrics.inner
+    readonly property real capsuleScale: capsule.capsuleScale
+    readonly property var capsuleMetrics: capsule.capsuleMetrics
+    property int padding: capsule.capsulePadding
+    readonly property int iconBox: capsule.capsuleInner
     readonly property alias capsule: capsule
 
-    width: capsuleMetrics.height
-    height: capsuleMetrics.height
+    width: capsule.capsuleHeight
+    height: capsule.capsuleHeight
     implicitWidth: width
     implicitHeight: height
 
@@ -25,7 +24,7 @@ Item {
         id: capsule
         anchors.fill: parent
         backgroundKey: "weather"
-        paddingScale: capsuleMetrics.padding > 0 ? padding / capsuleMetrics.padding : 1
+        paddingScale: capsule.paddingScaleFor(root.padding)
         verticalPaddingScale: paddingScale
         centerContent: true
         cursorShape: Qt.PointingHandCursor
@@ -64,19 +63,19 @@ Item {
         onVisibleChanged: { if (visible) { try { Services.Weather.start() } catch (e) {} } else { try { Services.Weather.stop() } catch (e) {} } }
         Rectangle {
             id: popup
-            radius: Math.round(Theme.panelOverlayRadius * _scale)
+            radius: Math.round(Theme.panelOverlayRadius * capsuleScale)
             color: Theme.overlayWeak
             border.color: Theme.borderSubtle
             border.width: Theme.uiBorderWidth
             anchors.top: parent.top
             anchors.left: parent.left
-            anchors.topMargin: Math.round(Theme.sidePanelSpacingMedium * _scale)
-            anchors.leftMargin: Math.round(Theme.panelSideMargin * _scale)
+            anchors.topMargin: Math.round(Theme.sidePanelSpacingMedium * capsuleScale)
+            anchors.leftMargin: Math.round(Theme.panelSideMargin * capsuleScale)
 
             Weather {
                 id: weather
-                width: Math.round(Theme.sidePanelWeatherWidth * _scale)
-                height: Math.round(Theme.sidePanelWeatherHeight * _scale)
+                width: Math.round(Theme.sidePanelWeatherWidth * capsuleScale)
+                height: Math.round(Theme.sidePanelWeatherHeight * capsuleScale)
             }
         }
         MouseArea {

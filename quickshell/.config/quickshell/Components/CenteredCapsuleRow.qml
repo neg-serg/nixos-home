@@ -38,8 +38,6 @@ LocalComponents.CapsuleButton {
     property bool iconAutoTune: false
     property color iconColor: Theme.textSecondary
 
-    property var screen: null
-
     // Accessors
     readonly property alias row: lineBox
     readonly property alias iconItem: baselineIcon
