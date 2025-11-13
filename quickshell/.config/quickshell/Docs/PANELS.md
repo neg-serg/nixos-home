@@ -27,6 +27,11 @@ Notes:
 - You can use either setting, but `panelBgAlphaScale` is preferred.
 - The color and original alpha come from `Theme.background`; the scale is applied on top of that.
 
+### Interaction with the wedge shader
+- The wedge subtracts from the panel fill. With very transparent panels the wedge appears more subtle. If you want a stronger look, either increase `QS_WEDGE_WIDTH_PCT` or reduce transparency (increase `panelBgAlphaScale`).
+- When debugging (`QS_WEDGE_DEBUG=1`), bars may run on `WlrLayer.Overlay`, so the “hole” shows whatever is behind the panel window.
+- See `Docs/SHADERS.md` for shader flags and troubleshooting.
+
 ---
 
 ## Русский (RU)
@@ -52,3 +57,7 @@ Notes:
 - Можно использовать любой вариант, но предпочтительно `panelBgAlphaScale`.
 - Цвет и исходная альфа берутся из `Theme.background`; сверху применяется ваш множитель.
 
+### Связка с шейдером клина
+- Клин вычитает заливку панели. При сильной прозрачности панели клин выглядит более «мягко». Чтобы усилить эффект, либо увеличьте ширину клина (`QS_WEDGE_WIDTH_PCT`), либо уменьшите прозрачность панели (увеличьте `panelBgAlphaScale`).
+- В отладке (`QS_WEDGE_DEBUG=1`) панели могут работать на слое `WlrLayer.Overlay` — «дырка» будет показывать то, что под окном панели в композиторе.
+- За флагами шейдера и диагностикой см. `Docs/SHADERS.md`.

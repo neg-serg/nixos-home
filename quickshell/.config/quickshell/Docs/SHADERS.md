@@ -84,6 +84,14 @@ This document summarizes how shaders are used in this Quickshell setup, how the 
 - Миграция на чистый шейдер‑путь: после успешной верификации можно удалить старые Canvas/OpacityMask‑fallback.
 - Производительность: эффекты работают поверх панелей; все источники идут через `ShaderEffectSource` (live, recursive), что имеет накладные расходы — держать логи включенными только на отладку.
 
+### Взаимодействие с прозрачностью панелей
+
+- При высокой прозрачности фон панелей становится менее заметным — визуально «сила» клина (вырезанного треугольника) тоже кажется меньше. Это ожидаемо: клин вычитает из базовой заливки панели. Если нужно усилить эффект — увеличьте ширину клина (`QS_WEDGE_WIDTH_PCT`) или уменьшите прозрачность панели (см. `Docs/PANELS.md`).
+- В отладке панели могут быть на `WlrLayer.Overlay` — тогда «дырка» клина показывает то, что под окном панели на уровне композитора. В обычном режиме слой `Top`.
+- Параметры авто‑ширины: по умолчанию берем `min(seamWidthPx, 0.35 * faceWidth) / faceWidth` и затем ограничиваем в [0.02..0.98]. Переменная окружения `QS_WEDGE_WIDTH_PCT` (0..100) переопределяет это поведение.
+- Перо/растушёвка границы: `params1.x` вычисляется из радиуса темы и масштаба и далее ограничивается примерно до 0.05 относительно ширины панели.
+- Смешивание: в `ShaderEffect` включено `blending: true`; Qt Quick использует premultiplied alpha, шейдер отдаёт уменьшенную альфу внутри клина.
+
 ### Что уже поймали (проблемы и решения)
 
 - Ошибка `Failed to find shader … .qsb` — шейдер не собран или путь указан неверно. Решение: запустить сборку из каталога `~/.config/quickshell` или дать полный путь к скрипту. Убедиться, что `fragmentShader: Qt.resolvedUrl("../shaders/<name>.frag.qsb")`.
@@ -182,6 +190,14 @@ Wayland screenshot: `grim -g "$(slurp)" wedge.png`.
 
 - After validation, prefer the shader-only path and remove the legacy Canvas/OpacityMask fallbacks.
 - Performance: ShaderEffect/ShaderEffectSource are live and recursive; keep verbose debug disabled outside troubleshooting.
+
+### Interaction with panel transparency
+
+- High panel transparency reduces the visual prominence of the wedge because the shader subtracts from the panel fill. If you want a stronger look, increase wedge width (`QS_WEDGE_WIDTH_PCT`) or decrease panel transparency (see `Docs/PANELS.md`).
+- During debug, bars can be on `WlrLayer.Overlay`; the wedge then reveals whatever is under the panel window in the compositor. In normal runs the layer is `Top`.
+- Auto width defaults to `min(seamWidthPx, 0.35 * faceWidth) / faceWidth`, clamped to [0.02..0.98]. `QS_WEDGE_WIDTH_PCT` (0..100) overrides.
+- Feather: `params1.x` derives from theme radius and scale, capped at ~0.05 relative to face width.
+- Blending is enabled; Qt Quick uses premultiplied alpha; inside the wedge alpha is reduced toward zero.
 
 ### Issues we hit (and fixes)
 
