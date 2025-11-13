@@ -32,6 +32,26 @@ Notes:
 - When debugging (`QS_WEDGE_DEBUG=1`), bars may run on `WlrLayer.Overlay`, so the “hole” shows whatever is behind the panel window.
 - See `Docs/SHADERS.md` for shader flags and troubleshooting.
 
+### Widget capsules (per-module backgrounds)
+- Panel rows are now fully transparent; every widget owns its own rounded capsule.
+- Colors come from `Settings.settings.widgetBackgrounds`. Each module looks up its name, then `default`, and finally falls back to `rgba(12, 14, 20, 0.2)` (≈80 % transparent).
+- Known keys: `clock`, `workspaces`, `network`, `vpn`, `weather`, `media`, `systemTray`, `volume`, `microphone`, `mpdFlags`. You can add more as new widgets adopt the helper.
+- Example:
+
+```json
+{
+  "widgetBackgrounds": {
+    "default": "rgba(10, 12, 20, 0.2)",
+    "media": "rgba(15, 18, 30, 0.25)",
+    "systemTray": "#201f2dcc"
+  }
+}
+```
+
+Tips:
+- Stick to CSS-style colors (`rgba()`, `#rrggbbaa`, `hsl()`).
+- Keep base alpha in the 0.15–0.3 range for the requested “mostly transparent” look.
+
 ---
 
 ## Русский (RU)
@@ -61,3 +81,23 @@ Notes:
 - Клин вычитает заливку панели. При сильной прозрачности панели клин выглядит более «мягко». Чтобы усилить эффект, либо увеличьте ширину клина (`QS_WEDGE_WIDTH_PCT`), либо уменьшите прозрачность панели (увеличьте `panelBgAlphaScale`).
 - В отладке (`QS_WEDGE_DEBUG=1`) панели могут работать на слое `WlrLayer.Overlay` — «дырка» будет показывать то, что под окном панели в композиторе.
 - За флагами шейдера и диагностикой см. `Docs/SHADERS.md`.
+
+### Капсулы виджетов (фон для каждого модуля)
+- Ряды панели теперь полностью прозрачные; каждый виджет рисует свою скруглённую «капсулу».
+- Цвета берутся из `Settings.settings.widgetBackgrounds`. Модуль ищет ключ со своим именем, затем `default`, а после — запасной `rgba(12, 14, 20, 0.2)` (≈80 % прозрачности).
+- Известные ключи: `clock`, `workspaces`, `network`, `vpn`, `weather`, `media`, `systemTray`, `volume`, `microphone`, `mpdFlags`. Добавляйте новые по мере появления модулей.
+- Пример:
+
+```json
+{
+  "widgetBackgrounds": {
+    "default": "rgba(10, 12, 20, 0.2)",
+    "media": "rgba(15, 18, 30, 0.25)",
+    "systemTray": "#201f2dcc"
+  }
+}
+```
+
+Подсказки:
+- Используйте css-цвета (`rgba()`, `#rrggbbaa`, `hsl()`).
+- Держите базовую прозрачность в диапазоне 0.15–0.3, чтобы фон выглядел «почти прозрачным», как требуется.
