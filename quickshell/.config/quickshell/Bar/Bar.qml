@@ -60,8 +60,8 @@ Scope {
                     color: "transparent"
                     property bool panelHovering: false
                     WlrLayershell.namespace: "quickshell-bar-left"
-                    // During wedge debugging, force overlay layer to ensure visibility over fullscreen apps
-                    WlrLayershell.layer: ((Quickshell.env("QS_WEDGE_DEBUG") || "") === "1") ? WlrLayer.Overlay : WlrLayer.Top
+                    // Use Top layer by default; overlay hack removed after validation
+                    WlrLayershell.layer: WlrLayer.Top
                     anchors.bottom: true
                     anchors.left: true
                     anchors.right: false
@@ -147,44 +147,7 @@ Scope {
                             live: true
                             recursive: true
                         }
-                        Canvas {
-                            id: leftFillMask
-                            anchors.fill: leftBarFill
-                            visible: false
-                            onPaint: {
-                                var ctx = getContext('2d');
-                                ctx.reset();
-                                ctx.clearRect(0, 0, width, height);
-                                // keep everything by default
-                                ctx.fillStyle = '#ffffffff';
-                                ctx.fillRect(0, 0, width, height);
-                                // cut the wedge at the right edge
-                                var w = Math.max(1, Math.min(width, leftPanel.seamWidth));
-                                var x0 = width - w;
-                                ctx.fillStyle = '#000000ff';
-                                ctx.beginPath();
-                                if (Settings.settings.debugTriangleLeftSlopeUp) {
-                                    // bottom-left → top-right
-                                    ctx.moveTo(x0, height);
-                                    ctx.lineTo(width, 0);
-                                    ctx.lineTo(width, height);
-                                } else {
-                                    // top-left → bottom-right
-                                    ctx.moveTo(x0, 0);
-                                    ctx.lineTo(width, height);
-                                    ctx.lineTo(width, 0);
-                                }
-                                ctx.closePath();
-                                ctx.fill();
-                            }
-                        }
-                        // Fallback mask path (only when shader clip is disabled)
-                        GE.OpacityMask {
-                            anchors.fill: leftBarFill
-                            source: leftBarFillSource
-                            maskSource: leftFillMask
-                            visible: leftFaceClipLoader.active !== true
-                        }
+                        // Legacy Canvas/OpacityMask fallback removed — shader path only
                         // Panel tint (left) drawn and masked within leftPanelContent so anchors are valid siblings
                         ShaderEffect {
                             id: leftPanelTintFX
@@ -211,41 +174,7 @@ Scope {
                             live: true
                             recursive: true
                         }
-                        Canvas {
-                            id: leftPanelTintMask
-                            anchors.fill: leftBarFill
-                            visible: false
-                            onPaint: {
-                                var ctx = getContext('2d');
-                                ctx.reset();
-                                ctx.clearRect(0, 0, width, height);
-                                ctx.fillStyle = '#ffffffff';
-                                ctx.fillRect(0, 0, width, height);
-                                var w = Math.max(1, Math.min(width, leftPanel.seamWidth));
-                                var x0 = width - w;
-                                ctx.fillStyle = '#000000ff';
-                                ctx.beginPath();
-                                if (Settings.settings.debugTriangleLeftSlopeUp) {
-                                    ctx.moveTo(x0, height);
-                                    ctx.lineTo(width, 0);
-                                    ctx.lineTo(width, height);
-                                } else {
-                                    ctx.moveTo(x0, 0);
-                                    ctx.lineTo(width, height);
-                                    ctx.lineTo(width, 0);
-                                }
-                                ctx.closePath();
-                                ctx.fill();
-                            }
-                        }
-                        // Keep tint overlay masked (fallback) when shader clip is disabled
-                        GE.OpacityMask {
-                            anchors.fill: leftBarFill
-                            z: 2
-                            visible: leftPanel.panelTintEnabled && leftFaceClipLoader.active !== true
-                            source: leftPanelTintSource
-                            maskSource: leftPanelTintMask
-                        }
+                        // Legacy tint mask fallback removed — shader path only
                         // Shader-based subtractive wedge for the tint overlay (enabled with the same flag)
                         Loader {
                             id: leftTintClipLoader
@@ -669,8 +598,8 @@ Scope {
                     color: "transparent"
                     property bool panelHovering: false
                     WlrLayershell.namespace: "quickshell-bar-right"
-                    // During wedge debugging, force overlay layer to ensure visibility over fullscreen apps
-                    WlrLayershell.layer: ((Quickshell.env("QS_WEDGE_DEBUG") || "") === "1") ? WlrLayer.Overlay : WlrLayer.Top
+                    // Use Top layer by default; overlay hack removed after validation
+                    WlrLayershell.layer: WlrLayer.Top
                     anchors.bottom: true
                     anchors.right: true
                     anchors.left: false
@@ -752,43 +681,7 @@ Scope {
                             live: true
                             recursive: true
                         }
-                        Canvas {
-                            id: rightFillMask
-                            anchors.fill: rightBarFill
-                            visible: false
-                            onPaint: {
-                                var ctx = getContext('2d');
-                                ctx.reset();
-                                ctx.clearRect(0, 0, width, height);
-                                // keep everything by default
-                                ctx.fillStyle = '#ffffffff';
-                                ctx.fillRect(0, 0, width, height);
-                                // cut the wedge at the left edge
-                                var w = Math.max(1, Math.min(width, rightPanel.seamWidth));
-                                ctx.fillStyle = '#000000ff';
-                                ctx.beginPath();
-                                if (Settings.settings.debugTriangleRightSlopeUp) {
-                                    // bottom-left → top-right (vertical edge at x=0)
-                                    ctx.moveTo(0, height);
-                                    ctx.lineTo(w, 0);
-                                    ctx.lineTo(0, 0);
-                                } else {
-                                    // top-left → bottom-right (vertical edge at x=0)
-                                    ctx.moveTo(0, 0);
-                                    ctx.lineTo(w, height);
-                                    ctx.lineTo(0, height);
-                                }
-                                ctx.closePath();
-                                ctx.fill();
-                            }
-                        }
-                        // Fallback mask path (only when shader clip is disabled)
-                        GE.OpacityMask {
-                            anchors.fill: rightBarFill
-                            source: rightBarFillSource
-                            maskSource: rightFillMask
-                            visible: rightFaceClipLoader.active !== true
-                        }
+                        // Legacy Canvas/OpacityMask fallback removed — shader path only
                         // Panel tint (right) drawn and masked within rightPanelContent so anchors are valid siblings
                         ShaderEffect {
                             id: rightPanelTintFX
@@ -815,40 +708,7 @@ Scope {
                             live: true
                             recursive: true
                         }
-                        Canvas {
-                            id: rightPanelTintMask
-                            anchors.fill: rightBarFill
-                            visible: false
-                            onPaint: {
-                                var ctx = getContext('2d');
-                                ctx.reset();
-                                ctx.clearRect(0, 0, width, height);
-                                ctx.fillStyle = '#ffffffff';
-                                ctx.fillRect(0, 0, width, height);
-                                var w = Math.max(1, Math.min(width, rightPanel.seamWidth));
-                                ctx.fillStyle = '#000000ff';
-                                ctx.beginPath();
-                                if (Settings.settings.debugTriangleRightSlopeUp) {
-                                    ctx.moveTo(0, height);
-                                    ctx.lineTo(w, 0);
-                                    ctx.lineTo(0, 0);
-                                } else {
-                                    ctx.moveTo(0, 0);
-                                    ctx.lineTo(w, height);
-                                    ctx.lineTo(0, height);
-                                }
-                                ctx.closePath();
-                                ctx.fill();
-                            }
-                        }
-                        // Keep tint overlay masked (fallback) when shader clip is disabled
-                        GE.OpacityMask {
-                            anchors.fill: rightBarFill
-                            z: 2
-                            visible: rightPanel.panelTintEnabled && rightFaceClipLoader.active !== true
-                            source: rightPanelTintSource
-                            maskSource: rightPanelTintMask
-                        }
+                        // Legacy tint mask fallback removed — shader path only
                         // Shader-based subtractive wedge for the tint overlay (enabled with the same flag)
                         Loader {
                             id: rightTintClipLoader
