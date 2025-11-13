@@ -54,9 +54,12 @@ LocalComponents.CapsuleButton {
     Row {
         id: lineBox
         spacing: iconSpacing
-        anchors.horizontalCenter: undefined
-        anchors.left: parent.left
-        anchors.top: parent.top
+        anchors.horizontalCenter: root.centerRow ? parent.horizontalCenter : undefined
+        anchors.verticalCenter: root.centerRow ? parent.verticalCenter : undefined
+        anchors.verticalCenterOffset: root.centerRow ? root.centerOffset : 0
+        anchors.left: root.centerRow ? undefined : parent.left
+        anchors.top: root.centerRow ? undefined : parent.top
+        anchors.topMargin: root.centerRow ? 0 : root.centerOffset
 
         LocalComponents.BaselineAlignedIcon {
             id: baselineIcon
