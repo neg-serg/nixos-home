@@ -51,8 +51,11 @@ Notes:
 Tips:
 - Stick to CSS-style colors (`rgba()`, `#rrggbbaa`, `hsl()`).
 - Keep base alpha in the 0.15–0.3 range for the requested “mostly transparent” look.
-- Capsule padding/height are standardized via `Helpers/CapsuleMetrics.js`; keep using `centerContent: true` on `SmallInlineStat` (and similar helpers) so icons stay vertically centered.
+- Capsule padding/height are standardized via `Helpers/CapsuleMetrics.js`. For icon+label widgets prefer `Components/CenteredCapsuleRow.qml`, which already wraps `WidgetCapsule`, centers content, and handles font/icon alignment without custom rows.
 - Prefer the shared `Components/WidgetCapsule.qml` wrapper whenever you add/edit a widget: it already looks up colors via `Helpers/WidgetBg.js`, applies hover tint/borders, and mirrors the capsule metrics. Override `backgroundKey`, `hoverColorOverride`, `paddingScale`, or `verticalPaddingScale` only when a module truly needs different spacing.
+- If the capsule needs click/tap behavior, use `Components/CapsuleButton.qml` (or wrappers like `CenteredCapsuleRow`) instead of hand-written `MouseArea`+`HoverHandler`.
+- Audio-level widgets (volume/microphone) must go through `Components/AudioLevelCapsule.qml`; it embeds `PillIndicator`, handles hover/scroll, and collapses cleanly when hidden.
+- Inline reveal capsules (system tray hover box, future inline menus) should use `Components/InlineTrayCapsule.qml` so borders/hover/clip settings stay consistent.
 
 ### Panel side margins & flush layout
 - Both panel windows now read `panelSideMarginPx` from `Settings.json`. If the key is missing, `Theme.panel.sideMargin` (18px by default) is used.
@@ -77,8 +80,8 @@ Keep this order intact so separators remain unnecessary and hover hot-zones are 
 
 ### Network cluster behavior
 - The “net cluster” lives on the left bar: `LocalMods.VpnAmneziaIndicator`, `NetworkLinkIndicator`, then `NetworkUsage`.
-- `NetworkLinkIndicator` picks a random Material icon from `graph_1`…`graph_7`, `schema`, `family_sharing`, or `family_history` when the bar loads. Tweak the pool via the module’s `iconPool` list if needed.
-- Only the icon changes color on failure: warning (`Settings.networkNoInternetColor`) when there is link but no internet; error (`Settings.networkNoLinkColor`) when the physical link drops. Throughput text remains in the neutral color.
+- `NetworkLinkIndicator` picks a random Material icon from `graph_1`…`graph_7`, `schema`, or `family_history` when the bar loads. Tweak the pool via the module’s `iconPool` list if needed.
+- Only the icon changes color on failure: warning (`Settings.networkNoInternetColor`) when there is link but no internet; error (`Settings.networkNoLinkColor`) when the physical link drops. Throughput text remains in the neutral color. Use `Helpers/ConnectivityUi.js` to keep formatting/colors consistent across VPN/link/speed modules.
 - Icon scale/baseline adjustments come from `Theme.network.icon.scale` / `.vAdjust`. The capsule reuses the same hover tint logic as other widgets, so alignment stays consistent.
 
 ---
@@ -130,8 +133,11 @@ Keep this order intact so separators remain unnecessary and hover hot-zones are 
 Подсказки:
 - Используйте css-цвета (`rgba()`, `#rrggbbaa`, `hsl()`).
 - Держите базовую прозрачность в диапазоне 0.15–0.3, чтобы фон выглядел «почти прозрачным», как требуется.
-- Паддинги и высота капсул унифицированы через `Helpers/CapsuleMetrics.js`. Указывайте `centerContent: true` в `SmallInlineStat` (и аналогичных помощниках), чтобы иконки оставались по центру.
+- Паддинги и высота капсул унифицированы через `Helpers/CapsuleMetrics.js`. Для типовых «иконка + текст» используйте `Components/CenteredCapsuleRow.qml` — там уже есть `WidgetCapsule`, центрирование и выравнивание по базовой линии, так что индивидуальные Row/FontMetrics не нужны.
 - Для всех новых/обновлённых модулей используйте общий компонент `Components/WidgetCapsule.qml`: он сам подбирает цвет через `Helpers/WidgetBg.js`, настраивает hover-подсветку, рамку и метрики. Свойства `backgroundKey`, `hoverColorOverride`, `paddingScale`, `verticalPaddingScale` меняйте только если конкретному виджету действительно нужны другие отступы.
+- Нужна кликабельная капсула — начинайте с `Components/CapsuleButton.qml` (или тех, кто его использует), чтобы не размножать `MouseArea`/`TapHandler`.
+- Виджеты уровня громкости/микрофона обязаны использовать `Components/AudioLevelCapsule.qml`: внутри уже есть `PillIndicator`, обработка hover/скролла и автосворачивание.
+- Для «встроенных» капсул (вроде ховера системного трея) используйте `Components/InlineTrayCapsule.qml`, чтобы фон, рамка и обрезка совпадали с остальными.
 
 ### Отступы по краям панели
 - Обе панели читают значение `panelSideMarginPx` из `Settings.json`. Если ключ не задан, используется `Theme.panel.sideMargin` (по умолчанию 18 px).
@@ -156,6 +162,7 @@ Keep this order intact so separators remain unnecessary and hover hot-zones are 
 
 ### Поведение сетевого кластера
 - «Нет-кластер» живёт на левой панели: `LocalMods.VpnAmneziaIndicator`, `NetworkLinkIndicator`, затем `NetworkUsage`.
-- `NetworkLinkIndicator` при старте случайно выбирает Material-иконку из набора `graph_1`…`graph_7`, `schema`, `family_sharing`, `family_history`. При необходимости скорректируйте список через свойство `iconPool`.
-- При проблемах меняется только цвет иконки: warning (`Settings.networkNoInternetColor`), если линк есть, но «интернет не пингуется», и error (`Settings.networkNoLinkColor`), если физический линк пропал. Текст скоростей всегда остаётся нейтральным.
+- `NetworkLinkIndicator` при старте случайно выбирает Material-иконку из набора `graph_1`…`graph_7`, `schema`, `family_history`. При необходимости скорректируйте список через свойство `iconPool`.
+- При проблемах меняется только цвет иконки: warning (`Settings.networkNoInternetColor`), если линк есть, но «интернет не пингуется», и error (`Settings.networkNoLinkColor`), если физический линк пропал. Текст скоростей всегда остаётся нейтральным. Цвета/форматирование вынесены в `Helpers/ConnectivityUi.js`, чтобы VPN/Link/Usage выглядели одинаково.
+- Цвета/форматирование для VPN/Link/Usage берите из `Helpers/ConnectivityUi.js`, чтобы все три виджета выглядели одинаково.
 - Масштаб и вертикальный сдвиг иконок задаются `Theme.network.icon.scale` / `.vAdjust`. Капсула использует те же hover-правила, что и остальные виджеты, поэтому выравнивание единообразное.

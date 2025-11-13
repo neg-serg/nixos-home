@@ -25,6 +25,7 @@ Rectangle {
     property real cornerRadiusOverride: -1
     property real borderWidthOverride: -1
     property real contentYOffset: 0
+    property int cursorShape: Qt.ArrowCursor
 
     readonly property real _scale: Theme.scale(Screen)
     readonly property var _metrics: Capsule.metrics(Theme, _scale)
@@ -36,10 +37,8 @@ Rectangle {
     readonly property int verticalPadding: Math.max(2, Math.round(_metrics.padding * verticalPaddingScale))
     readonly property color _hoverColor: ColorHelpers.mix(_baseColor, hoverMixColor, hoverMixAmount)
 
-    implicitWidth: Math.max(0, contentItem.implicitWidth) + horizontalPadding * 2
-    implicitHeight: forceHeightFromMetrics
-            ? Math.max(_metrics.height, contentItem.implicitHeight + verticalPadding * 2)
-            : contentItem.implicitHeight + verticalPadding * 2
+    implicitWidth: 0
+    implicitHeight: forceHeightFromMetrics ? _metrics.height : 0
     width: implicitWidth
     height: implicitHeight
 
@@ -61,6 +60,7 @@ Rectangle {
         id: hoverTracker
         enabled: root.hoverEnabled
         acceptedDevices: PointerDevice.Mouse | PointerDevice.Stylus | PointerDevice.TouchPad
+        cursorShape: root.cursorShape
     }
     readonly property bool hovered: hoverTracker.hovered
 
@@ -74,16 +74,7 @@ Rectangle {
             bottomMargin: verticalPadding
         }
 
-        Item {
-            id: contentItem
-            implicitWidth: childrenRect.width
-            implicitHeight: childrenRect.height
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.verticalCenterOffset: root.contentYOffset
-            anchors.horizontalCenter: centerContent ? parent.horizontalCenter : undefined
-            anchors.left: centerContent ? undefined : parent.left
-        }
     }
 
-    default property alias content: contentItem.data
+    default property alias content: contentArea.data
 }

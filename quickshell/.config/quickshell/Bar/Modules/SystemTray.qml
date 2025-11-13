@@ -7,10 +7,10 @@ import Quickshell.Widgets
 import qs.Settings
 import qs.Components
 import qs.Services as Services
-import "../../Helpers/CapsuleMetrics.js" as Capsule
 
 Row {
     id: root
+    CapsuleContext { id: capsuleCtx; screen: root.screen }
     property bool panelHover: false
     property bool hotHover: false
     property bool holdOpen: false
@@ -44,8 +44,8 @@ Row {
     property bool programmaticOverlayDismiss: false
     // Collapse delay handled by TrayController service
     function dismissOverlayNow() { root.programmaticOverlayDismiss = true; trayOverlay.dismiss(); root.programmaticOverlayDismiss = false }
-    readonly property real _scale: Theme.scale(Screen)
-    readonly property var capsuleMetrics: Capsule.metrics(Theme, _scale)
+    readonly property real _scale: capsuleCtx.scale
+    readonly property var capsuleMetrics: capsuleCtx.metrics
     readonly property int capsuleInnerSize: capsuleMetrics.inner
     spacing: Math.max(2, Math.round(Theme.panelRowSpacing * _scale * 0.5))
     Layout.alignment: Qt.AlignVCenter
@@ -92,24 +92,24 @@ Row {
         id: inlineBox
         visible: expanded
         anchors.verticalCenter: parent.verticalCenter
-        width: bg.width
-        height: bg.height
-        Rectangle {
-            id: bg
-            radius: Theme.cornerRadiusSmall
-            color: inlineBgColor
-            border.color: inlineBorderColor
-            border.width: Theme.uiBorderWidth
-            width: collapsedRow.implicitWidth + Theme.panelTrayInlinePadding
-            height: collapsedRow.implicitHeight + Theme.panelTrayInlinePadding
-            anchors.verticalCenter: parent.verticalCenter
-            clip: true
+        readonly property real inlinePadding: Math.max(2, Theme.panelTrayInlinePadding)
+        width: collapsedRow.implicitWidth + inlinePadding
+        height: collapsedRow.implicitHeight + inlinePadding
+
+        InlineTrayCapsule {
+            id: inlineCapsule
+            anchors.fill: parent
+            inlineBackground: inlineBgColor
+            inlineBorder: inlineBorderColor
+            inlinePaddingScale: 1
+            inlineVerticalPaddingScale: 1
+            forceHeightFromMetrics: false
         }
 
         // Hover area over the inline box to keep it open while cursor is inside
         MouseArea {
             id: inlineHoverArea
-            anchors.fill: bg
+            anchors.fill: inlineCapsule
             z: 999
             hoverEnabled: true
             acceptedButtons: Qt.NoButton
@@ -121,9 +121,10 @@ Row {
         Row {
             id: collapsedRow
             // Align to the right edge so reveal expands leftwards
-            anchors.right: bg.right
-            anchors.verticalCenter: bg.verticalCenter
-            spacing: Math.round(Theme.panelRowSpacingSmall * Theme.scale(Screen))
+            anchors.right: parent.right
+            anchors.rightMargin: inlineBox.inlinePadding / 2
+            anchors.verticalCenter: parent.verticalCenter
+            spacing: Math.round(Theme.panelRowSpacingSmall * root._scale)
             Repeater {
                 model: systemTray.items
                 delegate: Item {
@@ -172,7 +173,7 @@ Row {
                                 if (trayMenu && trayMenu.visible) { trayMenu.hideMenu(); root.dismissOverlayNow(); return; }
                                 if (modelData.hasMenu && modelData.menu && trayMenu) {
                                     const menuX = (width / 2) - (trayMenu.width / 2);
-                                    const menuY = height + Math.round(Services.TrayController.menuYOffset * Theme.scale(Screen));
+                                    const menuY = height + Math.round(Services.TrayController.menuYOffset * root._scale);
                                     trayMenu.menu = modelData.menu;
                                     trayMenu.showAt(parent, menuX, menuY);
                                     trayOverlay.show();
@@ -192,7 +193,7 @@ Row {
         z: 1002
         visible: false // hidden; tray reveals by hover in bottom-right hot zone
         anchors.verticalCenter: parent.verticalCenter
-        size: Math.round(Theme.panelIconSize * Theme.scale(Screen))
+        size: Math.round(Theme.panelIconSize * root._scale)
         cornerRadius: Theme.cornerRadiusSmall
         icon: Settings.settings.collapsedTrayIcon || "expand_more"
         iconRotation: expanded ? 90 : 0
@@ -237,8 +238,8 @@ Row {
         // Disabled always to avoid duplicate inline tray; use inlineBox above
         model: 0
         delegate: Item {
-            width: Math.round(Theme.panelIconSize * Theme.scale(Screen))
-            height: Math.round(Theme.panelIconSize * Theme.scale(Screen))
+            width: Math.round(Theme.panelIconSize * root._scale)
+            height: Math.round(Theme.panelIconSize * root._scale)
 
             visible: modelData
             property bool isHovered: trayMouseArea.containsMouse
@@ -247,8 +248,8 @@ Row {
 
             Rectangle {
                 anchors.centerIn: parent
-                width: Math.round(Theme.panelIconSizeSmall * Theme.scale(Screen))
-                height: Math.round(Theme.panelIconSizeSmall * Theme.scale(Screen))
+                width: Math.round(Theme.panelIconSizeSmall * root._scale)
+                height: Math.round(Theme.panelIconSizeSmall * root._scale)
                 radius: Theme.cornerRadiusSmall
                 color: "transparent"
                 clip: true
@@ -256,7 +257,7 @@ Row {
                 TrayIcon {
                     id: trayIcon
                     anchors.centerIn: parent
-                    size: Math.round(Theme.panelIconSizeSmall * Theme.scale(Screen))
+                    size: Math.round(Theme.panelIconSizeSmall * root._scale)
                     source: modelData?.icon || ""
                     grayscale: trayOverlay.visible
                     opacity: ready ? 1 : 0
@@ -301,7 +302,7 @@ Row {
                         if (modelData.hasMenu && modelData.menu && trayMenu) {
                             // Anchor the menu to the tray icon item (parent) and position it below the icon
                             const menuX = (width / 2) - (trayMenu.width / 2);
-                            const menuY = height + Math.round(Services.TrayController.menuYOffset * Theme.scale(Screen));
+                            const menuY = height + Math.round(Services.TrayController.menuYOffset * root._scale);
                             trayMenu.menu = modelData.menu;
                             trayMenu.showAt(parent, menuX, menuY);
                             trayOverlay.show();

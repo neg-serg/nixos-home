@@ -5,35 +5,24 @@ import Quickshell.Io
 import Quickshell.Hyprland
 import qs.Components
 import qs.Settings
-import "../../Helpers/Utils.js" as Utils
-import "../../Helpers/WidgetBg.js" as WidgetBg
-import "../../Helpers/Color.js" as Color
-import "../../Helpers/CapsuleMetrics.js" as Capsule
 
 Item {
     id: kb
 
     property string deviceMatch: ""
-    property alias fontPixelSize:label.font.pixelSize
-    property int desiredHeight: capsuleMetrics.inner
+    property int fontPixelSize: Math.round(Theme.fontSizeSmall * sc())
+    property int desiredHeight: capsuleCtx.inner
     property var screen:null
-    property bool useTheme:true
     property int yNudge:0
 
     property real iconScale:Theme.keyboardIconScale
     property int iconSpacing:Theme.keyboardIconSpacing
-    property color iconColor:useTheme ? Theme.keyboardIconColor : Theme.textSecondary
+    property color iconColor:Theme.keyboardIconColor
 
     property int iconBaselineAdjust:Theme.keyboardIconBaselineOffset
     property int textBaselineAdjust:Theme.keyboardTextBaselineOffset
 
-    property color widgetBgColor: WidgetBg.color(Settings.settings, "keyboard", "rgba(10, 12, 20, 0.2)")
-    property color widgetBorderColor: Color.withAlpha(Theme.textPrimary, 0.08)
-    property color bgColor:useTheme ? widgetBgColor : Theme.background
-    property color textColor:useTheme ? Theme.keyboardTextColor : Theme.textPrimary
-    property color hoverBgColor:useTheme
-        ? Qt.rgba(widgetBgColor.r, widgetBgColor.g, widgetBgColor.b, Math.min(1, widgetBgColor.a + 0.12))
-        : Theme.surfaceHover
+    property color textColor:Theme.keyboardTextColor
 
     property string layoutText: "??"
     property string deviceName: ""
@@ -62,81 +51,65 @@ Item {
      *   compromise keeps the UI snappy and accurate.
      */
 
-    function sc() {
-        const s = kb.screen || (Quickshell.screens && Quickshell.screens.length ? Quickshell.screens[0] : null)
-        return s ? Theme.scale(s) : 1
+    readonly property var resolvedScreen: kb.screen
+        ? kb.screen
+        : ((Quickshell.screens && Quickshell.screens.length) ? Quickshell.screens[0] : null)
+
+    CapsuleContext {
+        id: capsuleCtx
+        screen: resolvedScreen
     }
 
-    readonly property var capsuleMetrics: Capsule.metrics(Theme, sc())
-    readonly property int capsulePadding: capsuleMetrics.padding
+    function sc() {
+        return capsuleCtx.scale
+    }
+
+    readonly property var capsuleMetrics: capsuleCtx.metrics
+    readonly property int capsulePadding: capsuleCtx.padding
     property int horizontalPadding: Math.max(4, Math.round(Theme.keyboardMargin * sc()))
     property int verticalPadding: Math.max(capsulePadding, Math.round(Theme.keyboardMargin * 0.8 * sc()))
-    readonly property int capsuleHeight: capsuleMetrics.height
+    readonly property int capsuleHeight: capsuleCtx.height
 
-    implicitWidth: Math.max(Math.round(Theme.keyboardMinWidth * sc()), Math.ceil(row.implicitWidth + 2 * horizontalPadding))
+    implicitWidth: Math.max(Math.round(Theme.keyboardMinWidth * sc()), Math.ceil(capsule.row.implicitWidth + 2 * horizontalPadding))
     implicitHeight: capsuleHeight
 
-    WidgetCapsule {
+    CenteredCapsuleRow {
         id: capsule
         width: parent.width
         height: parent.height
         anchors.centerIn: parent
         anchors.verticalCenterOffset: kb.yNudge
-        backgroundColorOverride: kb.bgColor
-        hoverColorOverride: kb.hoverBgColor
-        borderColorOverride: widgetBorderColor
-        borderWidthOverride: Theme.uiBorderWidth
-        cornerRadiusOverride: Math.round(Theme.keyboardRadius * sc())
         paddingScale: capsulePadding > 0 ? horizontalPadding / capsulePadding : 1
         verticalPaddingScale: capsulePadding > 0 ? verticalPadding / capsulePadding : 1
         backgroundKey: "keyboard"
         contentYOffset: kb.yNudge
-
-        Row {
-            id: row
-            spacing: kb.iconSpacing * sc()
-
-            // Metrics used for baseline alignment
-            FontMetrics { id: fmText; font: label.font }
-            FontMetrics { id: fmIcon; font: iconLabel.font }
-
-            Label {
-                id: iconLabel
-                text: "\uf11c" // FA "keyboard"
-                font.family: "Font Awesome 6 Free"
-                font.styleName: "Regular"
-                font.weight: Font.Normal
-                font.pixelSize: Math.round(kb.fontPixelSize * kb.iconScale * Theme.keyboardFontScale)
-                color: kb.iconColor
-                verticalAlignment: Text.AlignVCenter
-                padding: Math.round(Theme.keyboardIconPadding * sc())
-                baselineOffset: fmIcon.ascent + kb.iconBaselineAdjust
-            }
-
-            Label {
-                id: label
-                text: kb.layoutText
-                color: kb.textColor
-                font.family: Theme.fontFamily
-                font.weight: Theme.keyboardTextBold ? Font.DemiBold : Font.Medium
-                verticalAlignment: Text.AlignVCenter
-                padding: Math.round(Theme.keyboardTextPadding * sc())
-                baselineOffset: fmText.ascent + kb.textBaselineAdjust
-            }
-        }
+        cursorShape: Qt.PointingHandCursor
+        desiredInnerHeight: capsuleCtx.inner
+        centerRow: true
+        iconMode: "glyph"
+        iconGlyph: "\uf11c"
+        iconFontFamily: "Font Awesome 6 Free"
+        iconStyleName: "Regular"
+        iconColor: kb.iconColor
+        iconScale: kb.iconScale * Theme.keyboardFontScale
+        iconVAdjust: kb.iconBaselineAdjust
+        iconPadding: Math.round(Theme.keyboardIconPadding * sc())
+        iconSpacing: kb.iconSpacing * sc()
+        textPadding: Math.round(Theme.keyboardTextPadding * sc())
+        labelText: kb.layoutText
+        labelColor: kb.textColor
+        fontPixelSize: kb.fontPixelSize
+        labelFontFamily: Theme.fontFamily
+        labelFontWeight: Theme.keyboardTextBold ? Font.DemiBold : Font.Medium
+        labelBaselineAdjust: kb.textBaselineAdjust
 
         TapHandler {
-            target: capsule
             acceptedButtons: Qt.LeftButton
             gesturePolicy: TapHandler.ReleaseWithinBounds
             onTapped: {
                 switchProc.cmd = ["hyprctl", "switchxkblayout", "current", "next"]
                 switchProc.start()
             }
-        }
-        HoverHandler {
-            target: capsule
-            cursorShape: Qt.PointingHandCursor
         }
     }
 

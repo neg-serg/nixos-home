@@ -5,39 +5,36 @@ import Quickshell.Wayland
 import qs.Settings
 import qs.Widgets.SidePanel
 import qs.Services as Services
-import "../../Helpers/WidgetBg.js" as WidgetBg
-import "../../Helpers/Color.js" as Color
-import "../../Helpers/CapsuleMetrics.js" as Capsule
 
 Item {
     id: root
     property bool expanded: false
-    property color backgroundColor: WidgetBg.color(Settings.settings, "weather", "rgba(10, 12, 20, 0.2)")
-    readonly property real hoverMixAmount: 0.18
-    readonly property color hoverColor: Color.mix(backgroundColor, Qt.rgba(1, 1, 1, 1), hoverMixAmount)
-    readonly property real _scale: Theme.scale(Screen)
-    readonly property var capsuleMetrics: Capsule.metrics(Theme, _scale)
+    CapsuleContext { id: capsuleCtx }
+    readonly property real _scale: capsuleCtx.scale
+    readonly property var capsuleMetrics: capsuleCtx.metrics
     property int padding: capsuleMetrics.padding
     readonly property int iconBox: capsuleMetrics.inner
-    readonly property bool hovered: hoverTracker.hovered || weatherBtn.hovering
+    readonly property alias capsule: capsule
 
-    height: capsuleMetrics.height
     width: capsuleMetrics.height
-    implicitHeight: height
+    height: capsuleMetrics.height
     implicitWidth: width
-    HoverHandler { id: hoverTracker }
+    implicitHeight: height
 
-    Rectangle {
+    WidgetCapsule {
+        id: capsule
         anchors.fill: parent
-        radius: Theme.cornerRadiusSmall
-        color: hovered ? hoverColor : backgroundColor
-        border.width: Theme.uiBorderWidth
-        border.color: Color.withAlpha(Theme.textPrimary, 0.08)
+        backgroundKey: "weather"
+        paddingScale: capsuleMetrics.padding > 0 ? padding / capsuleMetrics.padding : 1
+        verticalPaddingScale: paddingScale
+        centerContent: true
+        cursorShape: Qt.PointingHandCursor
+        contentYOffset: 0
     }
 
     IconButton {
         id: weatherBtn
-        anchors.centerIn: parent
+        anchors.centerIn: capsule
         size: iconBox
         icon: "partly_cloudy_day"
         cornerRadius: Theme.cornerRadiusSmall
@@ -67,19 +64,19 @@ Item {
         onVisibleChanged: { if (visible) { try { Services.Weather.start() } catch (e) {} } else { try { Services.Weather.stop() } catch (e) {} } }
         Rectangle {
             id: popup
-            radius: Math.round(Theme.panelOverlayRadius * Theme.scale(Screen))
+            radius: Math.round(Theme.panelOverlayRadius * _scale)
             color: Theme.overlayWeak
             border.color: Theme.borderSubtle
             border.width: Theme.uiBorderWidth
             anchors.top: parent.top
             anchors.left: parent.left
-            anchors.topMargin: Math.round(Theme.sidePanelSpacingMedium * Theme.scale(Screen))
-            anchors.leftMargin: Math.round(Theme.panelSideMargin * Theme.scale(Screen))
+            anchors.topMargin: Math.round(Theme.sidePanelSpacingMedium * _scale)
+            anchors.leftMargin: Math.round(Theme.panelSideMargin * _scale)
 
             Weather {
                 id: weather
-                width: Math.round(Theme.sidePanelWeatherWidth * Theme.scale(Screen))
-                height: Math.round(Theme.sidePanelWeatherHeight * Theme.scale(Screen))
+                width: Math.round(Theme.sidePanelWeatherWidth * _scale)
+                height: Math.round(Theme.sidePanelWeatherHeight * _scale)
             }
         }
         MouseArea {

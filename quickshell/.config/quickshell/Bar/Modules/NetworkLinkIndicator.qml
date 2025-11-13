@@ -2,32 +2,31 @@ import QtQuick
 import qs.Components
 import qs.Services as Services
 import qs.Settings
-import "../../Helpers/CapsuleMetrics.js" as Capsule
+import "../../Helpers/ConnectivityUi.js" as ConnUi
 
 // Standalone indicator for physical link / internet availability
-WidgetCapsule {
+CenteredCapsuleRow {
     id: root
 
     property var screen: null
-    readonly property real _scale: Theme.scale(Screen)
-    readonly property var capsuleMetrics: Capsule.metrics(Theme, _scale)
+    CapsuleContext { id: capsuleCtx; screen: root.screen || Screen }
+    readonly property real _scale: capsuleCtx.scale
+    readonly property var capsuleMetrics: capsuleCtx.metrics
     readonly property int capsulePadding: capsuleMetrics.padding
-    property int desiredHeight: capsuleMetrics.inner
-    readonly property int capsuleHeight: capsuleMetrics.height
-    property int fontPixelSize: Math.round(Theme.fontSizeSmall * _scale)
+    property int labelPixelSize: Math.round(Theme.fontSizeSmall * _scale)
 
     property bool showLabel: false
-    property string labelText: "NET"
-    property int iconSpacing: Theme.panelRowSpacingSmall
-    property int textPadding: Theme.panelRowSpacingSmall
+    property string labelTextValue: "NET"
+    property int iconSpacingPx: Theme.panelRowSpacingSmall
+    property int textPaddingPx: Theme.panelRowSpacingSmall
 
-    property real iconScale: Theme.networkLinkIconScale
-    property int iconVAdjust: Theme.networkLinkIconVAdjust
+    property real iconScaleFactor: Theme.networkLinkIconScale
+    property int iconVAdjustPx: Theme.networkLinkIconVAdjust
     // Icon selection pool (Material Symbols names). Picked randomly on init.
     property var iconPool: ([
         "graph_1", "graph_2", "graph_3", "graph_4",
         "graph_5", "graph_6", "graph_7",
-        "schema", "family_sharing", "family_history"
+        "schema", "family_history"
     ])
     property string iconConnected: "network_check"
     property string iconNoInternet: "network_ping"
@@ -36,8 +35,8 @@ WidgetCapsule {
     property string _selectedIcon: "schema"
 
     readonly property color connectedColor: Theme.textSecondary
-    readonly property color warningColor: (Settings.settings.networkNoInternetColor || Theme.warning)
-    readonly property color errorColor: (Settings.settings.networkNoLinkColor || Theme.error)
+    readonly property color warningColor: ConnUi.warningColor(Settings.settings, Theme)
+    readonly property color errorColor: ConnUi.errorColor(Settings.settings, Theme)
     property bool hasLink: Services.Connectivity.hasLink
     property bool hasInternet: Services.Connectivity.hasInternet
     property int horizontalPadding: Math.max(4, Math.round(Theme.panelRowSpacingSmall * _scale))
@@ -45,24 +44,20 @@ WidgetCapsule {
     paddingScale: capsuleMetrics.padding > 0
         ? horizontalPadding / capsuleMetrics.padding
         : 1
-
-    SmallInlineStat {
-        id: inlineView
-        desiredHeight: Math.max(1, capsuleMetrics.inner)
-        fontPixelSize: root.fontPixelSize
-        textPadding: root.textPadding
-        iconSpacing: root.iconSpacing
-        iconMode: "material"
-        materialIconName: root.currentIconName()
-        iconAutoTune: true
-        iconScale: root.iconScale
-        iconVAdjust: root.iconVAdjust
-        iconColor: root.currentIconColor()
-        labelVisible: root.showLabel
-        labelText: root.labelText
-        labelColor: root.currentIconColor()
-        centerContent: true
-    }
+    desiredInnerHeight: capsuleCtx.inner
+    fontPixelSize: root.labelPixelSize
+    iconMode: "material"
+    materialIconName: currentIconName()
+    iconAutoTune: true
+    iconScale: root.iconScaleFactor
+    iconVAdjust: root.iconVAdjustPx
+    iconColor: currentIconColor()
+    labelVisible: root.showLabel
+    labelText: root.labelTextValue
+    labelColor: currentIconColor()
+    labelFontFamily: Theme.fontFamily
+    textPadding: root.textPaddingPx
+    iconSpacing: root.iconSpacingPx
 
     function currentIconName() {
         if (useStatusFallbackIcons) {
@@ -73,9 +68,7 @@ WidgetCapsule {
     }
 
     function currentIconColor() {
-        if (!hasLink) return errorColor;
-        if (!hasInternet) return warningColor;
-        return connectedColor;
+        return ConnUi.iconColor(hasLink, hasInternet, Settings.settings, Theme);
     }
 
     function _pickRandomIcon() {

@@ -6,39 +6,27 @@ import qs.Services as Services
 import qs.Components
 import qs.Services
 import "../../Helpers/Utils.js" as Utils
-import "../../Helpers/WidgetBg.js" as WidgetBg
-import "../../Helpers/Color.js" as Color
-import "../../Helpers/CapsuleMetrics.js" as Capsule
 
-Rectangle {
+WidgetCapsule {
     id: root
+    CapsuleContext { id: capsuleCtx }
     property bool enabled: false
     property int fallbackIntervalMs:Theme.mpdFlagsFallbackMs
     property color iconColor: Theme.textPrimary
-    property int iconPx: Math.round(Theme.fontSizeSmall * Theme.scale(Screen))
+    property int iconPx: Math.round(Theme.fontSizeSmall * _scale)
     property string cmd: "(mpc status || rmpc status)"
     property var activeFlags: [] // [{ key, icon, title }]
     property string mpdState: "unknown" // playing | paused | stopped | unknown
-    readonly property real _scale: Theme.scale(Screen)
-    readonly property var capsuleMetrics: Capsule.metrics(Theme, _scale)
+    readonly property real _scale: capsuleCtx.scale
+    readonly property var capsuleMetrics: capsuleCtx.metrics
     property int padX: Math.round(Theme.panelRowSpacingSmall * _scale)
     property int padY: capsuleMetrics.padding
     property int cornerRadius: Math.round(Theme.cornerRadiusSmall * _scale)
-    implicitWidth: content.implicitWidth + 2 * padX
-    implicitHeight: capsuleMetrics.height
-    // Ensure the item actually occupies its implicit size
-    width: implicitWidth
-    height: implicitHeight
     visible: enabled && activeFlags.length > 0
-    readonly property color capsuleColor: WidgetBg.color(Settings.settings, "mpdFlags", "rgba(10, 12, 20, 0.2)")
-    readonly property real hoverMixAmount: 0.18
-    readonly property color capsuleHoverColor: Color.mix(capsuleColor, Qt.rgba(1, 1, 1, 1), hoverMixAmount)
-    color: hoverTracker.hovered ? capsuleHoverColor : capsuleColor
-    radius: cornerRadius
-    border.width: Theme.uiBorderWidth
-    border.color: Color.withAlpha(Theme.textPrimary, 0.08)
-    antialiasing: true
-    HoverHandler { id: hoverTracker }
+    backgroundKey: "mpdFlags"
+    paddingScale: capsuleMetrics.padding > 0 ? padX / capsuleMetrics.padding : 1
+    verticalPaddingScale: capsuleMetrics.padding > 0 ? padY / capsuleMetrics.padding : 1
+    cornerRadiusOverride: cornerRadius
 
     function parseStatus(text) {
         try {
@@ -152,15 +140,7 @@ Rectangle {
     // Icon row
     Row {
         id: content
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        anchors.leftMargin: root.padX
-        anchors.rightMargin: root.padX
-        anchors.topMargin: root.padY
-        anchors.bottomMargin: root.padY
-        spacing: Math.round(Theme.panelRowSpacingSmall * Theme.scale(Screen))
+        spacing: Math.round(Theme.panelRowSpacingSmall * _scale)
         Repeater {
             model: activeFlags
             delegate: MaterialIcon {
@@ -171,4 +151,9 @@ Rectangle {
             }
         }
     }
+
+    implicitWidth: padX * 2 + content.implicitWidth
+    implicitHeight: forceHeightFromMetrics
+        ? Math.max(capsuleMetrics.height, content.implicitHeight + padY * 2)
+        : content.implicitHeight + padY * 2
 }

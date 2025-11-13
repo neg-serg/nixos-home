@@ -5,25 +5,15 @@ import qs.Components
 import qs.Bar.Modules
 import qs.Services as Services
 import "../../Helpers/Utils.js" as Utils
-import "../../Helpers/WidgetBg.js" as WidgetBg
-import "../../Helpers/Color.js" as Color
 
-Item {
+AudioLevelCapsule {
     id: volumeDisplay
-    property int volume: 0
-    property bool firstChange: true
-    // Last non-muted icon category (hysteresis): 'off' | 'down' | 'up'
-    property string lastVolIconCategory: 'up'
-    visible: false
-    property color pillBgColor: WidgetBg.color(Settings.settings, "volume", Theme.panelPillBackground)
-    readonly property real hoverMixAmount: 0.18
-    readonly property color hoverColor: Color.mix(pillBgColor, Qt.rgba(1, 1, 1, 1), hoverMixAmount)
-    readonly property real _scale: Theme.scale(Screen)
-    property int horizontalPadding: Math.max(4, Math.round(Theme.panelRowSpacingSmall * _scale * 0.8))
-    property int verticalPadding: Math.max(2, Math.round(Theme.uiSpacingXSmall * _scale))
-    // Gradient endpoints
-    property color volLowColor: Theme.panelVolumeLowColor
-    property color volHighColor: Theme.panelVolumeHighColor
+    settingsKey: "volume"
+    iconOff: "volume_off"
+    iconLow: "volume_down"
+    iconHigh: "volume_up"
+    labelSuffix: "%"
+
     // Stub ioSelector to avoid reference errors if advanced UI isn't present
     Item {
         id: ioSelector
@@ -32,185 +22,42 @@ Item {
         function dismiss() { visible = false }
     }
 
-    // Collapse size when hidden (RowLayout-friendly)
-    readonly property int contentWidth: pillIndicator.width
-    readonly property int contentHeight: pillIndicator.height
-    width: visible ? (contentWidth + horizontalPadding * 2) : 0
-    height: visible ? (contentHeight + verticalPadding * 2) : 0
-    implicitWidth: width
-    implicitHeight: height
-    // Hint RowLayout
-    Layout.preferredWidth: implicitWidth
-    Layout.preferredHeight: implicitHeight
-    Layout.minimumWidth: implicitWidth
-    Layout.minimumHeight: implicitHeight
-    Layout.maximumWidth: implicitWidth
-    Layout.maximumHeight: implicitHeight
-
-    Rectangle {
-        anchors.fill: parent
-        radius: Theme.cornerRadiusSmall
-        color: volumeDisplay.containsMouse ? hoverColor : pillBgColor
-        border.width: Theme.uiBorderWidth
-        border.color: Color.withAlpha(Theme.textPrimary, 0.08)
-        visible: volumeDisplay.visible
-        antialiasing: true
+    StyledTooltip {
+        id: volumeTooltip
+        text: "Volume: " + volumeDisplay.level + "%\nLeft click for advanced settings.\nScroll up/down to change volume."
+        positionAbove: false
+        tooltipVisible: !ioSelector.visible && volumeDisplay.containsMouse
+        targetItem: volumeDisplay.pill
+        delay: Theme.tooltipDelayMs
     }
 
-    // Auto-hide at 100%
-    Timer {
-        id: fullHideTimer
-        interval: Theme.panelVolumeFullHideMs
-        repeat: false
-        onTriggered: {
-            if (volumeDisplay.volume === 100) {
-                // Hide the entire volume icon when exactly at 100%
-                volumeDisplay.visible = false;
-            }
-        }
+    onWheelStep: direction => {
+        let step = Services.Audio.step || 5;
+        Services.Audio.changeVolume(direction > 0 ? step : -step);
     }
 
-    function getVolumeColor() {
-        // 0% -> lowColor, 100% -> highColor
-        var t = Utils.clamp(volume / 100.0, 0, 1);
-        return Qt.rgba(
-            volLowColor.r + (volHighColor.r - volLowColor.r) * t,
-            volLowColor.g + (volHighColor.g - volLowColor.g) * t,
-            volLowColor.b + (volHighColor.b - volLowColor.b) * t,
-            1
-        );
-    }
-
-    function getIconColor() { return getVolumeColor(); }
-
-    function resolveIconCategory(vol, muted) {
-        if (muted) return 'off';
-        if (vol <= Theme.volumeIconOffThreshold) return 'off';
-        // Hysteresis between down/up thresholds
-        if (vol < Theme.volumeIconDownThreshold) return 'down';
-        if (vol >= Theme.volumeIconUpThreshold) return 'up';
-        return lastVolIconCategory === 'down' ? 'down' : 'up';
-    }
-
-    function iconNameForCategory(cat) {
-        switch (cat) {
-        case 'off': return 'volume_off';
-        case 'down': return 'volume_down';
-        case 'up': default: return 'volume_up';
-        }
-    }
-
-    PillIndicator {
-        id: pillIndicator
-        anchors.centerIn: parent
-        icon: iconNameForCategory(resolveIconCategory(volume, Services.Audio.muted))
-        text: volume + "%"
-
-        pillColor: pillBgColor
-        iconCircleColor: getVolumeColor()
-        iconTextColor: Theme.background
-        textColor: Theme.textPrimary
-        collapsedIconColor: getIconColor()
-        autoHide: true
-        
-        autoHidePauseMs: Theme.volumePillAutoHidePauseMs
-        showDelayMs: Theme.volumePillShowDelayMs
-
-        StyledTooltip {
-            id: volumeTooltip
-            text: "Volume: " + volume + "%\nLeft click for advanced settings.\nScroll up/down to change volume."
-            positionAbove: false
-            tooltipVisible: !ioSelector.visible && volumeDisplay.containsMouse
-            targetItem: pillIndicator
-            delay: Theme.tooltipDelayMs
-        }
-
-        MouseArea {
-            anchors.fill: parent
-            hoverEnabled: true
-            cursorShape: Qt.PointingHandCursor
-            onClicked: {
-                if (ioSelector.visible) {
-                    ioSelector.dismiss();
-                } else {
-                    ioSelector.show();
-                }
-            }
+    onClicked: {
+        if (ioSelector.visible) {
+            ioSelector.dismiss();
+        } else {
+            ioSelector.show();
         }
     }
 
     Connections {
         target: Services.Audio
         function onVolumeChanged() {
-            const clampedVolume = Utils.clamp(Services.Audio.volume, 0, 100);
-            if (clampedVolume === volume) return;
-
-            volume = clampedVolume;
-
-            // Update pill content/icon
-            pillIndicator.text = volume + "%";
-            const cat = resolveIconCategory(volume, Services.Audio.muted);
-            if (cat !== 'off') lastVolIconCategory = cat;
-            pillIndicator.icon = iconNameForCategory(cat);
-
-            const atHundred = (volume === 100);
-
-            // First change: avoid flash at exactly 100%
-            if (firstChange) {
-                firstChange = false;
-                if (!atHundred) {
-                    if (!volumeDisplay.visible) volumeDisplay.visible = true;
-                    pillIndicator.show();
-                }
-            } else {
-                if (!volumeDisplay.visible) volumeDisplay.visible = true;
-                pillIndicator.show();
-            }
-
-            // Manage full-hide timer
-            if (atHundred) {
-                fullHideTimer.restart();
-            } else if (fullHideTimer.running) {
-                fullHideTimer.stop();
-            }
+            if (Services.Audio.volume === undefined) return;
+            volumeDisplay.updateFrom(Utils.clamp(Services.Audio.volume, 0, 100), Services.Audio.muted);
+        }
+        function onMutedChanged() {
+            volumeDisplay.updateFrom(volumeDisplay.level, Services.Audio.muted);
         }
     }
 
     Component.onCompleted: {
         if (Services.Audio && Services.Audio.volume !== undefined) {
-            volume = Utils.clamp(Services.Audio.volume, 0, 100);
-            const cat = resolveIconCategory(volume, Services.Audio.muted || false);
-            if (cat !== 'off') lastVolIconCategory = cat;
-            pillIndicator.icon = iconNameForCategory(cat);
-            // Start hidden at 100%
-            if (volume === 100) fullHideTimer.restart();
+            volumeDisplay.updateFrom(Utils.clamp(Services.Audio.volume, 0, 100), Services.Audio.muted || false);
         }
     }
-
-    MouseArea {
-        anchors.fill: parent
-        hoverEnabled: true
-        acceptedButtons: Qt.NoButton
-        propagateComposedEvents: true
-        onEntered: {
-            volumeDisplay.containsMouse = true
-            pillIndicator.autoHide = false;
-            pillIndicator.showDelayed()
-        }
-        onExited: {
-            volumeDisplay.containsMouse = false
-            pillIndicator.autoHide = true;
-            pillIndicator.hide()
-        }
-        cursorShape: Qt.PointingHandCursor
-        onWheel: (wheel) => {
-            let step = Services.Audio.step || 5;
-            if (wheel.angleDelta.y > 0) {
-                Services.Audio.changeVolume(step);
-            } else if (wheel.angleDelta.y < 0) {
-                Services.Audio.changeVolume(-step);
-            }
-        }
-    }
-    property bool containsMouse: false
 }

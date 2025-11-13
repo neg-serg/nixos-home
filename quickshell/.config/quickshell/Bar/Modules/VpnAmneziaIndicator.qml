@@ -4,26 +4,23 @@ import qs.Components
 import "../../Helpers/Color.js" as Color
 import "../../Helpers/Utils.js" as Utils
 import qs.Services as Services
-import "../../Helpers/CapsuleMetrics.js" as Capsule
 
 // Amnezia VPN status indicator (polls `ip -j -br a`)
-WidgetCapsule {
+CenteredCapsuleRow {
     id: root
 
-    readonly property real _scale: Theme.scale(Screen)
-    readonly property var capsuleMetrics: Capsule.metrics(Theme, _scale)
-    readonly property int capsulePadding: capsuleMetrics.padding
-    property int desiredHeight: capsuleMetrics.inner
-    readonly property int capsuleHeight: capsuleMetrics.height
+    CapsuleContext { id: capsuleCtx; screen: Screen }
+    readonly property real _scale: capsuleCtx.scale
+    readonly property var capsuleMetrics: capsuleCtx.metrics
 
     // Match network usage label size with standard small font
-    property int fontPixelSize:Math.round(Theme.fontSizeSmall * _scale)
+    property int labelPixelSize:Math.round(Theme.fontSizeSmall * _scale)
     property bool useTheme:true
     property bool showLabel:true
-    property int iconSpacing:Theme.vpnIconSpacing
-    property int textPadding:Theme.vpnTextPadding
-    property int iconVAdjust:Theme.vpnIconVAdjust
-    property real iconScale:Theme.vpnIconScale
+    property int iconSpacingPx:Theme.vpnIconSpacing
+    property int textPaddingPx:Theme.vpnTextPadding
+    property int iconBaselineAdjustPx:Theme.vpnIconVAdjust
+    property real iconScaleFactor:Theme.vpnIconScale
     property string iconName: "verified_user"
     property bool iconRounded:false
 
@@ -44,27 +41,22 @@ WidgetCapsule {
     paddingScale: capsuleMetrics.padding > 0
         ? horizontalPadding / capsuleMetrics.padding
         : 1
-
     visible: connected
-
-    SmallInlineStat {
-        id: inlineView
-        desiredHeight: Math.max(1, capsuleHeight - capsulePadding * 2)
-        fontPixelSize: root.fontPixelSize
-        textPadding: root.textPadding
-        iconSpacing: root.iconSpacing
-        iconMode: "material"
-        materialIconName: root.iconName
-        materialIconRounded: root.iconRounded
-        iconScale: root.iconScale
-        iconVAdjust: root.iconVAdjust
-        iconColor: root.iconColor()
-        labelVisible: root.showLabel
-        labelText: "VPN"
-        labelColor: root.iconColor()
-        centerContent: true
-        iconAutoTune: true
-    }
+    desiredInnerHeight: capsuleCtx.inner
+    fontPixelSize: root.labelPixelSize
+    textPadding: root.textPaddingPx
+    iconSpacing: root.iconSpacingPx
+    iconMode: "material"
+    materialIconName: root.iconName
+    materialIconRounded: root.iconRounded
+    iconScale: root.iconScaleFactor
+    iconVAdjust: root.iconBaselineAdjustPx
+    iconAutoTune: true
+    iconColor: root.iconColor()
+    labelVisible: root.showLabel
+    labelText: "VPN"
+    labelColor: root.iconColor()
+    labelFontFamily: Theme.fontFamily
 
     Connections {
         target: Services.Connectivity

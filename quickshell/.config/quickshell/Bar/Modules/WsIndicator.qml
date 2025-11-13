@@ -8,12 +8,9 @@ import qs.Services
 import qs.Settings
 import "../../Helpers/RichText.js" as Rich
 import "../../Helpers/WsIconMap.js" as WsMap
-import "../../Helpers/WidgetBg.js" as WidgetBg
-import "../../Helpers/Color.js" as Color
-import "../../Helpers/CapsuleMetrics.js" as Capsule
-
-Rectangle {
+WidgetCapsule {
     id: root
+    CapsuleContext { id: capsuleCtx }
     property string wsName: "?"
     property int wsId: -1
     property string submapName: ""
@@ -34,21 +31,13 @@ Rectangle {
     property int iconBaselineOffset:Theme.wsIconBaselineOffset
     property int iconSpacing:Theme.wsIconSpacing
 
-    readonly property real _scale: Theme.scale(Screen)
-    readonly property var capsuleMetrics: Capsule.metrics(Theme, _scale)
+    readonly property real _scale: capsuleCtx.scale
+    readonly property var capsuleMetrics: capsuleCtx.metrics
     property int horizontalPadding: Math.max(4, Math.round(Theme.panelRowSpacingSmall * _scale))
     property int verticalPadding: capsuleMetrics.padding
-    readonly property color capsuleColor: WidgetBg.color(Settings.settings, "workspaces", "rgba(10, 12, 20, 0.2)")
-    readonly property real hoverMixAmount: 0.18
-    readonly property color capsuleHoverColor: Color.mix(capsuleColor, Qt.rgba(1, 1, 1, 1), hoverMixAmount)
-    implicitWidth: lineBox.implicitWidth + 2 * horizontalPadding
-    implicitHeight: capsuleMetrics.height
-    color: hoverTracker.hovered ? capsuleHoverColor : capsuleColor
-    radius: Math.round(Theme.cornerRadiusSmall * _scale)
-    border.width: Theme.uiBorderWidth
-    border.color: Color.withAlpha(Theme.textPrimary, 0.08)
-    antialiasing: true
-    HoverHandler { id: hoverTracker }
+    backgroundKey: "workspaces"
+    paddingScale: capsuleMetrics.padding > 0 ? horizontalPadding / capsuleMetrics.padding : 1
+    verticalPaddingScale: capsuleMetrics.padding > 0 ? verticalPadding / capsuleMetrics.padding : 1
 
     // Hyprland environment
     function hyprSig() { return Quickshell.env("HYPRLAND_INSTANCE_SIGNATURE") || ""; }
@@ -125,19 +114,9 @@ Rectangle {
                                    : decorateName(fallbackText)
 
     // UI
-    Item {
-        id: contentBox
-        anchors.fill: parent
-        anchors.leftMargin: horizontalPadding
-        anchors.rightMargin: horizontalPadding
-        anchors.topMargin: verticalPadding
-        anchors.bottomMargin: verticalPadding
-    }
-
     Row {
         id: lineBox
         spacing: iconSpacing
-        anchors.centerIn: contentBox
 
         BaselineAlignedIcon {
             visible: root.submapName && root.submapName.length > 0
@@ -175,7 +154,7 @@ Rectangle {
             text: decoratedText
             font.family: Theme.fontFamily
             font.weight: Font.Medium
-            font.pixelSize: Theme.fontSizeSmall * Theme.scale(Screen)
+            font.pixelSize: Theme.fontSizeSmall * root._scale
             color: Theme.textPrimary
             padding: Theme.wsLabelPadding
             leftPadding: (root.isTerminalWs ? Theme.wsLabelLeftPaddingTerminal : Theme.wsLabelLeftPadding)
@@ -258,4 +237,9 @@ Rectangle {
         getCurrentWS.start();
         getBinds.start();
     }
+
+    implicitWidth: horizontalPadding * 2 + lineBox.implicitWidth
+    implicitHeight: forceHeightFromMetrics
+        ? Math.max(capsuleMetrics.height, lineBox.implicitHeight + verticalPadding * 2)
+        : lineBox.implicitHeight + verticalPadding * 2
 }
