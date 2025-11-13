@@ -188,7 +188,4 @@ WidgetCapsule {
     }
 
     implicitWidth: horizontalPadding * 2 + lineBox.implicitWidth
-    implicitHeight: forceHeightFromMetrics
-        ? Math.max(capsuleMetrics.height, lineBox.implicitHeight + verticalPadding * 2)
-        : lineBox.implicitHeight + verticalPadding * 2
 }
