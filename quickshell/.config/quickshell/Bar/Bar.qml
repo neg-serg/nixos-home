@@ -23,8 +23,8 @@ Scope {
         required property real scaleFactor
         required property int panelHeightPx
         property real alpha: 0.28
-        width: Math.max(1, Math.round(Math.max(1, Theme.uiBorderWidth) * scaleFactor * 4))
-        height: Math.max(2, Math.round(panelHeightPx * 0.68 * 4))
+        width: Math.max(1, Math.round(Math.max(1, Theme.uiBorderWidth) * scaleFactor * 16))
+        height: Math.max(2, Math.round(panelHeightPx * 0.68 * 16))
         radius: 0
         color: Color.withAlpha(Theme.textPrimary, alpha)
         opacity: 1.0
