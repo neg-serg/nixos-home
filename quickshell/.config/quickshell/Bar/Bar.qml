@@ -60,8 +60,10 @@ Scope {
                     color: "transparent"
                     property bool panelHovering: false
                     WlrLayershell.namespace: "quickshell-bar-left"
-                    // Use Top layer by default; overlay hack removed after validation
-                    WlrLayershell.layer: WlrLayer.Top
+                    // Debug/testing: put bars on Overlay when wedge debug or shader-test enabled
+                    WlrLayershell.layer: (((Quickshell.env("QS_WEDGE_DEBUG") || "") === "1")
+                                          || ((Quickshell.env("QS_WEDGE_SHADER_TEST") || "") === "1"))
+                        ? WlrLayer.Overlay : WlrLayer.Top
                     anchors.bottom: true
                     anchors.left: true
                     anchors.right: false
@@ -187,10 +189,16 @@ Scope {
                                 fragmentShader: Qt.resolvedUrl("../shaders/wedge_clip.frag.qsb")
                                 property var sourceSampler: leftPanelTintSource
                                 property vector4d params0: Qt.vector4d(
-                                    // Allow override via QS_WEDGE_WIDTH_PCT (0..100). Otherwise use seamPanel.seamWidthPx.
-                                    (function(){ var ww = Number(Quickshell.env("QS_WEDGE_WIDTH_PCT") || "");
+                                    // QS_WEDGE_WIDTH_PCT override; otherwise use panel seamWidth capped to 35% of face.
+                                    (function(){
+                                        var ww = Number(Quickshell.env("QS_WEDGE_WIDTH_PCT") || "");
                                         if (isFinite(ww) && ww > 0) return Math.max(0.0, Math.min(1.0, ww/100.0));
-                                        return Math.max(0.0, Math.min(1.0, (Math.max(1, Math.min(leftBarFill.width, seamPanel.seamWidthPx)) / Math.max(1, leftBarFill.width)))); })(),
+                                        var faceW = Math.max(1, leftBarFill.width);
+                                        var targetPx = Math.max(1, Math.round(leftPanel.seamWidth));
+                                        var capPx = Math.round(faceW * 0.35);
+                                        var wpx = Math.min(targetPx, capPx);
+                                        return Math.max(0.02, Math.min(0.98, wpx / faceW));
+                                    })(),
                                     Settings.settings.debugTriangleLeftSlopeUp ? 1 : 0,
                                     1,
                                     0
@@ -199,17 +207,29 @@ Scope {
                                     Math.max(0.0, Math.min(0.05, (Math.max(1, Math.round(Theme.uiRadiusSmall * 0.5 * leftPanel.s)) / Math.max(1, leftBarFill.width)))) ,
                                     0,0,0
                                 )
-                                // Debug overlay disabled for tint path to avoid double-drawing
-                                property vector4d params2: Qt.vector4d(0,0,0,0)
+                                // In shader-test mode, force visible magenta overlay for tint path as well
+                                property vector4d params2: Qt.vector4d(
+                                    ((Quickshell.env("QS_WEDGE_SHADER_TEST") || "") === "1") ? 0.6 : 0.0,
+                                    ((Quickshell.env("QS_WEDGE_SHADER_TEST") || "") === "1") ? 1.0 : 0.0,
+                                    0,0)
                                 blending: true
+                                Component.onCompleted: {
+                                    if (Settings.settings.debugLogs)
+                                        console.log("[wedge:left:tint] shader ready", params0.x, params1.x)
+                                }
                             }
                         }
                         // Subtractive wedge using a shader clip over the base face (lazy-loaded)
                         Loader {
                             id: leftFaceClipLoader
                             anchors.fill: leftBarFill
-                            z: 1
-                            active: ((Quickshell.env("QS_ENABLE_WEDGE_CLIP") || "") === "1") || (Settings.settings.enableWedgeClipShader === true)
+                            // Raise above base content; seam remains higher.
+                            z: 50
+                            // Force-activate in debug/test modes to guarantee visibility
+                            active: ((Quickshell.env("QS_ENABLE_WEDGE_CLIP") || "") === "1")
+                                    || ((Quickshell.env("QS_WEDGE_DEBUG") || "") === "1")
+                                    || ((Quickshell.env("QS_WEDGE_SHADER_TEST") || "") === "1")
+                                    || (Settings.settings.enableWedgeClipShader === true)
                             onActiveChanged: {
                                 if (Settings.settings.debugLogs) {
                                     console.log("[bar:left] wedge shader active:", leftFaceClipLoader.active,
@@ -223,9 +243,15 @@ Scope {
                                 property var sourceSampler: leftBarFillSource
                                 // params0: x=wNorm, y=slopeUp, z=side(+1 right edge), w=unused
                                 property vector4d params0: Qt.vector4d(
-                                    (function(){ var ww = Number(Quickshell.env("QS_WEDGE_WIDTH_PCT") || "");
+                                    (function(){
+                                        var ww = Number(Quickshell.env("QS_WEDGE_WIDTH_PCT") || "");
                                         if (isFinite(ww) && ww > 0) return Math.max(0.0, Math.min(1.0, ww/100.0));
-                                        return Math.max(0.0, Math.min(1.0, (Math.max(1, Math.min(leftBarFill.width, seamPanel.seamWidthPx)) / Math.max(1, leftBarFill.width)))); })(),
+                                        var faceW = Math.max(1, leftBarFill.width);
+                                        var targetPx = Math.max(1, Math.round(leftPanel.seamWidth));
+                                        var capPx = Math.round(faceW * 0.35);
+                                        var wpx = Math.min(targetPx, capPx);
+                                        return Math.max(0.02, Math.min(0.98, wpx / faceW));
+                                    })(),
                                     Settings.settings.debugTriangleLeftSlopeUp ? 1 : 0,
                                     1,
                                     0
@@ -241,6 +267,10 @@ Scope {
                                     ((Quickshell.env("QS_WEDGE_SHADER_TEST") || "") === "1") ? 1.0 : 0.0,
                                     0, 0)
                                 blending: true
+                                Component.onCompleted: {
+                                    if (Settings.settings.debugLogs)
+                                        console.log("[wedge:left:base] shader ready", params0.x, params1.x)
+                                }
                             }
                         }
 
@@ -260,8 +290,11 @@ Scope {
                                 ctx.fillStyle = 'rgba(255,255,0,0.50)';
                                 ctx.fillRect(0, 0, width, height);
                                 var ww = Number(Quickshell.env("QS_WEDGE_WIDTH_PCT") || "");
-                                var wnorm = (isFinite(ww) && ww > 0) ? Math.max(0.0, Math.min(1.0, ww/100.0))
-                                                                      : Math.max(0.0, Math.min(1.0, (Math.max(1, Math.min(leftBarFill.width, seamPanel.seamWidthPx)) / Math.max(1, leftBarFill.width))));
+                                var faceW = Math.max(1, leftBarFill.width);
+                                var targetPx = Math.max(1, Math.round(leftPanel.seamWidth));
+                                var capPx = Math.round(faceW * 0.35);
+                                var autoPx = Math.min(targetPx, capPx);
+                                var wnorm = (isFinite(ww) && ww > 0) ? Math.max(0.0, Math.min(1.0, ww/100.0)) : Math.max(0.02, Math.min(0.98, autoPx / faceW));
                                 var wpx = Math.max(1, Math.round(wnorm * width));
                                 ctx.fillStyle = 'rgba(255,0,255,0.45)';
                                 ctx.beginPath();
@@ -600,8 +633,10 @@ Scope {
                     color: "transparent"
                     property bool panelHovering: false
                     WlrLayershell.namespace: "quickshell-bar-right"
-                    // Use Top layer by default; overlay hack removed after validation
-                    WlrLayershell.layer: WlrLayer.Top
+                    // Debug/testing: put bars on Overlay when wedge debug or shader-test enabled
+                    WlrLayershell.layer: (((Quickshell.env("QS_WEDGE_DEBUG") || "") === "1")
+                                          || ((Quickshell.env("QS_WEDGE_SHADER_TEST") || "") === "1"))
+                        ? WlrLayer.Overlay : WlrLayer.Top
                     anchors.bottom: true
                     anchors.right: true
                     anchors.left: false
@@ -724,9 +759,15 @@ Scope {
                                 fragmentShader: Qt.resolvedUrl("../shaders/wedge_clip.frag.qsb")
                                 property var sourceSampler: rightPanelTintSource
                                 property vector4d params0: Qt.vector4d(
-                                    (function(){ var ww = Number(Quickshell.env("QS_WEDGE_WIDTH_PCT") || "");
+                                    (function(){
+                                        var ww = Number(Quickshell.env("QS_WEDGE_WIDTH_PCT") || "");
                                         if (isFinite(ww) && ww > 0) return Math.max(0.0, Math.min(1.0, ww/100.0));
-                                        return Math.max(0.0, Math.min(1.0, (Math.max(1, Math.min(rightBarFill.width, seamPanel.seamWidthPx)) / Math.max(1, rightBarFill.width)))); })(),
+                                        var faceW = Math.max(1, rightBarFill.width);
+                                        var targetPx = Math.max(1, Math.round(rightPanel.seamWidth));
+                                        var capPx = Math.round(faceW * 0.35);
+                                        var wpx = Math.min(targetPx, capPx);
+                                        return Math.max(0.02, Math.min(0.98, wpx / faceW));
+                                    })(),
                                     Settings.settings.debugTriangleRightSlopeUp ? 1 : 0,
                                     -1,
                                     0
@@ -735,17 +776,27 @@ Scope {
                                     Math.max(0.0, Math.min(0.05, (Math.max(1, Math.round(Theme.uiRadiusSmall * 0.5 * rightPanel.s)) / Math.max(1, rightBarFill.width)))) ,
                                     0,0,0
                                 )
-                                // Debug overlay disabled for tint path to avoid double-drawing
-                                property vector4d params2: Qt.vector4d(0,0,0,0)
+                                // In shader-test mode, force visible magenta overlay for tint path as well
+                                property vector4d params2: Qt.vector4d(
+                                    ((Quickshell.env("QS_WEDGE_SHADER_TEST") || "") === "1") ? 0.6 : 0.0,
+                                    ((Quickshell.env("QS_WEDGE_SHADER_TEST") || "") === "1") ? 1.0 : 0.0,
+                                    0,0)
                                 blending: true
+                                Component.onCompleted: {
+                                    if (Settings.settings.debugLogs)
+                                        console.log("[wedge:right:tint] shader ready", params0.x, params1.x)
+                                }
                             }
                         }
                         // Subtractive wedge using a shader clip over the base face (lazy-loaded)
                         Loader {
                             id: rightFaceClipLoader
                             anchors.fill: rightBarFill
-                            z: 1
-                            active: ((Quickshell.env("QS_ENABLE_WEDGE_CLIP") || "") === "1") || (Settings.settings.enableWedgeClipShader === true)
+                            z: 50
+                            active: ((Quickshell.env("QS_ENABLE_WEDGE_CLIP") || "") === "1")
+                                    || ((Quickshell.env("QS_WEDGE_DEBUG") || "") === "1")
+                                    || ((Quickshell.env("QS_WEDGE_SHADER_TEST") || "") === "1")
+                                    || (Settings.settings.enableWedgeClipShader === true)
                             onActiveChanged: {
                                 if (Settings.settings.debugLogs) {
                                     console.log("[bar:right] wedge shader active:", rightFaceClipLoader.active,
@@ -759,9 +810,15 @@ Scope {
                                 property var sourceSampler: rightBarFillSource
                                 // params0: x=wNorm, y=slopeUp, z=side(-1 left edge), w=unused
                                 property vector4d params0: Qt.vector4d(
-                                    (function(){ var ww = Number(Quickshell.env("QS_WEDGE_WIDTH_PCT") || "");
+                                    (function(){
+                                        var ww = Number(Quickshell.env("QS_WEDGE_WIDTH_PCT") || "");
                                         if (isFinite(ww) && ww > 0) return Math.max(0.0, Math.min(1.0, ww/100.0));
-                                        return Math.max(0.0, Math.min(1.0, (Math.max(1, Math.min(rightBarFill.width, seamPanel.seamWidthPx)) / Math.max(1, rightBarFill.width)))); })(),
+                                        var faceW = Math.max(1, rightBarFill.width);
+                                        var targetPx = Math.max(1, Math.round(rightPanel.seamWidth));
+                                        var capPx = Math.round(faceW * 0.35);
+                                        var wpx = Math.min(targetPx, capPx);
+                                        return Math.max(0.02, Math.min(0.98, wpx / faceW));
+                                    })(),
                                     Settings.settings.debugTriangleRightSlopeUp ? 1 : 0,
                                     -1,
                                     0
@@ -777,6 +834,10 @@ Scope {
                                     ((Quickshell.env("QS_WEDGE_SHADER_TEST") || "") === "1") ? 1.0 : 0.0,
                                     0, 0)
                                 blending: true
+                                Component.onCompleted: {
+                                    if (Settings.settings.debugLogs)
+                                        console.log("[wedge:right:base] shader ready", params0.x, params1.x)
+                                }
                             }
                         }
 
@@ -795,8 +856,11 @@ Scope {
                                 ctx.fillStyle = 'rgba(0,255,255,0.50)';
                                 ctx.fillRect(0, 0, width, height);
                                 var ww = Number(Quickshell.env("QS_WEDGE_WIDTH_PCT") || "");
-                                var wnorm = (isFinite(ww) && ww > 0) ? Math.max(0.0, Math.min(1.0, ww/100.0))
-                                                                      : Math.max(0.0, Math.min(1.0, (Math.max(1, Math.min(rightBarFill.width, seamPanel.seamWidthPx)) / Math.max(1, rightBarFill.width))));
+                                var faceW = Math.max(1, rightBarFill.width);
+                                var targetPx = Math.max(1, Math.round(rightPanel.seamWidth));
+                                var capPx = Math.round(faceW * 0.35);
+                                var autoPx = Math.min(targetPx, capPx);
+                                var wnorm = (isFinite(ww) && ww > 0) ? Math.max(0.0, Math.min(1.0, ww/100.0)) : Math.max(0.02, Math.min(0.98, autoPx / faceW));
                                 var wpx = Math.max(1, Math.round(wnorm * width));
                                 ctx.fillStyle = 'rgba(255,0,255,0.45)';
                                 ctx.beginPath();
