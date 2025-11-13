@@ -5,9 +5,10 @@ import "../../Helpers/Color.js" as Color
 import qs.Settings
 import "../../Helpers/Utils.js" as Utils
 import qs.Services as Services
+import "../../Helpers/WidgetBg.js" as WidgetBg
 
 // Amnezia VPN status indicator (polls `ip -j -br a`)
-Item {
+Rectangle {
     id: root
 
     property int desiredHeight:Math.round(Theme.panelHeight * Theme.scale(Screen))
@@ -19,7 +20,7 @@ Item {
     property int textPadding:Theme.vpnTextPadding
     property int iconVAdjust:Theme.vpnIconVAdjust
     property real iconScale:Theme.vpnIconScale
-    property color bgColor: "transparent"
+    property color bgColor: WidgetBg.color(Settings.settings, "vpn", "rgba(10, 12, 20, 0.2)")
     property string iconName: "verified_user"
     property bool iconRounded:false
 
@@ -35,16 +36,26 @@ Item {
     property real disconnectedOpacity: Theme.vpnDisconnectedOpacity
     property bool connected: false
     property string matchedIf: ""
+    readonly property real _scale: Theme.scale(Screen)
+    property int horizontalPadding: Math.max(4, Math.round(Theme.panelRowSpacingSmall * _scale))
+    property int verticalPadding: Math.max(2, Math.round(Theme.uiSpacingXSmall * _scale))
 
     visible: connected
-    implicitHeight: desiredHeight
-    width: inlineView.implicitWidth
-    height: desiredHeight
+    implicitHeight: Math.max(desiredHeight, inlineView.implicitHeight + 2 * verticalPadding)
+    implicitWidth: inlineView.implicitWidth + 2 * horizontalPadding
+    width: implicitWidth
+    height: implicitHeight
+    color: root.bgColor
+    radius: Theme.cornerRadiusSmall
+    border.width: Theme.uiBorderWidth
+    border.color: Color.withAlpha(Theme.textPrimary, 0.08)
+    antialiasing: true
 
     SmallInlineStat {
         id: inlineView
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left
+        anchors.leftMargin: horizontalPadding
         desiredHeight: root.desiredHeight
         fontPixelSize: root.fontPixelSize
         textPadding: root.textPadding

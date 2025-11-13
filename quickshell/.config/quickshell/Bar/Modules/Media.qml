@@ -11,12 +11,16 @@ import "../../Helpers/Color.js" as Color
 import qs.Settings
 import qs.Services
 import qs.Components
+import "../../Helpers/WidgetBg.js" as WidgetBg
 
 Item {
     id: mediaControl
     property var sidePanelPopup: null
-    implicitWidth: mediaRow.implicitWidth
-    height: Math.round((Theme.panelModuleHeight !== undefined ? Theme.panelModuleHeight : 36) * Theme.scale(Screen))
+    property int surfacePadding: Math.max(6, Math.round(Theme.panelRowSpacingSmall * Theme.scale(Screen)))
+    property int baseHeight: Math.round((Theme.panelModuleHeight !== undefined ? Theme.panelModuleHeight : 36) * Theme.scale(Screen))
+    implicitWidth: mediaRow.implicitWidth + surfacePadding * 2
+    height: baseHeight
+    implicitHeight: height
     visible: Settings.settings.showMediaInBar
              && MusicManager.currentPlayer
              && !MusicManager.isStopped
@@ -72,10 +76,21 @@ Item {
                               ? Settings.settings.visualizerProfiles[Settings.settings.activeVisualizerProfile]
                               : null
     Timer { id: accentRetry; interval: Theme.mediaAccentRetryMs; repeat: false; onTriggered: { colorSampler.requestPaint(); if (!mediaControl.accentReady && mediaControl._accentRetryCount < Theme.mediaAccentRetryMax) { mediaControl._accentRetryCount++; start() } else { mediaControl._accentRetryCount = 0 } } }
+    property color backgroundColor: WidgetBg.color(Settings.settings, "media", "rgba(10, 12, 20, 0.2)")
+
+    Rectangle {
+        anchors.fill: parent
+        radius: Theme.cornerRadiusMedium
+        color: backgroundColor
+        antialiasing: true
+        border.width: Theme.uiBorderWidth
+        border.color: Color.withAlpha(Theme.textPrimary, 0.08)
+    }
 
     RowLayout {
         id: mediaRow
-        height: parent.height
+        anchors.fill: parent
+        anchors.margins: surfacePadding
         spacing: Math.round(Theme.panelWidgetSpacing * Theme.scale(Screen))
 
         // Legacy inline dividers removed due to rendering issues

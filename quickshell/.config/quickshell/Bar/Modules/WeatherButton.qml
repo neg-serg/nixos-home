@@ -5,18 +5,34 @@ import Quickshell.Wayland
 import qs.Settings
 import qs.Widgets.SidePanel
 import qs.Services as Services
+import "../../Helpers/WidgetBg.js" as WidgetBg
+import "../../Helpers/Color.js" as Color
 
 Item {
     id: root
     property bool expanded: false
+    property color backgroundColor: WidgetBg.color(Settings.settings, "weather", "rgba(10, 12, 20, 0.2)")
+    readonly property real _scale: Theme.scale(Screen)
+    property int padding: Math.max(4, Math.round(Theme.panelRowSpacingSmall * _scale * 0.75))
+    readonly property int iconBox: Math.round(Theme.panelIconSize * _scale)
 
-    height: Math.round(Theme.panelIconSize * Theme.scale(Screen))
-    width: Math.round(Theme.panelIconSize * Theme.scale(Screen))
+    height: iconBox + padding * 2
+    width: iconBox + padding * 2
+    implicitHeight: height
+    implicitWidth: width
+
+    Rectangle {
+        anchors.fill: parent
+        radius: Theme.cornerRadiusSmall
+        color: backgroundColor
+        border.width: Theme.uiBorderWidth
+        border.color: Color.withAlpha(Theme.textPrimary, 0.08)
+    }
 
     IconButton {
         id: weatherBtn
         anchors.centerIn: parent
-        size: Math.round(Theme.panelIconSize * Theme.scale(Screen))
+        size: iconBox
         icon: "partly_cloudy_day"
         cornerRadius: Theme.cornerRadiusSmall
         accentColor: Theme.accentPrimary

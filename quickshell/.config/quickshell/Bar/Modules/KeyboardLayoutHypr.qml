@@ -6,6 +6,8 @@ import Quickshell.Hyprland
 import qs.Components
 import qs.Settings
 import "../../Helpers/Utils.js" as Utils
+import "../../Helpers/WidgetBg.js" as WidgetBg
+import "../../Helpers/Color.js" as Color
 
 Item {
     id: kb
@@ -24,9 +26,13 @@ Item {
     property int iconBaselineAdjust:Theme.keyboardIconBaselineOffset
     property int textBaselineAdjust:Theme.keyboardTextBaselineOffset
 
-    property color bgColor:useTheme ? Theme.keyboardBgColor : Theme.background
+    property color widgetBgColor: WidgetBg.color(Settings.settings, "keyboard", "rgba(10, 12, 20, 0.2)")
+    property color widgetBorderColor: Color.withAlpha(Theme.textPrimary, 0.08)
+    property color bgColor:useTheme ? widgetBgColor : Theme.background
     property color textColor:useTheme ? Theme.keyboardTextColor : Theme.textPrimary
-    property color hoverBgColor:useTheme ? Theme.keyboardHoverBgColor : Theme.surfaceHover
+    property color hoverBgColor:useTheme
+        ? Qt.rgba(widgetBgColor.r, widgetBgColor.g, widgetBgColor.b, Math.min(1, widgetBgColor.a + 0.12))
+        : Theme.surfaceHover
 
     property string layoutText: "??"
     property string deviceName: ""
@@ -60,33 +66,37 @@ Item {
         return s ? Theme.scale(s) : 1
     }
 
-    readonly property int margin: Math.round(Theme.keyboardMargin * sc())
+    property int horizontalPadding: Math.max(4, Math.round(Theme.keyboardMargin * sc()))
+    property int verticalPadding: Math.max(2, Math.round(Theme.keyboardMargin * 0.8 * sc()))
 
-    implicitWidth: Math.ceil(row.implicitWidth + 2 * margin)
-    implicitHeight: capsule.height
+    implicitWidth: Math.max(Math.round(Theme.keyboardMinWidth * sc()), Math.ceil(row.implicitWidth + 2 * horizontalPadding))
+    implicitHeight: Math.max(kb.desiredHeight, Math.ceil(row.implicitHeight + 2 * verticalPadding))
 
     Rectangle {
         id: capsule
         readonly property bool hovered: ma.containsMouse
-        height: Utils.clamp(row.implicitHeight + 2 * kb.margin, kb.desiredHeight, row.implicitHeight + 2 * kb.margin)
-        width: Utils.clamp(row.implicitWidth + 2 * kb.margin, Math.round(Theme.keyboardMinWidth * sc()), row.implicitWidth + 2 * kb.margin)
+        width: parent.width
+        height: parent.height
+        anchors.centerIn: parent
+        anchors.verticalCenterOffset: kb.yNudge
         color: hovered ? kb.hoverBgColor : kb.bgColor
         radius: Math.round(Theme.keyboardRadius * sc())
-        opacity: hovered ? Theme.keyboardHoverOpacity : Theme.keyboardNormalOpacity
+        border.width: Theme.uiBorderWidth
+        border.color: widgetBorderColor
         antialiasing: true
-
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.verticalCenterOffset: kb.yNudge
-
-        // Metrics used for baseline alignment
-        FontMetrics { id: fmText; font: label.font }
-        FontMetrics { id: fmIcon; font: iconLabel.font }
 
         Row {
             id: row
             anchors.fill: parent
-            anchors.margins: kb.margin
+            anchors.leftMargin: horizontalPadding
+            anchors.rightMargin: horizontalPadding
+            anchors.topMargin: verticalPadding
+            anchors.bottomMargin: verticalPadding
             spacing: kb.iconSpacing * sc()
+
+            // Metrics used for baseline alignment
+            FontMetrics { id: fmText; font: label.font }
+            FontMetrics { id: fmIcon; font: iconLabel.font }
 
             Label {
                 id: iconLabel

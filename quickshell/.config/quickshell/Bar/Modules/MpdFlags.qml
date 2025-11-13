@@ -6,8 +6,10 @@ import qs.Services as Services
 import qs.Components
 import qs.Services
 import "../../Helpers/Utils.js" as Utils
+import "../../Helpers/WidgetBg.js" as WidgetBg
+import "../../Helpers/Color.js" as Color
 
-Item {
+Rectangle {
     id: root
     property bool enabled: false
     property int fallbackIntervalMs:Theme.mpdFlagsFallbackMs
@@ -18,13 +20,18 @@ Item {
     property string mpdState: "unknown" // playing | paused | stopped | unknown
     property int padX: Math.round(Theme.panelRowSpacingSmall * Theme.scale(Screen))
     property int padY: Math.round(Theme.uiGapTiny * Theme.scale(Screen))
-    property int radius: Math.round(Theme.cornerRadiusSmall * Theme.scale(Screen))
+    property int cornerRadius: Math.round(Theme.cornerRadiusSmall * Theme.scale(Screen))
     implicitWidth: content.implicitWidth + 2 * padX
     implicitHeight: Utils.clamp(content.implicitHeight + 2 * padY, iconPx + 2 * padY, content.implicitHeight + 2 * padY)
     // Ensure the item actually occupies its implicit size
     width: implicitWidth
     height: implicitHeight
     visible: enabled && activeFlags.length > 0
+    color: WidgetBg.color(Settings.settings, "mpdFlags", "rgba(10, 12, 20, 0.2)")
+    radius: cornerRadius
+    border.width: Theme.uiBorderWidth
+    border.color: Color.withAlpha(Theme.textPrimary, 0.08)
+    antialiasing: true
 
     function parseStatus(text) {
         try {

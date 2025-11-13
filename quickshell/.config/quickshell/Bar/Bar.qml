@@ -11,6 +11,7 @@ import qs.Services
 import qs.Settings
 import qs.Widgets.SidePanel
 import "../Helpers/Color.js" as Color
+import "../Helpers/WidgetBg.js" as WidgetBg
 
 Scope {
     id: rootScope
@@ -22,7 +23,7 @@ Scope {
     component PanelSeparator : Rectangle {
         required property real scaleFactor
         required property int panelHeightPx
-        property real alpha: 0.28
+        property real alpha: 0.0
         width: Math.max(1, Math.round(scaleFactor * Math.max(1, Theme.uiBorderWidth) * 16))
         height: Math.max(2, Math.round(panelHeightPx * 0.68 * 16))
         radius: 0
@@ -95,21 +96,7 @@ Scope {
                     // Panel background transparency is configurable via Settings:
                     // - panelBgAlphaScale: 0..1 multiplier (preferred)
                     // - panelBgAlphaFactor: >0 divisor (fallback), e.g. 5 means 5x more transparent
-                    property color barBgColor: (function(){
-                        var h = Color.toHsl(Theme.background);
-                        var a = (h && h.a !== undefined) ? h.a : 1.0;
-                        var scale;
-                        if (Settings.settings.panelBgAlphaScale !== undefined) {
-                            scale = Number(Settings.settings.panelBgAlphaScale);
-                            if (!(scale >= 0 && scale <= 1)) scale = 0.2; // default ~5x
-                        } else if (Settings.settings.panelBgAlphaFactor !== undefined) {
-                            var f = Number(Settings.settings.panelBgAlphaFactor);
-                            scale = (f > 0) ? (1.0 / f) : 0.2;
-                        } else {
-                            scale = 0.2; // default ~5x
-                        }
-                        return Color.withAlpha(Theme.background, Math.max(0.0, Math.min(1.0, a * scale)));
-                    })()
+                    property color barBgColor: Color.withAlpha(Theme.background, 0.0)
                     property real seamTaperTop: 0.25
                     property real seamTaperBottom: 0.9
                     property real seamOpacity: 0.55
@@ -695,21 +682,7 @@ Scope {
                     // Panel background transparency is configurable via Settings:
                     // - panelBgAlphaScale: 0..1 multiplier (preferred)
                     // - panelBgAlphaFactor: >0 divisor (fallback), e.g. 5 means 5x more transparent
-                    property color barBgColor: (function(){
-                        var h = Color.toHsl(Theme.background);
-                        var a = (h && h.a !== undefined) ? h.a : 1.0;
-                        var scale;
-                        if (Settings.settings.panelBgAlphaScale !== undefined) {
-                            scale = Number(Settings.settings.panelBgAlphaScale);
-                            if (!(scale >= 0 && scale <= 1)) scale = 0.2; // default ~5x
-                        } else if (Settings.settings.panelBgAlphaFactor !== undefined) {
-                            var f = Number(Settings.settings.panelBgAlphaFactor);
-                            scale = (f > 0) ? (1.0 / f) : 0.2;
-                        } else {
-                            scale = 0.2; // default ~5x
-                        }
-                        return Color.withAlpha(Theme.background, Math.max(0.0, Math.min(1.0, a * scale)));
-                    })()
+                    property color barBgColor: Color.withAlpha(Theme.background, 0.0)
                     property real seamTaperTop: 0.25
                     property real seamTaperBottom: 0.9
                     property real seamOpacity: 0.55
@@ -1203,12 +1176,31 @@ Scope {
                                 panelHeightPx: rightPanel.barHeightPx
                                 visible: mpdFlagsBar.enabled
                             }
-                            SystemTray {
-                                id: systemTrayModule
-                                shell: rootScope.shell
-                                screen: modelData
+                            Item {
+                                id: systemTrayWrapper
                                 Layout.alignment: Qt.AlignVCenter
-                                trayMenu: externalTrayMenu
+                                readonly property int padding: Math.max(2, Math.round(rightPanel.widgetSpacing * 0.45))
+                                implicitWidth: systemTrayBackground.width
+                                implicitHeight: systemTrayBackground.height
+
+                                Rectangle {
+                                    id: systemTrayBackground
+                                    radius: Theme.cornerRadiusSmall
+                                    color: WidgetBg.color(Settings.settings, "systemTray", "rgba(10, 12, 20, 0.2)")
+                                    width: Math.max(1, systemTrayModule.implicitWidth) + systemTrayWrapper.padding * 2
+                                    height: Math.max(1, systemTrayModule.implicitHeight) + systemTrayWrapper.padding * 2
+                                    border.width: Theme.uiBorderWidth
+                                    border.color: Color.withAlpha(Theme.textPrimary, 0.08)
+                                    antialiasing: true
+                                }
+
+                                SystemTray {
+                                    id: systemTrayModule
+                                    shell: rootScope.shell
+                                    screen: modelData
+                                    trayMenu: externalTrayMenu
+                                    anchors.centerIn: systemTrayBackground
+                                }
                             }
                             CustomTrayMenu { id: externalTrayMenu }
                             PanelSeparator {

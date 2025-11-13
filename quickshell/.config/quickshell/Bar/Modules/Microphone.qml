@@ -5,6 +5,8 @@ import qs.Components
 import qs.Bar.Modules
 import qs.Services as Services
 import "../../Helpers/Utils.js" as Utils
+import "../../Helpers/WidgetBg.js" as WidgetBg
+import "../../Helpers/Color.js" as Color
 
 Item {
     id: micDisplay
@@ -12,21 +14,37 @@ Item {
     property bool firstChange: true
     property string lastVolIconCategory: 'up'
     visible: false
+    property color pillBgColor: WidgetBg.color(Settings.settings, "microphone", Theme.panelPillBackground)
+    readonly property real _scale: Theme.scale(Screen)
+    property int horizontalPadding: Math.max(4, Math.round(Theme.panelRowSpacingSmall * _scale * 0.8))
+    property int verticalPadding: Math.max(2, Math.round(Theme.uiSpacingXSmall * _scale))
 
     // Reuse volume gradient for microphone level visualization
     property color volLowColor: Theme.panelVolumeLowColor
     property color volHighColor: Theme.panelVolumeHighColor
 
-    width: visible ? pillIndicator.width : 0
-    height: visible ? pillIndicator.height : 0
-    implicitWidth: visible ? pillIndicator.width : 0
-    implicitHeight: visible ? pillIndicator.height : 0
+    readonly property int contentWidth: pillIndicator.width
+    readonly property int contentHeight: pillIndicator.height
+    width: visible ? (contentWidth + horizontalPadding * 2) : 0
+    height: visible ? (contentHeight + verticalPadding * 2) : 0
+    implicitWidth: width
+    implicitHeight: height
     Layout.preferredWidth: implicitWidth
     Layout.preferredHeight: implicitHeight
     Layout.minimumWidth: implicitWidth
     Layout.minimumHeight: implicitHeight
     Layout.maximumWidth: implicitWidth
     Layout.maximumHeight: implicitHeight
+
+    Rectangle {
+        anchors.fill: parent
+        radius: Theme.cornerRadiusSmall
+        color: pillBgColor
+        border.width: Theme.uiBorderWidth
+        border.color: Color.withAlpha(Theme.textPrimary, 0.08)
+        visible: micDisplay.visible
+        antialiasing: true
+    }
 
     Timer {
         id: fullHideTimer
@@ -72,7 +90,8 @@ Item {
         icon: iconNameForCategory(resolveIconCategory(volume, Services.Audio.micMuted))
         text: volume + "%"
 
-        pillColor: Theme.panelPillBackground
+        anchors.centerIn: parent
+        pillColor: pillBgColor
         iconCircleColor: getVolumeColor()
         iconTextColor: Theme.background
         textColor: Theme.textPrimary

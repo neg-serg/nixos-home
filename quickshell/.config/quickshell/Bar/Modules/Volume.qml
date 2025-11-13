@@ -5,6 +5,8 @@ import qs.Components
 import qs.Bar.Modules
 import qs.Services as Services
 import "../../Helpers/Utils.js" as Utils
+import "../../Helpers/WidgetBg.js" as WidgetBg
+import "../../Helpers/Color.js" as Color
 
 Item {
     id: volumeDisplay
@@ -13,6 +15,10 @@ Item {
     // Last non-muted icon category (hysteresis): 'off' | 'down' | 'up'
     property string lastVolIconCategory: 'up'
     visible: false
+    property color pillBgColor: WidgetBg.color(Settings.settings, "volume", Theme.panelPillBackground)
+    readonly property real _scale: Theme.scale(Screen)
+    property int horizontalPadding: Math.max(4, Math.round(Theme.panelRowSpacingSmall * _scale * 0.8))
+    property int verticalPadding: Math.max(2, Math.round(Theme.uiSpacingXSmall * _scale))
     // Gradient endpoints
     property color volLowColor: Theme.panelVolumeLowColor
     property color volHighColor: Theme.panelVolumeHighColor
@@ -25,10 +31,12 @@ Item {
     }
 
     // Collapse size when hidden (RowLayout-friendly)
-    width: visible ? pillIndicator.width : 0
-    height: visible ? pillIndicator.height : 0
-    implicitWidth: visible ? pillIndicator.width : 0
-    implicitHeight: visible ? pillIndicator.height : 0
+    readonly property int contentWidth: pillIndicator.width
+    readonly property int contentHeight: pillIndicator.height
+    width: visible ? (contentWidth + horizontalPadding * 2) : 0
+    height: visible ? (contentHeight + verticalPadding * 2) : 0
+    implicitWidth: width
+    implicitHeight: height
     // Hint RowLayout
     Layout.preferredWidth: implicitWidth
     Layout.preferredHeight: implicitHeight
@@ -36,6 +44,16 @@ Item {
     Layout.minimumHeight: implicitHeight
     Layout.maximumWidth: implicitWidth
     Layout.maximumHeight: implicitHeight
+
+    Rectangle {
+        anchors.fill: parent
+        radius: Theme.cornerRadiusSmall
+        color: pillBgColor
+        border.width: Theme.uiBorderWidth
+        border.color: Color.withAlpha(Theme.textPrimary, 0.08)
+        visible: volumeDisplay.visible
+        antialiasing: true
+    }
 
     // Auto-hide at 100%
     Timer {
@@ -82,10 +100,11 @@ Item {
 
     PillIndicator {
         id: pillIndicator
+        anchors.centerIn: parent
         icon: iconNameForCategory(resolveIconCategory(volume, Services.Audio.muted))
         text: volume + "%"
 
-        pillColor: Theme.panelPillBackground
+        pillColor: pillBgColor
         iconCircleColor: getVolumeColor()
         iconTextColor: Theme.background
         textColor: Theme.textPrimary

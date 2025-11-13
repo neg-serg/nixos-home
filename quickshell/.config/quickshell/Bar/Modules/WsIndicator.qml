@@ -8,8 +8,10 @@ import qs.Services
 import qs.Settings
 import "../../Helpers/RichText.js" as Rich
 import "../../Helpers/WsIconMap.js" as WsMap
+import "../../Helpers/WidgetBg.js" as WidgetBg
+import "../../Helpers/Color.js" as Color
 
-Item {
+Rectangle {
     id: root
     property string wsName: "?"
     property int wsId: -1
@@ -31,8 +33,16 @@ Item {
     property int iconBaselineOffset:Theme.wsIconBaselineOffset
     property int iconSpacing:Theme.wsIconSpacing
 
-    implicitWidth: lineBox.implicitWidth
-    implicitHeight: lineBox.implicitHeight
+    readonly property real _scale: Theme.scale(Screen)
+    property int horizontalPadding: Math.max(4, Math.round(Theme.panelRowSpacingSmall * _scale))
+    property int verticalPadding: Math.max(2, Math.round(Theme.uiSpacingXSmall * _scale))
+    implicitWidth: lineBox.implicitWidth + 2 * horizontalPadding
+    implicitHeight: lineBox.implicitHeight + 2 * verticalPadding
+    color: WidgetBg.color(Settings.settings, "workspaces", "rgba(10, 12, 20, 0.2)")
+    radius: Math.round(Theme.cornerRadiusSmall * _scale)
+    border.width: Theme.uiBorderWidth
+    border.color: Color.withAlpha(Theme.textPrimary, 0.08)
+    antialiasing: true
 
     // Hyprland environment
     function hyprSig() { return Quickshell.env("HYPRLAND_INSTANCE_SIGNATURE") || ""; }
@@ -112,8 +122,14 @@ Item {
     Row {
         id: lineBox
         spacing: iconSpacing
-        anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.leftMargin: horizontalPadding
+        anchors.rightMargin: horizontalPadding
+        anchors.topMargin: verticalPadding
+        anchors.bottomMargin: verticalPadding
 
         BaselineAlignedIcon {
             visible: root.submapName && root.submapName.length > 0
