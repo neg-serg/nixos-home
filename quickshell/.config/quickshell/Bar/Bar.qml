@@ -1149,7 +1149,7 @@ Scope {
                             anchors.verticalCenter: rightBarBackground.verticalCenter
                             anchors.right: rightBarBackground.right
                             anchors.rightMargin: rightPanel.sideMargin
-                            spacing: rightPanel.interWidgetSpacing
+                            spacing: 0
                             Media {
                                 id: mediaModule
                                 Layout.alignment: Qt.AlignVCenter
