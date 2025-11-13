@@ -142,7 +142,10 @@ Item {
             workspaceDebounce.restart();
             return;
         }
-        if (key === "keyboard-layout" || key === "keyboard_layout") {
+        if (key === "keyboard-layout"
+                || key === "keyboard_layout"
+                || key === "activelayout"
+                || key === "activelayoutv2") {
             root._handleKeyboardLayout(payload);
             return;
         }
