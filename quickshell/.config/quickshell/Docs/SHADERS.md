@@ -221,3 +221,49 @@ Wayland screenshot: `grim -g "$(slurp)" wedge.png`.
 4) Polish visuals: tune `feather` using theme radius/scale; keep left/right in sync.  
 5) Add a small Settings toggle to reset width/slope env overrides.  
 6) Keep `scripts/compile_shaders.sh` documented as the canonical rebuild step.
+
+---
+
+## Итоги (что получилось / что не получилось)
+
+Что получилось:
+- Сборка `.qsb` через `qsb --glsl "100es,120,150"` (скрипт `scripts/compile_shaders.sh`) — все шейдеры компилируются.
+- Клин (треугольное вычитание) виден на обеих панелях; `QS_WEDGE_DEBUG=1` показывает мадженту внутри клина; `QS_WEDGE_SHADER_TEST=1` подтверждает, что ShaderEffect реально рисуется.
+- Источники скрываются при активном шейдере (`ShaderEffectSource.hideSource ← Loader.active`), чтобы исходные прямоугольники не закрывали «дыру».
+- Z‑порядок клип‑лоадеров поднят (например, `z: 50`) для наглядности в отладке; при необходимости панели ставятся в `WlrLayer.Overlay`.
+- Прозрачность фона панелей теперь настраивается: `panelBgAlphaScale`/`panelBgAlphaFactor` (см. `Docs/PANELS.md`).
+
+Что не получилось/проблемы по пути (и как обошли):
+- Флаги `qsb --vk/--sl` не поддерживаются локальной версией — перешли на GLSL‑только.
+- Предупреждения «Failed to find shader … .qsb» при отсутствии сборки/неверном пути — исправили скриптом сборки и `Qt.resolvedUrl("../shaders/*.frag.qsb")`.
+- «Клина не видно» — из‑за того, что исходные прямоугольники панели/тинта продолжали рисоваться под/над эффектом. Решение: `hideSource` + отключить fallback‑маски, при отладке поднять `z` и/или слой.
+- Логи Component.onCompleted иногда не доходили — включили `Settings.json → debugLogs: true` и дополнили видимыми overlay‑логами.
+- Путаница с рабочим каталогом для скрипта — запускать из `~/.config/quickshell`.
+
+Оставшиеся идеи/потенциальные доработки:
+- Экспонировать ширину/наклон клина в Settings (сейчас есть env и slope‑флаги).
+- Урезать область `ShaderEffectSource` до полосы клина (меньше перерисовок), пересмотреть `live/recursive`.
+- Тонкая настройка перьев/скруглений под тему и масштаб.
+
+---
+
+## Summary (what worked / what didn’t)
+
+Worked:
+- QSB builds (`qsb --glsl "100es,120,150"`) via `scripts/compile_shaders.sh`; all shaders compile.
+- Wedge subtraction visible on both bars; `QS_WEDGE_DEBUG=1` shows magenta overlay; `QS_WEDGE_SHADER_TEST=1` proves ShaderEffect paints.
+- Sources are hidden when the shader is active (`ShaderEffectSource.hideSource ← Loader.active`) so the original rects don’t fill the hole.
+- Raised z for clip loaders (e.g., `z: 50`) and optional `WlrLayer.Overlay` during debug to ensure visibility.
+- Panel background transparency configurable via `panelBgAlphaScale` / `panelBgAlphaFactor` (see `Docs/PANELS.md`).
+
+Didn’t work initially / issues encountered (and fixes):
+- Local `qsb` doesn’t accept `--vk/--sl` → use GLSL only.
+- “Failed to find shader … .qsb” when not compiled or wrong path → fixed with build script and `Qt.resolvedUrl("../shaders/*.frag.qsb")`.
+- “Wedge not visible” because original fills/tints still painted → fixed with `hideSource` and by removing fallbacks; raised `z`/Overlay for debugging.
+- Logging not always visible → enabled `debugLogs` in `Settings.json` and relied on overlay logs.
+- Working directory confusion → run `scripts/compile_shaders.sh` from `~/.config/quickshell`.
+
+Open items / potential follow‑ups:
+- Expose wedge width/slope in persistent Settings (beyond env and slope flags).
+- Limit `ShaderEffectSource` to the wedge strip; review `live/recursive` for perf.
+- Fine‑tune feather based on theme and scaling.
