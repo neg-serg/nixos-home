@@ -1,10 +1,10 @@
 import QtQuick
 import QtQuick.Controls
 import Quickshell
-import Quickshell.Io
 import Quickshell.Hyprland
 import qs.Components
 import qs.Settings
+import qs.Services as Services
 
 Item {
     id: kb
@@ -150,55 +150,24 @@ Item {
 
             // If the event is not from the main keyboard, confirm quickly via devices snapshot
             // to correct a rare stale payload without penalizing the fast path.
-            if (!fromMain) postEventProc.start()
+            if (!fromMain) Services.HyprlandWatcher.refreshDevices()
         }
     }
 
-    // Init path: detect main:true keyboard once and seed the initial label from the
-    // devices snapshot so the indicator starts with a correct value.
-    ProcessRunner {
-        id: initProc
-        cmd: ["hyprctl", "-j", "devices"]
-        parseJson: true
-        onJson: (obj) => {
-            try {
-                const list = (obj?.keyboards || [])
-                kb.knownKeyboards = list.map(k => (k.name || ""))
-                // Identify main keyboard once
-                for (let k of list) {
-                    if (k.main) {
-                        kb.mainDeviceName = k.name || kb.mainDeviceName
-                        kb.mainDeviceNeedle = norm(k.name || k.identifier || kb.mainDeviceName)
-                        break
-                    }
-                }
-                const pick = pickDevice(list)
-                if (pick) kb.layoutText = shortenLayout(pick.active_keymap || pick.layout || kb.layoutText)
-            } catch (_) { }
-        }
+    Connections {
+        target: Services.HyprlandWatcher
+        function onKeyboardDevicesChanged() { kb.applyDeviceSnapshot(Services.HyprlandWatcher.keyboardDevices); }
     }
 
-    ProcessRunner { id: switchProc; autoStart: false; restartOnExit: false }
+    Component.onCompleted: {
+        Services.HyprlandWatcher.refreshDevices();
+    }
 
-    // Quick confirmation when we got an event from a non‑main device; this is intentionally
-    // not run on every event to avoid introducing latency in the common path.
     ProcessRunner {
-        id: postEventProc
-        cmd: ["hyprctl", "-j", "devices"]
-        parseJson: true
-        onJson: (obj) => {
-            try {
-                const list = (obj?.keyboards || [])
-                // Prefer main device snapshot
-                let dev = null
-                for (let k of list) { if (k.main) { dev = k; break } }
-                if (!dev && list.length) dev = list[0]
-                if (dev) {
-                    const txt = shortenLayout(dev.active_keymap || dev.layout || kb.layoutText)
-                    if (txt && txt !== kb.layoutText) kb.layoutText = txt
-                }
-            } catch (_) {}
-        }
+        id: switchProc
+        autoStart: false
+        restartOnExit: false
+        env: Services.HyprlandWatcher.hyprEnvObject
     }
 
     function norm(s) { return (String(s || "").toLowerCase().replace(/[^a-z0-9]+/g, "-")) }
@@ -266,5 +235,27 @@ Item {
         if (/\b(us|en)\b/i.test(s)) return "en"
         if (/\bru\b/i.test(s)) return "ru"
         return s.split(/\s+/)[0].toUpperCase().slice(0, 3)
+    }
+
+    function applyDeviceSnapshot(devs) {
+        try {
+            const list = Array.isArray(devs) ? devs : (Array.isArray(devs?.keyboards) ? devs.keyboards : [])
+            if (!Array.isArray(list) || list.length === 0) return
+            kb.knownKeyboards = list.map(k => (k.name || ""))
+            let main = null
+            for (let k of list) {
+                if (k.main) { main = k; break }
+            }
+            if (main) {
+                kb.mainDeviceName = main.name || kb.mainDeviceName
+                kb.mainDeviceNeedle = norm(main.name || main.identifier || kb.mainDeviceName)
+            }
+            const pick = pickDevice(list)
+            const chosen = pick || main || list[0]
+            if (chosen) {
+                const txt = shortenLayout(chosen.active_keymap || chosen.layout || kb.layoutText)
+                if (txt && txt !== kb.layoutText) kb.layoutText = txt
+            }
+        } catch (e) {}
     }
 }

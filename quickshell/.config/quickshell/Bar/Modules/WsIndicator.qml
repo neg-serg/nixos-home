@@ -1,10 +1,8 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import Quickshell
-import Quickshell.Io
 import qs.Components
-import qs.Services
+import qs.Services as Services
 import qs.Settings
 import "../../Helpers/RichText.js" as Rich
 import "../../Helpers/WsIconMap.js" as WsMap
@@ -35,15 +33,6 @@ WidgetCapsule {
     backgroundKey: "workspaces"
     paddingScale: paddingScaleFor(horizontalPadding)
     verticalPaddingScale: paddingScaleFor(verticalPadding)
-
-    // Hyprland environment
-    function hyprSig() { return Quickshell.env("HYPRLAND_INSTANCE_SIGNATURE") || ""; }
-    function runtimeDir() { return Quickshell.env("XDG_RUNTIME_DIR") || ("/run/user/" + Quickshell.env("UID")); }
-    function socketPath() { return runtimeDir() + "/hypr/" + hyprSig() + "/.socket2.sock"; }
-    function hyprEnvOrNull() {
-        const sig = hyprSig();
-        return sig ? ["HYPRLAND_INSTANCE_SIGNATURE=" + sig] : null;
-    }
 
     // RichText helpers are provided by Helpers/RichText.js
 
@@ -160,79 +149,42 @@ WidgetCapsule {
         }
     }
 
-    // Hyprland socket2 events (socat)
-    ProcessRunner {
-        id: eventMonitor
-        cmd: ["socat", "-u", "UNIX-CONNECT:" + socketPath(), "-"]
-        backoffMs: Theme.networkRestartBackoffMs
-        onLine: (lineRaw) => {
-            let line = String(lineRaw || "").trim();
-            if (!line) return;
-            if (line.startsWith("workspace>>")) {
-                const id = parseInt(line.substring(11).trim());
-                if (!isNaN(id)) { root.wsId = id; root.wsName = ""; }
-            } else if (line.startsWith("workspacev2>>")) {
-                const payload = line.substring(13);
-                const parts = payload.split(",", 2);
-                const id = parseInt(parts[0]);
-                if (!isNaN(id)) root.wsId = id;
-                let name = (parts[1] || "").trim();
-                if (name.startsWith("name:")) name = name.substring(5);
-                root.wsName = name;
-            } else if (line.startsWith("submap>>")) {
-                const name = line.substring(8).trim();
-                root.submapName = (!name || name === "default" || name === "reset") ? "" : name;
-            } else if (line.startsWith("submapv2>>")) {
-                const name = line.substring(10).trim();
-                root.submapName = (!name || name === "default" || name === "reset") ? "" : name;
-            } else if (line.startsWith("focusedmon>>") || line.startsWith("focusedmonv2>>")) {
-                refreshOnce.start();
+    function updateDynamicMap(binds) {
+        try {
+            const dyn = {};
+            const list = Array.isArray(binds) ? binds : [];
+            for (let i = 0; i < list.length; i++) {
+                const sub = (list[i] && list[i].submap) ? String(list[i].submap) : "";
+                const n = sub.toLowerCase().trim();
+                if (!n || n === "default" || n === "reset") continue;
+                dyn[n] = submapIconName(n);
             }
+            submapDynamicMap = dyn;
+            try { const _ = Object.keys(dyn); } catch (_) {}
+        } catch (e) {}
+    }
+
+    Connections {
+        target: Services.HyprlandWatcher
+        function onActiveWorkspaceIdChanged() {
+            const id = Services.HyprlandWatcher.activeWorkspaceId;
+            if (typeof id === "number") root.wsId = id;
         }
-    }
-
-    // One-shot refresh using hyprctl (JSON)
-    ProcessRunner {
-        id: getCurrentWS
-        cmd: ["hyprctl", "-j", "activeworkspace"]
-        env: hyprEnvOrNull()
-        parseJson: true
-        autoStart: false
-        onJson: (obj) => { try { root.wsId = obj.id; root.wsName = obj.name; } catch (e) {} }
-    }
-
-    // Debounce before asking hyprctl again (used on monitor focus change)
-    Timer {
-        id: refreshOnce
-        interval: Theme.wsRefreshDebounceMs
-        onTriggered: getCurrentWS.start()
-    }
-
-    // Discover submaps used in binds and derive icon mapping
-    ProcessRunner {
-        id: getBinds
-        cmd: ["bash", "-lc", "hyprctl -j binds"]
-        env: hyprEnvOrNull()
-        parseJson: true
-        onJson: (arr) => {
-            try {
-                const dyn = {};
-                for (let i = 0; i < arr.length; i++) {
-                    const sub = (arr[i] && arr[i].submap) ? String(arr[i].submap) : "";
-                    const n = sub.toLowerCase().trim();
-                    if (!n || n === "default" || n === "reset") continue;
-                    dyn[n] = submapIconName(n);
-                }
-                submapDynamicMap = dyn;
-                try { const _ = Object.keys(dyn); } catch (_) {}
-            } catch (e) { }
+        function onActiveWorkspaceNameChanged() {
+            root.wsName = Services.HyprlandWatcher.activeWorkspaceName || "";
         }
+        function onCurrentSubmapChanged() { root.submapName = Services.HyprlandWatcher.currentSubmap || ""; }
+        function onFocusedMonitorEvent() { Services.HyprlandWatcher.refreshWorkspace(); }
+        function onBindsChanged() { updateDynamicMap(Services.HyprlandWatcher.binds); }
     }
 
-    // Initial sync at component creation
     Component.onCompleted: {
-        getCurrentWS.start();
-        getBinds.start();
+        root.wsId = Services.HyprlandWatcher.activeWorkspaceId;
+        root.wsName = Services.HyprlandWatcher.activeWorkspaceName;
+        root.submapName = Services.HyprlandWatcher.currentSubmap;
+        updateDynamicMap(Services.HyprlandWatcher.binds);
+        Services.HyprlandWatcher.refreshWorkspace();
+        Services.HyprlandWatcher.refreshBinds();
     }
 
     implicitWidth: horizontalPadding * 2 + lineBox.implicitWidth
