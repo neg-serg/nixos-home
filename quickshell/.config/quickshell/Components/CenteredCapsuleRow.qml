@@ -56,10 +56,10 @@ LocalComponents.CapsuleButton {
         spacing: iconSpacing
         anchors.horizontalCenter: root.centerRow ? parent.horizontalCenter : undefined
         anchors.verticalCenter: root.centerRow ? parent.verticalCenter : undefined
-        anchors.verticalCenterOffset: root.centerRow ? root.centerOffset : 0
+        anchors.verticalCenterOffset: 0
         anchors.left: root.centerRow ? undefined : parent.left
         anchors.top: root.centerRow ? undefined : parent.top
-        anchors.topMargin: root.centerRow ? 0 : root.centerOffset
+        anchors.topMargin: 0
 
         LocalComponents.BaselineAlignedIcon {
             id: baselineIcon
@@ -69,6 +69,7 @@ LocalComponents.CapsuleButton {
             implicitHeight: root.desiredInnerHeight
             labelRef: label
             mode: root.iconMode === "material" ? "material" : "text"
+            alignMode: root.labelVisible ? "baseline" : "optical"
             text: root.iconGlyph
             fontFamily: root.iconFontFamily
             fontStyleName: root.iconStyleName
