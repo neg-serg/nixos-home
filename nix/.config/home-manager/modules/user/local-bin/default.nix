@@ -250,6 +250,8 @@ with lib;
         # Special case: ren needs path substitution for libs as well
         renTpl = builtins.readFile ./scripts/ren;
         renText = lib.replaceStrings ["@LIBPP@" "@LIBCOLORED@"] [libpp libcolored] renTpl;
+        picInfoText = builtins.readFile ./scripts/pic-info;
+
       in
         base
         // {
@@ -262,6 +264,11 @@ with lib;
             executable = true;
             force = true;
             text = renText;
+          };
+          ".local/bin/pic-info" = {
+            executable = true;
+            force = true;
+            text = picInfoText;
           };
           # Provide a stable wrapper for Pyprland CLI with absolute path,
           # so Hypr bindings don't rely on PATH. Kept at ~/.local/bin/pypr-client
