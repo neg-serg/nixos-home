@@ -77,7 +77,12 @@ Scope {
                     property int sideMargin: Math.round(Theme.panelSideMargin * s)
                     property int widgetSpacing: Math.round(Theme.panelWidgetSpacing * s)
                     property int seamWidth: Math.max(8, Math.round(Theme.uiDiagonalSeparatorImplicitWidth * s))
-                    property color barBgColor: Theme.background
+                    // Make the base panel background 5x more transparent
+                    property color barBgColor: (function(){
+                        var h = Color.toHsl(Theme.background);
+                        var a = (h && h.a !== undefined) ? h.a : 1.0;
+                        return Color.withAlpha(Theme.background, Math.max(0.0, Math.min(1.0, a / 5.0)));
+                    })()
                     property real seamTaperTop: 0.25
                     property real seamTaperBottom: 0.9
                     property real seamOpacity: Math.min(1.0, Math.max(0.35, Theme.uiSeparatorOpacity * 3))
@@ -650,7 +655,12 @@ Scope {
                     property int sideMargin: Math.round(Theme.panelSideMargin * s)
                     property int widgetSpacing: Math.round(Theme.panelWidgetSpacing * s)
                     property int seamWidth: Math.max(8, Math.round(Theme.uiDiagonalSeparatorImplicitWidth * s))
-                    property color barBgColor: Theme.background
+                    // Make the base panel background 5x more transparent
+                    property color barBgColor: (function(){
+                        var h = Color.toHsl(Theme.background);
+                        var a = (h && h.a !== undefined) ? h.a : 1.0;
+                        return Color.withAlpha(Theme.background, Math.max(0.0, Math.min(1.0, a / 5.0)));
+                    })()
                     property real seamTaperTop: 0.25
                     property real seamTaperBottom: 0.9
                     property real seamOpacity: Math.min(1.0, Math.max(0.35, Theme.uiSeparatorOpacity * 3))
