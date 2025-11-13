@@ -17,6 +17,7 @@ Scope {
     property var shell
     property alias visible: barRootItem.visible
     property real barHeight: 0 // Expose current bar height for other components (e.g. window mirroring)
+    property bool diagnosticsEnabled: false
 
     Item {
         id: barRootItem
@@ -121,7 +122,7 @@ Scope {
                     property real panelTintFeatherBottom: 0.35
                     // Debug: draw a right triangle above the network indicator cluster
                     // Now controlled by Settings
-                    property bool debugNetTriangle: Settings.settings.debugTriangleLeft
+                    property bool debugNetTriangle: rootScope.diagnosticsEnabled && Settings.settings.debugTriangleLeft
 
                     readonly property real contentWidth: Math.max(
                         leftWidgetsRow.width,
@@ -236,7 +237,7 @@ Scope {
                                     0,0)
                                 blending: true
                                 Component.onCompleted: {
-                                    if (Settings.settings.debugLogs)
+                                    if (rootScope.diagnosticsEnabled && Settings.settings.debugLogs)
                                         console.log("[wedge:left:tint] shader ready", params0.x, params1.x)
                                 }
                             }
@@ -253,7 +254,7 @@ Scope {
                                     || ((Quickshell.env("QS_WEDGE_SHADER_TEST") || "") === "1")
                                     || (Settings.settings.enableWedgeClipShader === true)
                             onActiveChanged: {
-                                if (Settings.settings.debugLogs) {
+                                if (rootScope.diagnosticsEnabled && Settings.settings.debugLogs) {
                                     console.log("[bar:left] wedge shader active:", leftFaceClipLoader.active,
                                                 "debug=", (Quickshell.env("QS_WEDGE_DEBUG")||""),
                                                 "widthPct=", (Quickshell.env("QS_WEDGE_WIDTH_PCT")||""))
@@ -290,7 +291,7 @@ Scope {
                                     0, 0)
                                 blending: true
                                 Component.onCompleted: {
-                                    if (Settings.settings.debugLogs)
+                                    if (rootScope.diagnosticsEnabled && Settings.settings.debugLogs)
                                         console.log("[wedge:left:base] shader ready", params0.x, params1.x)
                                 }
                             }
@@ -302,7 +303,7 @@ Scope {
                             id: leftWedgeOverlayDebug
                             anchors.fill: leftBarFill
                             z: 999999
-                            visible: (Quickshell.env("QS_WEDGE_DEBUG") || "") === "1"
+                            visible: rootScope.diagnosticsEnabled && ((Quickshell.env("QS_WEDGE_DEBUG") || "") === "1")
                             property bool _loggedOnce: false
                             onPaint: {
                                 var ctx = getContext('2d');
@@ -337,7 +338,7 @@ Scope {
                                 ctx.strokeStyle = 'rgba(255,0,255,0.9)';
                                 ctx.lineWidth = 2;
                                 ctx.stroke();
-                                if (Settings.settings.debugLogs && !leftWedgeOverlayDebug._loggedOnce) {
+                                if (rootScope.diagnosticsEnabled && Settings.settings.debugLogs && !leftWedgeOverlayDebug._loggedOnce) {
                                     leftWedgeOverlayDebug._loggedOnce = true;
                                     console.log("[wedge:left:overlay] size=", width, height,
                                                 "leftBarFillW=", leftBarFill.width,
@@ -814,7 +815,7 @@ Scope {
                                     0,0)
                                 blending: true
                                 Component.onCompleted: {
-                                    if (Settings.settings.debugLogs)
+                                    if (rootScope.diagnosticsEnabled && Settings.settings.debugLogs)
                                         console.log("[wedge:right:tint] shader ready", params0.x, params1.x)
                                 }
                             }
@@ -829,7 +830,7 @@ Scope {
                                     || ((Quickshell.env("QS_WEDGE_SHADER_TEST") || "") === "1")
                                     || (Settings.settings.enableWedgeClipShader === true)
                             onActiveChanged: {
-                                if (Settings.settings.debugLogs) {
+                                if (rootScope.diagnosticsEnabled && Settings.settings.debugLogs) {
                                     console.log("[bar:right] wedge shader active:", rightFaceClipLoader.active,
                                                 "debug=", (Quickshell.env("QS_WEDGE_DEBUG")||""),
                                                 "widthPct=", (Quickshell.env("QS_WEDGE_WIDTH_PCT")||""))
@@ -866,7 +867,7 @@ Scope {
                                     0, 0)
                                 blending: true
                                 Component.onCompleted: {
-                                    if (Settings.settings.debugLogs)
+                                    if (rootScope.diagnosticsEnabled && Settings.settings.debugLogs)
                                         console.log("[wedge:right:base] shader ready", params0.x, params1.x)
                                 }
                             }
@@ -877,7 +878,7 @@ Scope {
                             id: rightWedgeOverlayDebug
                             anchors.fill: rightBarFill
                             z: 999999
-                            visible: (Quickshell.env("QS_WEDGE_DEBUG") || "") === "1"
+                            visible: rootScope.diagnosticsEnabled && ((Quickshell.env("QS_WEDGE_DEBUG") || "") === "1")
                             property bool _loggedOnce: false
                             onPaint: {
                                 var ctx = getContext('2d');
@@ -912,7 +913,7 @@ Scope {
                                 ctx.strokeStyle = 'rgba(255,0,255,0.9)';
                                 ctx.lineWidth = 2;
                                 ctx.stroke();
-                                if (Settings.settings.debugLogs && !rightWedgeOverlayDebug._loggedOnce) {
+                                if (rootScope.diagnosticsEnabled && Settings.settings.debugLogs && !rightWedgeOverlayDebug._loggedOnce) {
                                     rightWedgeOverlayDebug._loggedOnce = true;
                                     console.log("[wedge:right:overlay] size=", width, height,
                                                 "rightBarFillW=", rightBarFill.width,
@@ -1274,7 +1275,7 @@ Scope {
                     // Prevents early full-width flash while rows are still measuring.
                     property bool useReadinessFilter: true
                     // Debug switch: force seam visible regardless of readiness to verify rendering/ordering
-                    property bool debugForceVisible: true
+                    property bool debugForceVisible: rootScope.diagnosticsEnabled
                     visible: monitorEnabled && (
                         seamPanel.debugForceVisible || (
                             !seamPanel.useReadinessFilter
@@ -1317,9 +1318,9 @@ Scope {
                     property real seamTintFeatherPx: Math.max(1, Math.round(Theme.uiRadiusSmall * 0.35 * s))
                     readonly property real monitorWidth: seamPanel.screen ? seamPanel.screen.width : seamPanel.width
                     // Debug: enable to overlay bounding boxes and logs
-                    property bool debugSeam: true
+                    property bool debugSeam: rootScope.diagnosticsEnabled
                     // Debug: when true, the accent debug overlay fills the entire panel width
-                    property bool debugFillFullWidth: Settings.settings.debugSeamFullWidth
+                    property bool debugFillFullWidth: rootScope.diagnosticsEnabled && Settings.settings.debugSeamFullWidth
                     // Consider geometry "ready" only when left/right fills are measured and gap is sane
                     readonly property bool leftReady: _leftFillWidth > Math.max(8, leftPanel.sideMargin + leftPanel.widgetSpacing)
                     readonly property bool rightReady: _rightFillWidth > Math.max(8, rightPanel.sideMargin + rightPanel.widgetSpacing)
@@ -1414,7 +1415,7 @@ Scope {
                                 )
                                 property color baseColor: seamPanel.seamBaseColor
                                 blending: true
-                            Component.onCompleted: if (Settings.settings.debugLogs) console.log("[seam-panel]", "shader ready", seamPanel.seamWidthPx, seamPanel.seamTintColor)
+                            Component.onCompleted: if (rootScope.diagnosticsEnabled && Settings.settings.debugLogs) console.log("[seam-panel]", "shader ready", seamPanel.seamWidthPx, seamPanel.seamTintColor)
                             }
                             Row {
                                 z: 10
