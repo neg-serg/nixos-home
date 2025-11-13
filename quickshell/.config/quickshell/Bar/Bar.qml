@@ -100,15 +100,6 @@ Scope {
                     property real seamTaperTop: 0.25
                     property real seamTaperBottom: 0.9
                     property real seamOpacity: 0.55
-                    readonly property real seamTiltSign: -1.0
-                    readonly property real seamTaperTopClamped: Math.max(0.0, Math.min(1.0, seamTaperTop))
-                    readonly property real seamTaperBottomClamped: Math.max(0.0, Math.min(1.0, seamTaperBottom))
-                    readonly property real seamEdgeBaseTop: (seamTiltSign > 0)
-                        ? (1.0 - seamTaperTopClamped)
-                        : seamTaperTopClamped
-                    readonly property real seamEdgeSlope: ((seamTiltSign > 0)
-                        ? (1.0 - seamTaperBottomClamped)
-                        : seamTaperBottomClamped) - seamEdgeBaseTop
                     readonly property real seamTiltSign: 1.0
                     readonly property real seamTaperTopClamped: Math.max(0.0, Math.min(1.0, seamTaperTop))
                     readonly property real seamTaperBottomClamped: Math.max(0.0, Math.min(1.0, seamTaperBottom))
@@ -691,6 +682,15 @@ Scope {
                     property real seamTaperTop: 0.25
                     property real seamTaperBottom: 0.9
                     property real seamOpacity: 0.55
+                    readonly property real seamTiltSign: -1.0
+                    readonly property real seamTaperTopClamped: Math.max(0.0, Math.min(1.0, seamTaperTop))
+                    readonly property real seamTaperBottomClamped: Math.max(0.0, Math.min(1.0, seamTaperBottom))
+                    readonly property real seamEdgeBaseTop: (seamTiltSign > 0)
+                        ? (1.0 - seamTaperTopClamped)
+                        : seamTaperTopClamped
+                    readonly property real seamEdgeSlope: ((seamTiltSign > 0)
+                        ? (1.0 - seamTaperBottomClamped)
+                        : seamTaperBottomClamped) - seamEdgeBaseTop
                     property color seamFillColor: Color.withAlpha(
                         Color.mix(Theme.surfaceVariant, Theme.background, 0.45),
                         seamOpacity
