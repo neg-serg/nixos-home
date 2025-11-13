@@ -70,6 +70,7 @@ LocalComponents.CapsuleButton {
             labelRef: label
             mode: root.iconMode === "material" ? "material" : "text"
             alignMode: root.labelVisible ? "baseline" : "optical"
+            alignTarget: root.labelVisible ? label : null
             text: root.iconGlyph
             fontFamily: root.iconFontFamily
             fontStyleName: root.iconStyleName
