@@ -59,6 +59,9 @@ Row {
     property bool collapsed: Settings.settings.collapseSystemTray
     property bool expanded: false
     property bool openGuard: false
+    // Inline tray background/border colors (overridable by parent capsule)
+    property color inlineBgColor: Theme.background
+    property color inlineBorderColor: Theme.borderSubtle
 
     PanelWithOverlay {
         id: trayOverlay
@@ -94,8 +97,8 @@ Row {
         Rectangle {
             id: bg
             radius: Theme.cornerRadiusSmall
-            color: Theme.background
-            border.color: Theme.borderSubtle
+            color: inlineBgColor
+            border.color: inlineBorderColor
             border.width: Theme.uiBorderWidth
             width: collapsedRow.implicitWidth + Theme.panelTrayInlinePadding
             height: collapsedRow.implicitHeight + Theme.panelTrayInlinePadding

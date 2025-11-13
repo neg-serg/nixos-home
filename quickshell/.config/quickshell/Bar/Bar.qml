@@ -1220,6 +1220,10 @@ Scope {
                                     screen: modelData
                                     trayMenu: externalTrayMenu
                                     anchors.centerIn: systemTrayBackground
+                                    inlineBgColor: systemTrayWrapper.capsuleColor
+                                    inlineBorderColor: systemTrayWrapper.hovered
+                                        ? Color.withAlpha(Theme.textPrimary, 0.12)
+                                        : Color.withAlpha(Theme.textPrimary, 0.08)
                                 }
                             }
                             CustomTrayMenu { id: externalTrayMenu }
@@ -1234,6 +1238,7 @@ Scope {
                             PanelSeparator {
                                 scaleFactor: rightPanel.s
                                 panelHeightPx: rightPanel.barHeightPx
+                                visible: widgetsMicrophone.visible
                             }
                             Volume {
                                 id: widgetsVolume
