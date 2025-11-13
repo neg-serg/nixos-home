@@ -21,19 +21,10 @@ Rectangle {
     property color bgColor: WidgetBg.color(Settings.settings, "network", "rgba(10, 12, 20, 0.2)")
     readonly property real hoverMixAmount: 0.18
     readonly property color hoverColor: Color.mix(bgColor, Qt.rgba(1, 1, 1, 1), hoverMixAmount)
-    property int iconSpacing:Theme.panelRowSpacingSmall
     property string deviceMatch: ""
     property string displayText: "0"
-    property bool useTheme:true
     property bool hasLink:Services.Connectivity.hasLink
     property bool hasInternet:Services.Connectivity.hasInternet
-
-    property real iconScale:Theme.networkIconScale
-    property color iconColor:useTheme ? Theme.textSecondary : Theme.textSecondary
-    property int iconVAdjust:Theme.networkIconVAdjust   // vertical nudge (px)
-    property string iconText: ""
-    property string iconFontFamily: "Font Awesome 6 Free"
-    property string iconStyleName: "Solid"
 
     property int textPadding:Theme.panelRowSpacingSmall
     property int horizontalPadding: Math.max(4, Math.round(Theme.panelRowSpacingSmall * _scale))
@@ -55,23 +46,16 @@ Rectangle {
     SmallInlineStat {
         id: inlineView
         anchors.verticalCenter: parent.verticalCenter
-        anchors.left: parent.left
-        anchors.leftMargin: horizontalPadding
+        anchors.horizontalCenter: parent.horizontalCenter
         desiredHeight: Math.max(1, capsuleMetrics.inner)
         fontPixelSize: root.fontPixelSize
         textPadding: root.textPadding
-        iconSpacing: root.iconSpacing
-        iconMode: "glyph"
-        iconGlyph: iconText
-        iconFontFamily: iconFontFamily
-        iconStyleName: iconStyleName
-        iconScale: root.iconScale
-        iconVAdjust: root.iconVAdjust
-        iconColor: currentIconColor()
+        iconSpacing: 0
         labelIsRichText: false
         labelText: displayText
         labelColor: textColor
         labelFontFamily: Theme.fontFamily
+        centerContent: true
     }
 
     function fmtKiBps(kib) { return kib.toFixed(1) }
@@ -89,9 +73,5 @@ Rectangle {
     }
     Component.onCompleted: { displayText = formatRxTx(Services.Connectivity.rxKiBps, Services.Connectivity.txKiBps) }
 
-    function currentIconColor() {
-        if (!root.hasLink) return (Settings.settings.networkNoLinkColor || Theme.error)
-        if (!root.hasInternet) return (Settings.settings.networkNoInternetColor || Theme.warning)
-        return root.iconColor
-    }
+    // Text color stays constant; link state is expressed via the dedicated icon.
 }

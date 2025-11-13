@@ -441,17 +441,20 @@ Scope {
                                 panelHeightPx: leftPanel.barHeightPx
                                 visible: netCluster.visible
                             }
-                            Row {
-                                id: netCluster
-                                Layout.alignment: Qt.AlignVCenter
-                                spacing: Math.round(Theme.panelNetClusterSpacing * leftPanel.s)
-                                LocalMods.VpnAmneziaIndicator {
-                                    id: amneziaVpn
-                                    showLabel: false
-                                    iconRounded: true
+                                Row {
+                                    id: netCluster
+                                    Layout.alignment: Qt.AlignVCenter
+                                    spacing: Math.round(Theme.panelNetClusterSpacing * leftPanel.s)
+                                    LocalMods.VpnAmneziaIndicator {
+                                        id: amneziaVpn
+                                        showLabel: false
+                                        iconRounded: true
+                                    }
+                                    LocalMods.NetworkLinkIndicator {
+                                        id: netLinkIndicator
+                                    }
+                                    NetworkUsage { id: net }
                                 }
-                                NetworkUsage { id: net }
-                            }
                             // Logical anchor position for the custom triangle placed "after network"
                             // This doesn't consume layout width (preferredWidth=0), it's used only to compute x
                             Item {

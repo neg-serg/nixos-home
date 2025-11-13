@@ -532,8 +532,11 @@ Singleton {
     property int wsLabelLeftPaddingTerminal:val('ws.label.leftPadding.terminal', -2)
     property int wsIconInnerPadding:val('ws.icon.innerPadding', 1)
     // NetworkUsage icon tuning
-    property real networkIconScale: val('network.icon.scale', 0.7)
+    property real networkIconScale: val('network.icon.scale', 2.0)
     property int networkIconVAdjust:val('network.icon.vAdjust', 0)
+    // Dedicated link indicator icon tuning (falls back to network icon tokens)
+    property real networkLinkIconScale: val('network.link.icon.scale', 1.0)
+    property int networkLinkIconVAdjust:val('network.link.icon.vAdjust', networkIconVAdjust)
     // VPN indicator opacities
     property real vpnConnectedOpacity: val('vpn.connectedOpacity', 0.8)
     property real vpnDisconnectedOpacity: val('vpn.disconnectedOpacity', 0.45)

@@ -221,7 +221,7 @@
     "restartBackoffMs": 1500,
     "linkPollMs": 4000,
     "icon": {
-      "scale": 0.7,
+      "scale": 2.0,
       "vAdjust": 0
     }
   },
