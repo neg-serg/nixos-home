@@ -33,7 +33,7 @@ Item {
     // Use the same accent for minus and brackets (simplified)
     // Version bump to force RichText recompute on accent changes
     property int accentVersion: 0
-    // Accent readiness: separators uncolored until accent is ready
+    // Accent readiness: hold accent color until palette is ready
     property bool accentReady: false
     onMediaAccentChanged: { accentVersion++; }
     Component.onCompleted: { colorSampler.requestPaint(); accentRetry.restart() }
@@ -78,7 +78,7 @@ Item {
         height: parent.height
         spacing: Math.round(Theme.panelWidgetSpacing * Theme.scale(Screen))
 
-        // Separator removed (temporarily) due to rendering issues
+        // Legacy inline dividers removed due to rendering issues
 
         Item {
             id: albumArtContainer
@@ -338,14 +338,14 @@ Item {
                     textFormat: Text.RichText
                     renderType: Text.NativeRendering
                     wrapMode: Text.NoWrap
-                    // Brackets use the same accent as the separator (minus)
+                    // Brackets reuse the same accent as the time markers
                     property string timeColor: (function(){
                         var c = MusicManager.isPlaying ? Theme.textPrimary : Theme.textSecondary;
                         var a = MusicManager.isPlaying ? Theme.mediaTimeAlphaPlaying : Theme.mediaTimeAlphaPaused;
                         return Format.colorCss(c, a);
                     })()
                     property string titlePart: (MusicManager.trackArtist || MusicManager.trackTitle)
-                        ? [MusicManager.trackArtist, MusicManager.trackTitle].filter(function(x){return !!x;}).join(" - ")
+                        ? [MusicManager.trackArtist, MusicManager.trackTitle].filter(function(x){return !!x;}).join(" ")
                         : ""
                     // Bind against accent so changes retrigger (same color for minus and brackets)
                     property string _accentCss: (mediaControl.mediaAccentCss ? mediaControl.mediaAccentCss : Format.colorCss(Theme.accentPrimary, 1))
@@ -353,31 +353,22 @@ Item {
                     property int _accentVer: mediaControl.accentVersion
                     text: (function(){
                         if (!trackText.titlePart) return "";
-                        const sepChar = (Settings.settings.mediaTitleSeparator || '—');
                         let _v = trackText._accentVer; // force re-eval when accent changes
-                        let t = Rich.esc(trackText.titlePart)
-                                   .replace(/\s(?:-|–|—)\s/g, function(){
-                                        // Only color the injected separator when accent is ready; otherwise plain
-                                        return trackText._accentReady
-                                            ? ("&#8201;" + Rich.sepSpan(trackText._accentCss, sepChar) + "&#8201;")
-                                            : ("&#8201;" + Rich.esc(sepChar) + "&#8201;");
-                                   });
+                        let t = Rich.esc(trackText.titlePart);
                         const cur = Format.fmtTime(MusicManager.currentPosition || 0);
                         const tot = Format.fmtTime(Time.mprisToMs(MusicManager.trackLength || 0));
                         const bp = Rich.bracketPair(Settings.settings.timeBracketStyle || "square");
+                        const ofLabel = qsTr("of");
+                        const timeSummary = cur && tot ? (cur + " " + ofLabel + " " + tot) : (cur || tot);
                         if (trackText._accentReady) {
                             return t
                                    + " &#8201;" + Rich.bracketSpan(trackText._accentCss, bp.l)
-                                   + Rich.timeSpan(trackText.timeColor, cur)
-                                   + Rich.sepSpan(trackText._accentCss, '/')
-                                   + Rich.timeSpan(trackText.timeColor, tot)
+                                   + Rich.timeSpan(trackText.timeColor, timeSummary)
                                    + Rich.bracketSpan(trackText._accentCss, bp.r);
                         } else {
                             return t
                                    + " &#8201;" + Rich.esc(bp.l)
-                                   + Rich.timeSpan(trackText.timeColor, cur)
-                                   + Rich.esc('/')
-                                   + Rich.timeSpan(trackText.timeColor, tot)
+                                   + Rich.timeSpan(trackText.timeColor, timeSummary)
                                    + Rich.esc(bp.r);
                         }
                     })()

@@ -31,20 +31,11 @@ required property var entryData
     property int itemRadius:Theme.panelMenuItemRadius
 
     width: listViewRef.width
-    height: (entryData?.isSeparator) ? Theme.panelMenuSeparatorHeight : Theme.panelMenuItemHeight
+    height: Theme.panelMenuItemHeight
     color: "transparent"
     radius: itemRadius
 
     property var subMenu: null
-
-    // Separator line
-    Rectangle {
-        anchors.centerIn: parent
-        width: parent.width - (Theme.panelMenuDividerMargin * 2)
-        height: Theme.uiSeparatorThickness
-        color: Theme.borderSubtle
-        visible: entryData?.isSeparator ?? false
-    }
 
     // Hover background for regular items
     Rectangle {
@@ -52,7 +43,6 @@ required property var entryData
         anchors.fill: parent
         color: mouseArea.containsMouse ? hoverBaseColor : "transparent"
         radius: itemRadius
-        visible: !(entryData?.isSeparator ?? false)
         // Pick readable hover text color using guard (use menu base background, not semi-transparent hover overlay)
         ContrastGuard { id: menuCg; bg: Theme.background; label: 'MenuItem' }
         property color hoverTextColor: mouseArea.containsMouse ? menuCg.fg : Theme.textPrimary
@@ -106,7 +96,7 @@ required property var entryData
             id: mouseArea
             anchors.fill: parent
             hoverEnabled: true
-            enabled: (entryData?.enabled ?? true) && !(entryData?.isSeparator ?? false) && (menuWindow && menuWindow.visible)
+            enabled: (entryData?.enabled ?? true) && (menuWindow && menuWindow.visible)
             cursorShape: Qt.PointingHandCursor
 
             function openSubmenu() {
@@ -140,7 +130,7 @@ required property var entryData
             }
 
             onClicked: {
-                if (!entryData || entryData.isSeparator) return;
+                if (!entryData) return;
                 if (entryData.hasChildren) return; // submenu opens on hover
                 entryData.triggered();
                 // Close the root menu

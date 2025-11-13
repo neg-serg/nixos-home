@@ -16,3 +16,6 @@ Wedge Shader Quick Checklist
 Notes
 - Qt 6 `ShaderEffect` requires precompiled `.qsb` files (use `qsb --glsl "100es,120,150"`).
 - Run the shader build script from this directory (`~/.config/quickshell`).
+
+Migration Log
+- 2025-11: Decorative separators were removed across the bar, menus, and docs. Delete any local overrides such as `mediaTitleSeparator`, `panel.menu.separatorHeight`, `panel.sepOvershoot`, and every `ui.separator.*` token in custom `Settings.json`/`Theme.json`. Use spacing/padding only; rebuild shaders after updating themes.

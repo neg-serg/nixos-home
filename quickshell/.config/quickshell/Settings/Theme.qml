@@ -150,7 +150,6 @@ Singleton {
                         'panel.height': 'panelHeight',
                         'panel.sideMargin': 'panelSideMargin',
                         'panel.widgetSpacing': 'panelWidgetSpacing',
-                        'panel.sepOvershoot': 'panelSepOvershoot',
                         'panel.icons.iconSize': 'panelIconSize',
                         'panel.icons.iconSizeSmall': 'panelIconSizeSmall',
                         'panel.hotzone.width': 'panelHotzoneWidth',
@@ -203,8 +202,6 @@ Singleton {
                         'panel.menu.padding': 'panelMenuPadding',
                         'panel.menu.itemSpacing': 'panelMenuItemSpacing',
                         'panel.menu.itemHeight': 'panelMenuItemHeight',
-                        'panel.menu.separatorHeight': 'panelMenuSeparatorHeight',
-                        'panel.menu.dividerMargin': 'panelMenuDividerMargin',
                         'panel.menu.radius': 'panelMenuRadius',
                         'panel.menu.heightExtra': 'panelMenuHeightExtra',
                         'panel.menu.anchorYOffset': 'panelMenuAnchorYOffset',
@@ -346,8 +343,6 @@ Singleton {
     property int panelHeight: val('panel.height', 28)
     property int panelSideMargin: val('panel.sideMargin', 18)
     property int panelWidgetSpacing: val('panel.widgetSpacing', 12)
-    // Temporarily disable sepOvershoot usage; keep token but force default to 0.
-    property int panelSepOvershoot: val('panel.sepOvershoot', 0)
     // Panel icon sizing
     property int panelIconSize: val('panel.icons.iconSize', 24)
     property int panelIconSizeSmall: val('panel.icons.iconSizeSmall', 16)
@@ -467,8 +462,6 @@ Singleton {
     property int panelMenuPadding:val('panel.menu.padding', 4)
     property int panelMenuItemSpacing:val('panel.menu.itemSpacing', 2)
     property int panelMenuItemHeight:val('panel.menu.itemHeight', 26)
-    property int panelMenuSeparatorHeight:val('panel.menu.separatorHeight', 6)
-    property int panelMenuDividerMargin:val('panel.menu.dividerMargin', 10)
     property int panelMenuRadius:val('panel.menu.radius', 0)
     property int panelMenuItemRadius:val('panel.menu.itemRadius', 0)
     property int panelMenuHeightExtra:val('panel.menu.heightExtra', 12)
@@ -511,12 +504,8 @@ Singleton {
     property real uiShadowBlur: val('ui.shadow.blur', 0.8)
     property int uiShadowOffsetX: val('ui.shadow.offsetX', 0)
     property int uiShadowOffsetY: val('ui.shadow.offsetY', 1)
-    // UI border/separator thickness
+    // UI border thickness
     property int uiBorderWidth: val('ui.border.width', 1)
-    property int uiSeparatorThickness: val('ui.separator.thickness', 1)
-    property int uiSeparatorRadius: val('ui.separator.radius', 0)
-    // Generic separator opacity (applies to all kinds); fallback to diagonal alpha
-    property real uiSeparatorOpacity: val('ui.separator.opacity', val('ui.separator.diagonal.alpha', 0.05))
     // UI small-visibility epsilon for hover fades, etc.
     property real uiVisibilityEpsilon: val('ui.visibilityEpsilon', 0.01)
     // UI "none" tokens for consistency
@@ -524,16 +513,6 @@ Singleton {
     property int uiSpacingNone: val('ui.spacing.none', 0)
     property int uiBorderNone: val('ui.border.noneWidth', 0)
     property int uiRadiusNone: val('ui.radius.none', 0)
-    // Diagonal separator implicit size
-    property int uiDiagonalSeparatorImplicitWidth: val('ui.separator.diagonal.implicitWidth', 10)
-    property int uiDiagonalSeparatorImplicitHeight: val('ui.separator.diagonal.implicitHeight', 28)
-    // Diagonal separator tuning
-    property real uiSeparatorDiagonalAlpha: val('ui.separator.diagonal.alpha', 0.05)
-    property real uiSeparatorDiagonalThickness: val('ui.separator.diagonal.thickness', 7.0)
-    property int uiSeparatorDiagonalAngleDeg:val('ui.separator.diagonal.angleDeg', 30)
-    property int uiSeparatorDiagonalInset:val('ui.separator.diagonal.inset', 4)
-    property real uiSeparatorDiagonalStripeBrightness: val('ui.separator.diagonal.stripeBrightness', 0.4)
-    property real uiSeparatorDiagonalStripeRatio: val('ui.separator.diagonal.stripeRatio', 0.35)
     // UI common opacities
     property real uiRippleOpacity: val('ui.ripple.opacity', 0.18)
     property real uiIconEmphasisOpacity: val('ui.icon.emphasisOpacity', 0.9)
@@ -645,10 +624,6 @@ Singleton {
     // Spectrum opacities
     property real spectrumFillOpacity: val('spectrum.fillOpacity', 0.35)
     property real spectrumPeakOpacity: val('spectrum.peakOpacity', 0.7)
-    // Separator stripe settings (generic with diagonal fallback)
-    property real uiSeparatorStripeOpacity: val('ui.separator.stripe.opacity', val('ui.separator.diagonal.stripeOpacity', 0.9))
-    property real uiSeparatorStripeBrightness: val('ui.separator.stripe.brightness', val('ui.separator.diagonal.stripeBrightness', 0.4))
-    property real uiSeparatorStripeRatio: val('ui.separator.stripe.ratio', val('ui.separator.diagonal.stripeRatio', 0.35))
     // Derived accent/surface/border tokens (formula-based)
     // Keep simple and perceptually stable; expose tokens for reuse
     // Each derived token may be overridden by matching *Override property in Theme.json

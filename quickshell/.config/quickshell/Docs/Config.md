@@ -42,7 +42,6 @@ Media & Visualizer
 - activeVisualizerProfile: string, default "classic". Active visualizer profile name.
 - visualizerProfiles: object of profiles keyed by name. Each profile can override CAVA/spectrum parameters below.
 - timeBracketStyle: string, default "round". Brackets for RichText: round|square|lenticular|lenticular_black|angle|tortoise.
-- mediaTitleSeparator: string, default "—". Separator between artist and title.
 
 CAVA / Spectrum (global defaults; each may be overridden per profile in visualizerProfiles.<name>)
 - cavaBars: integer, default 86. Number of bars.

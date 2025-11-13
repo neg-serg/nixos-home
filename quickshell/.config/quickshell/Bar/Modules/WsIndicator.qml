@@ -26,7 +26,6 @@ Item {
 
     property color iconColor: Theme.accentHover
     property color gothicColor: Theme.textPrimary
-    property color separatorColor: Theme.textSecondary
 
     // Icon layout
     property int iconBaselineOffset:Theme.wsIconBaselineOffset
@@ -48,18 +47,12 @@ Item {
 
     function isPUA(cp) { return cp >= 0xE000 && cp <= 0xF8FF; }          // Private Use Area (icon fonts)
     function isOldItalic(cp){ return cp >= 0x10300 && cp <= 0x1034F; }
-    function isSeparatorChar(ch){ return [":","·","|","/","-"] .indexOf(ch) !== -1; }
-
     // Wrap one char into colored span by category
     function spanForChar(ch) {
         const cp = ch.codePointAt(0);
         if (isPUA(cp)) { return Rich.colorSpan(iconColor, ch); }
         if (isOldItalic(cp)) { return Rich.colorSpan(gothicColor, ch); }
-        if (isSeparatorChar(ch)) {
-            if (ch === "·") return " ";
-            // Use accentHover for separators
-            return Rich.sepSpan(Theme.accentHover, ch);
-        }
+        if (ch === "·") return " ";
         return Rich.esc(ch);
     }
 

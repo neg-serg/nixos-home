@@ -117,22 +117,11 @@ Rectangle {
                 }
             }
  
- 
-            Rectangle {
-                width: parent.width
-                height: Utils.clamp(Math.round(Theme.tooltipBorderWidth * Theme.scale(Screen)), 1, 64)
-                color: Theme.borderSubtle
-                radius: Theme.uiSeparatorRadius
-                Layout.fillWidth: true
-                Layout.topMargin: Math.round(Theme.sidePanelSpacingSmall * 0.5 * Theme.scale(Screen))
-                Layout.bottomMargin: Math.round(Theme.sidePanelSpacingSmall * 0.5 * Theme.scale(Screen))
-            }
- 
- 
             RowLayout {
                 spacing: Math.round(Theme.sidePanelSpacing * Theme.scale(Screen))
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignHCenter
+                Layout.topMargin: Math.round(Theme.sidePanelSpacing * 0.75 * Theme.scale(Screen))
                 visible: weatherData && weatherData.daily && weatherData.daily.time
  
                 Repeater {

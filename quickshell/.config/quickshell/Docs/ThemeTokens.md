@@ -1,7 +1,7 @@
 Theme Color Tokens and Derivations
 
 Overview
-See also: Docs/RichText.md for helpers used to color separators, brackets, and time spans in rich text labels (Media, NetworkUsage, WsIndicator).
+See also: Docs/RichText.md for helpers used to color brackets and time spans in rich text labels (Media, NetworkUsage, WsIndicator).
 - Base palette (user-configurable in Theme.json):
   - background
   - surface/surfaceVariant
@@ -23,13 +23,11 @@ See also: Docs/RichText.md for helpers used to color separators, brackets, and t
 Additional UI tokens (nested)
 - Tooltip: tooltip.opacity, tooltip.smallScaleRatio
 - UI shadow: ui.shadow.opacity, ui.shadow.blur, ui.shadow.offsetX, ui.shadow.offsetY
-- UI border/separators: ui.border.width, ui.separator.thickness
-  - Separator radius: ui.separator.radius
-  - Separator opacity: ui.separator.opacity
-  - UI animation: ui.anim.quickMs, ui.anim.rotateMs, ui.anim.rippleMs
-  - UI easing: ui.anim.easing.quick|rotate|ripple|stdOut|stdIn|inOut (string names like "OutCubic")
-  - UI spinner: ui.spinner.durationMs
-  - UI opacities: ui.ripple.opacity, ui.icon.emphasisOpacity
+- UI border: ui.border.width
+- UI animation: ui.anim.quickMs, ui.anim.rotateMs, ui.anim.rippleMs
+- UI easing: ui.anim.easing.quick|rotate|ripple|stdOut|stdIn|inOut (string names like "OutCubic")
+- UI spinner: ui.spinner.durationMs
+- UI opacities: ui.ripple.opacity, ui.icon.emphasisOpacity
  - Media: media.iconScaleEmphasis
   - MPD flags polling: media.mpd.flags.fallbackMs
   - Album art fallback opacity: media.albumArt.fallbackOpacity
@@ -83,8 +81,6 @@ Additional UI tokens (nested)
   - Calendar layout: calendar.dow.spacing, calendar.dow.sideMargin, calendar.grid.spacing
  - Spectrum bars: spectrum.barGap, spectrum.minBarWidth
   - Spectrum opacities: spectrum.fillOpacity, spectrum.peakOpacity
-  - Separator stripe (generic): ui.separator.stripe.opacity, ui.separator.stripe.brightness, ui.separator.stripe.ratio
-  - Diagonal separator implicit size: ui.separator.diagonal.implicitWidth, ui.separator.diagonal.implicitHeight
   - VPN opacities: vpn.connectedOpacity, vpn.disconnectedOpacity
   - VPN icon/layout: vpn.icon.scale, vpn.icon.vAdjust, vpn.icon.spacing; vpn.text.padding
   - VPN accent tuning: vpn.accent.saturateBoost, vpn.accent.lightenTowardWhite; vpn.desaturateAmount
@@ -124,7 +120,6 @@ Accessibility
 Examples
 - Menu item hover: Theme.surfaceHover
 - Selected day (calendar): Theme.accentDarkStrong background + Theme.accentPrimary border
-- Media separators: bracket = Theme.accentDarkStrong; separator = Theme.accentHover
 Debugging
 - Strict token warnings: set `Settings.settings.strictThemeTokens` to true to log a warning whenever a Theme token is missing and a fallback is used. Helps ensure themes define all tokens you rely on.
 
@@ -144,7 +139,7 @@ Flat keys were historically supported alongside nested tokens. They are deprecat
 Core mappings (examples):
 
 - Colors: background → colors.background; surface → colors.surface; surfaceVariant → colors.surfaceVariant; textPrimary → colors.text.primary; textSecondary → colors.text.secondary; textDisabled → colors.text.disabled; accentPrimary → colors.accent.primary; error → colors.status.error; warning → colors.status.warning; highlight → colors.highlight; onAccent → colors.onAccent; outline → colors.outline; shadow → colors.shadow
-- Panel: panelHeight → panel.height; panelSideMargin → panel.sideMargin; panelWidgetSpacing → panel.widgetSpacing; panelSepOvershoot → panel.sepOvershoot; panelModuleHeight → panel.moduleHeight; panelMenuYOffset → panel.menuYOffset
+- Panel: panelHeight → panel.height; panelSideMargin → panel.sideMargin; panelWidgetSpacing → panel.widgetSpacing; panelModuleHeight → panel.moduleHeight; panelMenuYOffset → panel.menuYOffset
 - Panel icons: panelIconSize → panel.icons.iconSize; panelIconSizeSmall → panel.icons.iconSizeSmall
 - Hotzone: panelHotzoneWidth → panel.hotzone.width; panelHotzoneHeight → panel.hotzone.height; panelHotzoneRightShift → panel.hotzone.rightShift
 - Shape: cornerRadius → shape.cornerRadius; cornerRadiusSmall → shape.cornerRadiusSmall; cornerRadiusLarge → shape.cornerRadiusLarge

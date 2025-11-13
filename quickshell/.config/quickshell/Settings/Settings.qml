@@ -101,7 +101,6 @@ Singleton {
 
             // Media time brackets styling
             property string timeBracketStyle: "round"
-            property string mediaTitleSeparator: "—"
 
             // Displays
             property var barMonitors: []

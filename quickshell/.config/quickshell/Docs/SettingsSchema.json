@@ -65,7 +65,6 @@
       "enum": ["round","square","lenticular","lenticular_black","angle","tortoise"],
       "description": "Bracket style used in RichText"
     },
-    "mediaTitleSeparator": { "type": "string", "default": "—", "description": "Artist/title separator" },
 
     "barMonitors": { "type": "array", "items": { "type": "string" }, "default": [] },
     

@@ -5,12 +5,6 @@ try { Qt.include("./RichText.js"); } catch (e) {}
 
 // Helpers/Format.js — common lightweight formatting utilities
 
-// Return a colored inline separator span (default '/') for rich text
-// Delegates to Helpers/RichText.js
-function sepSpan(colorCss, ch) {
-    return RichRT.sepSpan(colorCss, ch);
-}
-
 // Convert a QML color (or CSS color string) to CSS rgba() string.
 // Accepts: Qt.rgba object (with r,g,b,a 0..1) or string like "#RRGGBB".
 // Optional alphaOverride (0..1) forces the alpha channel.

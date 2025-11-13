@@ -76,7 +76,9 @@ Scope {
                     property int barHeightPx: Math.round(Theme.panelHeight * s)
                     property int sideMargin: Math.round(Theme.panelSideMargin * s)
                     property int widgetSpacing: Math.round(Theme.panelWidgetSpacing * s)
-                    property int seamWidth: Math.max(8, Math.round(Theme.uiDiagonalSeparatorImplicitWidth * s))
+                    // Provide extra spacing between widgets now that decorative separators are gone
+                    property int interWidgetSpacing: Math.max(widgetSpacing, Math.round(widgetSpacing * 1.35))
+                    property int seamWidth: Math.max(8, Math.round(widgetSpacing * 0.85))
                     // Panel background transparency is configurable via Settings:
                     // - panelBgAlphaScale: 0..1 multiplier (preferred)
                     // - panelBgAlphaFactor: >0 divisor (fallback), e.g. 5 means 5x more transparent
@@ -97,7 +99,25 @@ Scope {
                     })()
                     property real seamTaperTop: 0.25
                     property real seamTaperBottom: 0.9
-                    property real seamOpacity: Math.min(1.0, Math.max(0.35, Theme.uiSeparatorOpacity * 3))
+                    property real seamOpacity: 0.55
+                    readonly property real seamTiltSign: -1.0
+                    readonly property real seamTaperTopClamped: Math.max(0.0, Math.min(1.0, seamTaperTop))
+                    readonly property real seamTaperBottomClamped: Math.max(0.0, Math.min(1.0, seamTaperBottom))
+                    readonly property real seamEdgeBaseTop: (seamTiltSign > 0)
+                        ? (1.0 - seamTaperTopClamped)
+                        : seamTaperTopClamped
+                    readonly property real seamEdgeSlope: ((seamTiltSign > 0)
+                        ? (1.0 - seamTaperBottomClamped)
+                        : seamTaperBottomClamped) - seamEdgeBaseTop
+                    readonly property real seamTiltSign: 1.0
+                    readonly property real seamTaperTopClamped: Math.max(0.0, Math.min(1.0, seamTaperTop))
+                    readonly property real seamTaperBottomClamped: Math.max(0.0, Math.min(1.0, seamTaperBottom))
+                    readonly property real seamEdgeBaseTop: (seamTiltSign > 0)
+                        ? (1.0 - seamTaperTopClamped)
+                        : seamTaperTopClamped
+                    readonly property real seamEdgeSlope: ((seamTiltSign > 0)
+                        ? (1.0 - seamTaperBottomClamped)
+                        : seamTaperBottomClamped) - seamEdgeBaseTop
                     property color seamFillColor: Color.withAlpha(
                         Color.mix(Theme.surfaceVariant, Theme.background, 0.45),
                         seamOpacity
@@ -115,13 +135,7 @@ Scope {
                     readonly property real contentWidth: Math.max(
                         leftWidgetsRow.width,
                         leftWidgetsRow.implicitWidth || leftWidgetsRow.width || 0
-                    ) + leftPanel.widgetSpacing
-
-                    component DiagSep: ThemedSeparator {
-                        kind: "diagonal"
-                        Layout.preferredHeight: leftBarBackground.height
-                        height: Layout.preferredHeight
-                    }
+                    ) + leftPanel.interWidgetSpacing
 
                         Item {
                             id: leftPanelContent
@@ -358,8 +372,8 @@ Scope {
                                 anchors.fill: parent
                                 fragmentShader: Qt.resolvedUrl("../shaders/seam.frag.qsb")
                                 property color baseColor: leftPanel.seamFillColor
-                                // params0: tilt, taperTop, taperBottom, opacity
-                                property vector4d params0: Qt.vector4d(1, leftPanel.seamTaperTop, leftPanel.seamTaperBottom, leftPanel.seamOpacity)
+                                // params0: edgeBase, edgeSlope, tilt, opacity
+                                property vector4d params0: Qt.vector4d(leftPanel.seamEdgeBaseTop, leftPanel.seamEdgeSlope, leftPanel.seamTiltSign, leftPanel.seamOpacity)
                                 blending: true
                             }
                         }
@@ -419,13 +433,10 @@ Scope {
                             anchors.verticalCenter: leftBarBackground.verticalCenter
                             anchors.left: leftBarBackground.left
                             anchors.leftMargin: leftPanel.sideMargin
-                            spacing: leftPanel.widgetSpacing
+                            spacing: leftPanel.interWidgetSpacing
                             ClockWidget { Layout.alignment: Qt.AlignVCenter }
-                            DiagSep { stripeEnabled: false; Layout.alignment: Qt.AlignVCenter }
                             WsIndicator { id: wsindicator; Layout.alignment: Qt.AlignVCenter }
-                            DiagSep { Layout.alignment: Qt.AlignVCenter }
                             KeyboardLayoutHypr { id: kbIndicator; Layout.alignment: Qt.AlignVCenter }
-                            DiagSep { Layout.alignment: Qt.AlignVCenter }
                             Row {
                                 id: netCluster
                                 Layout.alignment: Qt.AlignVCenter
@@ -445,16 +456,7 @@ Scope {
                                 Layout.preferredWidth: 0
                                 visible: netCluster.visible
                             }
-                            DiagSep {
-                                Layout.alignment: Qt.AlignVCenter
-                                Layout.preferredHeight: leftBarBackground.height
-                                height: Layout.preferredHeight
-                                stripeEnabled: false
-                                visible: netCluster.visible
-                            }
-                            DiagSep { visible: Settings.settings.showWeatherInBar === true; Layout.alignment: Qt.AlignVCenter }
                             LocalMods.WeatherButton { visible: Settings.settings.showWeatherInBar === true; Layout.alignment: Qt.AlignVCenter }
-                            DiagSep { stripeEnabled: false; visible: Settings.settings.showWeatherInBar === true; Layout.alignment: Qt.AlignVCenter }
                         }
 
                         // Legacy debug triangle inside content (disabled)
@@ -532,7 +534,7 @@ Scope {
                                 property color baseColor: seamPanel.seamBaseColor
                                 property vector4d params0: Qt.vector4d(
                                     seamPanel.seamBaseOpacityTop,
-                                    seamPanel.seamBaseOpacityBottom,
+                                    seamPanel.seamBaseOpacityBottom - seamPanel.seamBaseOpacityTop,
                                     0,
                                     0
                                 )
@@ -666,7 +668,8 @@ Scope {
                     property int barHeightPx: Math.round(Theme.panelHeight * s)
                     property int sideMargin: Math.round(Theme.panelSideMargin * s)
                     property int widgetSpacing: Math.round(Theme.panelWidgetSpacing * s)
-                    property int seamWidth: Math.max(8, Math.round(Theme.uiDiagonalSeparatorImplicitWidth * s))
+                    property int interWidgetSpacing: Math.max(widgetSpacing, Math.round(widgetSpacing * 1.35))
+                    property int seamWidth: Math.max(8, Math.round(widgetSpacing * 0.85))
                     // Panel background transparency is configurable via Settings:
                     // - panelBgAlphaScale: 0..1 multiplier (preferred)
                     // - panelBgAlphaFactor: >0 divisor (fallback), e.g. 5 means 5x more transparent
@@ -687,7 +690,7 @@ Scope {
                     })()
                     property real seamTaperTop: 0.25
                     property real seamTaperBottom: 0.9
-                    property real seamOpacity: Math.min(1.0, Math.max(0.35, Theme.uiSeparatorOpacity * 3))
+                    property real seamOpacity: 0.55
                     property color seamFillColor: Color.withAlpha(
                         Color.mix(Theme.surfaceVariant, Theme.background, 0.45),
                         seamOpacity
@@ -702,13 +705,7 @@ Scope {
                     readonly property real contentWidth: Math.max(
                         rightWidgetsRow.width,
                         rightWidgetsRow.implicitWidth || rightWidgetsRow.width || 0
-                    ) + rightPanel.widgetSpacing
-
-                    component RightDiagSep: ThemedSeparator {
-                        kind: "diagonal"
-                        Layout.preferredHeight: rightBarBackground.height
-                        height: Layout.preferredHeight
-                    }
+                    ) + rightPanel.interWidgetSpacing
 
                         Item {
                             id: rightPanelContent
@@ -964,13 +961,13 @@ Scope {
                                 ShaderEffect {
                                     anchors.fill: parent
                                     fragmentShader: Qt.resolvedUrl("../shaders/seam_fill.frag.qsb")
-                                    property color baseColor: seamPanel.seamBaseColor
-                                    property vector4d params0: Qt.vector4d(
-                                        seamPanel.seamBaseOpacityTop,
-                                        seamPanel.seamBaseOpacityBottom,
-                                        0,
-                                        0
-                                    )
+                                property color baseColor: seamPanel.seamBaseColor
+                                property vector4d params0: Qt.vector4d(
+                                    seamPanel.seamBaseOpacityTop,
+                                    seamPanel.seamBaseOpacityBottom - seamPanel.seamBaseOpacityTop,
+                                    0,
+                                    0
+                                )
                                 }
                                 ShaderEffect {
                                     visible: seamPanel.seamTintEnabled
@@ -1091,7 +1088,8 @@ Scope {
                                 anchors.fill: parent
                                 fragmentShader: Qt.resolvedUrl("../shaders/seam.frag.qsb")
                                 property color baseColor: rightPanel.seamFillColor
-                                property vector4d params0: Qt.vector4d(-1, rightPanel.seamTaperTop, rightPanel.seamTaperBottom, rightPanel.seamOpacity)
+                                // params0: edgeBase, edgeSlope, tilt, opacity
+                                property vector4d params0: Qt.vector4d(rightPanel.seamEdgeBaseTop, rightPanel.seamEdgeSlope, rightPanel.seamTiltSign, rightPanel.seamOpacity)
                                 blending: true
                             }
                         }
@@ -1144,11 +1142,7 @@ Scope {
                             anchors.verticalCenter: rightBarBackground.verticalCenter
                             anchors.right: rightBarBackground.right
                             anchors.rightMargin: rightPanel.sideMargin
-                            spacing: rightPanel.widgetSpacing
-                            RightDiagSep {
-                                Layout.alignment: Qt.AlignVCenter
-                                visible: mediaModule.visible
-                            }
+                            spacing: rightPanel.interWidgetSpacing
                             Media {
                                 id: mediaModule
                                 Layout.alignment: Qt.AlignVCenter
@@ -1297,8 +1291,7 @@ Scope {
                     property int seamHeightPx: Math.round(Theme.panelHeight * s)
                     property real seamTaperTop: 0.12
                     property real seamTaperBottom: 0.65
-                    property real seamEffectOpacity: seamPanel.debugForceVisible
-                        ? 1.0 : Math.min(1.0, Math.max(0.45, Theme.uiSeparatorOpacity * 7.5))
+                    property real seamEffectOpacity: seamPanel.debugForceVisible ? 1.0 : 0.85
                     property color seamFillColor: Color.mix(Theme.surfaceVariant, Theme.background, 0.35)
                     property bool seamTintEnabled: true
                     // Use theme accent for seam tint to avoid hardcoded red
@@ -1307,6 +1300,18 @@ Scope {
                     property color seamBaseColor: Theme.background
                     property real seamBaseOpacityTop: seamPanel.debugForceVisible ? 1.0 : 0.5
                     property real seamBaseOpacityBottom: seamPanel.debugForceVisible ? 1.0 : 0.65
+                    function seamClamp01(v) { return Math.max(0.0, Math.min(1.0, v)); }
+                    function seamEdgeBaseForTilt(tiltSign, frac) {
+                        var f = seamClamp01(frac);
+                        return (tiltSign > 0) ? (1.0 - f) : f;
+                    }
+                    function seamEdgeParamsFor(tiltSign) {
+                        var topEdge = seamEdgeBaseForTilt(tiltSign, seamTaperTop);
+                        var bottomEdge = seamEdgeBaseForTilt(tiltSign, seamTaperBottom);
+                        return ({ base: topEdge, slope: (bottomEdge - topEdge) });
+                    }
+                    readonly property var seamEdgeLeft: seamEdgeParamsFor(-1)
+                    readonly property var seamEdgeRight: seamEdgeParamsFor(1)
                     property real seamTintTopInsetPx: Math.round(Theme.panelWidgetSpacing * 0.55 * s)
                     property real seamTintBottomInsetPx: Math.round(Theme.panelWidgetSpacing * 0.2 * s)
                     property real seamTintFeatherPx: Math.max(1, Math.round(Theme.uiRadiusSmall * 0.35 * s))
@@ -1337,7 +1342,7 @@ Scope {
                     readonly property real rawGapWidth: Math.max(0, gapEnd - gapStart)
                     readonly property real seamWidthPx: Math.min(
                         seamPanel.monitorWidth,
-                        Math.max(Math.round(Theme.uiDiagonalSeparatorImplicitWidth * seamPanel.s * 3), rawGapWidth)
+                        Math.max(Math.round(Theme.panelWidgetSpacing * seamPanel.s * 2.4), rawGapWidth)
                     )
                     readonly property real seamLeftMargin: Math.max(
                         0,
@@ -1384,7 +1389,7 @@ Scope {
                                 property color baseColor: seamPanel.seamBaseColor
                                 property vector4d params0: Qt.vector4d(
                                     seamPanel.seamBaseOpacityTop,
-                                    seamPanel.seamBaseOpacityBottom,
+                                    seamPanel.seamBaseOpacityBottom - seamPanel.seamBaseOpacityTop,
                                     0,
                                     0
                                 )
@@ -1414,22 +1419,22 @@ Scope {
                             Row {
                                 z: 10
                                 anchors.fill: parent
-                                ShaderEffect {
-                                    width: parent.width / 2
-                                    height: parent.height
-                                    fragmentShader: Qt.resolvedUrl("../shaders/seam.frag.qsb")
-                                    property color baseColor: seamPanel.seamFillColor
-                                    property vector4d params0: Qt.vector4d(-1, seamPanel.seamTaperTop, seamPanel.seamTaperBottom, seamPanel.seamEffectOpacity)
-                                    blending: true
-                                }
-                                ShaderEffect {
-                                    width: parent.width / 2
-                                    height: parent.height
-                                    fragmentShader: Qt.resolvedUrl("../shaders/seam.frag.qsb")
-                                    property color baseColor: seamPanel.seamFillColor
-                                    property vector4d params0: Qt.vector4d(1, seamPanel.seamTaperTop, seamPanel.seamTaperBottom, seamPanel.seamEffectOpacity)
-                                    blending: true
-                                }
+                            ShaderEffect {
+                                width: parent.width / 2
+                                height: parent.height
+                                fragmentShader: Qt.resolvedUrl("../shaders/seam.frag.qsb")
+                                property color baseColor: seamPanel.seamFillColor
+                                property vector4d params0: Qt.vector4d(seamPanel.seamEdgeLeft.base, seamPanel.seamEdgeLeft.slope, -1, seamPanel.seamEffectOpacity)
+                                blending: true
+                            }
+                            ShaderEffect {
+                                width: parent.width / 2
+                                height: parent.height
+                                fragmentShader: Qt.resolvedUrl("../shaders/seam.frag.qsb")
+                                property color baseColor: seamPanel.seamFillColor
+                                property vector4d params0: Qt.vector4d(seamPanel.seamEdgeRight.base, seamPanel.seamEdgeRight.slope, 1, seamPanel.seamEffectOpacity)
+                                blending: true
+                            }
                             }
                         }
 

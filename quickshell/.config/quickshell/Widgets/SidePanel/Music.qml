@@ -585,7 +585,7 @@ Rectangle {
                                 }
                                 Text {
                                     Layout.fillWidth: true
-                                    // Color the middle dot with accent color; keep rest default
+                                    // Drop decorative dots; keep plain text
                                     textFormat: Text.RichText
                                     text: (function(){
                                         const raw = String(MusicManager.trackQualitySummary || "");
@@ -599,7 +599,7 @@ Rectangle {
                                             if (cp >= 0xE000 && cp <= 0xF8FF) {
                                                 out += Rich.colorSpan(accentCss, ch);
                                             } else if (ch === "\u00B7") {
-                                                out += Rich.sepSpan(accentCss, "\u00B7", true);
+                                                out += " ";
                                             } else {
                                                 out += Rich.esc(ch);
                                             }

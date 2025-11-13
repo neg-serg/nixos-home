@@ -1,7 +1,6 @@
 import QtQuick
 import QtQuick.Controls
 import qs.Settings
-import "../../Helpers/RichText.js" as Rich
 import "../../Helpers/Utils.js" as Utils
 import qs.Components
 import qs.Services as Services
@@ -13,7 +12,6 @@ Item {
     // Use standard small font size to match other bar text
     property int fontPixelSize:Math.round(Theme.fontSizeSmall * Theme.scale(Screen))
     property color textColor:Theme.textPrimary
-    property color separatorColor:Theme.accentHover
     property color bgColor:"transparent"
     property int iconSpacing:Theme.panelRowSpacingSmall
     property string deviceMatch: ""
@@ -60,10 +58,8 @@ Item {
         iconScale: root.iconScale
         iconVAdjust: root.iconVAdjust
         iconColor: currentIconColor()
-        labelIsRichText: true
-        labelText: displayText && displayText.indexOf('/') !== -1
-                   ? displayText.replace('/', Rich.sepSpan(separatorColor, '/'))
-                   : displayText
+        labelIsRichText: false
+        labelText: displayText
         labelColor: textColor
         labelFontFamily: Theme.fontFamily
     }

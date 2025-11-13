@@ -12,17 +12,11 @@ function esc(s) {
         .replace(/'/g, "&#39;");
 }
 
-// Colored inline separator span (default '/') for RichText
-function sepSpan(colorCss, ch, bold) {
-    var c = (colorCss === undefined || colorCss === null) ? "inherit" : String(colorCss);
-    var s = (ch === undefined || ch === null) ? '/' : String(ch);
-    var fw = (bold === true) ? "; font-weight:bold" : "";
-    return "<span style='color:" + c + fw + "'>" + esc(s) + "</span>";
-}
-
-// Colored bracket span helper (semantic helper over sepSpan)
+// Colored bracket span helper
 function bracketSpan(colorCss, ch) {
-    return sepSpan(colorCss, ch);
+    var c = (colorCss === undefined || colorCss === null) ? "inherit" : String(colorCss);
+    var s = esc((ch === undefined || ch === null) ? "" : String(ch));
+    return "<span style='color:" + c + "'>" + s + "</span>";
 }
 
 // Return a pair of bracket characters according to style keyword
@@ -58,7 +52,6 @@ function colorSpan(colorCss, text) {
 // Also expose a namespaced object for Qt.include usage in other JS libs
 var RichRT = {
     esc: esc,
-    sepSpan: sepSpan,
     bracketPair: bracketPair,
     bracketSpan: bracketSpan,
     timeSpan: timeSpan,
