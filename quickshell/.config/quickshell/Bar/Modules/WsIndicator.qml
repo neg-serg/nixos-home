@@ -103,6 +103,7 @@ WidgetCapsule {
     Row {
         id: lineBox
         spacing: iconSpacing
+        anchors.centerIn: parent
 
         BaselineAlignedIcon {
             visible: root.submapName && root.submapName.length > 0
