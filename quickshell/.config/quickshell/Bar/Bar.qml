@@ -60,6 +60,8 @@ Scope {
                     color: "transparent"
                     property bool panelHovering: false
                     WlrLayershell.namespace: "quickshell-bar-left"
+                    // During wedge debugging, force overlay layer to ensure visibility over fullscreen apps
+                    WlrLayershell.layer: ((Quickshell.env("QS_WEDGE_DEBUG") || "") === "1") ? WlrLayer.Overlay : WlrLayer.Top
                     anchors.bottom: true
                     anchors.left: true
                     anchors.right: false
@@ -102,9 +104,18 @@ Scope {
                         height: Layout.preferredHeight
                     }
 
-                    Item {
-                        id: leftPanelContent
-                        anchors.fill: parent
+                        Item {
+                            id: leftPanelContent
+                            anchors.fill: parent
+
+                        // Full-surface debug tint to verify the window renders
+                        Rectangle {
+                            anchors.fill: parent
+                            z: 2000000
+                            color: "#80ffff00" // yellow, semi-transparent
+                            // Only if explicitly requested
+                            visible: (Quickshell.env("QS_WEDGE_TINT_TEST") || "") === "1"
+                        }
 
                         Rectangle {
                             id: leftBarBackground
@@ -163,10 +174,12 @@ Scope {
                                 ctx.fill();
                             }
                         }
+                        // Fallback mask path (only when shader clip is disabled)
                         GE.OpacityMask {
                             anchors.fill: leftBarFill
                             source: leftBarFillSource
                             maskSource: leftFillMask
+                            visible: leftFaceClipLoader.active !== true
                         }
                         // Panel tint (left) drawn and masked within leftPanelContent so anchors are valid siblings
                         ShaderEffect {
@@ -219,11 +232,128 @@ Scope {
                                 ctx.fill();
                             }
                         }
+                        // Keep tint overlay masked (fallback) when shader clip is disabled
                         GE.OpacityMask {
                             anchors.fill: leftBarFill
-                            visible: leftPanel.panelTintEnabled
+                            z: 2
+                            visible: leftPanel.panelTintEnabled && leftFaceClipLoader.active !== true
                             source: leftPanelTintSource
                             maskSource: leftPanelTintMask
+                        }
+                        // Shader-based subtractive wedge for the tint overlay (enabled with the same flag)
+                        Loader {
+                            id: leftTintClipLoader
+                            anchors.fill: leftBarFill
+                            z: 2
+                            active: leftPanel.panelTintEnabled && leftFaceClipLoader.active === true
+                            sourceComponent: ShaderEffect {
+                                fragmentShader: Qt.resolvedUrl("../shaders/wedge_clip.frag.qsb")
+                                property var sourceSampler: leftPanelTintSource
+                                property vector4d params0: Qt.vector4d(
+                                    // Allow override via QS_WEDGE_WIDTH_PCT (0..100). Otherwise use seamPanel.seamWidthPx.
+                                    (function(){ var ww = Number(Quickshell.env("QS_WEDGE_WIDTH_PCT") || "");
+                                        if (isFinite(ww) && ww > 0) return Math.max(0.0, Math.min(1.0, ww/100.0));
+                                        return Math.max(0.0, Math.min(1.0, (Math.max(1, Math.min(leftBarFill.width, seamPanel.seamWidthPx)) / Math.max(1, leftBarFill.width)))); })(),
+                                    Settings.settings.debugTriangleLeftSlopeUp ? 1 : 0,
+                                    1,
+                                    0
+                                )
+                                property vector4d params1: Qt.vector4d(
+                                    Math.max(0.0, Math.min(0.05, (Math.max(1, Math.round(Theme.uiRadiusSmall * 0.5 * leftPanel.s)) / Math.max(1, leftBarFill.width)))) ,
+                                    0,0,0
+                                )
+                                // Debug overlay disabled for tint path to avoid double-drawing
+                                property vector4d params2: Qt.vector4d(0,0,0,0)
+                                blending: true
+                            }
+                        }
+                        // Subtractive wedge using a shader clip over the base face (lazy-loaded)
+                        Loader {
+                            id: leftFaceClipLoader
+                            anchors.fill: leftBarFill
+                            z: 1
+                            active: ((Quickshell.env("QS_ENABLE_WEDGE_CLIP") || "") === "1") || (Settings.settings.enableWedgeClipShader === true)
+                            onActiveChanged: {
+                                if (Settings.settings.debugLogs) {
+                                    console.log("[bar:left] wedge shader active:", leftFaceClipLoader.active,
+                                                "debug=", (Quickshell.env("QS_WEDGE_DEBUG")||""),
+                                                "widthPct=", (Quickshell.env("QS_WEDGE_WIDTH_PCT")||""))
+                                }
+                            }
+                            sourceComponent: ShaderEffect {
+                                fragmentShader: Qt.resolvedUrl("../shaders/wedge_clip.frag.qsb")
+                                // Clip the base face (pure fill color) to subtract the wedge
+                                property var sourceSampler: leftBarFillSource
+                                // params0: x=wNorm, y=slopeUp, z=side(+1 right edge), w=unused
+                                property vector4d params0: Qt.vector4d(
+                                    (function(){ var ww = Number(Quickshell.env("QS_WEDGE_WIDTH_PCT") || "");
+                                        if (isFinite(ww) && ww > 0) return Math.max(0.0, Math.min(1.0, ww/100.0));
+                                        return Math.max(0.0, Math.min(1.0, (Math.max(1, Math.min(leftBarFill.width, seamPanel.seamWidthPx)) / Math.max(1, leftBarFill.width)))); })(),
+                                    Settings.settings.debugTriangleLeftSlopeUp ? 1 : 0,
+                                    1,
+                                    0
+                                )
+                                // params1: x=feather
+                                property vector4d params1: Qt.vector4d(
+                                    Math.max(0.0, Math.min(0.05, (Math.max(1, Math.round(Theme.uiRadiusSmall * 0.5 * leftPanel.s)) / Math.max(1, leftBarFill.width)))) ,
+                                    0,0,0
+                                )
+                                // Enable magenta wedge overlay when QS_WEDGE_DEBUG=1
+                                property vector4d params2: Qt.vector4d(
+                                    ((Quickshell.env("QS_WEDGE_DEBUG") || "") === "1") ? 0.6 : 0.0,
+                                    ((Quickshell.env("QS_WEDGE_SHADER_TEST") || "") === "1") ? 1.0 : 0.0,
+                                    0, 0)
+                                blending: true
+                            }
+                        }
+
+                        // Extra on-screen debug overlay to be absolutely sure about geometry.
+                        // Drawn only when QS_WEDGE_DEBUG=1
+                        Canvas {
+                            id: leftWedgeOverlayDebug
+                            anchors.fill: leftBarFill
+                            z: 999999
+                            visible: (Quickshell.env("QS_WEDGE_DEBUG") || "") === "1"
+                            property bool _loggedOnce: false
+                            onPaint: {
+                                var ctx = getContext('2d');
+                                ctx.reset();
+                                ctx.clearRect(0, 0, width, height);
+                                // Background highlight to prove this item renders
+                                ctx.fillStyle = 'rgba(255,255,0,0.50)';
+                                ctx.fillRect(0, 0, width, height);
+                                var ww = Number(Quickshell.env("QS_WEDGE_WIDTH_PCT") || "");
+                                var wnorm = (isFinite(ww) && ww > 0) ? Math.max(0.0, Math.min(1.0, ww/100.0))
+                                                                      : Math.max(0.0, Math.min(1.0, (Math.max(1, Math.min(leftBarFill.width, seamPanel.seamWidthPx)) / Math.max(1, leftBarFill.width))));
+                                var wpx = Math.max(1, Math.round(wnorm * width));
+                                ctx.fillStyle = 'rgba(255,0,255,0.45)';
+                                ctx.beginPath();
+                                if (Settings.settings.debugTriangleLeftSlopeUp) {
+                                    // bottom-left → top-right, wedge at right edge
+                                    ctx.moveTo(width - wpx, height);
+                                    ctx.lineTo(width, 0);
+                                    ctx.lineTo(width, height);
+                                } else {
+                                    // top-left → bottom-right, wedge at right edge
+                                    ctx.moveTo(width - wpx, 0);
+                                    ctx.lineTo(width, height);
+                                    ctx.lineTo(width, 0);
+                                }
+                                ctx.closePath();
+                                ctx.fill();
+                                // Outline for visibility
+                                ctx.strokeStyle = 'rgba(255,0,255,0.9)';
+                                ctx.lineWidth = 2;
+                                ctx.stroke();
+                                if (Settings.settings.debugLogs && !leftWedgeOverlayDebug._loggedOnce) {
+                                    leftWedgeOverlayDebug._loggedOnce = true;
+                                    console.log("[wedge:left:overlay] size=", width, height,
+                                                "leftBarFillW=", leftBarFill.width,
+                                                "seamW=", seamPanel.seamWidthPx,
+                                                "wnorm=", wnorm, "wpx=", wpx,
+                                                "slopeUp=", Settings.settings.debugTriangleLeftSlopeUp);
+                                }
+                            }
                         }
                         Item {
                             id: leftSeamFill
@@ -232,6 +362,10 @@ Scope {
                             anchors.bottom: leftBarBackground.bottom
                             anchors.right: leftBarBackground.right
                             z: 1000
+                            // Draw local seam wedge only when the shader path is active,
+                            // and hide it while QS_WEDGE_DEBUG is enabled so the shader's
+                            // magenta overlay remains visible for validation.
+                            visible: leftFaceClipLoader.active === true && ((Quickshell.env("QS_WEDGE_DEBUG") || "") !== "1")
                             ShaderEffect {
                                 id: leftSeamFX
                                 anchors.fill: parent
@@ -387,8 +521,8 @@ Scope {
                     // continuation of the center seam, without sampling from layershell.
                     Item {
                         id: leftSeamWedge
-                        // Force‑enable for visibility while we debug placement/appearance
-                        visible: true
+                        // Disabled to rely on subtractive masking of the main fill
+                        visible: false
                         opacity: 1.0
                         z: 9000000
                         width: Math.max(1, leftPanel.seamWidth)
@@ -448,13 +582,13 @@ Scope {
                             recursive: true
                         }
 
-                        // Debug bright fill to localize the wedge on screen
+                        // Debug bright fill to localize the wedge on screen (disabled)
                         Rectangle {
                             id: leftWedgeDebugFill
                             anchors.fill: parent
                             color: "#00ff00"
                             opacity: 0.8
-                            visible: true
+                            visible: false
                             z: 5
                         }
 
@@ -462,7 +596,7 @@ Scope {
                         Canvas {
                             id: leftWedgeDebugTriangle
                             anchors.fill: parent
-                            visible: true
+                            visible: false
                             z: 6
                             onPaint: {
                                 var ctx = getContext('2d');
@@ -514,8 +648,8 @@ Scope {
                         }
                         GE.OpacityMask {
                             anchors.fill: parent
-                            // Use the bright debug fill as the source so the wedge is clearly visible
-                            source: leftWedgeDebugFill
+                            // Use the actual seam visuals for the wedge instead of the debug fill
+                            source: leftWedgeSource
                             maskSource: leftWedgeMask
                         }
                     }
@@ -529,6 +663,8 @@ Scope {
                     color: "transparent"
                     property bool panelHovering: false
                     WlrLayershell.namespace: "quickshell-bar-right"
+                    // During wedge debugging, force overlay layer to ensure visibility over fullscreen apps
+                    WlrLayershell.layer: ((Quickshell.env("QS_WEDGE_DEBUG") || "") === "1") ? WlrLayer.Overlay : WlrLayer.Top
                     anchors.bottom: true
                     anchors.right: true
                     anchors.left: false
@@ -568,9 +704,18 @@ Scope {
                         height: Layout.preferredHeight
                     }
 
-                    Item {
-                        id: rightPanelContent
-                        anchors.fill: parent
+                        Item {
+                            id: rightPanelContent
+                            anchors.fill: parent
+
+                        // Full-surface debug tint to verify the window renders
+                        Rectangle {
+                            anchors.fill: parent
+                            z: 2000000
+                            color: "#8000ffff" // cyan, semi-transparent
+                            // Only if explicitly requested
+                            visible: (Quickshell.env("QS_WEDGE_TINT_TEST") || "") === "1"
+                        }
 
                         Rectangle {
                             id: rightBarBackground
@@ -628,10 +773,12 @@ Scope {
                                 ctx.fill();
                             }
                         }
+                        // Fallback mask path (only when shader clip is disabled)
                         GE.OpacityMask {
                             anchors.fill: rightBarFill
                             source: rightBarFillSource
                             maskSource: rightFillMask
+                            visible: rightFaceClipLoader.active !== true
                         }
                         // Panel tint (right) drawn and masked within rightPanelContent so anchors are valid siblings
                         ShaderEffect {
@@ -683,11 +830,126 @@ Scope {
                                 ctx.fill();
                             }
                         }
+                        // Keep tint overlay masked (fallback) when shader clip is disabled
                         GE.OpacityMask {
                             anchors.fill: rightBarFill
-                            visible: rightPanel.panelTintEnabled
+                            z: 2
+                            visible: rightPanel.panelTintEnabled && rightFaceClipLoader.active !== true
                             source: rightPanelTintSource
                             maskSource: rightPanelTintMask
+                        }
+                        // Shader-based subtractive wedge for the tint overlay (enabled with the same flag)
+                        Loader {
+                            id: rightTintClipLoader
+                            anchors.fill: rightBarFill
+                            z: 2
+                            active: rightPanel.panelTintEnabled && rightFaceClipLoader.active === true
+                            sourceComponent: ShaderEffect {
+                                fragmentShader: Qt.resolvedUrl("../shaders/wedge_clip.frag.qsb")
+                                property var sourceSampler: rightPanelTintSource
+                                property vector4d params0: Qt.vector4d(
+                                    (function(){ var ww = Number(Quickshell.env("QS_WEDGE_WIDTH_PCT") || "");
+                                        if (isFinite(ww) && ww > 0) return Math.max(0.0, Math.min(1.0, ww/100.0));
+                                        return Math.max(0.0, Math.min(1.0, (Math.max(1, Math.min(rightBarFill.width, seamPanel.seamWidthPx)) / Math.max(1, rightBarFill.width)))); })(),
+                                    Settings.settings.debugTriangleRightSlopeUp ? 1 : 0,
+                                    -1,
+                                    0
+                                )
+                                property vector4d params1: Qt.vector4d(
+                                    Math.max(0.0, Math.min(0.05, (Math.max(1, Math.round(Theme.uiRadiusSmall * 0.5 * rightPanel.s)) / Math.max(1, rightBarFill.width)))) ,
+                                    0,0,0
+                                )
+                                // Debug overlay disabled for tint path to avoid double-drawing
+                                property vector4d params2: Qt.vector4d(0,0,0,0)
+                                blending: true
+                            }
+                        }
+                        // Subtractive wedge using a shader clip over the base face (lazy-loaded)
+                        Loader {
+                            id: rightFaceClipLoader
+                            anchors.fill: rightBarFill
+                            z: 1
+                            active: ((Quickshell.env("QS_ENABLE_WEDGE_CLIP") || "") === "1") || (Settings.settings.enableWedgeClipShader === true)
+                            onActiveChanged: {
+                                if (Settings.settings.debugLogs) {
+                                    console.log("[bar:right] wedge shader active:", rightFaceClipLoader.active,
+                                                "debug=", (Quickshell.env("QS_WEDGE_DEBUG")||""),
+                                                "widthPct=", (Quickshell.env("QS_WEDGE_WIDTH_PCT")||""))
+                                }
+                            }
+                            sourceComponent: ShaderEffect {
+                                fragmentShader: Qt.resolvedUrl("../shaders/wedge_clip.frag.qsb")
+                                // Clip the base face (pure fill color) to subtract the wedge
+                                property var sourceSampler: rightBarFillSource
+                                // params0: x=wNorm, y=slopeUp, z=side(-1 left edge), w=unused
+                                property vector4d params0: Qt.vector4d(
+                                    (function(){ var ww = Number(Quickshell.env("QS_WEDGE_WIDTH_PCT") || "");
+                                        if (isFinite(ww) && ww > 0) return Math.max(0.0, Math.min(1.0, ww/100.0));
+                                        return Math.max(0.0, Math.min(1.0, (Math.max(1, Math.min(rightBarFill.width, seamPanel.seamWidthPx)) / Math.max(1, rightBarFill.width)))); })(),
+                                    Settings.settings.debugTriangleRightSlopeUp ? 1 : 0,
+                                    -1,
+                                    0
+                                )
+                                // params1: x=feather
+                                property vector4d params1: Qt.vector4d(
+                                    Math.max(0.0, Math.min(0.05, (Math.max(1, Math.round(Theme.uiRadiusSmall * 0.5 * rightPanel.s)) / Math.max(1, rightBarFill.width)))) ,
+                                    0,0,0
+                                )
+                                // Enable magenta wedge overlay when QS_WEDGE_DEBUG=1
+                                property vector4d params2: Qt.vector4d(
+                                    ((Quickshell.env("QS_WEDGE_DEBUG") || "") === "1") ? 0.6 : 0.0,
+                                    ((Quickshell.env("QS_WEDGE_SHADER_TEST") || "") === "1") ? 1.0 : 0.0,
+                                    0, 0)
+                                blending: true
+                            }
+                        }
+
+                        // Extra on-screen debug overlay to be absolutely sure about geometry.
+                        Canvas {
+                            id: rightWedgeOverlayDebug
+                            anchors.fill: rightBarFill
+                            z: 999999
+                            visible: (Quickshell.env("QS_WEDGE_DEBUG") || "") === "1"
+                            property bool _loggedOnce: false
+                            onPaint: {
+                                var ctx = getContext('2d');
+                                ctx.reset();
+                                ctx.clearRect(0, 0, width, height);
+                                // Background highlight to prove this item renders
+                                ctx.fillStyle = 'rgba(0,255,255,0.50)';
+                                ctx.fillRect(0, 0, width, height);
+                                var ww = Number(Quickshell.env("QS_WEDGE_WIDTH_PCT") || "");
+                                var wnorm = (isFinite(ww) && ww > 0) ? Math.max(0.0, Math.min(1.0, ww/100.0))
+                                                                      : Math.max(0.0, Math.min(1.0, (Math.max(1, Math.min(rightBarFill.width, seamPanel.seamWidthPx)) / Math.max(1, rightBarFill.width))));
+                                var wpx = Math.max(1, Math.round(wnorm * width));
+                                ctx.fillStyle = 'rgba(255,0,255,0.45)';
+                                ctx.beginPath();
+                                if (Settings.settings.debugTriangleRightSlopeUp) {
+                                    // bottom-left → top-right, wedge at left edge
+                                    ctx.moveTo(0, height);
+                                    ctx.lineTo(wpx, 0);
+                                    ctx.lineTo(0, 0);
+                                } else {
+                                    // top-left → bottom-right, wedge at left edge
+                                    ctx.moveTo(0, 0);
+                                    ctx.lineTo(wpx, height);
+                                    ctx.lineTo(0, height);
+                                }
+                                ctx.closePath();
+                                ctx.fill();
+                                // Outline for visibility
+                                ctx.strokeStyle = 'rgba(255,0,255,0.9)';
+                                ctx.lineWidth = 2;
+                                ctx.stroke();
+                                if (Settings.settings.debugLogs && !rightWedgeOverlayDebug._loggedOnce) {
+                                    rightWedgeOverlayDebug._loggedOnce = true;
+                                    console.log("[wedge:right:overlay] size=", width, height,
+                                                "rightBarFillW=", rightBarFill.width,
+                                                "seamW=", seamPanel.seamWidthPx,
+                                                "wnorm=", wnorm, "wpx=", wpx,
+                                                "slopeUp=", Settings.settings.debugTriangleRightSlopeUp);
+                                }
+                            }
                         }
                         // Mirrored debug triangle on the right side: aligns to the left edge
                         // of the right panel's seam (i.e., the left edge of rightBarFill).
@@ -705,11 +967,11 @@ Scope {
                             )
                         }
 
-                        // Symmetric seam wedge for the right side
+                        // Symmetric seam wedge for the right side (disabled)
                         Item {
                             id: rightSeamWedge
-                            // Force‑enable for visibility while we debug placement/appearance
-                            visible: true
+                            // Disabled to rely on subtractive masking of the main fill
+                            visible: false
                             opacity: 1.0
                             z: 9000000
                             width: Math.max(1, rightPanel.seamWidth)
@@ -768,13 +1030,13 @@ Scope {
                                 recursive: true
                             }
 
-                            // Debug bright fill to localize the wedge on screen
+                            // Debug bright fill to localize the wedge on screen (disabled)
                             Rectangle {
                                 id: rightWedgeDebugFill
                                 anchors.fill: parent
                                 color: "#00ff00"
                                 opacity: 0.8
-                                visible: true
+                                visible: false
                                 z: 5
                             }
 
@@ -782,7 +1044,7 @@ Scope {
                             Canvas {
                                 id: rightWedgeDebugTriangle
                                 anchors.fill: parent
-                                visible: true
+                                visible: false
                                 z: 6
                                 onPaint: {
                                     var ctx = getContext('2d');
@@ -833,8 +1095,8 @@ Scope {
                             }
                             GE.OpacityMask {
                                 anchors.fill: parent
-                                // Use the bright debug fill as the source so the wedge is clearly visible
-                                source: rightWedgeDebugFill
+                                // Use the actual seam visuals for the wedge instead of the debug fill
+                                source: rightWedgeSource
                                 maskSource: rightWedgeMask
                             }
                         }
@@ -846,6 +1108,10 @@ Scope {
                             anchors.bottom: rightBarBackground.bottom
                             anchors.left: rightBarBackground.left
                             z: 1000
+                            // Draw local seam wedge only when the shader path is active,
+                            // and hide it while QS_WEDGE_DEBUG is enabled so the shader's
+                            // magenta overlay remains visible for validation.
+                            visible: rightFaceClipLoader.active === true && ((Quickshell.env("QS_WEDGE_DEBUG") || "") !== "1")
                             ShaderEffect {
                                 id: rightSeamFX
                                 anchors.fill: parent
