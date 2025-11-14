@@ -27,10 +27,7 @@ ConnectivityCapsule {
     readonly property bool hasLink: ConnectivityState.hasLink
     readonly property bool hasInternet: ConnectivityState.hasInternet
     backgroundKey: "networkLink"
-    iconMode: "material"
-    materialIconName: currentIconName()
-    iconAutoTune: true
-    iconColor: currentIconColor()
+    iconVisible: false
     labelVisible: root.showLabel
     labelText: root.labelTextValue
     labelColor: currentIconColor()
@@ -41,6 +38,18 @@ ConnectivityCapsule {
             if (!hasInternet) return iconNoInternet;
         }
         return _selectedIcon;
+    }
+
+    leadingContent: Item {
+        readonly property int box: root.desiredInnerHeight
+        width: box
+        height: box
+        MaterialIcon {
+            anchors.centerIn: parent
+            icon: root.currentIconName()
+            color: root.currentIconColor()
+            size: Math.round(root.labelPixelSize)
+        }
     }
 
     function currentIconColor() {

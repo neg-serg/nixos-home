@@ -27,11 +27,7 @@ ConnectivityCapsule {
     readonly property string matchedIf: ConnectivityState.vpnInterface
     backgroundKey: "vpn"
     visible: connected
-    iconMode: "material"
-    materialIconName: root.iconName
-    materialIconRounded: root.iconRounded
-    iconAutoTune: true
-    iconColor: root.iconColor()
+    iconVisible: false
     labelVisible: root.showLabel
     labelText: "VPN"
     labelColor: root.iconColor()
@@ -59,6 +55,19 @@ ConnectivityCapsule {
     function iconColor() {
         if (!connected) return offColor
         return accentColor
+    }
+
+    leadingContent: Item {
+        readonly property int box: root.desiredInnerHeight
+        width: box
+        height: box
+        MaterialIcon {
+            anchors.centerIn: parent
+            icon: root.iconName
+            rounded: root.iconRounded
+            color: root.iconColor()
+            size: Math.round(root.labelPixelSize)
+        }
     }
 
 }
