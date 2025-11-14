@@ -56,14 +56,28 @@ LocalComponents.CapsuleButton {
     contentYOffset: centerOffset
     interactive: false
 
+    readonly property int _iconSlotWidth: (root.iconVisible ? Math.max(0, baselineIcon.implicitWidth || 0) : 0)
+    readonly property int _tailSlotWidth: Math.max(0, tailSlot.implicitWidth || 0)
+    readonly property int _labelImplicitWidth: (root.labelVisible ? Math.max(0, label.implicitWidth || 0) : 0)
+    readonly property int _spacingBeforeLabel: (root.iconVisible && root.labelVisible && _iconSlotWidth > 0 && _labelImplicitWidth > 0)
+        ? iconSpacing
+        : 0
+    readonly property int _spacingBeforeTail: (((_iconSlotWidth > 0) || (_labelImplicitWidth > 0)) && _tailSlotWidth > 0)
+        ? iconSpacing
+        : 0
+    readonly property int _naturalWidth: _iconSlotWidth + _tailSlotWidth + _labelImplicitWidth + _spacingBeforeLabel + _spacingBeforeTail
     readonly property int _contentWidth: (function() {
-        var width = Math.max(minContentWidth, rowLayout.implicitWidth || 0);
+        var width = Math.max(minContentWidth, _naturalWidth);
         if (contentWidth > 0) width = contentWidth;
         if (maxContentWidth > 0) width = Math.min(width, maxContentWidth);
         return width;
     })()
-    readonly property int _iconSlotWidth: (root.iconVisible ? Math.max(0, baselineIcon.implicitWidth || 0) : 0)
-    readonly property int _labelAutoWidth: Math.max(0, _contentWidth - _iconSlotWidth - (root.iconVisible && root.labelVisible ? iconSpacing : 0))
+    readonly property int _labelAvailableWidth: Math.max(0, _contentWidth - (_iconSlotWidth + _tailSlotWidth + _spacingBeforeLabel + _spacingBeforeTail))
+    readonly property double _labelClampTarget: (function() {
+        var clamp = (_labelAvailableWidth > 0) ? _labelAvailableWidth : Number.POSITIVE_INFINITY;
+        if (root.labelMaxWidth > 0) clamp = Math.min(root.labelMaxWidth, clamp);
+        return clamp;
+    })()
 
     Item {
         id: lineBox
@@ -109,13 +123,11 @@ LocalComponents.CapsuleButton {
             Label {
                 id: label
                 visible: root.labelVisible
-                Layout.fillWidth: true
+                Layout.fillWidth: false
                 Layout.alignment: Qt.AlignVCenter
                 Layout.minimumWidth: 0
-                Layout.preferredWidth: (_labelAutoWidth > 0) ? _labelAutoWidth : implicitWidth
-                Layout.maximumWidth: (root.labelMaxWidth > 0)
-                    ? root.labelMaxWidth
-                    : (_labelAutoWidth > 0 ? _labelAutoWidth : Number.POSITIVE_INFINITY)
+                Layout.preferredWidth: _labelImplicitWidth
+                Layout.maximumWidth: root.labelVisible ? _labelClampTarget : 0
                 textFormat: root.labelIsRichText ? Text.RichText : Text.PlainText
                 text: root.labelText
                 color: root.labelColor
@@ -142,6 +154,8 @@ LocalComponents.CapsuleButton {
                 Layout.preferredWidth: childrenRect.width
                 Layout.preferredHeight: childrenRect.height
                 Layout.alignment: Qt.AlignVCenter
+                implicitWidth: childrenRect.width
+                implicitHeight: childrenRect.height
             }
         }
     }
