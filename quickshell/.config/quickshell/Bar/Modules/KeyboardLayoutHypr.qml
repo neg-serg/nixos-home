@@ -21,7 +21,7 @@ CenteredCapsuleRow {
     // Track main keyboard to ignore noise from pseudo-keyboards
     property string mainDeviceName: ""
     property string mainDeviceNeedle: ""
-    property var knownKeyboards:[]
+    property var knownKeyboards: []
     // If true, we only accept events for the pinned deviceName
     // This prevents the indicator from jumping between multiple keyboards.
     readonly property bool hasPinnedDevice: deviceName.length > 0
@@ -41,35 +41,85 @@ CenteredCapsuleRow {
      *   compromise keeps the UI snappy and accurate.
      */
 
+    readonly property bool inlineKeyboardIcon: kb.showKeyboardIcon && !kb.iconSquare
+    readonly property bool inlineLabelTuning: inlineKeyboardIcon && kb.showLayoutLabel
+
+    property int inlineIconSpacing: Theme.uiSpacingXSmall
+    property int inlineLabelLeftPadding: Theme.uiSpacingNone - Theme.uiGapTiny
+
     backgroundKey: "keyboard"
     cursorShape: Qt.PointingHandCursor
     interactive: true
-    iconVisible: kb.showKeyboardIcon && !kb.iconSquare
+    iconVisible: false
     iconMode: "material"
     materialIconName: "keyboard"
     iconColor: Theme.textSecondary
     iconAutoTune: true
-    iconSpacing: kb.showLayoutLabel ? Theme.panelRowSpacingSmall : Theme.uiSpacingNone
+    iconSpacing: kb.showLayoutLabel
+        ? (kb.inlineKeyboardIcon ? kb.inlineIconSpacing : Theme.panelRowSpacingSmall)
+        : Theme.uiSpacingNone
     labelVisible: kb.showLayoutLabel
     labelText: kb.layoutText
     labelColor: Theme.textPrimary
     labelFontFamily: Theme.fontFamily
     labelFontWeight: Font.Medium
     fontPixelSize: Math.round(Theme.fontSizeSmall * capsuleScale)
+    labelLeftPaddingOverride: kb.inlineLabelTuning ? kb.inlineLabelLeftPadding : -1
     minContentWidth: kb.iconSquare ? kb.desiredInnerHeight : 0
 
     leadingContent: Item {
-        visible: kb.iconSquare && kb.showKeyboardIcon
-        readonly property int box: kb.desiredInnerHeight
-        width: visible ? box : 0
-        height: box
-        MaterialIcon {
-            anchors.centerIn: parent
-            visible: parent.visible
-            icon: "keyboard"
-            color: Theme.textSecondary
-            size: Math.round(kb.fontPixelSize > 0 ? kb.fontPixelSize : Theme.fontSizeSmall)
-            screen: kb.screen
+        id: glyphSlot
+        implicitWidth: Math.max(inlineIconSlot.width, squareIconSlot.width)
+        implicitHeight: Math.max(inlineIconSlot.height, squareIconSlot.height)
+        width: implicitWidth
+        height: implicitHeight
+
+        Item {
+            id: squareIconSlot
+            readonly property int box: kb.desiredInnerHeight
+            visible: kb.iconSquare && kb.showKeyboardIcon
+            width: visible ? box : 0
+            height: visible ? box : 0
+            implicitWidth: width
+            implicitHeight: height
+
+            MaterialIcon {
+                anchors.centerIn: parent
+                visible: parent.visible
+                icon: kb.materialIconName
+                color: kb.iconColor
+                rounded: kb.materialIconRounded
+                size: Math.round(kb.fontPixelSize > 0 ? kb.fontPixelSize : Theme.fontSizeSmall)
+                screen: kb.screen
+            }
+        }
+
+        Item {
+            id: inlineIconSlot
+            visible: kb.inlineKeyboardIcon
+            width: visible ? inlineIcon.implicitWidth : 0
+            height: visible ? kb.desiredInnerHeight : 0
+            implicitWidth: width
+            implicitHeight: height
+
+            BaselineAlignedIcon {
+                id: inlineIcon
+                anchors.verticalCenter: parent.verticalCenter
+                visible: parent.visible
+                mode: kb.iconMode === "material" ? "material" : "text"
+                icon: kb.materialIconName
+                rounded: kb.materialIconRounded
+                text: kb.iconGlyph
+                fontFamily: kb.iconFontFamily
+                fontStyleName: kb.iconStyleName
+                color: kb.iconColor
+                autoTune: kb.iconAutoTune
+                labelRef: kb.showLayoutLabel ? kb.labelItem : null
+                alignTarget: kb.showLayoutLabel ? kb.labelItem : null
+                alignMode: kb.showLayoutLabel ? "baseline" : "optical"
+                padding: Theme.uiSpacingNone
+                screen: kb.screen
+            }
         }
     }
 
