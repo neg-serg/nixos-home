@@ -10,12 +10,10 @@ CenteredCapsuleRow {
     id: root
 
     property int labelPixelSize: Math.round(Theme.fontSizeSmall * capsuleScale)
-    property int horizontalPadding: Math.max(4, Math.round(Theme.panelRowSpacingSmall * capsuleScale))
     property int iconSpacingPx: Theme.panelRowSpacingSmall
     property int textPaddingPx: Theme.panelRowSpacingSmall
     property color textColor: Theme.textPrimary
 
-    paddingScale: paddingScaleFor(horizontalPadding)
     desiredInnerHeight: capsuleInner
     textPadding: textPaddingPx
     iconSpacing: iconSpacingPx

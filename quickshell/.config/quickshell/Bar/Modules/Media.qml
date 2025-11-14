@@ -17,11 +17,9 @@ Item {
     property var sidePanelPopup: null
     readonly property real capsuleScale: capsule.capsuleScale
     readonly property var capsuleMetrics: capsule.capsuleMetrics
-    property int horizontalPadding: capsule.capsulePadding
-    property int verticalPadding: Math.max(4, Math.round(capsuleMetrics.padding * 0.8))
     property int baseHeight: capsule.capsuleHeight
     readonly property int capsuleInnerSize: capsule.capsuleInner
-    implicitWidth: mediaRow ? (mediaRow.implicitWidth + horizontalPadding * 2) : baseHeight
+    implicitWidth: mediaRow ? (mediaRow.implicitWidth + capsule.horizontalPadding * 2) : baseHeight
     height: baseHeight
     implicitHeight: baseHeight
     visible: Settings.settings.showMediaInBar
