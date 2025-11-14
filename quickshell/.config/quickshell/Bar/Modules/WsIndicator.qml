@@ -103,7 +103,6 @@ WidgetCapsule {
             mode: "material"
             labelRef: label
             anchors.verticalCenter: lineBox.verticalCenter
-            scale: 0.88
             alignMode: "baseline"
             alignTarget: wsIcon
             icon: submapIconName(root.submapName)
@@ -117,7 +116,6 @@ WidgetCapsule {
             mode: "text"
             labelRef: label
             anchors.verticalCenter: lineBox.verticalCenter
-            scale: 1.40
             alignMode: "baseline"
             text: iconGlyph
             fontFamily: Theme.fontFamily
