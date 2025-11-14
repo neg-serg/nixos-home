@@ -16,6 +16,8 @@ Item {
     property string mode: "text"
     // Auto-tune size to match label visual height
     property bool autoTune: true
+    // Visual center fallback when labelRef is absent (e.g., detached icons)
+    property real fallbackLabelCenter: 0
 
     // Text mode properties
     property string text: ""
@@ -96,9 +98,15 @@ Item {
         : 1.0
     // Center offsets (positive is downward)
     function centerOffset(ascent, descent) { return (descent - ascent) / 2.0 }
+    function labelVisualCenter() {
+        if (root.labelRef && root.labelRef.font) {
+            return centerOffset(fmLabel.ascent, fmLabel.descent);
+        }
+        return root.fallbackLabelCenter;
+    }
     function computeCenterOffset(iconAscent, iconDescent) {
         var off = root._effBaselineOffset;
-        var labelCenter = centerOffset(fmLabel.ascent, fmLabel.descent);
+        var labelCenter = labelVisualCenter();
         var iconCenter  = centerOffset(iconAscent, iconDescent);
         if (root.alignMode === "optical") {
             // Align visual centers
@@ -189,7 +197,7 @@ Item {
 
     // Visual baseline delta for external alignment
     readonly property real baselineVisualDelta: (function(){
-        var lc = centerOffset(fmLabel.ascent, fmLabel.descent);
+        var lc = labelVisualCenter();
         if (root.mode === 'material') {
             return lc - centerOffset(fmMat.ascent, fmMat.descent);
         } else if (root.mode === 'svg') {
