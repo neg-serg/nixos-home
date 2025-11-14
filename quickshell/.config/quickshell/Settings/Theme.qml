@@ -538,15 +538,10 @@ Singleton {
     property int wsLabelLeftPadding:val('ws.label.leftPadding.normal', 2)
     property int wsLabelLeftPaddingTerminal:val('ws.label.leftPadding.terminal', -2)
     property int wsIconInnerPadding:val('ws.icon.innerPadding', 1)
-    // NetworkUsage icon tuning
-    property real networkIconScale: val('network.icon.scale', 2.0)
-    // Dedicated link indicator icon tuning
-    property real networkLinkIconScale: val('network.link.icon.scale', 1.0)
     // VPN indicator opacities
     property real vpnConnectedOpacity: val('vpn.connectedOpacity', 0.8)
     property real vpnDisconnectedOpacity: val('vpn.disconnectedOpacity', 0.45)
     // VPN icon/layout tuning and accent mix
-    property real vpnIconScale: val('vpn.icon.scale', 1.0)
     property real vpnAccentSaturateBoost: val('vpn.accent.saturateBoost', 0.12)
     property real vpnAccentLightenTowardWhite: val('vpn.accent.lightenTowardWhite', 0.20)
     property real vpnDesaturateAmount: val('vpn.desaturateAmount', 0.45)
@@ -575,11 +570,9 @@ Singleton {
     property int keyboardHeight:val('keyboard.height', panelHeight)
     property int keyboardMargin:val('keyboard.margin', 4)
     property int keyboardMinWidth:val('keyboard.minWidth', 40)
-    property real keyboardIconScale: val('keyboard.icon.scale', 1.0)
     property int keyboardIconSpacing:val('keyboard.icon.spacing', 4)
     property int keyboardIconPadding:val('keyboard.icon.padding', 4)
     property real keyboardTextPadding: val('keyboard.text.padding', 1.5)
-    property real keyboardFontScale: val('keyboard.font.scale', 0.9)
     property int keyboardRadius:val('keyboard.radius', cornerRadiusSmall)
     // Keyboard opacity + text emphasis
     property real keyboardNormalOpacity: val('keyboard.opacity.normal', 1.0)

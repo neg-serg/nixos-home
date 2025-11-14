@@ -12,7 +12,6 @@ Item {
     property int fontPixelSize: Math.round(Theme.fontSizeSmall * sc())
     property var screen:null
 
-    property real iconScale:Theme.keyboardIconScale
     property int iconSpacing:Theme.keyboardIconSpacing
     property color iconColor:Theme.keyboardIconColor
 
@@ -73,7 +72,6 @@ Item {
         iconFontFamily: "Font Awesome 6 Free"
         iconStyleName: "Regular"
         iconColor: kb.iconColor
-        iconScale: kb.iconScale * Theme.keyboardFontScale
         iconPadding: Math.round(Theme.keyboardIconPadding * sc())
         iconSpacing: kb.iconSpacing * sc()
         textPadding: Math.round(Theme.keyboardTextPadding * sc())
