@@ -509,7 +509,11 @@ Singleton {
     // Workspace indicator tuning
     property int wsIconSpacing:val('ws.icon.spacing', 1)
     property real wsIconScale: val('ws.icon.scale', 1.4)
+    property real wsIconSvgScale: val('ws.icon.svgScale', 0.92)
+    property real wsIconDetachedScale: val('ws.icon.detachedScale', 1.15)
     property int wsIconBaselineOffset: val('ws.icon.baselineOffset', 0)
+    property int wsIconDetachedPadding: val('ws.icon.detachedPadding', 0)
+    property int wsIconDetachedBaselineOffset: val('ws.icon.detachedBaselineOffset', 0)
     // Optional overrides for submap icon mapping
     property var wsSubmapIconOverrides:(function(){ var v = val('ws.submap.icon.overrides', undefined); return (v && typeof v === 'object') ? v : ({}); })()
     // Color of the submap icon

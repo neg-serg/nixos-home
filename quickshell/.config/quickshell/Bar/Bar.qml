@@ -435,28 +435,12 @@ Scope {
                                 scaleFactor: leftPanel.s
                                 panelHeightPx: leftPanel.barHeightPx
                             }
-                            RowLayout {
-                                id: wsCluster
+                            WsIndicator {
+                                id: wsindicator
                                 Layout.alignment: Qt.AlignVCenter
-                                spacing: Math.round(Theme.panelNetClusterSpacing * leftPanel.s)
-
-                                WsIndicator {
-                                    id: wsIconCapsule
-                                    Layout.alignment: Qt.AlignVCenter
-                                    Layout.preferredWidth: visible ? implicitWidth : 0
-                                    Layout.minimumWidth: 0
-                                    Layout.maximumWidth: visible ? implicitWidth : 0
-                                    showLabel: false
-                                    showSubmapIcon: false
-                                    workspaceGlyphDetached: true
-                                    visible: iconGlyph.length > 0
-                                }
-
-                                WsIndicator {
-                                    id: wsindicator
-                                    Layout.alignment: Qt.AlignVCenter
-                                    showWorkspaceGlyph: false
-                                }
+                                workspaceGlyphDetached: true
+                                showSubmapIcon: false
+                                showLabel: true
                             }
                             PanelSeparator {
                                 scaleFactor: leftPanel.s

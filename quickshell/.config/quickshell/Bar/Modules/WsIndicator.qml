@@ -6,6 +6,7 @@ import qs.Services as Services
 import qs.Settings
 import "../../Helpers/RichText.js" as Rich
 import "../../Helpers/WsIconMap.js" as WsMap
+import "../../Helpers/WorkspaceIcons.js" as WorkspaceIcons
 CenteredCapsuleRow {
     id: root
     property string wsName: "?"
@@ -16,6 +17,10 @@ CenteredCapsuleRow {
     property bool showLabel: true
     property bool showSubmapIcon: true
     property bool workspaceGlyphDetached: false
+    property var workspaceIconEntry: WorkspaceIcons.entryForWorkspace(root.wsName, root.wsId)
+    property bool workspaceIconValid: workspaceIconEntry && workspaceIconEntry.path && workspaceIconEntry.path.length > 0
+    property string workspaceIconPathData: workspaceIconValid ? workspaceIconEntry.path : ""
+    property int workspaceIconViewBox: WorkspaceIcons.manifestViewBox()
     // Map submap name to icon via helper + overrides + dynamic mapping
     function submapIconName(name) {
         const key = (name || "").toLowerCase().trim();
@@ -93,7 +98,7 @@ CenteredCapsuleRow {
                                    ? decorateName(restName)
                                    : decorateName(fallbackText)
 
-    iconVisible: root.showSubmapIcon && root.submapName && root.submapName.length > 0
+    iconVisible: root.showSubmapIcon && (!root.workspaceGlyphDetached) && root.submapName && root.submapName.length > 0
     iconMode: "material"
     materialIconName: submapIconName(root.submapName)
     iconColor: Theme.wsSubmapIconColor
@@ -111,26 +116,43 @@ CenteredCapsuleRow {
     labelLeftPaddingOverride: root.isTerminalWs ? Theme.wsLabelLeftPaddingTerminal : Theme.wsLabelLeftPadding
 
     leadingContent: Item {
-        readonly property bool glyphActive: wsIconGlyph.visible
-        width: glyphActive
-               ? (root.workspaceGlyphDetached ? root.desiredInnerHeight : wsIconGlyph.implicitWidth)
-               : 0
+        readonly property bool glyphPresent: root.showWorkspaceGlyph && (root.workspaceIconValid || iconGlyph.length > 0)
+        width: glyphPresent ? root.desiredInnerHeight : 0
         height: root.desiredInnerHeight
 
         BaselineAlignedIcon {
-            id: wsIconGlyph
             anchors.centerIn: parent
-            visible: root.showWorkspaceGlyph && iconGlyph.length > 0
+            visible: root.workspaceIconValid
+            mode: "svg"
+            alignMode: "optical"
+            svgPathData: root.workspaceIconPathData
+            svgViewBox: root.workspaceIconViewBox
+            color: workspaceGlyphColor
+            padding: root.workspaceGlyphDetached ? Theme.wsIconDetachedPadding : Theme.wsIconInnerPadding
+            autoTune: !root.workspaceGlyphDetached
+            labelRef: root.workspaceGlyphDetached ? null : root.labelItem
+            alignTarget: root.workspaceGlyphDetached ? null : root.labelItem
+            scaleToken: root.workspaceGlyphDetached ? (Theme.wsIconScale * Theme.wsIconDetachedScale) : Theme.wsIconScale
+            baselineOffsetToken: root.workspaceGlyphDetached
+                ? (Theme.wsIconBaselineOffset + Theme.wsIconDetachedBaselineOffset)
+                : Theme.wsIconBaselineOffset
+        }
+
+        BaselineAlignedIcon {
+            anchors.centerIn: parent
+            visible: !root.workspaceIconValid && iconGlyph.length > 0
             mode: "text"
             alignMode: "optical"
             text: iconGlyph
-            fontFamily: Theme.fontFamily
             color: workspaceGlyphColor
-            padding: root.workspaceGlyphDetached ? Theme.uiSpacingNone : Theme.wsIconInnerPadding
+            fontFamily: Theme.fontFamily
+            padding: root.workspaceGlyphDetached ? Theme.wsIconDetachedPadding : Theme.wsIconInnerPadding
             autoTune: !root.workspaceGlyphDetached
             labelRef: root.workspaceGlyphDetached ? null : root.labelItem
-            scaleToken: root.workspaceGlyphDetached ? Theme.wsIconScale : undefined
-            baselineOffsetToken: root.workspaceGlyphDetached ? Theme.wsIconBaselineOffset : undefined
+            scaleToken: root.workspaceGlyphDetached ? (Theme.wsIconScale * Theme.wsIconDetachedScale) : undefined
+            baselineOffsetToken: root.workspaceGlyphDetached
+                ? (Theme.wsIconBaselineOffset + Theme.wsIconDetachedBaselineOffset)
+                : undefined
         }
     }
 

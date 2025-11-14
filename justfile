@@ -20,6 +20,9 @@ hm-lite:
 clean-caches:
     just --justfile {{_hm_justfile}} --working-directory {{_hm_dir}} clean-caches
 
+workspace-icons:
+    python3 quickshell/.config/quickshell/Tools/workspace-icons/generate.py
+
 # Lint: ensure executables have shebang or recognizable extension
 shebang-lint:
     bash -eu -o pipefail -c '

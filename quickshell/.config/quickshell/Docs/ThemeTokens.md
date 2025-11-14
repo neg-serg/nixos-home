@@ -48,7 +48,7 @@ Additional UI tokens (nested)
    - time.font.scale (multiplier for Theme.fontSizeSmall)
    - time.font.weight (Qt Font weight enum/int)
    - time.text.color
- - Workspace indicator: ws.icon.scale, ws.icon.baselineOffset, ws.icon.spacing
+- Workspace indicator: ws.icon.scale, ws.icon.svgScale, ws.icon.detachedScale, ws.icon.baselineOffset, ws.icon.detachedBaselineOffset, ws.icon.spacing, ws.icon.detachedPadding
    - ws.label.padding, ws.label.leftPadding.normal, ws.label.leftPadding.terminal
    - ws.icon.innerPadding
   - Submap baseline: ws.submap.icon.baselineOffset

@@ -191,9 +191,13 @@
   "ws": {
     "icon": {
       "scale": 1.4,
+      "detachedScale": 1.15,
       "baselineOffset": 0,
+      "detachedBaselineOffset": 0,
       "spacing": 1,
-      "innerPadding": 1
+      "innerPadding": 1,
+      "detachedPadding": 0,
+      "svgScale": 0.9
     },
     "submap": {
       "icon": {

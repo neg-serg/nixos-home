@@ -175,8 +175,7 @@
   },
   "ws": {
     "icon": {
-      "spacing": 1,
-      "innerPadding": 1
+      "svgScale": 0.52
     },
     "submap": {
       "icon": {
@@ -230,7 +229,11 @@
       "satMin": 10,
       "lumMin": 20,
       "lumMax": 235,
-      "relaxed": { "satMin": 8, "lumMin": 20, "lumMax": 240 }
+      "relaxed": {
+        "satMin": 8,
+        "lumMin": 20,
+        "lumMax": 240
+      }
     }
   },
   "spectrum": {
@@ -266,8 +269,12 @@
       "italic": true,
       "underline": true
     },
-    "cell": { "radiusFactor": 0.33 },
-    "holidayDot": { "radiusFactor": 0.5 },
+    "cell": {
+      "radiusFactor": 0.33
+    },
+    "holidayDot": {
+      "radiusFactor": 0.5
+    },
     "grid": {
       "spacing": 0
     },
@@ -302,7 +309,6 @@
       "color": "#CBD6E5"
     }
   },
-  
   "volume": {
     "icon": {
       "offThreshold": 0,

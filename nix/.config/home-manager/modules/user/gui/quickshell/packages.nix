@@ -29,6 +29,8 @@ with lib;
       pkgs.kdePackages.qtvirtualkeyboard # on-screen keyboard
       pkgs.kdePackages.qtwayland # Wayland platform plugin
       pkgs.kdePackages.syntax-highlighting # KSyntaxHighlighting
+      pkgs.libxml2 # xmllint for SVG validation
+      pkgs.librsvg # rsvg-convert for SVG raster validation
       pkgs.material-symbols # Material Symbols font
       pkgs.networkmanager # nmcli and helpers
       pkgs.qt6.qtimageformats # extra image formats (Qt6)

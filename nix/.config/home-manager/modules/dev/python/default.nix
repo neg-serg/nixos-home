@@ -15,6 +15,7 @@
       psutil # process and system utilities
       requests # HTTP client
       tabulate # pretty tables for text/CLI
+      fonttools # font asset tooling (svg export, subsetting)
     ];
   tools = ps:
     with ps; [
