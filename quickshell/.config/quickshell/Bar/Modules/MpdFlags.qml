@@ -18,7 +18,6 @@ WidgetCapsule {
     property string mpdState: "unknown" // playing | paused | stopped | unknown
     visible: enabled && activeFlags.length > 0
     backgroundKey: "mpdFlags"
-    readonly property int capsuleMinWidth: Theme.panelWidgetMinWidth
 
     function parseStatus(text) {
         try {
@@ -133,7 +132,8 @@ WidgetCapsule {
     Row {
         id: content
         spacing: Math.round(Theme.panelRowSpacingSmall * capsuleScale)
-        width: Math.max(0, capsuleMinWidth - horizontalPadding * 2)
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.verticalCenter: parent.verticalCenter
         clip: true
         Repeater {
             model: activeFlags
@@ -146,7 +146,7 @@ WidgetCapsule {
         }
     }
 
-    implicitWidth: Math.max(capsuleMinWidth, horizontalPadding * 2 + content.implicitWidth)
+    implicitWidth: horizontalPadding * 2 + content.implicitWidth
     implicitHeight: forceHeightFromMetrics
         ? Math.max(capsuleMetrics.height, content.implicitHeight + verticalPadding * 2)
         : content.implicitHeight + verticalPadding * 2

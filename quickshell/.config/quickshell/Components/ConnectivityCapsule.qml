@@ -13,7 +13,6 @@ CenteredCapsuleRow {
     property int iconSpacingPx: Theme.panelRowSpacingSmall
     property int textPaddingPx: Theme.panelRowSpacingSmall
     property color textColor: Theme.textPrimary
-    property int capsuleWidthPx: Theme.panelWidgetMinWidth
 
     desiredInnerHeight: capsuleInner
     textPadding: textPaddingPx
@@ -21,7 +20,4 @@ CenteredCapsuleRow {
     fontPixelSize: labelPixelSize
     labelColor: textColor
     labelFontFamily: Theme.fontFamily
-    minContentWidth: capsuleWidthPx
-    contentWidth: capsuleWidthPx
-    labelMaxWidth: capsuleWidthPx - iconSpacingPx
 }

@@ -13,6 +13,4 @@ ConnectivityCapsule {
     labelColor: textColor
     iconVisible: false
     iconSpacing: 0
-    capsuleWidthPx: Theme.panelWidgetWideWidth
-    labelMaxWidth: Theme.panelWidgetWideWidth
 }

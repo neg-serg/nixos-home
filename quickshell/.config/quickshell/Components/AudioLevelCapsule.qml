@@ -171,8 +171,7 @@ LocalComponents.WidgetCapsule {
 
     default property alias extraContent: overlayLayer.data
 
-    readonly property int capsuleMinWidth: Theme.panelWidgetMinWidth
-    implicitWidth: Math.max(capsuleMinWidth, horizontalPadding * 2 + Math.max(pillIndicator.width, capsuleMetrics.inner))
+    implicitWidth: horizontalPadding * 2 + Math.max(pillIndicator.width, capsuleMetrics.inner)
     implicitHeight: forceHeightFromMetrics
         ? Math.max(capsuleMetrics.height, pillIndicator.height + verticalPadding * 2)
         : pillIndicator.height + verticalPadding * 2

@@ -18,9 +18,9 @@ LocalComponents.CapsuleButton {
     property bool labelVisible: true
     property bool iconVisible: true
     property int iconPadding: 0
-    property int minContentWidth: Theme.panelWidgetMinWidth
+    property int minContentWidth: 0
     property int maxContentWidth: 0
-    property int contentWidth: Theme.panelWidgetMinWidth
+    property int contentWidth: 0
     property int labelMaxWidth: 0
     property int labelElideMode: Text.ElideRight
 

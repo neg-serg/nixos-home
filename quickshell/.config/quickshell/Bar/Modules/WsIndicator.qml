@@ -24,7 +24,6 @@ WidgetCapsule {
 
     // Icon layout
     property int iconSpacing:Theme.wsIconSpacing
-    readonly property int capsuleMinWidth: Theme.panelWidgetMinWidth
     readonly property int capsuleInnerHeight: root.capsuleInner
     readonly property int iconFontPx: Math.round(Theme.fontSizeSmall * root.capsuleScale)
     readonly property int iconSlotWidth: iconFontPx + Theme.wsIconInnerPadding * 2
@@ -101,13 +100,15 @@ WidgetCapsule {
         id: lineBox
         spacing: iconSpacing
         anchors.centerIn: parent
+        height: capsuleInnerHeight
 
         Item {
             id: submapIconSlot
             visible: root.submapName && root.submapName.length > 0
-            width: visible ? iconSlotWidth : 0
-            height: capsuleInnerHeight
-            anchors.verticalCenter: parent.verticalCenter
+            implicitWidth: visible ? iconSlotWidth : 0
+            implicitHeight: capsuleInnerHeight
+            width: implicitWidth
+            height: implicitHeight
 
             BaselineAlignedIcon {
                 mode: "material"
@@ -122,9 +123,10 @@ WidgetCapsule {
         Item {
             id: wsIconSlot
             visible: iconGlyph.length > 0
-            width: visible ? iconSlotWidth : 0
-            height: capsuleInnerHeight
-            anchors.verticalCenter: parent.verticalCenter
+            implicitWidth: visible ? iconSlotWidth : 0
+            implicitHeight: capsuleInnerHeight
+            width: implicitWidth
+            height: implicitHeight
 
             BaselineAlignedIcon {
                 mode: "text"
@@ -137,28 +139,19 @@ WidgetCapsule {
             }
         }
 
-        Item {
-            id: labelSlot
-            width: Math.max(0, capsuleMinWidth - (submapIconSlot.visible ? iconSlotWidth : 0) - (wsIconSlot.visible ? iconSlotWidth : 0) - iconSpacing * 2)
-            height: capsuleInnerHeight
-            anchors.verticalCenter: lineBox.verticalCenter
-            clip: true
-
-            Label {
-                id: label
-                textFormat: Text.RichText
-                renderType: Text.NativeRendering
-                text: decoratedText
-                font.family: Theme.fontFamily
-                font.weight: Font.Medium
-                font.pixelSize: Theme.fontSizeSmall * root.capsuleScale
-                color: Theme.textPrimary
-                padding: Theme.wsLabelPadding
-                leftPadding: (root.isTerminalWs ? Theme.wsLabelLeftPaddingTerminal : Theme.wsLabelLeftPadding)
-                anchors.verticalCenter: parent.verticalCenter
-                width: parent.width
-                horizontalAlignment: Text.AlignHCenter
-            }
+        Label {
+            id: label
+            textFormat: Text.RichText
+            renderType: Text.NativeRendering
+            text: decoratedText
+            font.family: Theme.fontFamily
+            font.weight: Font.Medium
+            font.pixelSize: Theme.fontSizeSmall * root.capsuleScale
+            color: Theme.textPrimary
+            padding: Theme.wsLabelPadding
+            leftPadding: (root.isTerminalWs ? Theme.wsLabelLeftPaddingTerminal : Theme.wsLabelLeftPadding)
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
         }
     }
 
@@ -200,5 +193,5 @@ WidgetCapsule {
         Services.HyprlandWatcher.refreshBinds();
     }
 
-    implicitWidth: Math.max(capsuleMinWidth, horizontalPadding * 2 + lineBox.implicitWidth)
+    implicitWidth: horizontalPadding * 2 + lineBox.implicitWidth
 }
