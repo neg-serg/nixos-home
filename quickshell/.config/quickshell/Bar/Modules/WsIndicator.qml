@@ -12,6 +12,10 @@ CenteredCapsuleRow {
     property int wsId: -1
     property string submapName: ""
     property var submapDynamicMap: ({})
+    property bool showWorkspaceGlyph: true
+    property bool showLabel: true
+    property bool showSubmapIcon: true
+    property bool workspaceGlyphDetached: false
     // Map submap name to icon via helper + overrides + dynamic mapping
     function submapIconName(name) {
         const key = (name || "").toLowerCase().trim();
@@ -89,7 +93,7 @@ CenteredCapsuleRow {
                                    ? decorateName(restName)
                                    : decorateName(fallbackText)
 
-    iconVisible: root.submapName && root.submapName.length > 0
+    iconVisible: root.showSubmapIcon && root.submapName && root.submapName.length > 0
     iconMode: "material"
     materialIconName: submapIconName(root.submapName)
     iconColor: Theme.wsSubmapIconColor
@@ -97,6 +101,7 @@ CenteredCapsuleRow {
     iconPadding: Theme.wsIconInnerPadding
     iconSpacing: Theme.wsIconSpacing
     labelIsRichText: true
+    labelVisible: root.showLabel
     labelText: decoratedText
     fontPixelSize: Math.round(Theme.fontSizeSmall * root.capsuleScale)
     labelFontFamily: Theme.fontFamily
@@ -106,12 +111,15 @@ CenteredCapsuleRow {
     labelLeftPaddingOverride: root.isTerminalWs ? Theme.wsLabelLeftPaddingTerminal : Theme.wsLabelLeftPadding
 
     leadingContent: Item {
-        width: wsIcon.visible ? wsIcon.implicitWidth : 0
+        readonly property bool glyphActive: wsIcon.visible
+        width: glyphActive
+               ? (root.workspaceGlyphDetached ? root.desiredInnerHeight : wsIcon.implicitWidth)
+               : 0
         height: root.desiredInnerHeight
 
         BaselineAlignedIcon {
             id: wsIcon
-            visible: iconGlyph.length > 0
+            visible: root.showWorkspaceGlyph && iconGlyph.length > 0
             mode: "text"
             alignMode: "optical"
             text: iconGlyph

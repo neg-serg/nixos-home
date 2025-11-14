@@ -10,6 +10,10 @@ CenteredCapsuleRow {
 
     property string deviceMatch: ""
 
+    property bool showKeyboardIcon: true
+    property bool showLayoutLabel: true
+    property bool iconSquare: false
+
     property string layoutText: "??"
     property string deviceName: ""
     // Normalized device selector for pinned device (if any)
@@ -40,16 +44,34 @@ CenteredCapsuleRow {
     backgroundKey: "keyboard"
     cursorShape: Qt.PointingHandCursor
     interactive: true
-    iconVisible: true
+    iconVisible: kb.showKeyboardIcon && !kb.iconSquare
     iconMode: "material"
     materialIconName: "keyboard"
     iconColor: Theme.textSecondary
     iconAutoTune: true
+    iconSpacing: kb.showLayoutLabel ? Theme.panelRowSpacingSmall : Theme.uiSpacingNone
+    labelVisible: kb.showLayoutLabel
     labelText: kb.layoutText
     labelColor: Theme.textPrimary
     labelFontFamily: Theme.fontFamily
     labelFontWeight: Font.Medium
     fontPixelSize: Math.round(Theme.fontSizeSmall * capsuleScale)
+    minContentWidth: kb.iconSquare ? kb.desiredInnerHeight : 0
+
+    leadingContent: Item {
+        visible: kb.iconSquare && kb.showKeyboardIcon
+        readonly property int box: kb.desiredInnerHeight
+        width: visible ? box : 0
+        height: box
+        MaterialIcon {
+            anchors.centerIn: parent
+            visible: parent.visible
+            icon: "keyboard"
+            color: Theme.textSecondary
+            size: Math.round(kb.fontPixelSize > 0 ? kb.fontPixelSize : Theme.fontSizeSmall)
+            screen: kb.screen
+        }
+    }
 
     onClicked: {
         switchProc.cmd = ["hyprctl", "switchxkblayout", "current", "next"]

@@ -435,12 +435,51 @@ Scope {
                                 scaleFactor: leftPanel.s
                                 panelHeightPx: leftPanel.barHeightPx
                             }
-                            WsIndicator { id: wsindicator; Layout.alignment: Qt.AlignVCenter }
+                            RowLayout {
+                                id: wsCluster
+                                Layout.alignment: Qt.AlignVCenter
+                                spacing: Math.round(Theme.panelNetClusterSpacing * leftPanel.s)
+
+                                WsIndicator {
+                                    id: wsIconCapsule
+                                    Layout.alignment: Qt.AlignVCenter
+                                    Layout.preferredWidth: visible ? implicitWidth : 0
+                                    Layout.minimumWidth: 0
+                                    Layout.maximumWidth: visible ? implicitWidth : 0
+                                    showLabel: false
+                                    showSubmapIcon: false
+                                    workspaceGlyphDetached: true
+                                    visible: iconGlyph.length > 0
+                                }
+
+                                WsIndicator {
+                                    id: wsindicator
+                                    Layout.alignment: Qt.AlignVCenter
+                                    showWorkspaceGlyph: false
+                                }
+                            }
                             PanelSeparator {
                                 scaleFactor: leftPanel.s
                                 panelHeightPx: leftPanel.barHeightPx
                             }
-                            KeyboardLayoutHypr { id: kbIndicator; Layout.alignment: Qt.AlignVCenter }
+                            RowLayout {
+                                id: kbCluster
+                                Layout.alignment: Qt.AlignVCenter
+                                spacing: Math.round(Theme.panelNetClusterSpacing * leftPanel.s)
+
+                                KeyboardLayoutHypr {
+                                    id: kbIconCapsule
+                                    Layout.alignment: Qt.AlignVCenter
+                                    showLayoutLabel: false
+                                    iconSquare: true
+                                }
+
+                                KeyboardLayoutHypr {
+                                    id: kbIndicator
+                                    Layout.alignment: Qt.AlignVCenter
+                                    showKeyboardIcon: false
+                                }
+                            }
                             PanelSeparator {
                                 scaleFactor: leftPanel.s
                                 panelHeightPx: leftPanel.barHeightPx
