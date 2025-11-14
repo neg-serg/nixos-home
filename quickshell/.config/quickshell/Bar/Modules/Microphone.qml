@@ -14,12 +14,10 @@ AudioEndpointCapsule {
     toggleMethod: "toggleMicMute"
     toggleOnClick: true
 
-    StyledTooltip {
+    PanelTooltip {
         id: micTooltip
         text: "Microphone: " + micDisplay.level + "%\nLeft click to toggle mute.\nScroll up/down to change level."
-        positionAbove: false
-        tooltipVisible: micDisplay.containsMouse
         targetItem: micDisplay.pill
-        delay: Theme.tooltipDelayMs
+        visibleWhen: micDisplay.containsMouse
     }
 }

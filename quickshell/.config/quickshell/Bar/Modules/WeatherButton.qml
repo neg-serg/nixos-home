@@ -19,15 +19,11 @@ OverlayToggleCapsule {
     onOpened: { try { Services.Weather.start(); } catch (e) {} }
     onDismissed: { try { Services.Weather.stop(); } catch (e) {} }
 
-    IconButton {
+    PanelIconButton {
         id: weatherBtn
         anchors.centerIn: parent
         size: iconBox
         icon: "partly_cloudy_day"
-        cornerRadius: Theme.cornerRadiusSmall
-        accentColor: Theme.accentPrimary
-        iconNormalColor: Theme.textPrimary
-        iconHoverColor: Theme.onAccent
         onClicked: root.toggle("weather")
         hoverEnabled: true
         onEntered: {
@@ -36,12 +32,10 @@ OverlayToggleCapsule {
     }
 
     overlayChildren: [
-        Rectangle {
+        PanelOverlaySurface {
             id: popup
-            radius: Math.round(Theme.panelOverlayRadius * capsuleScale)
-            color: Theme.overlayWeak
-            border.color: Theme.borderSubtle
-            border.width: Theme.uiBorderWidth
+            screen: root.screen
+            scaleHint: capsuleScale
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.topMargin: Math.round(Theme.sidePanelSpacingMedium * capsuleScale)
@@ -55,13 +49,11 @@ OverlayToggleCapsule {
         }
     ]
 
-    StyledTooltip {
+    PanelTooltip {
         id: weatherTip
         targetItem: weatherBtn
-        positionAbove: false
-        delay: Theme.tooltipDelayMs
-        tooltipVisible: weatherBtn.hovering
         text: root.tooltipText()
+        visibleWhen: weatherBtn.hovering
     }
 
     function tooltipText() {

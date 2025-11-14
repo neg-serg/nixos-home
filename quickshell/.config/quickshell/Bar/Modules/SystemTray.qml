@@ -183,18 +183,14 @@ Row {
     }
 
     // Collapsed trigger button (placed after inline box)
-    IconButton {
+    PanelIconButton {
         id: collapsedButton
         z: 1002
         visible: false // hidden; tray reveals by hover in bottom-right hot zone
         anchors.verticalCenter: parent.verticalCenter
         size: Math.round(Theme.panelIconSize * root._scale)
-        cornerRadius: Theme.cornerRadiusSmall
         icon: Settings.settings.collapsedTrayIcon || "expand_more"
         iconRotation: expanded ? 90 : 0
-        accentColor: Theme.accentHover
-        iconNormalColor: Theme.textPrimary
-        iconHoverColor: Theme.textPrimary
         onClicked: {
             expanded = !expanded;
             if (expanded) { openGuard = true; Services.TrayController.startGuard(); }
@@ -286,7 +282,7 @@ Row {
 
                         modelData.secondaryActivate && modelData.secondaryActivate();
                     } else if (mouse.button === Qt.RightButton) {
-                        trayTooltip.tooltipVisible = false;
+                        trayTooltip.visibleWhen = false;
                         // If menu is already visible, close it
                         if (trayMenu && trayMenu.visible) {
                             trayMenu.hideMenu();
@@ -307,17 +303,16 @@ Row {
                         {}
                     }
                 }
-                onEntered: trayTooltip.tooltipVisible = true
-                onExited: trayTooltip.tooltipVisible = false
+                onEntered: trayTooltip.visibleWhen = true
+                onExited: trayTooltip.visibleWhen = false
             }
 
-            StyledTooltip {
+            PanelTooltip {
                 id: trayTooltip
                 text: modelData.tooltipTitle || modelData.name || modelData.id || "Tray Item"
-                positionAbove: false
-                tooltipVisible: false
                 targetItem: trayIcon
-                delay: Services.TrayController.tooltipDelayMs
+                delayMs: Services.TrayController.tooltipDelayMs
+                visibleWhen: false
             }
 
             Component.onDestruction:

@@ -15,11 +15,13 @@ OverlayToggleCapsule {
     autoToggleOnTap: false
 
     overlayChildren: [
-        Rectangle {
-            color: Theme.background
-            radius: Math.round(Theme.cornerRadiusLarge / 3)
-            border.color: Theme.borderSubtle
-            border.width: Theme.calendarBorderWidth
+        PanelOverlaySurface {
+            id: calendarSurface
+            screen: calendarOverlay.screen
+            backgroundColor: Theme.background
+            borderColor: Theme.borderSubtle
+            borderWidth: Theme.calendarBorderWidth
+            cornerRadiusOverride: Math.round(Theme.cornerRadiusLarge / 3)
             width: Theme.calendarWidth
             height: Theme.calendarHeight
             anchors.bottom: parent.bottom
@@ -38,11 +40,8 @@ OverlayToggleCapsule {
                     Layout.fillWidth: true
                     spacing: Theme.calendarCellSpacing
 
-                    IconButton {
+                    PanelIconButton {
                         icon: "chevron_left"
-                        accentColor: Theme.accentPrimary
-                        iconNormalColor: Theme.textPrimary
-                        iconHoverColor: Theme.onAccent
                         onClicked: {
                             let newDate = new Date(calendar.year, calendar.month - 1, 1);
                             calendar.year = newDate.getFullYear();
@@ -61,11 +60,8 @@ OverlayToggleCapsule {
                         font.weight: Font.Medium
                     }
 
-                    IconButton {
+                    PanelIconButton {
                         icon: "chevron_right"
-                        accentColor: Theme.accentPrimary
-                        iconNormalColor: Theme.textPrimary
-                        iconHoverColor: Theme.onAccent
                         onClicked: {
                             let newDate = new Date(calendar.year, calendar.month + 1, 1);
                             calendar.year = newDate.getFullYear();
@@ -183,10 +179,10 @@ OverlayToggleCapsule {
                                         return h.localName + (h.name !== h.localName ? " (" + h.name + ")" : "") + (h.global ? " [Global]" : "");
                                     }).join(", ");
                                     holidayTooltip.targetItem = parent;
-                                    holidayTooltip.tooltipVisible = true;
+                                    holidayTooltip.visibleWhen = true;
                                 }
                             }
-                            onExited: holidayTooltip.tooltipVisible = false
+                            onExited: holidayTooltip.visibleWhen = false
                             onClicked: {
                                 calendar.selectedYear = model.year;
                                 calendar.selectedMonth = model.month;
@@ -194,12 +190,11 @@ OverlayToggleCapsule {
                             }
                         }
 
-                        StyledTooltip {
+                        PanelTooltip {
                             id: holidayTooltip
                             text: ""
-                            tooltipVisible: false
                             targetItem: null
-                            delay: Theme.tooltipDelayMs
+                            visibleWhen: false
                         }
                     }
                 }

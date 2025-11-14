@@ -22,13 +22,11 @@ AudioEndpointCapsule {
         function dismiss() { visible = false }
     }
 
-    StyledTooltip {
+    PanelTooltip {
         id: volumeTooltip
         text: "Volume: " + volumeDisplay.level + "%\nLeft click for advanced settings.\nScroll up/down to change volume."
-        positionAbove: false
-        tooltipVisible: !ioSelector.visible && volumeDisplay.containsMouse
         targetItem: volumeDisplay.pill
-        delay: Theme.tooltipDelayMs
+        visibleWhen: !ioSelector.visible && volumeDisplay.containsMouse
     }
 
     onClicked: {
