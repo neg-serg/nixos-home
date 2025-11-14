@@ -35,7 +35,7 @@ LocalComponents.CapsuleButton {
     property bool materialIconRounded: false
     property real iconScale: 1.0
     property int iconVAdjust: 0
-    property bool iconAutoTune: false
+    property bool iconAutoTune: true
     property color iconColor: Theme.textSecondary
 
     // Accessors
