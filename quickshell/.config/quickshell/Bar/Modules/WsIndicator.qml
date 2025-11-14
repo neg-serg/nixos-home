@@ -111,23 +111,26 @@ CenteredCapsuleRow {
     labelLeftPaddingOverride: root.isTerminalWs ? Theme.wsLabelLeftPaddingTerminal : Theme.wsLabelLeftPadding
 
     leadingContent: Item {
-        readonly property bool glyphActive: wsIcon.visible
+        readonly property bool glyphActive: wsIconGlyph.visible
         width: glyphActive
-               ? (root.workspaceGlyphDetached ? root.desiredInnerHeight : wsIcon.implicitWidth)
+               ? (root.workspaceGlyphDetached ? root.desiredInnerHeight : wsIconGlyph.implicitWidth)
                : 0
         height: root.desiredInnerHeight
 
         BaselineAlignedIcon {
-            id: wsIcon
+            id: wsIconGlyph
+            anchors.centerIn: parent
             visible: root.showWorkspaceGlyph && iconGlyph.length > 0
             mode: "text"
             alignMode: "optical"
             text: iconGlyph
             fontFamily: Theme.fontFamily
             color: workspaceGlyphColor
-            padding: (root.isTerminalWs ? Theme.uiSpacingNone : Theme.wsIconInnerPadding)
-            labelRef: root.labelItem
-            anchors.centerIn: parent
+            padding: root.workspaceGlyphDetached ? Theme.uiSpacingNone : Theme.wsIconInnerPadding
+            autoTune: !root.workspaceGlyphDetached
+            labelRef: root.workspaceGlyphDetached ? null : root.labelItem
+            scaleToken: root.workspaceGlyphDetached ? Theme.wsIconScale : undefined
+            baselineOffsetToken: root.workspaceGlyphDetached ? Theme.wsIconBaselineOffset : undefined
         }
     }
 

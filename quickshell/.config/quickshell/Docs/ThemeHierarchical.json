@@ -190,6 +190,7 @@
   },
   "ws": {
     "icon": {
+      "scale": 1.4,
       "baselineOffset": 0,
       "spacing": 1,
       "innerPadding": 1
