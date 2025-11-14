@@ -11,8 +11,6 @@ WidgetCapsule {
     property string wsName: "?"
     property int wsId: -1
     property string submapName: ""
-    // Vertical alignment of submap icon (px; negative moves up)
-    property int submapBaselineAdjust: Theme.wsSubmapIconBaselineOffset
     property var submapDynamicMap: ({})
     // Map submap name to icon via helper + overrides + dynamic mapping
     function submapIconName(name) {
@@ -25,7 +23,6 @@ WidgetCapsule {
     property color gothicColor: Theme.textPrimary
 
     // Icon layout
-    property int iconBaselineOffset:Theme.wsIconBaselineOffset
     property int iconSpacing:Theme.wsIconSpacing
 
     backgroundKey: "workspaces"
@@ -107,7 +104,6 @@ WidgetCapsule {
             labelRef: label
             anchors.verticalCenter: lineBox.verticalCenter
             scale: 0.88
-            baselineOffsetToken: submapBaselineAdjust
             alignMode: "baseline"
             alignTarget: wsIcon
             icon: submapIconName(root.submapName)
@@ -122,7 +118,6 @@ WidgetCapsule {
             labelRef: label
             anchors.verticalCenter: lineBox.verticalCenter
             scale: 1.40
-            baselineOffsetToken: iconBaselineOffset
             alignMode: "baseline"
             text: iconGlyph
             fontFamily: Theme.fontFamily
@@ -142,7 +137,6 @@ WidgetCapsule {
             padding: Theme.wsLabelPadding
             leftPadding: (root.isTerminalWs ? Theme.wsLabelLeftPaddingTerminal : Theme.wsLabelLeftPadding)
             anchors.verticalCenter: lineBox.verticalCenter
-            anchors.verticalCenterOffset: (wsIcon && wsIcon.currentOffset !== undefined) ? wsIcon.currentOffset : 0
         }
     }
 

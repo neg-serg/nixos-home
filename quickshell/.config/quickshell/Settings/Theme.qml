@@ -527,12 +527,9 @@ Singleton {
     property real uiRippleOpacity: val('ui.ripple.opacity', 0.18)
     property real uiIconEmphasisOpacity: val('ui.icon.emphasisOpacity', 0.9)
     // Workspace indicator tuning
-    property int wsIconBaselineOffset:val('ws.icon.baselineOffset', 4)
     property int wsIconSpacing:val('ws.icon.spacing', 1)
     // Optional overrides for submap icon mapping
     property var wsSubmapIconOverrides:(function(){ var v = val('ws.submap.icon.overrides', undefined); return (v && typeof v === 'object') ? v : ({}); })()
-    // Submap icon baseline vs. text
-    property int wsSubmapIconBaselineOffset:val('ws.submap.icon.baselineOffset', 0)
     // Color of the submap icon
     property color wsSubmapIconColor: val('ws.submap.icon.color', accentPrimary)
     // Workspace label/icon paddings
@@ -543,18 +540,13 @@ Singleton {
     property int wsIconInnerPadding:val('ws.icon.innerPadding', 1)
     // NetworkUsage icon tuning
     property real networkIconScale: val('network.icon.scale', 2.0)
-    property int networkIconVAdjust:val('network.icon.vAdjust', 0)
-    // Dedicated link indicator icon tuning (falls back to network icon tokens)
+    // Dedicated link indicator icon tuning
     property real networkLinkIconScale: val('network.link.icon.scale', 1.0)
-    property int networkLinkIconVAdjust:val('network.link.icon.vAdjust', networkIconVAdjust)
     // VPN indicator opacities
     property real vpnConnectedOpacity: val('vpn.connectedOpacity', 0.8)
     property real vpnDisconnectedOpacity: val('vpn.disconnectedOpacity', 0.45)
     // VPN icon/layout tuning and accent mix
     property real vpnIconScale: val('vpn.icon.scale', 1.0)
-    property int vpnIconVAdjust:val('vpn.icon.vAdjust', 0)
-    property int vpnIconSpacing:val('vpn.icon.spacing', panelRowSpacingSmall)
-    property int vpnTextPadding:val('vpn.text.padding', panelRowSpacingSmall)
     property real vpnAccentSaturateBoost: val('vpn.accent.saturateBoost', 0.12)
     property real vpnAccentLightenTowardWhite: val('vpn.accent.lightenTowardWhite', 0.20)
     property real vpnDesaturateAmount: val('vpn.desaturateAmount', 0.45)
@@ -587,8 +579,6 @@ Singleton {
     property int keyboardIconSpacing:val('keyboard.icon.spacing', 4)
     property int keyboardIconPadding:val('keyboard.icon.padding', 4)
     property real keyboardTextPadding: val('keyboard.text.padding', 1.5)
-    property int keyboardIconBaselineOffset:val('keyboard.icon.baselineOffset', 0)
-    property int keyboardTextBaselineOffset:val('keyboard.text.baselineOffset', 0)
     property real keyboardFontScale: val('keyboard.font.scale', 0.9)
     property int keyboardRadius:val('keyboard.radius', cornerRadiusSmall)
     // Keyboard opacity + text emphasis

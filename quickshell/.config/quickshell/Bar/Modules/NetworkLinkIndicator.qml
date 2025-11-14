@@ -10,7 +10,6 @@ ConnectivityCapsule {
     property bool showLabel: false
     property string labelTextValue: "NET"
     property real iconScaleFactor: Theme.networkLinkIconScale
-    property int iconVAdjustPx: Theme.networkLinkIconVAdjust
     // Icon selection pool (Material Symbols names). Picked randomly on init.
     property var iconPool: ([
         "graph_1", "graph_2", "graph_3", "graph_4",
@@ -33,7 +32,6 @@ ConnectivityCapsule {
     materialIconName: currentIconName()
     iconAutoTune: true
     iconScale: root.iconScaleFactor
-    iconVAdjust: root.iconVAdjustPx
     iconColor: currentIconColor()
     labelVisible: root.showLabel
     labelText: root.labelTextValue

@@ -16,8 +16,6 @@ Item {
     property int iconSpacing:Theme.keyboardIconSpacing
     property color iconColor:Theme.keyboardIconColor
 
-    property int iconBaselineAdjust:Theme.keyboardIconBaselineOffset
-    property int textBaselineAdjust:Theme.keyboardTextBaselineOffset
 
     property color textColor:Theme.keyboardTextColor
 
@@ -76,7 +74,6 @@ Item {
         iconStyleName: "Regular"
         iconColor: kb.iconColor
         iconScale: kb.iconScale * Theme.keyboardFontScale
-        iconVAdjust: kb.iconBaselineAdjust
         iconPadding: Math.round(Theme.keyboardIconPadding * sc())
         iconSpacing: kb.iconSpacing * sc()
         textPadding: Math.round(Theme.keyboardTextPadding * sc())
@@ -85,7 +82,6 @@ Item {
         fontPixelSize: kb.fontPixelSize
         labelFontFamily: Theme.fontFamily
         labelFontWeight: Theme.keyboardTextBold ? Font.DemiBold : Font.Medium
-        labelBaselineAdjust: kb.textBaselineAdjust
 
         TapHandler {
             acceptedButtons: Qt.LeftButton

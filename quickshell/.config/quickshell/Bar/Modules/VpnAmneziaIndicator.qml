@@ -10,7 +10,6 @@ ConnectivityCapsule {
 
     property bool useTheme:true
     property bool showLabel:true
-    property int iconBaselineAdjustPx:Theme.vpnIconVAdjust
     property real iconScaleFactor:Theme.vpnIconScale
     property string iconName: "verified_user"
     property bool iconRounded:false
@@ -29,13 +28,10 @@ ConnectivityCapsule {
     readonly property string matchedIf: ConnectivityState.vpnInterface
     backgroundKey: "vpn"
     visible: connected
-    textPadding: Theme.vpnTextPadding
-    iconSpacing: Theme.vpnIconSpacing
     iconMode: "material"
     materialIconName: root.iconName
     materialIconRounded: root.iconRounded
     iconScale: root.iconScaleFactor
-    iconVAdjust: root.iconBaselineAdjustPx
     iconAutoTune: true
     iconColor: root.iconColor()
     labelVisible: root.showLabel

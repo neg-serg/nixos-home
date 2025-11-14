@@ -196,13 +196,11 @@
   },
   "ws": {
     "icon": {
-      "baselineOffset": 0,
       "spacing": 1,
       "innerPadding": 1
     },
     "submap": {
       "icon": {
-        "baselineOffset": 0,
         "color": "#006FCC",
         "overrides": {}
       }
@@ -227,8 +225,7 @@
     "restartBackoffMs": 1500,
     "linkPollMs": 4000,
     "icon": {
-      "scale": 2.0,
-      "vAdjust": 0
+      "scale": 2.0
     }
   },
   "media": {
@@ -317,12 +314,7 @@
     "connectedOpacity": 0.8,
     "disconnectedOpacity": 0.45,
     "icon": {
-      "scale": 1.0,
-      "vAdjust": 0,
-      "spacing": 4
-    },
-    "text": {
-      "padding": 4
+      "scale": 1.0
     },
     "accent": {
       "saturateBoost": 0.12,
@@ -347,12 +339,10 @@
     "icon": {
       "scale": 1.0,
       "spacing": 4,
-      "padding": 4,
-      "baselineOffset": 0
+      "padding": 4
     },
     "text": {
       "padding": 1.5,
-      "baselineOffset": 0,
       "bold": false
     },
     "opacity": {
