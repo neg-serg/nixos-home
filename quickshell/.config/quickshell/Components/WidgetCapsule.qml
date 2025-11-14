@@ -17,7 +17,7 @@ Rectangle {
     property color hoverMixColor: Qt.rgba(1, 1, 1, 1)
     property bool borderVisible: true
     property color borderColorOverride: "transparent"
-    property real borderOpacity: 0.08
+    property real borderOpacity: Theme.panelCapsuleBorderOpacity
     property real paddingScale: 1.0
     property real minPadding: 4
     property real verticalPaddingScale: 0.6
@@ -25,7 +25,7 @@ Rectangle {
     property bool centerContent: true
     property real cornerRadiusOverride: -1
     property real borderWidthOverride: -1
-    property real borderInset: -Theme.uiBorderWidth
+    property real borderInset: Theme.panelCapsuleBorderInset
     property real contentYOffset: 0
     property int cursorShape: Qt.ArrowCursor
 
@@ -44,10 +44,13 @@ Rectangle {
     readonly property color _hoverColor: ColorHelpers.mix(_baseColor, hoverMixColor, hoverMixAmount)
     readonly property real _borderWidth: borderWidthOverride >= 0
             ? borderWidthOverride
-            : Theme.uiBorderWidth
+            : Theme.panelCapsuleBorderWidth
+    readonly property color _borderColorTheme: Theme.panelCapsuleBorderColor
     readonly property color _borderColor: borderColorOverride.a > 0
             ? borderColorOverride
-            : ColorHelpers.withAlpha(Theme.textPrimary, borderOpacity)
+            : (_borderColorTheme.a > 0
+                ? _borderColorTheme
+                : ColorHelpers.withAlpha(Theme.textPrimary, borderOpacity))
 
     implicitWidth: 0
     implicitHeight: forceHeightFromMetrics ? _metrics.height : 0

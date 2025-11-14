@@ -471,6 +471,16 @@ Singleton {
     property int panelMenuIconSize:val('panel.menu.iconSize', 16)
     // Panel menu item font scale (relative to Theme.fontSizeSmall)
     property real panelMenuItemFontScale: val('panel.menu.itemFontScale', 0.90)
+    // Panel capsule border defaults
+    property real panelCapsuleBorderOpacity: val('panel.capsule.borderOpacity', 0.08)
+    property int panelCapsuleBorderWidth: val('panel.capsule.borderWidth', uiBorderWidth)
+    property real panelCapsuleBorderInset: val('panel.capsule.borderInset', -panelCapsuleBorderWidth)
+    property color panelCapsuleBorderColor: {
+        const overrideColor = val('panel.capsule.borderColor', undefined)
+        return overrideColor !== undefined
+            ? overrideColor
+            : Color.withAlpha(textPrimary, panelCapsuleBorderOpacity)
+    }
     // Side panel exports
     property int sidePanelCornerRadius: val('sidePanel.cornerRadius', 9)
     property int sidePanelSpacing: val('sidePanel.spacing', 12)
