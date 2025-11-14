@@ -20,12 +20,11 @@ Rectangle {
     property color backgroundColor: Theme.overlayWeak
     property color borderColor: Theme.borderSubtle
     property real borderWidth: Theme.uiBorderWidth
+    property real borderInset: 0
     property real radiusBase: Theme.panelOverlayRadius
     property real cornerRadiusOverride: -1
 
     color: backgroundColor
-    border.color: borderColor
-    border.width: borderWidth
     radius: cornerRadiusOverride >= 0
         ? cornerRadiusOverride
         : Math.round(radiusBase * overlayScale)
@@ -40,6 +39,16 @@ Rectangle {
         anchors.fill: parent
         implicitWidth: childrenRect.width
         implicitHeight: childrenRect.height
+    }
+
+    OverlayFrame {
+        anchorTarget: root
+        inset: borderInset
+        baseRadius: root.radius
+        strokeWidth: borderWidth
+        strokeColor: borderColor
+        enabled: borderWidth > 0 && borderColor.a > 0
+        zIndex: root.z + 1
     }
 
     default property alias content: contentHost.data

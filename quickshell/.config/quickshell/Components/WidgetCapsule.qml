@@ -25,6 +25,7 @@ Rectangle {
     property bool centerContent: true
     property real cornerRadiusOverride: -1
     property real borderWidthOverride: -1
+    property real borderInset: 0
     property real contentYOffset: 0
     property int cursorShape: Qt.ArrowCursor
 
@@ -41,6 +42,12 @@ Rectangle {
     readonly property int horizontalPadding: Math.max(minPadding, Math.round(_metrics.padding * paddingScale))
     readonly property int verticalPadding: Math.max(2, Math.round(_metrics.padding * verticalPaddingScale))
     readonly property color _hoverColor: ColorHelpers.mix(_baseColor, hoverMixColor, hoverMixAmount)
+    readonly property real _borderWidth: borderWidthOverride >= 0
+            ? borderWidthOverride
+            : Theme.uiBorderWidth
+    readonly property color _borderColor: borderColorOverride.a > 0
+            ? borderColorOverride
+            : ColorHelpers.withAlpha(Theme.textPrimary, borderOpacity)
 
     implicitWidth: 0
     implicitHeight: forceHeightFromMetrics ? _metrics.height : 0
@@ -49,14 +56,8 @@ Rectangle {
 
     radius: cornerRadiusOverride >= 0 ? cornerRadiusOverride : Theme.cornerRadiusSmall
     antialiasing: true
-    border.width: borderVisible
-            ? (borderWidthOverride >= 0 ? borderWidthOverride : Theme.uiBorderWidth)
-            : 0
-    border.color: borderVisible
-            ? (borderColorOverride.a > 0
-                ? borderColorOverride
-                : ColorHelpers.withAlpha(Theme.textPrimary, borderOpacity))
-            : "transparent"
+    border.width: 0
+    border.color: "transparent"
     color: hoverEnabled && hoverTracker.hovered
         ? (hoverColorOverride.a > 0 ? hoverColorOverride : _hoverColor)
         : _baseColor
@@ -79,6 +80,16 @@ Rectangle {
             bottomMargin: verticalPadding
         }
 
+    }
+
+    OverlayFrame {
+        anchorTarget: root
+        inset: borderInset
+        baseRadius: root.radius
+        strokeWidth: borderVisible ? _borderWidth : 0
+        strokeColor: borderVisible ? _borderColor : "transparent"
+        enabled: borderVisible
+        zIndex: root.z + 1
     }
 
     default property alias content: contentArea.data
