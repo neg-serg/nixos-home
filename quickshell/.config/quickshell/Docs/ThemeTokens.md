@@ -51,6 +51,11 @@ Additional UI tokens (nested)
 - Workspace indicator: ws.icon.scale, ws.icon.svgScale, ws.icon.detachedScale, ws.icon.baselineOffset, ws.icon.detachedBaselineOffset, ws.icon.spacing, ws.icon.detachedPadding
    - ws.label.padding, ws.label.leftPadding.normal, ws.label.leftPadding.terminal
    - ws.icon.innerPadding
+    - Gap recipe: actual spacing = `leadingContent` width (see `Bar/Modules/WsIndicator.qml`) + `CenteredCapsuleRow.iconSpacing` (`Theme.wsIconSpacing`) + label padding. To replicate the current tight layout:
+      1. Ensure the glyph slot exposes the `BaselineAlignedIcon` `implicitWidth` (already handled in `WsIndicator`).
+      2. Tune `Theme.wsLabelPadding` and `Theme.wsLabelLeftPadding.*`; negative values are allowed thanks to the guard in `Components/CenteredCapsuleRow.qml`.
+      3. For a global offset adjust `Theme.wsIconSpacing`; override `iconSpacing` locally when a module needs a bespoke gap.
+      4. While debugging, log widths via `quickshell inspect` or temporary `console.log` statements in `leadingContent`/`labelItem` to understand each contribution.
   - Submap baseline: ws.submap.icon.baselineOffset
   - Submap icon color: ws.submap.icon.color
   - Menu item radius: panel.menu.itemRadius
