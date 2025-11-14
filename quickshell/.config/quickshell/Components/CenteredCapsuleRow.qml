@@ -22,6 +22,8 @@ LocalComponents.CapsuleButton {
     property int maxContentWidth: 0
     property int contentWidth: 0
     property int labelMaxWidth: 0
+    property int labelLeftPaddingOverride: -1
+    property int labelRightPaddingOverride: -1
     property int labelElideMode: Text.ElideRight
 
     // Label configuration
@@ -106,6 +108,15 @@ LocalComponents.CapsuleButton {
                 padding: root.iconPadding
             }
 
+            Item {
+                id: leadingSlot
+                Layout.alignment: Qt.AlignVCenter
+                Layout.preferredWidth: childrenRect.width
+                Layout.preferredHeight: childrenRect.height
+                Layout.minimumWidth: 0
+                Layout.maximumWidth: childrenRect.width
+            }
+
             Label {
                 id: label
                 visible: root.labelVisible
@@ -120,8 +131,8 @@ LocalComponents.CapsuleButton {
                 font.weight: root.labelFontWeight
                 font.pixelSize: root.computedFontPx
                 padding: 0
-                leftPadding: root.textPadding
-                rightPadding: root.textPadding
+                leftPadding: root.labelLeftPaddingOverride >= 0 ? root.labelLeftPaddingOverride : root.textPadding
+                rightPadding: root.labelRightPaddingOverride >= 0 ? root.labelRightPaddingOverride : root.textPadding
                 verticalAlignment: Text.AlignVCenter
                 baselineOffset: labelMetrics.ascent + root.labelBaselineAdjust
                 elide: root.labelElideMode
@@ -145,6 +156,7 @@ LocalComponents.CapsuleButton {
         }
     }
     default property alias tailContent: tailSlot.data
+    property alias leadingContent: leadingSlot.data
 
     implicitWidth: root.horizontalPadding * 2 + lineBox.width
     implicitHeight: root.forceHeightFromMetrics

@@ -96,7 +96,7 @@ Theme.json (short)
 - All typography, colors, paddings, radii, animations, etc. are hierarchical tokens.
 - Full list of tokens, types/defaults, and guidance: `Docs/ThemeTokens.md`.
 - Up‑to‑date example schema: `Docs/ThemeHierarchical.json`.
-- Important groups: `colors.*`, `panel.*`, `shape.*`, `tooltip.*`, `ui.*`, `ws.*`, `timers.*`, `network.*`, `media.*`, `spectrum.*`, `calendar.*`, `weather.*`, `vpn.*`, `time.*`, `keyboard.*`, `volume.*`, `sidePanel.*`.
+- Important groups: `colors.*`, `panel.*`, `shape.*`, `tooltip.*`, `ui.*`, `ws.*`, `timers.*`, `network.*`, `media.*`, `spectrum.*`, `calendar.*`, `weather.*`, `vpn.*`, `time.*`, `volume.*`, `sidePanel.*`.
 - Strict mode (`Settings.settings.strictThemeTokens = true`) logs warnings for missing tokens and deprecated flat keys. Flat keys are removed after 2025‑11‑01.
 
 Tools

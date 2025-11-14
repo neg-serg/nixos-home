@@ -98,7 +98,6 @@ Singleton {
             property var calendar: ({})
             property var vpn: ({})
             property var volume: ({})
-            property var keyboard: ({})
         }
         
     }
@@ -246,7 +245,7 @@ Singleton {
             }
 
             // Flat tokens presence warning (aggregate once)
-            var groupRoots = ['colors','panel','shape','tooltip','weather','sidePanel','ui','ws','timers','network','media','spectrum','time','calendar','vpn','volume','keyboard'];
+            var groupRoots = ['colors','panel','shape','tooltip','weather','sidePanel','ui','ws','timers','network','media','spectrum','time','calendar','vpn','volume'];
             var ignoreKeys = { objectName: true };
             var flats = [];
             try {
@@ -543,14 +542,6 @@ Singleton {
     property real timeFontScale: val('time.font.scale', 1.0)
     property int timeFontWeight:val('time.font.weight', Font.Medium)
     property color timeTextColor: val('time.text.color', textPrimary)
-    // Keyboard layout module
-    property int keyboardIconSpacing:val('keyboard.icon.spacing', 4)
-    property int keyboardIconPadding:val('keyboard.icon.padding', 4)
-    property real keyboardTextPadding: val('keyboard.text.padding', 1.5)
-    // Keyboard emphasis options
-    property bool keyboardTextBold: !!val('keyboard.text.bold', false)
-    property color keyboardTextColor: val('keyboard.colors.text', textPrimary)
-    property color keyboardIconColor: val('keyboard.colors.icon', textSecondary)
     // UI easing (configurable via string names)
     property int uiEasingQuick: easingType(val('ui.anim.easing.quick', 'OutQuad'), 'OutQuad')
     property int uiEasingRotate: easingType(val('ui.anim.easing.rotate', 'OutCubic'), 'OutCubic')

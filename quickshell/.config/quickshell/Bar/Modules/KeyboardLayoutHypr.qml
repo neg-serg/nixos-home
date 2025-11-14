@@ -5,18 +5,10 @@ import qs.Components
 import qs.Settings
 import qs.Services as Services
 
-Item {
+CenteredCapsuleRow {
     id: kb
 
     property string deviceMatch: ""
-    property int fontPixelSize: Math.round(Theme.fontSizeSmall * sc())
-    property var screen:null
-
-    property int iconSpacing:Theme.keyboardIconSpacing
-    property color iconColor:Theme.keyboardIconColor
-
-
-    property color textColor:Theme.keyboardTextColor
 
     property string layoutText: "??"
     property string deviceName: ""
@@ -45,79 +37,23 @@ Item {
      *   compromise keeps the UI snappy and accurate.
      */
 
-    readonly property var resolvedScreen: kb.screen
-        ? kb.screen
-        : ((Quickshell.screens && Quickshell.screens.length) ? Quickshell.screens[0] : null)
+    backgroundKey: "keyboard"
+    cursorShape: Qt.PointingHandCursor
+    interactive: true
+    iconVisible: true
+    iconMode: "material"
+    materialIconName: "keyboard"
+    iconColor: Theme.textSecondary
+    iconAutoTune: true
+    labelText: kb.layoutText
+    labelColor: Theme.textPrimary
+    labelFontFamily: Theme.fontFamily
+    labelFontWeight: Font.Medium
+    fontPixelSize: Math.round(Theme.fontSizeSmall * capsuleScale)
 
-    function sc() {
-        return capsule.capsuleScale
-    }
-
-    readonly property int capsuleHeight: capsule.capsuleHeight
-    readonly property int iconPaddingPx: Math.round(Theme.keyboardIconPadding * sc())
-    readonly property int textPaddingPx: Math.round(Theme.keyboardTextPadding * sc())
-    readonly property int iconSizePx: Math.max(1, kb.fontPixelSize)
-    readonly property int iconBoxWidth: iconSizePx + iconPaddingPx * 2
-    readonly property int iconBoxHeight: capsule.capsuleInner
-
-    implicitWidth: keyboardRow.implicitWidth + capsule.horizontalPadding * 2
-    implicitHeight: capsuleHeight
-    width: implicitWidth
-
-    WidgetCapsule {
-        id: capsule
-        width: parent.width
-        height: parent.height
-        anchors.centerIn: parent
-        backgroundKey: "keyboard"
-        cursorShape: Qt.PointingHandCursor
-        hoverEnabled: true
-
-        Row {
-            id: keyboardRow
-            spacing: kb.iconSpacing * sc()
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.verticalCenter: parent.verticalCenter
-            height: iconBoxHeight
-
-            Item {
-                id: iconBox
-                width: iconBoxWidth
-                height: iconBoxHeight
-
-                MaterialIcon {
-                    anchors.centerIn: parent
-                    icon: "keyboard"
-                    size: iconSizePx
-                    color: kb.iconColor
-                }
-            }
-
-            Label {
-                id: keyboardLabel
-                text: kb.layoutText
-                color: kb.textColor
-                font.family: Theme.fontFamily
-                font.weight: Theme.keyboardTextBold ? Font.DemiBold : Font.Medium
-                font.pixelSize: kb.fontPixelSize
-                padding: 0
-                leftPadding: textPaddingPx
-                rightPadding: textPaddingPx
-                elide: Text.ElideRight
-                clip: true
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-            }
-        }
-
-        TapHandler {
-            acceptedButtons: Qt.LeftButton
-            gesturePolicy: TapHandler.ReleaseWithinBounds
-            onTapped: {
-                switchProc.cmd = ["hyprctl", "switchxkblayout", "current", "next"]
-                switchProc.start()
-            }
-        }
+    onClicked: {
+        switchProc.cmd = ["hyprctl", "switchxkblayout", "current", "next"]
+        switchProc.start()
     }
 
     Connections {

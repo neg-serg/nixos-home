@@ -302,20 +302,6 @@
       "color": "#CBD6E5"
     }
   },
-  "keyboard": {
-    "icon": {
-      "spacing": 4,
-      "padding": 4
-    },
-    "text": {
-      "padding": 1.5,
-      "bold": false
-    },
-    "colors": {
-      "text": "#CBD6E5",
-      "icon": "#AEB9C8"
-    }
-  },
   
   "volume": {
     "icon": {

@@ -6,7 +6,7 @@ import qs.Services as Services
 import qs.Settings
 import "../../Helpers/RichText.js" as Rich
 import "../../Helpers/WsIconMap.js" as WsMap
-WidgetCapsule {
+CenteredCapsuleRow {
     id: root
     property string wsName: "?"
     property int wsId: -1
@@ -19,14 +19,8 @@ WidgetCapsule {
         return WsMap.submapIcon(key, Theme.wsSubmapIconOverrides);
     }
 
-    property color iconColor: Theme.accentHover
+    property color workspaceGlyphColor: Theme.accentHover
     property color gothicColor: Theme.textPrimary
-
-    // Icon layout
-    property int iconSpacing:Theme.wsIconSpacing
-    readonly property int capsuleInnerHeight: root.capsuleInner
-    readonly property int iconFontPx: Math.round(Theme.fontSizeSmall * root.capsuleScale)
-    readonly property int iconSlotWidth: iconFontPx + Theme.wsIconInnerPadding * 2
 
     backgroundKey: "workspaces"
 
@@ -37,7 +31,7 @@ WidgetCapsule {
     // Wrap one char into colored span by category
     function spanForChar(ch) {
         const cp = ch.codePointAt(0);
-        if (isPUA(cp)) { return Rich.colorSpan(iconColor, ch); }
+        if (isPUA(cp)) { return Rich.colorSpan(workspaceGlyphColor, ch); }
         if (isOldItalic(cp)) { return Rich.colorSpan(gothicColor, ch); }
         if (ch === "·") return " ";
         return Rich.esc(ch);
@@ -95,63 +89,37 @@ WidgetCapsule {
                                    ? decorateName(restName)
                                    : decorateName(fallbackText)
 
-    // UI
-    Row {
-        id: lineBox
-        spacing: iconSpacing
-        anchors.centerIn: parent
-        height: capsuleInnerHeight
+    iconVisible: root.submapName && root.submapName.length > 0
+    iconMode: "material"
+    materialIconName: submapIconName(root.submapName)
+    iconColor: Theme.wsSubmapIconColor
+    iconAutoTune: true
+    iconPadding: Theme.wsIconInnerPadding
+    iconSpacing: Theme.wsIconSpacing
+    labelIsRichText: true
+    labelText: decoratedText
+    fontPixelSize: Math.round(Theme.fontSizeSmall * root.capsuleScale)
+    labelFontFamily: Theme.fontFamily
+    labelFontWeight: Font.Medium
+    labelColor: Theme.textPrimary
+    textPadding: Theme.wsLabelPadding
+    labelLeftPaddingOverride: root.isTerminalWs ? Theme.wsLabelLeftPaddingTerminal : Theme.wsLabelLeftPadding
 
-        Item {
-            id: submapIconSlot
-            visible: root.submapName && root.submapName.length > 0
-            implicitWidth: visible ? iconSlotWidth : 0
-            implicitHeight: capsuleInnerHeight
-            width: implicitWidth
-            height: implicitHeight
+    leadingContent: Item {
+        width: wsIcon.visible ? wsIcon.implicitWidth : 0
+        height: root.desiredInnerHeight
 
-            BaselineAlignedIcon {
-                mode: "material"
-                alignMode: "optical"
-                icon: submapIconName(root.submapName)
-                color: Theme.wsSubmapIconColor
-                screen: Screen
-                anchors.centerIn: parent
-            }
-        }
-
-        Item {
-            id: wsIconSlot
+        BaselineAlignedIcon {
+            id: wsIcon
             visible: iconGlyph.length > 0
-            implicitWidth: visible ? iconSlotWidth : 0
-            implicitHeight: capsuleInnerHeight
-            width: implicitWidth
-            height: implicitHeight
-
-            BaselineAlignedIcon {
-                mode: "text"
-                alignMode: "optical"
-                text: iconGlyph
-                fontFamily: Theme.fontFamily
-                color: iconColor
-                padding: (root.isTerminalWs ? Theme.uiSpacingNone : Theme.wsIconInnerPadding)
-                anchors.centerIn: parent
-            }
-        }
-
-        Label {
-            id: label
-            textFormat: Text.RichText
-            renderType: Text.NativeRendering
-            text: decoratedText
-            font.family: Theme.fontFamily
-            font.weight: Font.Medium
-            font.pixelSize: Theme.fontSizeSmall * root.capsuleScale
-            color: Theme.textPrimary
-            padding: Theme.wsLabelPadding
-            leftPadding: (root.isTerminalWs ? Theme.wsLabelLeftPaddingTerminal : Theme.wsLabelLeftPadding)
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
+            mode: "text"
+            alignMode: "optical"
+            text: iconGlyph
+            fontFamily: Theme.fontFamily
+            color: workspaceGlyphColor
+            padding: (root.isTerminalWs ? Theme.uiSpacingNone : Theme.wsIconInnerPadding)
+            labelRef: root.labelItem
+            anchors.centerIn: parent
         }
     }
 
@@ -193,5 +161,4 @@ WidgetCapsule {
         Services.HyprlandWatcher.refreshBinds();
     }
 
-    implicitWidth: horizontalPadding * 2 + lineBox.implicitWidth
 }

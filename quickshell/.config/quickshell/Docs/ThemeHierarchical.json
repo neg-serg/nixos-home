@@ -341,36 +341,6 @@
       "color": "#CBD6E5"
     }
   },
-  "keyboard": {
-    "height": 28,
-    "minWidth": 40,
-    "margin": 4,
-    "radius": 4,
-    "icon": {
-      "scale": 1,
-      "spacing": 4,
-      "padding": 4,
-      "baselineOffset": 0
-    },
-    "text": {
-      "padding": 1.5,
-      "baselineOffset": 0,
-      "bold": false
-    },
-    "opacity": {
-      "normal": 1,
-      "hover": 1
-    },
-    "font": {
-      "scale": 0.9
-    },
-    "colors": {
-      "bg": "#00000000",
-      "hoverBg": "#26000000",
-      "text": "#CBD6E5",
-      "icon": "#AEB9C8"
-    }
-  },
   "volume": {
     "icon": {
       "offThreshold": 0,
