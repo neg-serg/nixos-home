@@ -37,6 +37,45 @@ in {
     docsearch_mcp = call ../mcp/docsearch {};
     "docsearch-mcp" = docsearch_mcp;
 
+    firecrawl_mcp = call ../mcp/firecrawl {};
+    "firecrawl-mcp" = firecrawl_mcp;
+
+    gmail_mcp = call ../mcp/gmail {};
+    "gmail-mcp" = gmail_mcp;
+
+    gcal_mcp = call ../mcp/gcal {};
+    "gcal-mcp" = gcal_mcp;
+
+    imap_mcp = call ../mcp/imap {};
+    "imap-mcp" = imap_mcp;
+
+    smtp_mcp = call ../mcp/smtp {};
+    "smtp-mcp" = smtp_mcp;
+
+    brave_search_mcp = call ../mcp/brave-search {};
+    "brave-search-mcp" = brave_search_mcp;
+
+    elasticsearch_mcp = call ../mcp/elasticsearch {};
+    "elasticsearch-mcp" = elasticsearch_mcp;
+
+    github_mcp = call ../mcp/github {};
+    "github-mcp" = github_mcp;
+
+    gitlab_mcp = call ../mcp/gitlab {};
+    "gitlab-mcp" = gitlab_mcp;
+
+    discord_mcp = call ../mcp/discord {};
+    "discord-mcp" = discord_mcp;
+
+    playwright_mcp = call ../mcp/playwright {};
+    "playwright-mcp" = playwright_mcp;
+
+    chromium_mcp = call ../mcp/chromium {};
+    "chromium-mcp" = chromium_mcp;
+
+    meeting_notes_mcp = call ../mcp/meeting-notes {};
+    "meeting-notes-mcp" = meeting_notes_mcp;
+
     mcp_server_browserbase = call ../mcp/browserbase {};
     "mcp-server-browserbase" = mcp_server_browserbase;
 
@@ -45,6 +84,24 @@ in {
 
     redis_mcp = call ../mcp/redis {};
     "redis-mcp" = redis_mcp;
+
+    exa_mcp = call ../mcp/exa {};
+    "exa-mcp" = exa_mcp;
+
+    sentry_mcp = call ../mcp/sentry {};
+    "sentry-mcp" = sentry_mcp;
+
+    slack_mcp = call ../mcp/slack {};
+    "slack-mcp" = slack_mcp;
+
+    sqlite_mcp = call ../mcp/sqlite {};
+    "sqlite-mcp" = sqlite_mcp;
+
+    telegram_mcp = call ../mcp/telegram {};
+    "telegram-mcp" = telegram_mcp;
+
+    telegram_bot_mcp = call ../mcp/telegram-bot {};
+    "telegram-bot-mcp" = telegram_bot_mcp;
 
     # Music album metadata CLI (used by music-rename script)
     albumdetails = prev.stdenv.mkDerivation rec {

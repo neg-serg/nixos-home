@@ -235,9 +235,28 @@ in {
             mcp-server-sequential-thinking = pkgs.neg.mcp_server_sequential_thinking;
             mcp-server-time = pkgs.neg.mcp_server_time;
             docsearch-mcp = pkgs.neg.docsearch_mcp;
+            firecrawl-mcp = pkgs.neg.firecrawl_mcp;
+            gmail-mcp = pkgs.neg.gmail_mcp;
+            gcal-mcp = pkgs.neg.gcal_mcp;
+            imap-mcp = pkgs.neg.imap_mcp;
+            smtp-mcp = pkgs.neg.smtp_mcp;
+            brave-search-mcp = pkgs.neg.brave_search_mcp;
+            elasticsearch-mcp = pkgs.neg.elasticsearch_mcp;
             mcp-server-browserbase = pkgs.neg.mcp_server_browserbase;
             postgres-mcp = pkgs.neg.postgres_mcp;
             redis-mcp = pkgs.neg.redis_mcp;
+            exa-mcp = pkgs.neg.exa_mcp;
+            sentry-mcp = pkgs.neg.sentry_mcp;
+            slack-mcp = pkgs.neg.slack_mcp;
+            sqlite-mcp = pkgs.neg.sqlite_mcp;
+            telegram-mcp = pkgs.neg.telegram_mcp;
+            telegram-bot-mcp = pkgs.neg.telegram_bot_mcp;
+            github-mcp = pkgs.neg.github_mcp;
+            gitlab-mcp = pkgs.neg.gitlab_mcp;
+            discord-mcp = pkgs.neg.discord_mcp;
+            playwright-mcp = pkgs.neg.playwright_mcp;
+            chromium-mcp = pkgs.neg.chromium_mcp;
+            meeting-notes-mcp = pkgs.neg.meeting_notes_mcp;
           }
           // lib.optionalAttrs extrasFlag extrasSet;
 

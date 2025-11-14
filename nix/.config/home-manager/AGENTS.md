@@ -217,6 +217,44 @@ consistent and activation quiet. This page shows what to use and how to validate
   - Avoid `ExecStartPre` mkdir/touch logic — prefer XDG helpers and per‑file `force = true`; reduces
     activation noise.
 
+- Telegram MCP servers
+
+  - `telegram` (personal account bridge, TDLib/gotd):
+    - Env: export `TG_APP_ID`, `TG_API_HASH`; run `telegram-mcp auth --app-id ... --api-hash ... --phone ...` once to create `$XDG_DATA_HOME/mcp/telegram/session.json` (autoprovisioned by HM).
+    - Full access to personal dialogs, drafts, and read states — only use when policy allows sharing the entire account context.
+  - `telegram-bot` (Bot API only):
+    - Env: `TELEGRAM_BOT_TOKEN` from `@BotFather`; no phone login or session files.
+    - Limited tools (`get_bot_info`, `send_message`, `get_updates`, `forward_message`) for alerting/automation in bot chats; cannot read private user dialogs.
+  - Choose the bridge that matches the required scope: bot token for channel/automation work, full account for inbox assistants.
+
+- MCP: Gmail/Calendars/Mail/DevTools
+
+  - `gmail` (Gmail API w/ style guide + draft tools):
+    - Env: `GMAIL_CLIENT_ID`, `GMAIL_CLIENT_SECRET`, `GMAIL_REFRESH_TOKEN`, `OPENAI_API_KEY`.
+    - Stores tokens + style guide under `~/.auto-gmail`; HM pre-creates the dir so the Go binary can persist state in pure builds.
+    - Use this when you need Gmail-specific search, thread metadata, and draft synthesis; IMAP is faster to wire up but cannot access Gmail resources like style guides.
+  - `google-calendar` (teren-papercutlabs/gcal-mcp):
+    - Env: `GCAL_CLIENT_ID`, `GCAL_CLIENT_SECRET`, `GCAL_REFRESH_TOKEN` (optional `GCAL_ACCESS_TOKEN`), `GCAL_CALENDAR_ID` to preselect calendars.
+    - Binary lives in the Nix store, so OAuth flows must inject refresh tokens; interactive logins cannot write to `$out` (documented limitation).
+  - `imap-mail` / `smtp-mail` (generic mailboxes):
+    - IMAP env: `IMAP_HOST`, `IMAP_PORT`, `IMAP_USERNAME`, `IMAP_PASSWORD`, `IMAP_USE_SSL`.
+    - SMTP env: `SMTP_HOST`, `SMTP_PORT`, `SMTP_USERNAME`, `SMTP_PASSWORD`, `SMTP_FROM_ADDRESS`, `SMTP_USE_TLS`, `SMTP_USE_SSL`, optional `SMTP_BEARER_TOKEN`.
+    - Use IMAP/SMTP when you want provider-agnostic mail access or service accounts; Gmail server remains superior for Gmail-native labels + drafts.
+  - `github` vs `gitlab`:
+    - GitHub env: `GITHUB_TOKEN` (PAT or fine-grained token), optional `GITHUB_HOST`/`GITHUB_TOOLSETS`/`GITHUB_READ_ONLY` toggles. Requires the `stdio` subcommand; PAT scopes should cover repos/issues/actions per need.
+    - GitLab env: `GITLAB_TOKEN`, `GITLAB_API_URL`, optional `GITLAB_PROJECT_ID`, `GITLAB_ALLOWED_PROJECT_IDS`, `GITLAB_READ_ONLY_MODE`, `USE_GITLAB_WIKI`, `USE_MILESTONE`, `USE_PIPELINE`. Use OAuth only if you can persist tokens outside the store.
+    - GitHub server gives you Copilot-style repo/PR/actions tooling; GitLab fork adds wiki/milestone/pipeline operations for self-hosted instances.
+  - `discord`:
+    - Env: `DISCORD_BOT_TOKEN` (wired into upstream `DISCORD_TOKEN`), optional `DISCORD_CHANNEL_IDS` to restrict usage at the policy layer.
+    - Bot-only bridge: can read and write in joined guild channels; no DM access.
+  - Browser automation (`playwright`, `chromium`):
+    - `playwright`: persists profile/output under `$XDG_DATA_HOME/mcp/playwright`, browsers cached in `$XDG_CACHE_HOME/ms-playwright`. Pass `PLAYWRIGHT_HEADLESS` or `PLAYWRIGHT_CAPS` via env to tweak launch flags; CLI args `--user-data-dir/--output-dir` are pre-set.
+    - `chromium`: uses `CHROMIUM_USER_DATA_DIR=$XDG_DATA_HOME/mcp/chromium/profile`; optional `CHROMIUM_PATH` to point at preinstalled builds.
+    - Combine them when you need both Playwright’s structured accessibility snapshots and lower-level CDP control (Chromium) for debugging.
+  - `meeting-notes`:
+    - FastMCP server that writes timelines + analytics into `~/.claude/session-notes`; HM ensures the tree exists so pure builds succeed.
+    - No secrets required; useful for keeping long-running coding sessions summarized for later recall.
+
 - rofi (launcher)
 
   - Use the local wrapper `rofi` from `~/.local/bin` (PATH is set so it takes precedence).

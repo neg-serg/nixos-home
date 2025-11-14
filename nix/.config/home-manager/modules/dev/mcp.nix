@@ -6,6 +6,14 @@
 }:
 let
   cfgDev = config.features.dev.enable or false;
+  sqliteDbPath = "${config.xdg.dataHome}/mcp/sqlite/mcp.db";
+  telegramSessionPath = "${config.xdg.dataHome}/mcp/telegram/session.json";
+  gmailStateDir = "${config.home.homeDirectory}/.auto-gmail";
+  meetingNotesDir = "${config.home.homeDirectory}/.claude/session-notes";
+  chromiumProfileDir = "${config.xdg.dataHome}/mcp/chromium/profile";
+  playwrightProfileDir = "${config.xdg.dataHome}/mcp/playwright/profile";
+  playwrightOutputDir = "${config.xdg.dataHome}/mcp/playwright/output";
+  playwrightBrowsersPath = "${config.xdg.cacheHome}/ms-playwright";
 in
 lib.mkIf cfgDev (lib.mkMerge [
   # Central MCP servers config written to $XDG_CONFIG_HOME/mcp/mcp.json
@@ -20,9 +28,28 @@ lib.mkIf cfgDev (lib.mkMerge [
       seqBinary = "${pkgs.neg.mcp_server_sequential_thinking}/bin/mcp-server-sequential-thinking";
       timeBinary = "${pkgs.neg.mcp_server_time}/bin/mcp-server-time";
       docsearchBinary = "${pkgs.neg.docsearch_mcp}/bin/docsearch-mcp";
+      gmailBinary = "${pkgs.neg.gmail_mcp}/bin/gmail-mcp-server";
+      gcalBinary = "${pkgs.neg.gcal_mcp}/bin/gcal-mcp";
+      imapBinary = "${pkgs.neg.imap_mcp}/bin/imap-mcp";
+      smtpBinary = "${pkgs.neg.smtp_mcp}/bin/smtp-mcp";
+      braveBinary = "${pkgs.neg.brave_search_mcp}/bin/brave-search-mcp-server";
+      firecrawlBinary = "${pkgs.neg.firecrawl_mcp}/bin/firecrawl-mcp";
       browserBinary = "${pkgs.neg.mcp_server_browserbase}/bin/mcp-server-browserbase";
-      postgresBinary = "${pkgs.neg.postgres_mcp}/bin/simple-postgres-mcp";
+      elasticBinary = "${pkgs.neg.elasticsearch_mcp}/bin/elasticsearch-core-mcp-server";
+      sentryBinary = "${pkgs.neg.sentry_mcp}/bin/mcp-server-sentry";
+      slackBinary = "${pkgs.neg.slack_mcp}/bin/mcp-server-slack";
+      sqliteBinary = "${pkgs.neg.sqlite_mcp}/bin/mcp-server-sqlite";
+      postgresBinary = "${pkgs.neg.postgres_mcp}/bin/mcp-server-postgres";
       redisBinary = "${pkgs.neg.redis_mcp}/bin/mcp-server-redis";
+      exaBinary = "${pkgs.neg.exa_mcp}/bin/exa-mcp-server";
+      githubBinary = "${pkgs.neg.github_mcp}/bin/github-mcp-server";
+      gitlabBinary = "${pkgs.neg.gitlab_mcp}/bin/gitlab-mcp";
+      discordBinary = "${pkgs.neg.discord_mcp}/bin/discordmcp";
+      playwrightBinary = "${pkgs.neg.playwright_mcp}/bin/playwright-mcp";
+      chromiumBinary = "${pkgs.neg.chromium_mcp}/bin/mcp-chromium-cdp";
+      meetingNotesBinary = "${pkgs.neg.meeting_notes_mcp}/bin/meeting-notes-mcp";
+      telegramBinary = "${pkgs.neg.telegram_mcp}/bin/telegram-mcp";
+      telegramBotBinary = "${pkgs.neg.telegram_bot_mcp}/bin/tg-mcp";
     in {
       enable = true;
       servers = {
@@ -79,11 +106,141 @@ lib.mkIf cfgDev (lib.mkMerge [
           command = docsearchBinary;
         };
 
+        gmail = {
+          command = gmailBinary;
+          env = {
+            GMAIL_CLIENT_ID = "{env:GMAIL_CLIENT_ID}";
+            GMAIL_CLIENT_SECRET = "{env:GMAIL_CLIENT_SECRET}";
+            GMAIL_REFRESH_TOKEN = "{env:GMAIL_REFRESH_TOKEN}";
+            OPENAI_API_KEY = "{env:OPENAI_API_KEY}";
+          };
+        };
+
+        google-calendar = {
+          command = gcalBinary;
+          env = {
+            GCAL_CLIENT_ID = "{env:GCAL_CLIENT_ID}";
+            GCAL_CLIENT_SECRET = "{env:GCAL_CLIENT_SECRET}";
+            GCAL_REFRESH_TOKEN = "{env:GCAL_REFRESH_TOKEN}";
+            GCAL_ACCESS_TOKEN = "{env:GCAL_ACCESS_TOKEN}";
+            GCAL_CALENDAR_ID = "{env:GCAL_CALENDAR_ID}";
+          };
+        };
+
+        imap-mail = {
+          command = imapBinary;
+          env = {
+            IMAP_HOST = "{env:IMAP_HOST}";
+            IMAP_PORT = "{env:IMAP_PORT}";
+            IMAP_USERNAME = "{env:IMAP_USERNAME}";
+            IMAP_PASSWORD = "{env:IMAP_PASSWORD}";
+            IMAP_USE_SSL = "{env:IMAP_USE_SSL}";
+          };
+        };
+
+        smtp-mail = {
+          command = smtpBinary;
+          env = {
+            SMTP_HOST = "{env:SMTP_HOST}";
+            SMTP_PORT = "{env:SMTP_PORT}";
+            SMTP_USERNAME = "{env:SMTP_USERNAME}";
+            SMTP_PASSWORD = "{env:SMTP_PASSWORD}";
+            SMTP_FROM_ADDRESS = "{env:SMTP_FROM_ADDRESS}";
+            SMTP_USE_TLS = "{env:SMTP_USE_TLS}";
+            SMTP_USE_SSL = "{env:SMTP_USE_SSL}";
+            SMTP_BEARER_TOKEN = "{env:SMTP_BEARER_TOKEN}";
+          };
+        };
+
+        firecrawl = {
+          command = firecrawlBinary;
+          env = {
+            FIRECRAWL_API_KEY = "{env:FIRECRAWL_API_KEY}";
+            FIRECRAWL_API_URL = "{env:FIRECRAWL_API_URL}";
+          };
+        };
+
+        elasticsearch = {
+          command = elasticBinary;
+          env = {
+            ES_URL = "{env:ES_URL}";
+            ES_API_KEY = "{env:ES_API_KEY}";
+            ES_USERNAME = "{env:ES_USERNAME}";
+            ES_PASSWORD = "{env:ES_PASSWORD}";
+            ES_SSL_SKIP_VERIFY = "{env:ES_SSL_SKIP_VERIFY}";
+          };
+        };
+
+        sentry = {
+          command = sentryBinary;
+          env = {
+            SENTRY_TOKEN = "{env:SENTRY_TOKEN}";
+          };
+        };
+
+        slack = {
+          command = slackBinary;
+          env = {
+            SLACK_BOT_TOKEN = "{env:SLACK_BOT_TOKEN}";
+            SLACK_TEAM_ID = "{env:SLACK_TEAM_ID}";
+            SLACK_CHANNEL_IDS = "{env:SLACK_CHANNEL_IDS}";
+          };
+        };
+
+        sqlite = {
+          command = sqliteBinary;
+          args = [
+            "--db-path"
+            sqliteDbPath
+          ];
+        };
+
+        brave-search = {
+          command = braveBinary;
+          env = {
+            BRAVE_API_KEY = "{env:BRAVE_API_KEY}";
+          };
+        };
+
         browserbase = {
           command = browserBinary;
           env = {
             BROWSERBASE_API_KEY = "{env:BROWSERBASE_API_KEY}";
             STAGEHAND_API_KEY = "{env:STAGEHAND_API_KEY}";
+          };
+        };
+
+        exa-search = {
+          command = exaBinary;
+          env = {
+            EXA_API_KEY = "{env:EXA_API_KEY}";
+          };
+        };
+
+        github = {
+          command = githubBinary;
+          args = ["stdio"];
+          env = {
+            GITHUB_PERSONAL_ACCESS_TOKEN = "{env:GITHUB_TOKEN}";
+            GITHUB_HOST = "{env:GITHUB_HOST}";
+            GITHUB_TOOLSETS = "{env:GITHUB_TOOLSETS}";
+            GITHUB_DYNAMIC_TOOLSETS = "{env:GITHUB_DYNAMIC_TOOLSETS}";
+            GITHUB_READ_ONLY = "{env:GITHUB_READ_ONLY}";
+            GITHUB_LOCKDOWN_MODE = "{env:GITHUB_LOCKDOWN_MODE}";
+          };
+        };
+
+        gitlab = {
+          command = gitlabBinary;
+          env = {
+            GITLAB_PERSONAL_ACCESS_TOKEN = "{env:GITLAB_TOKEN}";
+            GITLAB_API_URL = "{env:GITLAB_API_URL}";
+            GITLAB_PROJECT_ID = "{env:GITLAB_PROJECT_ID}";
+            GITLAB_ALLOWED_PROJECT_IDS = "{env:GITLAB_ALLOWED_PROJECT_IDS}";
+            GITLAB_READ_ONLY_MODE = "{env:GITLAB_READ_ONLY_MODE}";
+            USE_GITLAB_WIKI = "{env:USE_GITLAB_WIKI}";
+            USE_MILESTONE = "{env:USE_MILESTONE}";
+            USE_PIPELINE = "{env:USE_PIPELINE}";
           };
         };
 
@@ -101,6 +258,61 @@ lib.mkIf cfgDev (lib.mkMerge [
             REDIS_URL = "{env:REDIS_URL}";
           };
         };
+
+        discord = {
+          command = discordBinary;
+          env = {
+            DISCORD_TOKEN = "{env:DISCORD_BOT_TOKEN}";
+            DISCORD_CHANNEL_IDS = "{env:DISCORD_CHANNEL_IDS}";
+          };
+        };
+
+        playwright = {
+          command = playwrightBinary;
+          args = [
+            "--user-data-dir"
+            playwrightProfileDir
+            "--output-dir"
+            playwrightOutputDir
+          ];
+          env = {
+            PLAYWRIGHT_BROWSERS_PATH = playwrightBrowsersPath;
+            PLAYWRIGHT_HEADLESS = "{env:PLAYWRIGHT_HEADLESS}";
+            PLAYWRIGHT_CAPS = "{env:PLAYWRIGHT_CAPS}";
+          };
+        };
+
+        chromium = {
+          command = chromiumBinary;
+          env = {
+            CHROMIUM_PATH = "{env:CHROMIUM_PATH}";
+            CHROMIUM_USER_DATA_DIR = chromiumProfileDir;
+          };
+        };
+
+        meeting-notes = {
+          command = meetingNotesBinary;
+          env = {
+            CLAUDE_SESSION_NOTES_DIR = meetingNotesDir;
+          };
+        };
+
+        telegram = {
+          command = telegramBinary;
+          env = {
+            TG_APP_ID = "{env:TG_APP_ID}";
+            TG_API_HASH = "{env:TG_API_HASH}";
+            TG_SESSION_PATH = telegramSessionPath;
+          };
+        };
+
+        # Bot-only bridge: uses Telegram Bot API (no personal chat access)
+        telegram-bot = {
+          command = telegramBotBinary;
+          env = {
+            TELEGRAM_BOT_TOKEN = "{env:TELEGRAM_BOT_TOKEN}";
+          };
+        };
       };
     };
 
@@ -113,9 +325,39 @@ lib.mkIf cfgDev (lib.mkMerge [
       pkgs.neg.mcp_server_sequential_thinking
       pkgs.neg.mcp_server_time
       pkgs.neg.docsearch_mcp
+      pkgs.neg.gmail_mcp
+      pkgs.neg.gcal_mcp
+      pkgs.neg.imap_mcp
+      pkgs.neg.smtp_mcp
+      pkgs.neg.firecrawl_mcp
+      pkgs.neg.brave_search_mcp
+      pkgs.neg.elasticsearch_mcp
+      pkgs.neg.sentry_mcp
+      pkgs.neg.slack_mcp
+      pkgs.neg.sqlite_mcp
       pkgs.neg.mcp_server_browserbase
+      pkgs.neg.exa_mcp
+      pkgs.neg.github_mcp
+      pkgs.neg.gitlab_mcp
       pkgs.neg.postgres_mcp
       pkgs.neg.redis_mcp
+      pkgs.neg.discord_mcp
+      pkgs.neg.playwright_mcp
+      pkgs.neg.chromium_mcp
+      pkgs.neg.meeting_notes_mcp
+      pkgs.neg.telegram_mcp
+      pkgs.neg.telegram_bot_mcp
+    ];
+
+    home.activation.ensureMcpStateDirs = config.lib.neg.mkEnsureRealDirsMany [
+      (builtins.dirOf sqliteDbPath)
+      (builtins.dirOf telegramSessionPath)
+      gmailStateDir
+      meetingNotesDir
+      chromiumProfileDir
+      playwrightProfileDir
+      playwrightOutputDir
+      playwrightBrowsersPath
     ];
   }
 
