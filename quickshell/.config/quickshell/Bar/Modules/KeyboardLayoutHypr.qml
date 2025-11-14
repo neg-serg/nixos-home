@@ -54,30 +54,57 @@ Item {
     }
 
     readonly property int capsuleHeight: capsule.capsuleHeight
+    readonly property int iconPaddingPx: Math.round(Theme.keyboardIconPadding * sc())
+    readonly property int textPaddingPx: Math.round(Theme.keyboardTextPadding * sc())
+    readonly property int iconSizePx: Math.max(1, kb.fontPixelSize)
+    readonly property int iconBoxWidth: iconSizePx + iconPaddingPx * 2
+    readonly property int iconBoxHeight: capsule.capsuleInner
 
-    implicitWidth: Math.max(Math.round(Theme.keyboardMinWidth * sc()), Math.ceil(capsule.row.implicitWidth + 2 * capsule.horizontalPadding))
+    implicitWidth: Math.max(Math.round(Theme.keyboardMinWidth * sc()), Math.ceil(keyboardRow.implicitWidth + 2 * capsule.horizontalPadding))
     implicitHeight: capsuleHeight
 
-    CenteredCapsuleRow {
+    WidgetCapsule {
         id: capsule
         width: parent.width
         height: parent.height
         anchors.centerIn: parent
         backgroundKey: "keyboard"
         cursorShape: Qt.PointingHandCursor
-        desiredInnerHeight: capsule.capsuleInner
-        centerRow: true
-        iconMode: "material"
-        materialIconName: "keyboard"
-        iconColor: kb.iconColor
-        iconPadding: Math.round(Theme.keyboardIconPadding * sc())
-        iconSpacing: kb.iconSpacing * sc()
-        textPadding: Math.round(Theme.keyboardTextPadding * sc())
-        labelText: kb.layoutText
-        labelColor: kb.textColor
-        fontPixelSize: kb.fontPixelSize
-        labelFontFamily: Theme.fontFamily
-        labelFontWeight: Theme.keyboardTextBold ? Font.DemiBold : Font.Medium
+        hoverEnabled: true
+
+        Row {
+            id: keyboardRow
+            spacing: kb.iconSpacing * sc()
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
+
+            Item {
+                id: iconBox
+                width: iconBoxWidth
+                height: iconBoxHeight
+                anchors.verticalCenter: parent.verticalCenter
+
+                MaterialIcon {
+                    anchors.centerIn: parent
+                    icon: "keyboard"
+                    size: iconSizePx
+                    color: kb.iconColor
+                }
+            }
+
+            Label {
+                id: keyboardLabel
+                text: kb.layoutText
+                color: kb.textColor
+                font.family: Theme.fontFamily
+                font.weight: Theme.keyboardTextBold ? Font.DemiBold : Font.Medium
+                font.pixelSize: kb.fontPixelSize
+                padding: 0
+                leftPadding: textPaddingPx
+                rightPadding: textPaddingPx
+                verticalAlignment: Text.AlignVCenter
+            }
+        }
 
         TapHandler {
             acceptedButtons: Qt.LeftButton
