@@ -350,6 +350,8 @@ Singleton {
     property int panelHotzoneWidth: val('panel.hotzone.width', 16)
     property int panelHotzoneHeight: val('panel.hotzone.height', 9)
     property real panelHotzoneRightShift: val('panel.hotzone.rightShift', 1.15)
+    property int panelWidgetMinWidth: val('panel.widgetMinWidth', 88)
+    property int panelWidgetWideWidth: val('panel.widgetWideWidth', 148)
     property int panelModuleHeight: val('panel.moduleHeight', 36)
     property int panelMenuYOffset: val('panel.menuYOffset', 20)
     // Corners
