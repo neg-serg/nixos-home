@@ -14,8 +14,7 @@
     },
     "shadow": "#000000",
     "status": {
-      "error": "#FF6B81",
-      "warning": "#FFBB66"
+      "error": "#FF6B81"
     },
     "highlight": "#94E1F9",
     "onAccent": "#FFFFFF"
@@ -33,8 +32,6 @@
       "height": 9,
       "rightShift": 1.15
     },
-    "widgetMinWidth": 88,
-    "widgetWideWidth": 148,
     "moduleHeight": 36,
     "menuYOffset": 20,
     "pill": {
@@ -114,8 +111,7 @@
       "spacing": 0,
       "slideMs": 220,
       "autoHideMs": 4000,
-      "outerMargin": 4,
-      "radius": 10
+      "outerMargin": 4
     },
     "cornerRadius": 9,
     "innerRadius": 0,
@@ -143,17 +139,8 @@
       "width": 1,
       "noneWidth": 0
     },
-    "ripple": {
-      "opacity": 0.18
-    },
     "icon": {
       "emphasisOpacity": 0.9
-    },
-    "shadow": {
-      "opacity": 0.6,
-      "blur": 0.8,
-      "offsetX": 0,
-      "offsetY": 1
     },
     "anim": {
       "quickMs": 120,
@@ -173,27 +160,17 @@
     },
     "visibilityEpsilon": 0.01,
     "margin": {
-      "large": 32,
-      "medium": 16,
       "none": 0
-    },
-    "padding": {
-      "medium": 14
     },
     "spacing": {
-      "large": 18,
-      "small": 10,
-      "xsmall": 2,
-      "none": 0
+      "none": 0,
+      "xsmall": 4
     },
     "gap": {
       "tiny": 1
     },
     "control": {
       "height": 48
-    },
-    "radius": {
-      "none": 0
     }
   },
   "ws": {
@@ -326,10 +303,6 @@
     }
   },
   "keyboard": {
-    "height": 28,
-    "minWidth": 40,
-    "margin": 4,
-    "radius": 4,
     "icon": {
       "spacing": 4,
       "padding": 4
@@ -338,13 +311,7 @@
       "padding": 1.5,
       "bold": false
     },
-    "opacity": {
-      "normal": 1.0,
-      "hover": 1.0
-    },
     "colors": {
-      "bg": "#00000000",
-      "hoverBg": "#26000000",
       "text": "#CBD6E5",
       "icon": "#AEB9C8"
     }

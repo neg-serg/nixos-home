@@ -56,28 +56,14 @@ LocalComponents.CapsuleButton {
     contentYOffset: centerOffset
     interactive: false
 
-    readonly property int _iconSlotWidth: (root.iconVisible ? Math.max(0, baselineIcon.implicitWidth || 0) : 0)
-    readonly property int _tailSlotWidth: Math.max(0, tailSlot.implicitWidth || 0)
-    readonly property int _labelImplicitWidth: (root.labelVisible ? Math.max(0, label.implicitWidth || 0) : 0)
-    readonly property int _spacingBeforeLabel: (root.iconVisible && root.labelVisible && _iconSlotWidth > 0 && _labelImplicitWidth > 0)
-        ? iconSpacing
-        : 0
-    readonly property int _spacingBeforeTail: (((_iconSlotWidth > 0) || (_labelImplicitWidth > 0)) && _tailSlotWidth > 0)
-        ? iconSpacing
-        : 0
-    readonly property int _naturalWidth: _iconSlotWidth + _tailSlotWidth + _labelImplicitWidth + _spacingBeforeLabel + _spacingBeforeTail
+    readonly property int _naturalWidth: Math.max(0, rowLayout.implicitWidth || 0)
     readonly property int _contentWidth: (function() {
         var width = Math.max(minContentWidth, _naturalWidth);
         if (contentWidth > 0) width = contentWidth;
         if (maxContentWidth > 0) width = Math.min(width, maxContentWidth);
         return width;
     })()
-    readonly property int _labelAvailableWidth: Math.max(0, _contentWidth - (_iconSlotWidth + _tailSlotWidth + _spacingBeforeLabel + _spacingBeforeTail))
-    readonly property double _labelClampTarget: (function() {
-        var clamp = (_labelAvailableWidth > 0) ? _labelAvailableWidth : Number.POSITIVE_INFINITY;
-        if (root.labelMaxWidth > 0) clamp = Math.min(root.labelMaxWidth, clamp);
-        return clamp;
-    })()
+    readonly property bool _isClamped: _contentWidth < _naturalWidth || (contentWidth > 0) || (maxContentWidth > 0) || (labelMaxWidth > 0)
 
     Item {
         id: lineBox
@@ -85,7 +71,7 @@ LocalComponents.CapsuleButton {
         height: rowLayout.implicitHeight
         implicitWidth: width
         implicitHeight: height
-        clip: true
+        clip: _isClamped
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
 
@@ -123,11 +109,10 @@ LocalComponents.CapsuleButton {
             Label {
                 id: label
                 visible: root.labelVisible
-                Layout.fillWidth: false
+                Layout.fillWidth: true
                 Layout.alignment: Qt.AlignVCenter
                 Layout.minimumWidth: 0
-                Layout.preferredWidth: _labelImplicitWidth
-                Layout.maximumWidth: root.labelVisible ? _labelClampTarget : 0
+                Layout.maximumWidth: (root.labelMaxWidth > 0) ? root.labelMaxWidth : Number.POSITIVE_INFINITY
                 textFormat: root.labelIsRichText ? Text.RichText : Text.PlainText
                 text: root.labelText
                 color: root.labelColor

@@ -227,7 +227,7 @@ Singleton {
         try {
             if (!(Settings.settings && Settings.settings.strictThemeTokens)) return;
             var deprecated = [
-                { path: 'rippleEffect', note: 'Use ui.ripple.opacity' },
+                { path: 'rippleEffect', note: 'Token removed; ripple opacity is fixed internally' },
                 { path: 'accentDisabled', note: 'Use colors.text.disabled / Theme.textDisabled' },
                 { path: 'panelHoverOpacity', note: 'Use surfaceHover/surfaceActive for states' },
                 { path: 'overlay', note: 'Use colors.overrides.overlayWeak/overlayStrong or derived tokens' },
@@ -315,9 +315,8 @@ Singleton {
     property color textDisabled: val('colors.text.disabled', "#6B718A")
     // Accent Colors
     property color accentPrimary: val('colors.accent.primary', "#006FCC")
-    // Error/Warning
+    // Error state
     property color error: val('colors.status.error', "#FF6B81")
-    property color warning: val('colors.status.warning', "#FFBB66")
     // Highlights & Focus
     property color highlight: val('colors.highlight', "#94E1F9")
     
@@ -350,8 +349,6 @@ Singleton {
     property int panelHotzoneWidth: val('panel.hotzone.width', 16)
     property int panelHotzoneHeight: val('panel.hotzone.height', 9)
     property real panelHotzoneRightShift: val('panel.hotzone.rightShift', 1.15)
-    property int panelWidgetMinWidth: val('panel.widgetMinWidth', 88)
-    property int panelWidgetWideWidth: val('panel.widgetWideWidth', 148)
     property int panelModuleHeight: val('panel.moduleHeight', 36)
     property int panelMenuYOffset: val('panel.menuYOffset', 20)
     // Corners
@@ -437,9 +434,6 @@ Singleton {
     property int sidePanelPopupOuterMargin:val('sidePanel.popup.outerMargin', 4)
     // Side-panel popup spacing (between inner items)
     property int sidePanelPopupSpacing:val('sidePanel.popup.spacing', 0)
-    // Side-panel popup corner radius
-    property int sidePanelPopupRadius: val('sidePanel.popup.radius', cornerRadius)
-
     // Media dominant-accent sampler/logic (extract hardcoded tuning)
     property int mediaAccentSamplerPx: val('media.accent.samplerPx', 48)
     property int mediaAccentRetryMs: val('media.accent.retryMs', 120)
@@ -502,21 +496,9 @@ Singleton {
     // Overlay radius and larger corner
     property int panelOverlayRadius: val('panel.overlayRadius', 20)
     property int cornerRadiusLarge: val('shape.cornerRadiusLarge', 12)
-    // Generic UI spacings/margins
-    property int uiMarginLarge: val('ui.margin.large', 32)
-    property int uiMarginMedium: val('ui.margin.medium', 16)
-    property int uiPaddingMedium: val('ui.padding.medium', 14)
-    property int uiSpacingLarge: val('ui.spacing.large', 18)
-    property int uiSpacingSmall: val('ui.spacing.small', 10)
     property int uiSpacingXSmall: val('ui.spacing.xsmall', 2)
     property int uiGapTiny: val('ui.gap.tiny', 1)
     property int uiControlHeight: val('ui.control.height', 48)
-    // UI shadows (used by text overlays, etc.)
-    property real uiShadowOpacity: val('ui.shadow.opacity', 0.6)
-    property real uiShadowBlur: val('ui.shadow.blur', 0.8)
-    property int uiShadowOffsetX: val('ui.shadow.offsetX', 0)
-    property int uiShadowOffsetY: val('ui.shadow.offsetY', 1)
-    // UI border thickness
     property int uiBorderWidth: val('ui.border.width', 1)
     // UI small-visibility epsilon for hover fades, etc.
     property real uiVisibilityEpsilon: val('ui.visibilityEpsilon', 0.01)
@@ -524,9 +506,6 @@ Singleton {
     property int uiMarginNone: val('ui.margin.none', 0)
     property int uiSpacingNone: val('ui.spacing.none', 0)
     property int uiBorderNone: val('ui.border.noneWidth', 0)
-    property int uiRadiusNone: val('ui.radius.none', 0)
-    // UI common opacities
-    property real uiRippleOpacity: val('ui.ripple.opacity', 0.18)
     property real uiIconEmphasisOpacity: val('ui.icon.emphasisOpacity', 0.9)
     // Workspace indicator tuning
     property int wsIconSpacing:val('ws.icon.spacing', 1)
@@ -565,20 +544,11 @@ Singleton {
     property int timeFontWeight:val('time.font.weight', Font.Medium)
     property color timeTextColor: val('time.text.color', textPrimary)
     // Keyboard layout module
-    property int keyboardHeight:val('keyboard.height', panelHeight)
-    property int keyboardMargin:val('keyboard.margin', 4)
-    property int keyboardMinWidth:val('keyboard.minWidth', 40)
     property int keyboardIconSpacing:val('keyboard.icon.spacing', 4)
     property int keyboardIconPadding:val('keyboard.icon.padding', 4)
     property real keyboardTextPadding: val('keyboard.text.padding', 1.5)
-    property int keyboardRadius:val('keyboard.radius', cornerRadiusSmall)
-    // Keyboard opacity + text emphasis
-    property real keyboardNormalOpacity: val('keyboard.opacity.normal', 1.0)
-    property real keyboardHoverOpacity: val('keyboard.opacity.hover', 1.0)
+    // Keyboard emphasis options
     property bool keyboardTextBold: !!val('keyboard.text.bold', false)
-    // Keyboard colors
-    property color keyboardBgColor: val('keyboard.colors.bg', background)
-    property color keyboardHoverBgColor: val('keyboard.colors.hoverBg', surfaceHover)
     property color keyboardTextColor: val('keyboard.colors.text', textPrimary)
     property color keyboardIconColor: val('keyboard.colors.icon', textSecondary)
     // UI easing (configurable via string names)
