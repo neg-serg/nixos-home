@@ -25,7 +25,7 @@ Rectangle {
     property bool centerContent: true
     property real cornerRadiusOverride: -1
     property real borderWidthOverride: -1
-    property real borderInset: 0
+    property real borderInset: -Theme.uiBorderWidth
     property real contentYOffset: 0
     property int cursorShape: Qt.ArrowCursor
 
