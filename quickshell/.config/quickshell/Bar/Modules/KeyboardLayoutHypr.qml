@@ -67,10 +67,8 @@ Item {
         cursorShape: Qt.PointingHandCursor
         desiredInnerHeight: capsule.capsuleInner
         centerRow: true
-        iconMode: "glyph"
-        iconGlyph: "\uf11c"
-        iconFontFamily: "Font Awesome 6 Free"
-        iconStyleName: "Regular"
+        iconMode: "material"
+        materialIconName: "keyboard_outline"
         iconColor: kb.iconColor
         iconPadding: Math.round(Theme.keyboardIconPadding * sc())
         iconSpacing: kb.iconSpacing * sc()
