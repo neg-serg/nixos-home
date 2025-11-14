@@ -163,6 +163,14 @@ consistent and activation quiet. This page shows what to use and how to validate
     }
     ```
 
+- Коммит‑месседжи:
+
+  - Держи стиль ровным: `[scope] brief summary`. Scope — короткое слово/фраза в квадратных скобках
+    (пример: `[mcp] add foo server`, `[quickshell] reuse capsule row`). Это позволяет быстро искать
+    изменения по подсистемам.
+  - Если задействовано несколько областей, объединяй их через `/` (`[mcp/gui] …`) или выбирай самый
+    общий скоуп. Главное — всегда оборачивай в `[]` и не смешивай описание со скоупом.
+
   - Template and tips:
     - Keep conditions cheap to evaluate (avoid invoking helpers from `config.lib.neg`).
     - Phrase messages with clear destination and rationale (XDG compliance, less activation noise,
