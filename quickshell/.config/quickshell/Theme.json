@@ -86,7 +86,8 @@
     "capsule": {
       "borderInset": -1,
       "borderWidth": 1,
-      "borderOpacity": 0.08
+      "borderOpacity": 0.08,
+      "borderColor": "#FF4D4D"
     },
     "computedFontScale": 0.6
   },
