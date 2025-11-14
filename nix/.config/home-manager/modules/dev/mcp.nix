@@ -21,6 +21,8 @@ lib.mkIf cfgDev (lib.mkMerge [
       timeBinary = "${pkgs.neg.mcp_server_time}/bin/mcp-server-time";
       docsearchBinary = "${pkgs.neg.docsearch_mcp}/bin/docsearch-mcp";
       browserBinary = "${pkgs.neg.mcp_server_browserbase}/bin/mcp-server-browserbase";
+      postgresBinary = "${pkgs.neg.postgres_mcp}/bin/simple-postgres-mcp";
+      redisBinary = "${pkgs.neg.redis_mcp}/bin/mcp-server-redis";
     in {
       enable = true;
       servers = {
@@ -84,6 +86,21 @@ lib.mkIf cfgDev (lib.mkMerge [
             STAGEHAND_API_KEY = "{env:STAGEHAND_API_KEY}";
           };
         };
+
+        postgres-local = {
+          command = postgresBinary;
+          env = {
+            POSTGRES_DSN = "{env:POSTGRES_DSN}";
+            POSTGRES_READ_ONLY = "{env:POSTGRES_READ_ONLY}";
+          };
+        };
+
+        redis-local = {
+          command = redisBinary;
+          env = {
+            REDIS_URL = "{env:REDIS_URL}";
+          };
+        };
       };
     };
 
@@ -97,6 +114,8 @@ lib.mkIf cfgDev (lib.mkMerge [
       pkgs.neg.mcp_server_time
       pkgs.neg.docsearch_mcp
       pkgs.neg.mcp_server_browserbase
+      pkgs.neg.postgres_mcp
+      pkgs.neg.redis_mcp
     ];
   }
 

@@ -236,6 +236,8 @@ in {
             mcp-server-time = pkgs.neg.mcp_server_time;
             docsearch-mcp = pkgs.neg.docsearch_mcp;
             mcp-server-browserbase = pkgs.neg.mcp_server_browserbase;
+            postgres-mcp = pkgs.neg.postgres_mcp;
+            redis-mcp = pkgs.neg.redis_mcp;
           }
           // lib.optionalAttrs extrasFlag extrasSet;
 
