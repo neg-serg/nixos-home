@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Layouts
 import "." as LocalComponents
 import qs.Settings
 import "../Helpers/Utils.js" as Utils
@@ -17,6 +18,11 @@ LocalComponents.CapsuleButton {
     property bool labelVisible: true
     property bool iconVisible: true
     property int iconPadding: 0
+    property int minContentWidth: Theme.panelWidgetMinWidth
+    property int maxContentWidth: 0
+    property int contentWidth: Theme.panelWidgetMinWidth
+    property int labelMaxWidth: 0
+    property int labelElideMode: Text.ElideRight
 
     // Label configuration
     property string labelText: ""
@@ -50,70 +56,98 @@ LocalComponents.CapsuleButton {
     contentYOffset: centerOffset
     interactive: false
 
-    Row {
+    readonly property int _contentWidth: (function() {
+        var width = Math.max(minContentWidth, rowLayout.implicitWidth || 0);
+        if (contentWidth > 0) width = contentWidth;
+        if (maxContentWidth > 0) width = Math.min(width, maxContentWidth);
+        return width;
+    })()
+    readonly property int _iconSlotWidth: (root.iconVisible ? Math.max(0, baselineIcon.implicitWidth || 0) : 0)
+    readonly property int _labelAutoWidth: Math.max(0, _contentWidth - _iconSlotWidth - (root.iconVisible && root.labelVisible ? iconSpacing : 0))
+
+    Item {
         id: lineBox
-        spacing: iconSpacing
+        width: _contentWidth
+        height: rowLayout.implicitHeight
+        implicitWidth: width
+        implicitHeight: height
+        clip: true
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
 
-        LocalComponents.BaselineAlignedIcon {
-            id: baselineIcon
-            visible: root.iconVisible
-            width: root.iconVisible ? implicitWidth : 0
-            height: root.iconVisible ? implicitHeight : 0
-            implicitHeight: root.desiredInnerHeight
-            labelRef: label
-            mode: root.iconMode === "material" ? "material" : "text"
-            alignMode: root.labelVisible ? "baseline" : "optical"
-            alignTarget: root.labelVisible ? label : null
-            text: root.iconGlyph
-            fontFamily: root.iconFontFamily
-            fontStyleName: root.iconStyleName
-            color: root.iconColor
-            icon: root.materialIconName
-            rounded: root.materialIconRounded
-            screen: root.screen
-            autoTune: root.iconAutoTune
-            baselineAdjust: root.iconVAdjust
-            padding: root.iconPadding
-        }
+        RowLayout {
+            id: rowLayout
+            anchors.fill: parent
+            spacing: iconSpacing
+            layoutDirection: Qt.LeftToRight
 
-        Label {
-            id: label
-            visible: root.labelVisible
-            width: visible ? implicitWidth : 0
-            height: visible ? implicitHeight : 0
-            textFormat: root.labelIsRichText ? Text.RichText : Text.PlainText
-            text: root.labelText
-            color: root.labelColor
-            font.family: root.labelFontFamily
-            font.weight: root.labelFontWeight
-            font.pixelSize: root.computedFontPx
-            padding: 0
-            leftPadding: root.textPadding
-            rightPadding: root.textPadding
-            verticalAlignment: Text.AlignVCenter
-            baselineOffset: labelMetrics.ascent + root.labelBaselineAdjust
-        }
+            LocalComponents.BaselineAlignedIcon {
+                id: baselineIcon
+                visible: root.iconVisible
+                Layout.alignment: Qt.AlignVCenter
+                Layout.preferredWidth: root.iconVisible ? implicitWidth : 0
+                Layout.minimumWidth: root.iconVisible ? implicitWidth : 0
+                Layout.maximumWidth: root.iconVisible ? implicitWidth : 0
+                Layout.preferredHeight: root.desiredInnerHeight
+                implicitHeight: root.desiredInnerHeight
+                labelRef: label
+                mode: root.iconMode === "material" ? "material" : "text"
+                alignMode: root.labelVisible ? "baseline" : "optical"
+                alignTarget: root.labelVisible ? label : null
+                text: root.iconGlyph
+                fontFamily: root.iconFontFamily
+                fontStyleName: root.iconStyleName
+                color: root.iconColor
+                icon: root.materialIconName
+                rounded: root.materialIconRounded
+                screen: root.screen
+                autoTune: root.iconAutoTune
+                baselineAdjust: root.iconVAdjust
+                padding: root.iconPadding
+            }
 
-        FontMetrics {
-            id: labelMetrics
-            font: label.font
-        }
+            Label {
+                id: label
+                visible: root.labelVisible
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignVCenter
+                Layout.minimumWidth: 0
+                Layout.preferredWidth: (_labelAutoWidth > 0) ? _labelAutoWidth : implicitWidth
+                Layout.maximumWidth: (root.labelMaxWidth > 0)
+                    ? root.labelMaxWidth
+                    : (_labelAutoWidth > 0 ? _labelAutoWidth : Number.POSITIVE_INFINITY)
+                textFormat: root.labelIsRichText ? Text.RichText : Text.PlainText
+                text: root.labelText
+                color: root.labelColor
+                font.family: root.labelFontFamily
+                font.weight: root.labelFontWeight
+                font.pixelSize: root.computedFontPx
+                padding: 0
+                leftPadding: root.textPadding
+                rightPadding: root.textPadding
+                verticalAlignment: Text.AlignVCenter
+                baselineOffset: labelMetrics.ascent + root.labelBaselineAdjust
+                elide: root.labelElideMode
+                clip: true
+                maximumLineCount: 1
+            }
 
-        Item {
-            id: tailSlot
-            width: childrenRect.width
-            height: childrenRect.height
-            implicitWidth: childrenRect.width
-            implicitHeight: childrenRect.height
-            anchors.verticalCenter: parent.verticalCenter
+            FontMetrics {
+                id: labelMetrics
+                font: label.font
+            }
+
+            Item {
+                id: tailSlot
+                Layout.preferredWidth: childrenRect.width
+                Layout.preferredHeight: childrenRect.height
+                Layout.alignment: Qt.AlignVCenter
+            }
         }
     }
-
     default property alias tailContent: tailSlot.data
 
-    implicitWidth: root.horizontalPadding * 2 + lineBox.implicitWidth
+    implicitWidth: root.horizontalPadding * 2 + lineBox.width
     implicitHeight: root.forceHeightFromMetrics
         ? Math.max(root.capsuleMetrics.height, lineBox.implicitHeight + root.verticalPadding * 2)
         : lineBox.implicitHeight + root.verticalPadding * 2

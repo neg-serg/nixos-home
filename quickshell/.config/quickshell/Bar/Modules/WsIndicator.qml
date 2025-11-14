@@ -24,6 +24,7 @@ WidgetCapsule {
 
     // Icon layout
     property int iconSpacing:Theme.wsIconSpacing
+    readonly property int capsuleMinWidth: Theme.panelWidgetMinWidth
     readonly property int capsuleInnerHeight: root.capsuleInner
     readonly property int iconFontPx: Math.round(Theme.fontSizeSmall * root.capsuleScale)
     readonly property int iconSlotWidth: iconFontPx + Theme.wsIconInnerPadding * 2
@@ -136,18 +137,28 @@ WidgetCapsule {
             }
         }
 
-        Label {
-            id: label
-            textFormat: Text.RichText
-            renderType: Text.NativeRendering
-            text: decoratedText
-            font.family: Theme.fontFamily
-            font.weight: Font.Medium
-            font.pixelSize: Theme.fontSizeSmall * root.capsuleScale
-            color: Theme.textPrimary
-            padding: Theme.wsLabelPadding
-            leftPadding: (root.isTerminalWs ? Theme.wsLabelLeftPaddingTerminal : Theme.wsLabelLeftPadding)
+        Item {
+            id: labelSlot
+            width: Math.max(0, capsuleMinWidth - (submapIconSlot.visible ? iconSlotWidth : 0) - (wsIconSlot.visible ? iconSlotWidth : 0) - iconSpacing * 2)
+            height: capsuleInnerHeight
             anchors.verticalCenter: lineBox.verticalCenter
+            clip: true
+
+            Label {
+                id: label
+                textFormat: Text.RichText
+                renderType: Text.NativeRendering
+                text: decoratedText
+                font.family: Theme.fontFamily
+                font.weight: Font.Medium
+                font.pixelSize: Theme.fontSizeSmall * root.capsuleScale
+                color: Theme.textPrimary
+                padding: Theme.wsLabelPadding
+                leftPadding: (root.isTerminalWs ? Theme.wsLabelLeftPaddingTerminal : Theme.wsLabelLeftPadding)
+                anchors.verticalCenter: parent.verticalCenter
+                width: parent.width
+                horizontalAlignment: Text.AlignHCenter
+            }
         }
     }
 
@@ -189,5 +200,5 @@ WidgetCapsule {
         Services.HyprlandWatcher.refreshBinds();
     }
 
-    implicitWidth: horizontalPadding * 2 + lineBox.implicitWidth
+    implicitWidth: Math.max(capsuleMinWidth, horizontalPadding * 2 + lineBox.implicitWidth)
 }

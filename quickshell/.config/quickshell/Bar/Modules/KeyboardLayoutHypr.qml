@@ -59,9 +59,11 @@ Item {
     readonly property int iconSizePx: Math.max(1, kb.fontPixelSize)
     readonly property int iconBoxWidth: iconSizePx + iconPaddingPx * 2
     readonly property int iconBoxHeight: capsule.capsuleInner
+    readonly property int capsuleMinWidth: Math.max(Math.round(Theme.panelWidgetMinWidth * sc()), Math.round(Theme.keyboardMinWidth * sc()))
 
-    implicitWidth: Math.max(Math.round(Theme.keyboardMinWidth * sc()), Math.ceil(keyboardRow.implicitWidth + 2 * capsule.horizontalPadding))
+    implicitWidth: capsuleMinWidth
     implicitHeight: capsuleHeight
+    width: implicitWidth
 
     WidgetCapsule {
         id: capsule
@@ -72,16 +74,19 @@ Item {
         cursorShape: Qt.PointingHandCursor
         hoverEnabled: true
 
-        Row {
+        Item {
             id: keyboardRow
-            spacing: kb.iconSpacing * sc()
+            width: Math.max(0, capsuleMinWidth - 2 * capsule.horizontalPadding)
+            height: iconBoxHeight
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
+            clip: true
 
             Item {
                 id: iconBox
                 width: iconBoxWidth
                 height: iconBoxHeight
+                anchors.left: parent.left
                 anchors.verticalCenter: parent.verticalCenter
 
                 MaterialIcon {
@@ -102,6 +107,12 @@ Item {
                 padding: 0
                 leftPadding: textPaddingPx
                 rightPadding: textPaddingPx
+                anchors.left: iconBox.right
+                anchors.leftMargin: kb.iconSpacing * sc()
+                anchors.right: parent.right
+                elide: Text.ElideRight
+                clip: true
+                horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
             }
         }
