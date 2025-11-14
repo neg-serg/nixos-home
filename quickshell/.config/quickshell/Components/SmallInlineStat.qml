@@ -16,7 +16,6 @@ Item {
     property string iconStyleName: ""
     property string materialIconName: ""
     property bool materialIconRounded: false
-    property real iconScale: 1.0
     property int iconVAdjust: 0
     property bool iconAutoTune: true
     property color iconColor: Theme.textSecondary
@@ -61,7 +60,6 @@ Item {
             icon: root.materialIconName
             rounded: root.materialIconRounded
             screen: root.screen
-            scale: root.iconScale
             autoTune: root.iconAutoTune
             baselineAdjust: root.iconVAdjust
         }

@@ -1176,7 +1176,7 @@ Scope {
                                     && (MusicManager.isPlaying || MusicManager.isPaused || (MusicManager.trackTitle && MusicManager.trackTitle.length > 0))
                                 )
                                 enabled: _mediaVisible && MusicManager.isCurrentMpdPlayer()
-                                iconPx: Math.round(Theme.fontSizeSmall * Theme.scale(rightPanel.screen) * Theme.mpdFlagsIconScale)
+                                iconPx: Math.round(Theme.fontSizeSmall * Theme.scale(rightPanel.screen))
                                 iconColor: Theme.textPrimary
                             }
                             Item {

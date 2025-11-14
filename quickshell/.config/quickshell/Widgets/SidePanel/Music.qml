@@ -477,7 +477,7 @@ Rectangle {
                                     // Genre icon
                                     icon: "category"
                                     color: detailsCol.musicAccentReady ? detailsCol.musicAccent : playerUI.musicTextColor
-                                    size: Math.round(playerUI.musicFontPx * Theme.mediaIconScaleEmphasis)
+                                    size: Math.round(playerUI.musicFontPx * 1.05)
                                     Layout.alignment: Qt.AlignVCenter
                                 }
                                 Text {
@@ -580,7 +580,7 @@ Rectangle {
                                     // Quality icon
                                     icon: "high_quality"
                                     color: detailsCol.musicAccentReady ? detailsCol.musicAccent : playerUI.musicTextColor
-                                    size: Math.round(playerUI.musicFontPx * Theme.mediaIconScaleEmphasis)
+                                    size: Math.round(playerUI.musicFontPx * 1.05)
                                     Layout.alignment: Qt.AlignVCenter
                                 }
                                 Text {

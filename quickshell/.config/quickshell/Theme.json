@@ -230,7 +230,6 @@
       "openDelayMs": 320,
       "stillThresholdMs": 180
     },
-    "iconScaleEmphasis": 1.15,
     "time": {
       "alpha": {
         "playing": 1.0,
@@ -239,8 +238,7 @@
     },
     "mpd": {
       "flags": {
-        "fallbackMs": 2500,
-        "iconScale": 0.95
+        "fallbackMs": 2500
       }
     },
     "albumArt": {

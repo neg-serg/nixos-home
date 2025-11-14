@@ -551,10 +551,6 @@ Singleton {
     property int uiAnimRippleMs: val('ui.anim.rippleMs', 320)
     // UI spinner
     property int uiSpinnerDurationMs: val('ui.spinner.durationMs', 1000)
-    // Media emphasis scaling for icons
-    property real mediaIconScaleEmphasis: val('media.iconScaleEmphasis', 1.15)
-    // MPD flags
-    property real mpdFlagsIconScale: val('media.mpd.flags.iconScale', 0.95)
     // Media album art fallback icon opacity
     property real mediaAlbumArtFallbackOpacity: val('media.albumArt.fallbackOpacity', 0.4)
     // Media time alphas
