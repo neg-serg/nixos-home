@@ -3,7 +3,6 @@ import qs.Settings
 import qs.Components
 import "../../Helpers/Color.js" as Color
 import "../../Helpers/Utils.js" as Utils
-import qs.Services as Services
 
 // Amnezia VPN status indicator (polls `ip -j -br a`)
 ConnectivityCapsule {
@@ -26,8 +25,8 @@ ConnectivityCapsule {
 
     property real connectedOpacity: Theme.vpnConnectedOpacity
     property real disconnectedOpacity: Theme.vpnDisconnectedOpacity
-    property bool connected: false
-    property string matchedIf: ""
+    readonly property bool connected: ConnectivityState.vpnConnected
+    readonly property string matchedIf: ConnectivityState.vpnInterface
     backgroundKey: "vpn"
     visible: connected
     textPadding: Theme.vpnTextPadding
@@ -43,14 +42,6 @@ ConnectivityCapsule {
     labelText: "VPN"
     labelColor: root.iconColor()
     labelFontFamily: Theme.fontFamily
-
-    Connections {
-        target: Services.Connectivity
-        function onInterfacesChanged() {
-            try { checkInterfaces(Services.Connectivity.interfaces) }
-            catch (e) { root.connected = false; root.matchedIf = "" }
-        }
-    }
 
     function mixColor(a, b, t) {
         return Qt.rgba(
@@ -69,22 +60,6 @@ ConnectivityCapsule {
         return mixColor(c, grayOf(c), amount)
     }
 
-    function checkInterfaces(arr) {
-        if (!Array.isArray(arr)) { root.connected = false; root.matchedIf = ""; return }
-        let found = false
-        let name = ""
-        for (let it of arr) {
-            const ifname = (it && it.ifname) ? String(it.ifname) : ""
-            const nlow = ifname.toLowerCase()
-            const looksAmnezia = nlow.includes("awg") || nlow.includes("amnez")
-            if (!looksAmnezia) continue
-            const addrs = Array.isArray(it.addr_info) ? it.addr_info : []
-            if (addrs.length > 0) { found = true; name = ifname; break }
-        }
-        root.connected = found
-        root.matchedIf = name
-    }
-
     property bool muted:true
     opacity: root.hovered ? 1.0 : (connected ? connectedOpacity : disconnectedOpacity)
     function iconColor() {
@@ -92,5 +67,4 @@ ConnectivityCapsule {
         return accentColor
     }
 
-    Component.onCompleted: { try { checkInterfaces(Services.Connectivity.interfaces) } catch (_) {} }
 }

@@ -1,6 +1,5 @@
 import QtQuick
 import qs.Components
-import qs.Services as Services
 import qs.Settings
 import "../../Helpers/ConnectivityUi.js" as ConnUi
 
@@ -27,8 +26,8 @@ ConnectivityCapsule {
     readonly property color connectedColor: Theme.textSecondary
     readonly property color warningColor: ConnUi.warningColor(Settings.settings, Theme)
     readonly property color errorColor: ConnUi.errorColor(Settings.settings, Theme)
-    property bool hasLink: Services.Connectivity.hasLink
-    property bool hasInternet: Services.Connectivity.hasInternet
+    readonly property bool hasLink: ConnectivityState.hasLink
+    readonly property bool hasInternet: ConnectivityState.hasInternet
     backgroundKey: "networkLink"
     iconMode: "material"
     materialIconName: currentIconName()
