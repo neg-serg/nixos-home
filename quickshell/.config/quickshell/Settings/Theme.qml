@@ -522,7 +522,7 @@ Singleton {
     // Values validated by ThemeConstraints in tooling
     property int wsLabelPadding:val('ws.label.padding', 6)
     property int wsLabelLeftPadding:val('ws.label.leftPadding.normal', 2)
-    property int wsLabelLeftPaddingTerminal:val('ws.label.leftPadding.terminal', -2)
+    property int wsLabelLeftPaddingTerminal:val('ws.label.leftPadding.terminal', -50)
     property int wsIconInnerPadding:val('ws.icon.innerPadding', 1)
     // VPN indicator opacities
     property real vpnConnectedOpacity: val('vpn.connectedOpacity', 0.8)

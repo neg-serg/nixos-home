@@ -131,8 +131,8 @@ LocalComponents.CapsuleButton {
                 font.weight: root.labelFontWeight
                 font.pixelSize: root.computedFontPx
                 padding: 0
-                leftPadding: root.labelLeftPaddingOverride >= 0 ? root.labelLeftPaddingOverride : root.textPadding
-                rightPadding: root.labelRightPaddingOverride >= 0 ? root.labelRightPaddingOverride : root.textPadding
+                leftPadding: root.labelLeftPaddingOverride !== -1 ? root.labelLeftPaddingOverride : root.textPadding
+                rightPadding: root.labelRightPaddingOverride !== -1 ? root.labelRightPaddingOverride : root.textPadding
                 verticalAlignment: Text.AlignVCenter
                 baselineOffset: labelMetrics.ascent + root.labelBaselineAdjust
                 elide: root.labelElideMode

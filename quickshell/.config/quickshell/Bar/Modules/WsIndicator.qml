@@ -117,10 +117,15 @@ CenteredCapsuleRow {
 
     leadingContent: Item {
         readonly property bool glyphPresent: root.showWorkspaceGlyph && (root.workspaceIconValid || iconGlyph.length > 0)
-        width: glyphPresent ? root.desiredInnerHeight : 0
+        readonly property real glyphWidth: Math.max(
+            (workspaceSvgIcon.visible && workspaceSvgIcon.implicitWidth > 0) ? workspaceSvgIcon.implicitWidth : 0,
+            (workspaceTextIcon.visible && workspaceTextIcon.implicitWidth > 0) ? workspaceTextIcon.implicitWidth : 0
+        )
+        width: glyphPresent ? glyphWidth : 0
         height: root.desiredInnerHeight
 
         BaselineAlignedIcon {
+            id: workspaceSvgIcon
             anchors.centerIn: parent
             visible: root.workspaceIconValid
             mode: "svg"
@@ -139,6 +144,7 @@ CenteredCapsuleRow {
         }
 
         BaselineAlignedIcon {
+            id: workspaceTextIcon
             anchors.centerIn: parent
             visible: !root.workspaceIconValid && iconGlyph.length > 0
             mode: "text"
