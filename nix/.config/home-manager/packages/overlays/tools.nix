@@ -40,6 +40,12 @@ in {
     mcp_server_browserbase = call ../mcp/browserbase {};
     "mcp-server-browserbase" = mcp_server_browserbase;
 
+    postgres_mcp = call ../mcp/postgres {};
+    "postgres-mcp" = postgres_mcp;
+
+    redis_mcp = call ../mcp/redis {};
+    "redis-mcp" = redis_mcp;
+
     # Music album metadata CLI (used by music-rename script)
     albumdetails = prev.stdenv.mkDerivation rec {
       pname = "albumdetails";

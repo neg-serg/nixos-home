@@ -163,13 +163,12 @@ consistent and activation quiet. This page shows what to use and how to validate
     }
     ```
 
-- Коммит‑месседжи:
+- Commit messages *(RU: «Коммит‑месседжи»)*:
 
-  - Держи стиль ровным: `[scope] brief summary`. Scope — короткое слово/фраза в квадратных скобках
-    (пример: `[mcp] add foo server`, `[quickshell] reuse capsule row`). Это позволяет быстро искать
-    изменения по подсистемам.
-  - Если задействовано несколько областей, объединяй их через `/` (`[mcp/gui] …`) или выбирай самый
-    общий скоуп. Главное — всегда оборачивай в `[]` и не смешивай описание со скоупом.
+  - Keep the format `[scope] brief summary`. Scope is a short noun/phrase wrapped in brackets (e.g.
+    `[mcp] add foo server`, `[quickshell] reuse capsule row`) so changes stay easy to grep by area.
+  - If multiple areas are touched, combine them with `/` (`[mcp/gui] …`) or pick the most general
+    scope. Always include the brackets and keep the description outside of them.
 
   - Template and tips:
     - Keep conditions cheap to evaluate (avoid invoking helpers from `config.lib.neg`).
