@@ -68,7 +68,7 @@ Item {
         desiredInnerHeight: capsule.capsuleInner
         centerRow: true
         iconMode: "material"
-        materialIconName: "keyboard_outline"
+        materialIconName: "keyboard"
         iconColor: kb.iconColor
         iconPadding: Math.round(Theme.keyboardIconPadding * sc())
         iconSpacing: kb.iconSpacing * sc()
