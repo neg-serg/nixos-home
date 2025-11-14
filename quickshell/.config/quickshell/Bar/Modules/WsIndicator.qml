@@ -24,6 +24,9 @@ WidgetCapsule {
 
     // Icon layout
     property int iconSpacing:Theme.wsIconSpacing
+    readonly property int capsuleInnerHeight: root.capsuleInner
+    readonly property int iconFontPx: Math.round(Theme.fontSizeSmall * root.capsuleScale)
+    readonly property int iconSlotWidth: iconFontPx + Theme.wsIconInnerPadding * 2
 
     backgroundKey: "workspaces"
 
@@ -98,29 +101,39 @@ WidgetCapsule {
         spacing: iconSpacing
         anchors.centerIn: parent
 
-        BaselineAlignedIcon {
+        Item {
+            id: submapIconSlot
             visible: root.submapName && root.submapName.length > 0
-            mode: "material"
-            labelRef: label
-            anchors.verticalCenter: lineBox.verticalCenter
-            alignMode: "baseline"
-            alignTarget: wsIcon
-            icon: submapIconName(root.submapName)
-            color: Theme.wsSubmapIconColor
-            screen: Screen
+            width: visible ? iconSlotWidth : 0
+            height: capsuleInnerHeight
+            anchors.verticalCenter: parent.verticalCenter
+
+            BaselineAlignedIcon {
+                mode: "material"
+                alignMode: "optical"
+                icon: submapIconName(root.submapName)
+                color: Theme.wsSubmapIconColor
+                screen: Screen
+                anchors.centerIn: parent
+            }
         }
 
-        BaselineAlignedIcon {
-            id: wsIcon
+        Item {
+            id: wsIconSlot
             visible: iconGlyph.length > 0
-            mode: "text"
-            labelRef: label
-            anchors.verticalCenter: lineBox.verticalCenter
-            alignMode: "baseline"
-            text: iconGlyph
-            fontFamily: Theme.fontFamily
-            color: iconColor
-            padding: (root.isTerminalWs ? Theme.uiSpacingNone : Theme.wsIconInnerPadding)
+            width: visible ? iconSlotWidth : 0
+            height: capsuleInnerHeight
+            anchors.verticalCenter: parent.verticalCenter
+
+            BaselineAlignedIcon {
+                mode: "text"
+                alignMode: "optical"
+                text: iconGlyph
+                fontFamily: Theme.fontFamily
+                color: iconColor
+                padding: (root.isTerminalWs ? Theme.uiSpacingNone : Theme.wsIconInnerPadding)
+                anchors.centerIn: parent
+            }
         }
 
         Label {

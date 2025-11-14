@@ -19,6 +19,7 @@ Item {
     readonly property var capsuleMetrics: capsule.capsuleMetrics
     property int baseHeight: capsule.capsuleHeight
     readonly property int capsuleInnerSize: capsule.capsuleInner
+    property real albumActionIconScale: 0.6
     implicitWidth: mediaRow ? (mediaRow.implicitWidth + capsule.horizontalPadding * 2) : baseHeight
     height: baseHeight
     implicitHeight: baseHeight
@@ -208,11 +209,19 @@ Item {
                         color: Theme.overlayWeak
                         visible: playButton.containsMouse
                         z: 2
-                        MaterialIcon {
+
+                        Item {
+                            id: albumActionIconBox
                             anchors.centerIn: parent
-                            icon: MusicManager.isPlaying ? "pause" : "play_arrow"
-                            size: Math.max(12, Math.round(capsuleInnerSize * 0.6))
-                            color: Theme.onAccent
+                            width: capsuleInnerSize
+                            height: capsuleInnerSize
+
+                            MaterialIcon {
+                                anchors.centerIn: parent
+                                icon: MusicManager.isPlaying ? "pause" : "play_arrow"
+                                size: Math.max(12, Math.round(albumActionIconBox.height * mediaControl.albumActionIconScale))
+                                color: Theme.onAccent
+                            }
                         }
                     }
 
