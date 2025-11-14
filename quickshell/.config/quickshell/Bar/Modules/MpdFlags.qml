@@ -16,14 +16,8 @@ WidgetCapsule {
     property string cmd: "(mpc status || rmpc status)"
     property var activeFlags: [] // [{ key, icon, title }]
     property string mpdState: "unknown" // playing | paused | stopped | unknown
-    property int padX: Math.round(Theme.panelRowSpacingSmall * capsuleScale)
-    property int padY: capsulePadding
-    property int cornerRadius: Math.round(Theme.cornerRadiusSmall * capsuleScale)
     visible: enabled && activeFlags.length > 0
     backgroundKey: "mpdFlags"
-    paddingScale: paddingScaleFor(padX)
-    verticalPaddingScale: paddingScaleFor(padY)
-    cornerRadiusOverride: cornerRadius
 
     function parseStatus(text) {
         try {
@@ -149,8 +143,8 @@ WidgetCapsule {
         }
     }
 
-    implicitWidth: padX * 2 + content.implicitWidth
+    implicitWidth: horizontalPadding * 2 + content.implicitWidth
     implicitHeight: forceHeightFromMetrics
-        ? Math.max(capsuleMetrics.height, content.implicitHeight + padY * 2)
-        : content.implicitHeight + padY * 2
+        ? Math.max(capsuleMetrics.height, content.implicitHeight + verticalPadding * 2)
+        : content.implicitHeight + verticalPadding * 2
 }

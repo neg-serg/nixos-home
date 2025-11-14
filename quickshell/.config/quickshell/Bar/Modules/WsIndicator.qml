@@ -28,11 +28,7 @@ WidgetCapsule {
     property int iconBaselineOffset:Theme.wsIconBaselineOffset
     property int iconSpacing:Theme.wsIconSpacing
 
-    property int horizontalPadding: Math.max(4, Math.round(Theme.panelRowSpacingSmall * capsuleScale))
-    property int verticalPadding: capsulePadding
     backgroundKey: "workspaces"
-    paddingScale: paddingScaleFor(horizontalPadding)
-    verticalPaddingScale: paddingScaleFor(verticalPadding)
 
     // RichText helpers are provided by Helpers/RichText.js
 

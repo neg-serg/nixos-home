@@ -10,9 +10,7 @@ Item {
 
     property string deviceMatch: ""
     property int fontPixelSize: Math.round(Theme.fontSizeSmall * sc())
-    property int desiredHeight: capsule.capsuleInner
     property var screen:null
-    property int yNudge:0
 
     property real iconScale:Theme.keyboardIconScale
     property int iconSpacing:Theme.keyboardIconSpacing
@@ -58,13 +56,9 @@ Item {
         return capsule.capsuleScale
     }
 
-    readonly property var capsuleMetrics: capsule.capsuleMetrics
-    readonly property int capsulePadding: capsule.capsulePadding
-    property int horizontalPadding: Math.max(4, Math.round(Theme.keyboardMargin * sc()))
-    property int verticalPadding: Math.max(capsulePadding, Math.round(Theme.keyboardMargin * 0.8 * sc()))
     readonly property int capsuleHeight: capsule.capsuleHeight
 
-    implicitWidth: Math.max(Math.round(Theme.keyboardMinWidth * sc()), Math.ceil(capsule.row.implicitWidth + 2 * horizontalPadding))
+    implicitWidth: Math.max(Math.round(Theme.keyboardMinWidth * sc()), Math.ceil(capsule.row.implicitWidth + 2 * capsule.horizontalPadding))
     implicitHeight: capsuleHeight
 
     CenteredCapsuleRow {
@@ -72,11 +66,7 @@ Item {
         width: parent.width
         height: parent.height
         anchors.centerIn: parent
-        anchors.verticalCenterOffset: kb.yNudge
-        paddingScale: capsulePadding > 0 ? horizontalPadding / capsulePadding : 1
-        verticalPaddingScale: capsulePadding > 0 ? verticalPadding / capsulePadding : 1
         backgroundKey: "keyboard"
-        contentYOffset: kb.yNudge
         cursorShape: Qt.PointingHandCursor
         desiredInnerHeight: capsule.capsuleInner
         centerRow: true

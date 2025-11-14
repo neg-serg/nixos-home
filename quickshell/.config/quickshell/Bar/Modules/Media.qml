@@ -83,8 +83,6 @@ Item {
         id: capsule
         anchors.fill: parent
         backgroundKey: "media"
-        paddingScale: paddingScaleFor(mediaControl.horizontalPadding)
-        verticalPaddingScale: paddingScaleFor(mediaControl.verticalPadding)
         centerContent: false
 
         RowLayout {

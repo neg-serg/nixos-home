@@ -34,11 +34,6 @@ LocalComponents.WidgetCapsule {
     signal wheelStep(int direction)
     signal clicked()
 
-    property int horizontalPadding: Math.max(4, Math.round(Theme.panelRowSpacingSmall * capsuleScale * 0.8))
-    property int verticalPadding: Math.max(2, Math.round(Theme.uiSpacingXSmall * capsuleScale))
-
-    paddingScale: paddingScaleFor(horizontalPadding)
-    verticalPaddingScale: paddingScaleFor(verticalPadding)
     backgroundKey: settingsKey
     centerContent: true
 
