@@ -13,6 +13,15 @@ in {
     cxxmatrix = call ../cxxmatrix {};
     comma = call ../comma {};
 
+    mcp_server_filesystem = call ../mcp/server-filesystem {};
+    "mcp-server-filesystem" = mcp_server_filesystem;
+
+    mcp_ripgrep = call ../mcp/ripgrep {};
+    "mcp-ripgrep" = mcp_ripgrep;
+
+    mcp_server_git = call ../mcp/git {};
+    "mcp-server-git" = mcp_server_git;
+
     # Music album metadata CLI (used by music-rename script)
     albumdetails = prev.stdenv.mkDerivation rec {
       pname = "albumdetails";
