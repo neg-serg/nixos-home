@@ -227,6 +227,9 @@ in {
         in
           {
             default = pkgs.zsh;
+            mcp-server-filesystem = pkgs.neg.mcp_server_filesystem;
+            mcp-ripgrep = pkgs.neg.mcp_ripgrep;
+            mcp-server-git = pkgs.neg.mcp_server_git;
           }
           // lib.optionalAttrs extrasFlag extrasSet;
 
