@@ -21,6 +21,7 @@
     pkgs.nodePackages_latest.typescript-language-server # TS/JS LSP
     pkgs.nodePackages_latest.vscode-langservers-extracted # HTML/CSS/etc LSPs
     pkgs.qt6.qtdeclarative # Provides qmlls
+    pkgs.qt6.qttools # Qt tooling (qmllint, qmlformat, etc.)
     pkgs.just-lsp # Justfile LSP
     pkgs.lemminx # XML LSP
     pkgs.awk-language-server # AWK LSP

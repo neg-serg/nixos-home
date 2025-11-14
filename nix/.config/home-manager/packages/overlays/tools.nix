@@ -22,6 +22,24 @@ in {
     mcp_server_git = call ../mcp/git {};
     "mcp-server-git" = mcp_server_git;
 
+    mcp_server_memory = call ../mcp/memory {};
+    "mcp-server-memory" = mcp_server_memory;
+
+    mcp_server_fetch = call ../mcp/fetch {};
+    "mcp-server-fetch" = mcp_server_fetch;
+
+    mcp_server_sequential_thinking = call ../mcp/sequentialthinking {};
+    "mcp-server-sequential-thinking" = mcp_server_sequential_thinking;
+
+    mcp_server_time = call ../mcp/time {};
+    "mcp-server-time" = mcp_server_time;
+
+    docsearch_mcp = call ../mcp/docsearch {};
+    "docsearch-mcp" = docsearch_mcp;
+
+    mcp_server_browserbase = call ../mcp/browserbase {};
+    "mcp-server-browserbase" = mcp_server_browserbase;
+
     # Music album metadata CLI (used by music-rename script)
     albumdetails = prev.stdenv.mkDerivation rec {
       pname = "albumdetails";

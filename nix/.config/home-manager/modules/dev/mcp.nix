@@ -15,6 +15,12 @@ lib.mkIf cfgDev (lib.mkMerge [
       fsBinary = "${pkgs.neg.mcp_server_filesystem}/bin/mcp-server-filesystem";
       rgBinary = "${pkgs.neg.mcp_ripgrep}/bin/mcp-ripgrep";
       gitBinary = "${pkgs.neg.mcp_server_git}/bin/mcp-server-git";
+      memoryBinary = "${pkgs.neg.mcp_server_memory}/bin/mcp-server-memory";
+      fetchBinary = "${pkgs.neg.mcp_server_fetch}/bin/mcp-server-fetch";
+      seqBinary = "${pkgs.neg.mcp_server_sequential_thinking}/bin/mcp-server-sequential-thinking";
+      timeBinary = "${pkgs.neg.mcp_server_time}/bin/mcp-server-time";
+      docsearchBinary = "${pkgs.neg.docsearch_mcp}/bin/docsearch-mcp";
+      browserBinary = "${pkgs.neg.mcp_server_browserbase}/bin/mcp-server-browserbase";
     in {
       enable = true;
       servers = {
@@ -50,6 +56,34 @@ lib.mkIf cfgDev (lib.mkMerge [
             repoRoot
           ];
         };
+
+        memory-local = {
+          command = memoryBinary;
+        };
+
+        fetch-http = {
+          command = fetchBinary;
+        };
+
+        sequential-thinking = {
+          command = seqBinary;
+        };
+
+        time-local = {
+          command = timeBinary;
+        };
+
+        docsearch-local = {
+          command = docsearchBinary;
+        };
+
+        browserbase = {
+          command = browserBinary;
+          env = {
+            BROWSERBASE_API_KEY = "{env:BROWSERBASE_API_KEY}";
+            STAGEHAND_API_KEY = "{env:STAGEHAND_API_KEY}";
+          };
+        };
       };
     };
 
@@ -57,6 +91,12 @@ lib.mkIf cfgDev (lib.mkMerge [
       pkgs.neg.mcp_server_filesystem
       pkgs.neg.mcp_ripgrep
       pkgs.neg.mcp_server_git
+      pkgs.neg.mcp_server_memory
+      pkgs.neg.mcp_server_fetch
+      pkgs.neg.mcp_server_sequential_thinking
+      pkgs.neg.mcp_server_time
+      pkgs.neg.docsearch_mcp
+      pkgs.neg.mcp_server_browserbase
     ];
   }
 

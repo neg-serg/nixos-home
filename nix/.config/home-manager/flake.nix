@@ -230,6 +230,12 @@ in {
             mcp-server-filesystem = pkgs.neg.mcp_server_filesystem;
             mcp-ripgrep = pkgs.neg.mcp_ripgrep;
             mcp-server-git = pkgs.neg.mcp_server_git;
+            mcp-server-memory = pkgs.neg.mcp_server_memory;
+            mcp-server-fetch = pkgs.neg.mcp_server_fetch;
+            mcp-server-sequential-thinking = pkgs.neg.mcp_server_sequential_thinking;
+            mcp-server-time = pkgs.neg.mcp_server_time;
+            docsearch-mcp = pkgs.neg.docsearch_mcp;
+            mcp-server-browserbase = pkgs.neg.mcp_server_browserbase;
           }
           // lib.optionalAttrs extrasFlag extrasSet;
 

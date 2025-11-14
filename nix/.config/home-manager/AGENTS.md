@@ -17,6 +17,19 @@ consistent and activation quiet. This page shows what to use and how to validate
     exists with `nix search` (or an equivalent eval) against the repo’s flake. Only move forward
     when the package is present in the current channel.
 
+- QML best practices
+
+  - Whenever you touch QML/Qt Quick files, stick to the upstream Qt guidelines and well-known best
+    practices: keep components small and declarative, lean on property bindings instead of
+    imperative logic, avoid binding loops/global JS helpers, and prefer type-safe properties and
+    explicit signal handlers. Treat those guides as the source of truth and apply them wherever
+    applicable in this repo.
+  - Assume Qt 6+ features: review the latest Qt 6 porting notes and Quickshell release notes/docs
+    before suggesting changes so you stay aligned with new APIs and incompatibilities.
+  - Validate every edited/new QML file with the official tooling (e.g., `qmllint path/to/file.qml`,
+    `qmlformat --check path/to/file.qml`) from `pkgs.qt6.qtdeclarative`/`qttools`. If you can’t run
+    them yourself, explicitly ask the user to do so before considering the work done.
+
 - XDG helpers (preferred)
 
   - Config text/link: `xdg.mkXdgText`, `xdg.mkXdgSource`
