@@ -83,6 +83,16 @@ Rectangle {
             bottomMargin: verticalPadding
         }
 
+        Item {
+            id: centerHost
+            anchors {
+                left: parent.left
+                right: parent.right
+                verticalCenter: parent.verticalCenter
+                verticalCenterOffset: contentYOffset
+            }
+            height: parent.height
+        }
     }
 
     OverlayFrame {
@@ -95,7 +105,7 @@ Rectangle {
         zIndex: root.z + 1
     }
 
-    default property alias content: contentArea.data
+    default property alias content: centerHost.data
 
     function paddingScaleFor(paddingPx) {
         if (!_metrics || !_metrics.padding) return 1;
