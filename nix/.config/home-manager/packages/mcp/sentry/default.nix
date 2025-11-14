@@ -17,7 +17,7 @@ buildPythonApplication rec {
     rev = "9be4674d1ddf8c469e6461a27a337eeb65f76c2e";
     hash = "sha256-GD0MIgh+vxI65vUb8UKWn5eD970ICbi2Mnr26O3+fRk=";
   };
-  sourceRoot = "servers-archived-9be4674d1ddf8c469e6461a27a337eeb65f76c2e/src/sentry";
+  sourceRoot = "source/src/sentry";
 
   nativeBuildInputs = [ hatchling ];
   propagatedBuildInputs = [ mcp httpx click ];
