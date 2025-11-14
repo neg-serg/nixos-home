@@ -452,16 +452,11 @@ Scope {
                                 spacing: Math.round(Theme.panelNetClusterSpacing * leftPanel.s)
 
                                 KeyboardLayoutHypr {
-                                    id: kbIconCapsule
-                                    Layout.alignment: Qt.AlignVCenter
-                                    showLayoutLabel: false
-                                    iconSquare: true
-                                }
-
-                                KeyboardLayoutHypr {
                                     id: kbIndicator
                                     Layout.alignment: Qt.AlignVCenter
-                                    showKeyboardIcon: false
+                                    showKeyboardIcon: true
+                                    showLayoutLabel: true
+                                    iconSquare: false
                                 }
                             }
                             PanelSeparator {
