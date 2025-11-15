@@ -119,10 +119,17 @@ Scope {
         required property int panelHeightPx
         property real alpha: 0.0
         property bool triangleEnabled: false
-        property color triangleColor: Theme.panelPillColor
+        property string backgroundKey: ""
+        property color fallbackColor: Qt.rgba(10 / 255, 12 / 255, 20 / 255, 0.8)
+        property color backgroundColorOverride: "transparent"
+        property color triangleColor: backgroundColorOverride.a > 0
+            ? backgroundColorOverride
+            : WidgetBg.color(Settings.settings, backgroundKey, fallbackColor)
         property real triangleWidthFactor: 1.0
+        property bool mirrorTriangle: false
+        property real mirrorTriangleWidthFactor: triangleWidthFactor
         width: Math.max(1, Math.round(scaleFactor * Math.max(1, Theme.uiBorderWidth) * 16))
-        height: Math.max(2, Math.round(panelHeightPx * 0.68 * 16))
+        height: Math.max(2, Math.round(panelHeightPx))
         property var triangleVariant: "flipY"
         readonly property var triangleVariantSpec: rootScope.makeTriangleVariant(width, height, triangleVariant)
         readonly property bool triangleFlipX: triangleVariantSpec.flipX
@@ -133,6 +140,16 @@ Scope {
         color: Color.withAlpha(Theme.textPrimary, alpha)
         opacity: 1.0
         Layout.alignment: Qt.AlignVCenter
+
+        function logTriangleColor(origin) {
+            try {
+                console.debug("[PanelSeparator]", origin, "key:", backgroundKey || "<none>",
+                              "override:", backgroundColorOverride, "final:", triangleColor);
+            } catch (e) {}
+        }
+
+        Component.onCompleted: logTriangleColor("completed")
+        onTriangleColorChanged: logTriangleColor("colorChanged")
 
         TriangleOverlay {
             anchors.verticalCenter: parent.verticalCenter
@@ -146,6 +163,20 @@ Scope {
             xCoverage: parent.triangleWidthFactor
             z: parent.z + 0.5
             visible: parent.triangleEnabled && parent.visible
+        }
+
+        TriangleOverlay {
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.left: (!parent.triangleFlipX ? undefined : parent.left)
+            anchors.right: (!parent.triangleFlipX ? parent.right : undefined)
+            width: parent.width
+            height: parent.height
+            color: parent.triangleColor
+            flipX: !parent.triangleFlipX
+            flipY: !parent.triangleFlipY
+            xCoverage: parent.mirrorTriangleWidthFactor
+            z: parent.z + 0.5
+            visible: parent.triangleEnabled && parent.mirrorTriangle && parent.visible
         }
     }
 
@@ -482,6 +513,8 @@ Scope {
                                 panelHeightPx: leftPanel.barHeightPx
                                 triangleEnabled: true
                                 triangleWidthFactor: 0.3
+                                mirrorTriangle: true
+                                backgroundKey: "clock"
                             }
                             WsIndicator {
                                 id: wsindicator
@@ -495,6 +528,8 @@ Scope {
                                 panelHeightPx: leftPanel.barHeightPx
                                 triangleEnabled: true
                                 triangleWidthFactor: 0.55
+                                mirrorTriangle: true
+                                backgroundKey: "workspaces"
                             }
                             RowLayout {
                                 id: kbCluster
@@ -515,6 +550,8 @@ Scope {
                                 visible: netCluster.visible
                                 triangleEnabled: netCluster.visible
                                 triangleWidthFactor: 0.75
+                                mirrorTriangle: netCluster.visible
+                                backgroundKey: "keyboard"
                             }
                                 Row {
                                     id: netCluster
@@ -534,6 +571,8 @@ Scope {
                                 visible: (Settings.settings.showWeatherInBar === true)
                                 triangleEnabled: (Settings.settings.showWeatherInBar === true)
                                 triangleWidthFactor: 0.9
+                                mirrorTriangle: (Settings.settings.showWeatherInBar === true)
+                                backgroundKey: "network"
                             }
                             LocalMods.WeatherButton {
                                 id: weatherButton

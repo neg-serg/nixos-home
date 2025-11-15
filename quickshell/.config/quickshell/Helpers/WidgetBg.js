@@ -8,7 +8,16 @@ function isColor(value) {
 
 function color(settingsObj, key, fallback) {
     const map = (settingsObj && settingsObj.widgetBackgrounds) || {};
-    if (key && isColor(map[key])) return map[key];
-    if (isColor(map.default)) return map.default;
-    return fallback || fallbackColor;
+    let resolved;
+    if (key && isColor(map[key])) {
+        resolved = map[key];
+    } else if (isColor(map.default)) {
+        resolved = map.default;
+    } else {
+        resolved = fallback || fallbackColor;
+    }
+    try {
+        console.debug("[WidgetBg.color]", key || "default", resolved);
+    } catch (e) {}
+    return resolved;
 }
