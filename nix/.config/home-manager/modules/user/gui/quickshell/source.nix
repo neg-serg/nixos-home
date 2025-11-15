@@ -14,12 +14,12 @@ mkIf (config.features.gui.enable && (config.features.gui.qt.enable or false) && 
     source = config.lib.file.mkOutOfStoreSymlink "${config.neg.dotfilesRoot}/quickshell/.config/quickshell";
   };
 
-  # After linking the updated config, ask the running quickshell to reload.
-  # If reload is unsupported or fails, try a restart only when active.
+  # After linking the updated config, restart quickshell if it is running.
+  # Quickshell 0.2+ no longer supports SIGHUP reloads, so we bounce the service.
   home.activation.quickshell-reload = lib.hm.dag.entryAfter ["linkGeneration"] ''
     set -e
     if "${systemctl}" --user is-active -q quickshell.service; then
-      "${systemctl}" --user reload quickshell.service || "${systemctl}" --user try-restart quickshell.service || true
+      "${systemctl}" --user restart quickshell.service || true
     fi
   '';
 }

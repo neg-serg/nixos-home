@@ -80,11 +80,9 @@ with lib;
                       then wrapped
                       else pkgs.quickshell;
                     exe = lib.getExe' pkg "qs";
-                    logPath = "%t/quickshell/qs-theme.log";
-                  in "${exe} --log ${logPath}";
+                  in exe;
                   Environment = ["RUST_LOG=info,quickshell.dbus.properties=error"];
-                  # Allow a gentle config reload when requested by HM activation
-                  ExecReload = "${pkgs.coreutils}/bin/kill -HUP $MAINPID";
+                  # Quickshell 0.2+ removed SIGHUP reload support; rely on restarts for updates.
                   Restart = "on-failure";
                   RestartSec = "1";
                   Slice = "background-graphical.slice";
