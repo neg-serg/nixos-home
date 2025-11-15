@@ -1,6 +1,8 @@
 {
+  // Base palette tuned for dark Quickshell surfaces; override here to adjust visuals.
   "colors": {
     "accent": {
+      // Primary accent color for highlights across panels and tooltips.
       "primary": "#006FCC"
     },
     "background": "#ef000000",

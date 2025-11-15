@@ -1,12 +1,12 @@
-Quickshell Configuration: Settings.json and Theme.json options
+Quickshell Configuration: Settings.json and Theme/.theme.json options
 
 Locations
 - `~/.config/quickshell/Settings.json`: behavioral and global settings.
-- `~/.config/quickshell/Theme.json`: generated theme tokens (colors, sizes, animation, etc.). Edit the source files under `Theme/*.json` (merge order defined in `Theme/manifest.json`). Quickshell watches that directory and rewrites `Theme.json` automatically; use `node Tools/build-theme.mjs` only when you need a manual rebuild outside a running session.
+- `~/.config/quickshell/Theme/.theme.json`: generated theme tokens (colors, sizes, animation, etc.). Edit the source files under `Theme/*.jsonc` (merge order defined in `Theme/manifest.json`). Quickshell watches that directory and rewrites `.theme.json` automatically; use `node Tools/build-theme.mjs` only when you need a manual rebuild outside a running session.
 - Base directory is `${XDG_CONFIG_HOME:-$HOME/.config}/quickshell/`. Files are created on first run with defaults.
 
 Format
-- Both files are JSON. Values in files override built‑in defaults.
+- Settings.json is plain JSON. Theme parts use JSONC (comments allowed) and compile down to `Theme/.theme.json`, which remains strict JSON for Quickshell.
 
 Settings.json (all options)
 
@@ -92,7 +92,7 @@ Visualizer profiles notes
   - spectrumBarGap, spectrumVerticalRaise, spectrumMirror
   Any field not defined in a profile falls back to the global value.
 
-Theme.json (short)
+Theme/.theme.json (short)
 - All typography, colors, paddings, radii, animations, etc. are hierarchical tokens.
 - Full list of tokens, types/defaults, and guidance: `Docs/ThemeTokens.md`.
 - Up‑to‑date example schema: `Docs/ThemeHierarchical.json`.
@@ -100,9 +100,9 @@ Theme.json (short)
 - Strict mode (`Settings.settings.strictThemeTokens = true`) logs warnings for missing tokens and deprecated flat keys. Flat keys are removed after 2025‑11‑01.
 
 Tools
-- Build theme: `node Tools/build-theme.mjs` (merges `Theme/*.json` into `Theme.json`; add `--check` for CI/hooks).
-- Validate theme: `node Tools/validate-theme.mjs [--theme Theme.json] [--schema Docs/ThemeHierarchical.json] [--strict]` (auto-loads from `Theme/` parts).
-- Generate theme schema: `node Tools/generate-theme-schema.mjs` (updates `Docs/ThemeHierarchical.json` from the merged Theme).
+- Build theme: `node Tools/build-theme.mjs` (merges `Theme/*.jsonc` into `Theme/.theme.json`; add `--check` for CI/hooks).
+- Validate theme: `node Tools/validate-theme.mjs [--theme Theme/.theme.json] [--schema Docs/ThemeHierarchical.json] [--strict]` (auto-loads from the `Theme/` parts when present).
+- Generate theme schema: `node Tools/generate-theme-schema.mjs` (updates `Docs/ThemeHierarchical.json` from the merged theme parts).
 - Validate settings: `node Tools/validate-settings.mjs [--settings ~/.config/quickshell/Settings.json] [--schema Docs/SettingsSchema.json]`.
 
 Settings.json schema and samples

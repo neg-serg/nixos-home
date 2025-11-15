@@ -20,7 +20,7 @@ Wedge shader runtime toggles (env)
 - `QS_WEDGE_DEBUG=1` — show on‑screen overlays and magenta debug inside the wedge.
 - `QS_WEDGE_SHADER_TEST=1` — force magenta paint from shader to prove visibility.
 - `QS_WEDGE_WIDTH_PCT=NN` — wedge width in percent (0..100).
-- `QS_WEDGE_TINT_TEST=1` — full‑surface tint for visibility checks.
+- (Removed) `QS_WEDGE_TINT_TEST` — panels now rely on `QS_WEDGE_DEBUG=1` + `WlrLayer.Overlay` when verifying visibility.
 
 Debugging tips (use where applicable)
 - Ensure sources hide when clip is active: bind `ShaderEffectSource.hideSource` to the clip `Loader.active`.
@@ -30,7 +30,6 @@ Debugging tips (use where applicable)
 
 Settings knobs
 - Panel background transparency is configurable via `Settings.settings.panelBgAlphaScale` (preferred, 0..1) or `panelBgAlphaFactor` (>0 divisor). See Docs/PANELS.md.
-- Slope flags: `debugTriangleLeftSlopeUp`, `debugTriangleRightSlopeUp`.
 
 Style / contribution
 - Keep changes minimal and focused; follow existing QML/JS style.

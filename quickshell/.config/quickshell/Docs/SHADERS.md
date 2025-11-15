@@ -8,7 +8,7 @@ Quick Checklist (EN) / Краткий чек‑лист (RU)
 - Build shaders: `nix shell nixpkgs#qt6.qtshadertools -c bash -lc 'scripts/compile_shaders.sh'`
 - Visibility test: `QS_ENABLE_WEDGE_CLIP=1 QS_WEDGE_DEBUG=1 QS_WEDGE_SHADER_TEST=1 qs` (must see magenta)
 - If no magenta: move bars to Overlay (auto in debug), check logs with `debugLogs: true`
-- If wedge not obvious: set `QS_WEDGE_WIDTH_PCT=60` and flip slope flags in Settings
+- If wedge not obvious: set `QS_WEDGE_WIDTH_PCT=60` to temporarily widen the seam
 - Ensure sources hide: `ShaderEffectSource.hideSource === Loader.active`; raise clip z (e.g. `z: 50`) during debug
 - Panel transparency affects perceived wedge strength — see `Docs/PANELS.md`
 
@@ -56,11 +56,7 @@ Quick Checklist (EN) / Краткий чек‑лист (RU)
 - `QS_WEDGE_WIDTH_PCT=NN` — ширина клина в процентах (0..100). Если не задано, берётся от геометрии `seamPanel.seamWidthPx`.
 - `QS_WEDGE_DEBUG=1` — включает отладочные оверлеи (Canvas‑клины поверх панелей и маджента внутри клипа).
 - `QS_WEDGE_SHADER_TEST=1` — шейдер рисует мадженту по всей области эффекта (проверка, что сам ShaderEffect виден на экране).
-- `QS_WEDGE_TINT_TEST=1` — поверх содержимого панелей рисуются полупрозрачные прямоугольники (подтверждение, что окна панелей вообще видимы).
-
-Дополнительно в `Settings.json` есть флаги для наклона диагонали:
-
-- `debugTriangleLeftSlopeUp`, `debugTriangleRightSlopeUp` — задают направление диагонали слева/справа.
+- Проверочный полноэкранный тинт удалён; для проверки видимости используйте `QS_WEDGE_DEBUG=1` или временно поднимите панели на слой `WlrLayer.Overlay`.
 
 ### Интеграция в QML (вкратце)
 
@@ -77,12 +73,8 @@ Quick Checklist (EN) / Краткий чек‑лист (RU)
    QS_ENABLE_WEDGE_CLIP=1 QS_WEDGE_DEBUG=1 QS_WEDGE_SHADER_TEST=1 qs
    ```
    Должна появиться маджента поверх клипа на обеих панелях. Если нет — проблема со стеком слоёв/видимостью окна.
-3) Проверить видимость окон панелей:  
-   ```bash
-   QS_ENABLE_WEDGE_CLIP=1 QS_WEDGE_DEBUG=1 QS_WEDGE_TINT_TEST=1 qs
-   ```
-   Должны появиться сплошные полупрозрачные подсветки поверх панелей.
-4) Если ShaderEffect виден, но треугольник не «вырезается», увеличить ширину: `QS_WEDGE_WIDTH_PCT=60` (или 80) и сменить наклон в `Settings.json`.
+3) Проверить, что сами оконные поверхности видимы: оставьте `QS_WEDGE_DEBUG=1` (панели перейдут на `WlrLayer.Overlay`) и убедитесь, что маджента следует за окном.
+4) Если ShaderEffect виден, но треугольник не «вырезается», увеличить ширину: `QS_WEDGE_WIDTH_PCT=60` (или 80).
 5) Убедиться, что источники скрываются: `ShaderEffectSource.hideSource` привязан к активности соответствующего `Loader` (иначе оригинальные прямоугольники поверх/под шейдером скрывают «дырку»).
 
 Скриншот (Wayland): `grim -g "$(slurp)" wedge.png`.
@@ -107,16 +99,15 @@ Quick Checklist (EN) / Краткий чек‑лист (RU)
 - «Ничего не меняется» — клин не виден, хотя `QS_ENABLE_WEDGE_CLIP=1`:
   - Частая причина — базовые прямоугольники панелей (`leftBarFill/rightBarFill`) и/или их тинты всё ещё рисуются под/над шейдером и визуально закрывают «дырку». Нужно отключать исходные слои, когда активен шейдер, и оставлять только шейдерную версию. Аналогично — выключать fallback `OpacityMask` в этом режиме.
   - Убедиться, что `ShaderEffect` действительно отрисовывается: `QS_WEDGE_SHADER_TEST=1` (в этом режиме маджента закрашивает всю область эффекта).
-  - Проверить видимость самих окон панелей: `QS_WEDGE_TINT_TEST=1` (полупрозрачная заливка поверх панелей должна быть видна). На время отладки можно поднять слой: `WlrLayer.Overlay`.
+  - Проверить видимость самих окон панелей: оставьте `QS_WEDGE_DEBUG=1`, панели перейдут на `WlrLayer.Overlay`, что гарантирует отсутствие перекрытий от других окон.
 - Нулевая высота окна с шейдерами — Seam панель может «схлопнуться» до 0px и шейдеры становятся невидимыми. Решение: дать `implicitHeight` и показывать её после «готовности геометрии».
 - Путаемся с рабочим каталогом — вызов `scripts/compile_shaders.sh` вне каталога конфигурации приводит к `No such file or directory`. Решение: запускать из `~/.config/quickshell` или явно `cd ~/.config/quickshell && scripts/compile_shaders.sh`.
-- Диагональ не в ту сторону — включены противоположные флаги наклона. Решение: переключить `debugTriangleLeftSlopeUp` / `debugTriangleRightSlopeUp` в `Settings.json`.
 
 ### План доработок
 
 1) Спрятать исходные прямоугольники заливки/тинтов, когда активен путь шейдера (оставить только ShaderEffect-версии).  
 2) После подтверждения визуального результата удалить Canvas/OpacityMask‑fallback и вернуть слои панелей с Overlay на обычный Top.  
-3) Экспонировать ширину клина и наклон через `Settings` (перенести с env при желании).  
+3) Экспонировать ширину клина через `Settings` (перенести с env при желании).  
 4) Подточить производительность: ограничить `ShaderEffectSource` по области, снизить `live/recursive`, если это допустимо.  
 5) В документации закрепить «чек‑лист» отладки и добавить примеры команд для скриншотов (Wayland: `grim`, `slurp`).
 
@@ -166,9 +157,7 @@ Notes:
 - `QS_WEDGE_WIDTH_PCT=NN` — wedge width in percent (0..100). Defaults to a value derived from `seamPanel.seamWidthPx`.
 - `QS_WEDGE_DEBUG=1` — enables visual debug overlays (Canvas wedges + shader magenta overlay).
 - `QS_WEDGE_SHADER_TEST=1` — shader paints magenta across the whole rect (visibility check).
-- `QS_WEDGE_TINT_TEST=1` — adds full-surface semi‑transparent rectangles over the bars to confirm window visibility.
-
-Slope direction can be changed in settings: `debugTriangleLeftSlopeUp`, `debugTriangleRightSlopeUp`.
+- `QS_WEDGE_TINT_TEST` was removed; use `QS_WEDGE_DEBUG=1` combined with `WlrLayer.Overlay` to confirm the layer-shell windows are visible.
 
 ### QML integration (short)
 
@@ -185,11 +174,8 @@ Slope direction can be changed in settings: `debugTriangleLeftSlopeUp`, `debugTr
    QS_ENABLE_WEDGE_CLIP=1 QS_WEDGE_DEBUG=1 QS_WEDGE_SHADER_TEST=1 qs
    ```
    You should see magenta over the effect area. If not, it’s a stacking/visibility issue (not the shader).
-3) Confirm the bar windows are visible at all:  
-   ```bash
-   QS_ENABLE_WEDGE_CLIP=1 QS_WEDGE_DEBUG=1 QS_WEDGE_TINT_TEST=1 qs
-   ```
-4) If ShaderEffect is visible but the wedge is not obvious, increase width: `QS_WEDGE_WIDTH_PCT=60` (or 80) and flip slope flags in settings if needed.
+3) Confirm the layer-shell windows are visible: keep `QS_WEDGE_DEBUG=1` running (bars move to `WlrLayer.Overlay`) and check whether the magenta overlay tracks the window.
+4) If ShaderEffect is visible but the wedge is still subtle, increase width: `QS_WEDGE_WIDTH_PCT=60` (or 80).
 5) Ensure sources are hidden: bind `ShaderEffectSource.hideSource` to the corresponding clip `Loader.active`, otherwise the original rectangles over/under the effect will visually fill the “hole”.
 
 Wayland screenshot: `grim -g "$(slurp)" wedge.png`.
@@ -214,20 +200,19 @@ Wayland screenshot: `grim -g "$(slurp)" wedge.png`.
 - “Nothing changes” even with `QS_ENABLE_WEDGE_CLIP=1`:
   - Most common: the original bar fill/tint rectangles still render under/over the shader and visually cover the hole. Hide them when the shader path is active and show only the ShaderEffect variants. Also ensure all `OpacityMask` fallbacks are disabled in shader mode.
   - Verify ShaderEffect is actually painting: `QS_WEDGE_SHADER_TEST=1` (magenta over the whole rect).
-  - Confirm the bar windows are visible: `QS_WEDGE_TINT_TEST=1`. During debug it can help to place the bars on `WlrLayer.Overlay`.
+  - Confirm the bar windows are visible: keep `QS_WEDGE_DEBUG=1` running so the bars stay on `WlrLayer.Overlay` and the magenta overlay follows the window.
   - Z-order during debug: raise the clip Loaders (e.g., `z: 50`) so their output is not hidden; avoid seam overlays on top while validating.
   - Logging: enable `Settings.json` → `"debugLogs": true` to get lines like `[bar:left] wedge shader active: true …` and overlay geometry logs.
 - Zero-height shader window — the seam window may collapse to 0px; nothing renders. Fix: give it `implicitHeight` and show after geometry readiness.
 - Working directory confusion — invoking `scripts/compile_shaders.sh` outside the config dir fails. Fix: run it from `~/.config/quickshell` or `cd` there first.
-- Opposite wedge slope — wrong slope flags. Fix: flip `debugTriangleLeftSlopeUp` / `debugTriangleRightSlopeUp` in `Settings.json`.
 
 ### Next steps
 
 1) Keep the shader-only path; leave debug/test flags off by default.  
-2) Optionally expose wedge width and slope in persistent Settings (not only env).  
+2) Optionally expose wedge width in persistent Settings (not only env).  
 3) Improve performance: reduce `ShaderEffectSource` region to the wedge strip; review `live/recursive`.  
 4) Polish visuals: tune `feather` using theme radius/scale; keep left/right in sync.  
-5) Add a small Settings toggle to reset width/slope env overrides.  
+5) Add a small Settings toggle to reset width env overrides.  
 6) Keep `scripts/compile_shaders.sh` documented as the canonical rebuild step.
 
 ---

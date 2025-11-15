@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 /**
- * validate-theme.mjs — Dev script to validate Theme.json against a hierarchical schema
+ * validate-theme.mjs — Dev script to validate the generated theme JSON against a hierarchical schema
  *
  * Usage:
- *   node Tools/validate-theme.mjs [--theme Theme.json] [--schema Docs/ThemeHierarchical.json] [--constraints Docs/ThemeConstraints.json] [--parts Theme] [--strict] [--verbose]
+ *   node Tools/validate-theme.mjs [--theme Theme/.theme.json] [--schema Docs/ThemeHierarchical.json] [--constraints Docs/ThemeConstraints.json] [--parts Theme] [--strict] [--verbose]
  *
  * Checks:
  * - Unknown (extra) tokens not present in the schema
@@ -60,7 +60,7 @@ function flatten(obj, base = '') {
 
 function parseArgs(argv) {
   const args = {
-    theme: 'Theme.json',
+    theme: 'Theme/.theme.json',
     schema: 'Docs/ThemeHierarchical.json',
     constraints: 'Docs/ThemeConstraints.json',
     parts: null,
@@ -90,8 +90,12 @@ function resolvePartsDir(args, cwd, themePath) {
   if (args.parts) {
     candidates.push(path.resolve(cwd, args.parts));
   }
-  const siblingDir = path.join(path.dirname(themePath), 'Theme');
-  candidates.push(siblingDir);
+  const themeDir = path.dirname(themePath);
+  if (path.basename(themeDir) === 'Theme') {
+    candidates.push(themeDir);
+  } else {
+    candidates.push(path.join(themeDir, 'Theme'));
+  }
   const seen = new Set();
   for (const dir of candidates) {
     if (!dir || seen.has(dir)) continue;

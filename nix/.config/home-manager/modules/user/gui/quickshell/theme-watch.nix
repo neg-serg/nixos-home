@@ -37,7 +37,8 @@ mkIf quickshellEnabled {
             --restart \
             --watch ${themeRoot}/Theme \
             --watch ${themeRoot}/Theme/manifest.json \
-            --exts json \
+            --exts json,jsonc \
+            --ignore ${themeRoot}/Theme/.theme.json \
             --debounce 250ms \
             -- ${lib.getExe buildTheme}
         '';

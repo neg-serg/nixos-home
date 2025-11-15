@@ -262,3 +262,4 @@ shell/.config/nushell/plugin.msgpackz
 # Quickshell local settings (generated per-machine)
 quickshell/.config/quickshell/Settings.json
 quickshell/.config/quickshell/Theme.json
+quickshell/.config/quickshell/Theme/.theme.json

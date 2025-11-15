@@ -10,6 +10,62 @@ function normalizeRel(partsDir, filePath) {
   return rel.split(path.sep).join('/');
 }
 
+const JSON_EXTENSIONS = new Set(['.json', '.jsonc']);
+
+function stripJsonComments(input) {
+  if (!input) return '';
+  let str = String(input);
+  if (str.charCodeAt(0) === 0xfeff) {
+    str = str.slice(1);
+  }
+  let out = '';
+  let inString = false;
+  let escaped = false;
+  let inSingleLine = false;
+  let inMultiLine = false;
+  for (let i = 0; i < str.length; i++) {
+    const ch = str[i];
+    const next = i + 1 < str.length ? str[i + 1] : '';
+    if (inSingleLine) {
+      if (ch === '\n' || ch === '\r') {
+        inSingleLine = false;
+        out += ch;
+      }
+      continue;
+    }
+    if (inMultiLine) {
+      if (ch === '*' && next === '/') {
+        inMultiLine = false;
+        i++;
+      }
+      continue;
+    }
+    if (!inString && ch === '/' && next === '/') {
+      inSingleLine = true;
+      i++;
+      continue;
+    }
+    if (!inString && ch === '/' && next === '*') {
+      inMultiLine = true;
+      i++;
+      continue;
+    }
+    out += ch;
+    if (inString) {
+      if (!escaped && ch === '"') {
+        inString = false;
+      }
+      escaped = !escaped && ch === '\\';
+      continue;
+    }
+    if (ch === '"') {
+      inString = true;
+      escaped = false;
+    }
+  }
+  return out;
+}
+
 function collectJsonFiles(dir) {
   const entries = fs.readdirSync(dir, { withFileTypes: true });
   entries.sort((a, b) => a.name.localeCompare(b.name));
@@ -19,8 +75,11 @@ function collectJsonFiles(dir) {
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) {
       files.push(...collectJsonFiles(full));
-    } else if (entry.isFile() && entry.name.endsWith('.json')) {
+    } else if (entry.isFile()) {
+      const ext = path.extname(entry.name).toLowerCase();
+      if (!JSON_EXTENSIONS.has(ext)) continue;
       if (entry.name === 'manifest.json') continue;
+      if (entry.name === '.theme.json') continue;
       files.push(full);
     }
   }
@@ -30,7 +89,8 @@ function collectJsonFiles(dir) {
 function readJson(filePath) {
   const raw = fs.readFileSync(filePath, 'utf8');
   try {
-    return JSON.parse(raw);
+    const cleaned = stripJsonComments(raw);
+    return JSON.parse(cleaned);
   } catch (err) {
     throw new Error(`Failed to parse JSON ${filePath}: ${err.message}`);
   }
@@ -66,7 +126,7 @@ export function loadThemeFromParts({ partsDir = 'Theme', allowEmpty = false } = 
     const raw = fs.readFileSync(manifestPath, 'utf8');
     let manifest = null;
     try {
-      manifest = JSON.parse(raw);
+      manifest = JSON.parse(stripJsonComments(raw));
     } catch (err) {
       throw new Error(`Invalid manifest ${manifestPath}: ${err.message}`);
     }
@@ -108,3 +168,5 @@ export function writeTheme(outPath, theme) {
   const pretty = JSON.stringify(theme, null, 2) + '\n';
   fs.writeFileSync(resolved, pretty, 'utf8');
 }
+
+export { stripJsonComments };

@@ -9,7 +9,7 @@ Wedge Shader Quick Checklist
 - Build: `nix shell nixpkgs#qt6.qtshadertools -c bash -lc 'scripts/compile_shaders.sh'`
 - Test visibility: `QS_ENABLE_WEDGE_CLIP=1 QS_WEDGE_DEBUG=1 QS_WEDGE_SHADER_TEST=1 qs`
 - If no magenta: ensure `.qsb` files exist, debug puts bars on `WlrLayer.Overlay`; enable `debugLogs` in `Settings.json`
-- If wedge not obvious: `QS_WEDGE_WIDTH_PCT=60` and flip slope flags (`debugTriangle*SlopeUp`)
+- If wedge not obvious: `QS_WEDGE_WIDTH_PCT=60` to temporarily widen the seam
 - Ensure `ShaderEffectSource.hideSource` is bound to clip `Loader.active`; temporarily raise clip `z` (e.g. 50)
 - Panel transparency influences wedge appearance — see Docs/PANELS.md
 
@@ -18,7 +18,7 @@ Notes
 - Run the shader build script from this directory (`~/.config/quickshell`).
 
 Migration Log
-- 2025-11: Decorative separators were removed across the bar, menus, and docs. Delete any local overrides such as `mediaTitleSeparator`, `panel.menu.separatorHeight`, `panel.sepOvershoot`, and every `ui.separator.*` token in custom `Settings.json`/`Theme.json`. Use spacing/padding only; rebuild shaders after updating themes.
+- 2025-11: Decorative separators were removed across the bar, menus, and docs. Delete any local overrides such as `mediaTitleSeparator`, `panel.menu.separatorHeight`, `panel.sepOvershoot`, and every `ui.separator.*` token in custom `Settings.json`/`Theme/.theme.json`. Use spacing/padding only; rebuild shaders after updating themes.
 - 2025-11: Panel rows are now fully transparent. Every widget is responsible for its own rounded capsule background using `Helpers/WidgetBg.js` and the `Settings.settings.widgetBackgrounds` map (see Docs/PANELS.md). Keep individual capsules near 80 % opacity for the requested darker pill look.
 - 2025-11: The left/right window margins are controlled by `panelSideMarginPx` (Settings.json). This value overrides `Theme.panel.sideMargin` so both panels hug the screen edges equally; remove any hand-tuned padding from modules.
 - 2025-11: `Components/WidgetCapsule.qml` is the canonical capsule wrapper (hover tint, border, padding, metrics). When touching a widget that draws its own pill, replace ad-hoc `Rectangle` logic with this component and only override `backgroundKey`, `paddingScale`, or `hoverColorOverride` if the module truly requires it.

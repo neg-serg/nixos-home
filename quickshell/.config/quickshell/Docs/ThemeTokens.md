@@ -2,12 +2,12 @@ Theme Color Tokens and Derivations
 
 Overview
 See also: Docs/RichText.md for helpers used to color brackets and time spans in rich text labels (Media, NetworkUsage, WsIndicator).
-- Source layout: each logical block lives under `Theme/*.json` (colors, panel, tooltip, etc.). Edit those files instead of the monolithic Theme.json.
-- Merge order is defined in `Theme/manifest.json` (paths relative to the Theme directory); append new sections there so the generated `Theme.json` stays stable.
-- Quickshell watches the Theme directory at runtime (QML `FolderListModel` + `FileView`) and rewrites `Theme.json` automatically whenever a part changes, so the bar and helper scripts always consume the latest tokens.
-- `Theme.json` itself is gitignored; Quickshell regenerates it at login, and you can still run `node Tools/build-theme.mjs` manually when you need an offline copy (e.g., before editing outside a running session).
+- Source layout: each logical block lives under `Theme/*.jsonc` (colors, panel, tooltip, etc.). Edit those files instead of the monolithic theme output; inline `//` and `/* */` comments are allowed and stripped automatically.
+- Merge order is defined in `Theme/manifest.json` (paths relative to the Theme directory); append new sections there so the generated `Theme/.theme.json` stays stable.
+- Quickshell watches the Theme directory at runtime (QML `FolderListModel` + `FileView`) and rewrites `Theme/.theme.json` automatically whenever a part changes, so the bar and helper scripts always consume the latest tokens.
+- `Theme/.theme.json` itself is gitignored; Quickshell regenerates it at login, and you can still run `node Tools/build-theme.mjs` manually when you need an offline copy (e.g., before editing outside a running session).
 - Validators (`Tools/validate-theme.mjs`, `Tools/lint-theme-tokens.mjs`, `Tools/generate-theme-schema.mjs`) automatically read from the split parts; no extra flags are needed unless you pass `--no-parts`.
-- Base palette (user-configurable in Theme.json):
+- Base palette (user-configurable via the `Theme/colors.jsonc` part and reflected in `Theme/.theme.json`):
   - background
   - surface/surfaceVariant
   - textPrimary/Secondary/Disabled
@@ -89,13 +89,13 @@ Additional UI tokens (nested)
   - Calendar opacities: calendar.opacity.title, calendar.opacity.dow, calendar.opacity.otherMonthDay
 
 Overrides (advanced)
-- You can override any derived token by adding an "Override" key in Theme.json:
+- You can override any derived token by adding an "Override" key in Theme/.theme.json:
   - accentHoverOverride, accentDarkStrongOverride
   - surfaceHoverOverride, surfaceActiveOverride
   - borderSubtleOverride
   - overlayWeakOverride, overlayStrongOverride
 - If an override is present, it wins; otherwise the token is computed by formula.
-- Keep Theme.json minimal; only add overrides if you truly need to diverge.
+- Keep Theme/.theme.json minimal; only add overrides if you truly need to diverge.
 
 Helper APIs (Helpers/Color.js)
 - contrastOn(bg, light, dark, threshold): choose a readable text color based on bg luminance.
@@ -126,15 +126,15 @@ Debugging
 - Strict token warnings: set `Settings.settings.strictThemeTokens` to true to log a warning whenever a Theme token is missing and a fallback is used. Helps ensure themes define all tokens you rely on.
 
 Tools
-- Compose final Theme.json on demand: `node Tools/build-theme.mjs` (add `--check` to ensure it is current without writing). This is optional now that Quickshell auto-rebuilds at runtime, but remains handy for linting or external tools.
-- Validation: `node Tools/validate-theme.mjs [--theme Theme.json] [--schema Docs/ThemeHierarchical.json] [--strict]`
+- Compose final `Theme/.theme.json` on demand: `node Tools/build-theme.mjs` (add `--check` to ensure it is current without writing). This is optional now that Quickshell auto-rebuilds at runtime, but remains handy for linting or external tools.
+- Validation: `node Tools/validate-theme.mjs [--theme Theme/.theme.json] [--schema Docs/ThemeHierarchical.json] [--strict]`
   - Automatically reads from `Theme/` parts when present; reports unknown (extra) and missing tokens (missing is informational; `--strict` fails on unknown only).
 - Generate example schema: `node Tools/generate-theme-schema.mjs`
-  - Rebuilds `Docs/ThemeHierarchical.json` from the merged theme (prefers `Theme/*.json`, falls back to `Theme.json`), preventing drift.
+  - Rebuilds `Docs/ThemeHierarchical.json` from the merged theme (prefers `Theme/*.jsonc`, falls back to `Theme/.theme.json`), preventing drift.
 
 Deprecations and Migration
-- Deprecated (removed): media.time.fontScale — removed in Sep 2025 as time spans follow main text size. Remove from Theme.json; no replacement needed.
-- Flat (legacy) tokens: compatibility remains until 2025-11-01. After this date, flat keys stop working. Migrate to hierarchical tokens in Theme.json.
+- Deprecated (removed): media.time.fontScale — removed in Sep 2025 as time spans follow main text size. Remove from Theme/.theme.json; no replacement needed.
+- Flat (legacy) tokens: compatibility remains until 2025-11-01. After this date, flat keys stop working. Migrate to hierarchical tokens in Theme/.theme.json.
 
 Migration (flat → nested)
 Flat keys were historically supported alongside nested tokens. They are deprecated and removed after 2025-11-01. Enable `Settings.settings.strictThemeTokens = true` to get console warnings when any flat key is detected.

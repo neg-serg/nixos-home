@@ -67,7 +67,7 @@ fi
 # Compute offsets from Quickshell Theme + Hyprland scale to align with panel
 # Only when caller did not specify offsets explicitly
 if [ "$want_offsets" -eq 1 ] && [ "$have_xoff" -eq 0 ] && [ "$have_yoff" -eq 0 ]; then
-  theme_json="$xdg_conf/quickshell/Theme.json"
+  theme_json="$xdg_conf/quickshell/Theme/.theme.json"
   # Defaults if quickshell or jq/hyprctl unavailable
   sm=18; ay=4; scale=1
   extra=""

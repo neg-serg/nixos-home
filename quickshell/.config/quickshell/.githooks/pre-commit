@@ -9,9 +9,9 @@ node quickshell/.config/quickshell/Tools/validate-settings.mjs \
   --settings quickshell/.config/quickshell/Settings.json \
   --schema quickshell/.config/quickshell/Docs/SettingsSchema.json
 
-# Validate Theme.json in repo with constraints
+# Validate generated theme in repo with constraints
 node quickshell/.config/quickshell/Tools/validate-theme.mjs \
-  --theme quickshell/.config/quickshell/Theme.json \
+  --theme quickshell/.config/quickshell/Theme/.theme.json \
   --schema quickshell/.config/quickshell/Docs/ThemeHierarchical.json \
   --constraints quickshell/.config/quickshell/Docs/ThemeConstraints.json \
   --strict

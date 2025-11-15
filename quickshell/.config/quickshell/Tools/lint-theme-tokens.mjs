@@ -6,7 +6,7 @@ import { loadThemeFromParts } from './lib/theme-builder.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, '..');
-const themeJson = path.join(root, 'Theme.json');
+const themeJson = path.join(root, 'Theme/.theme.json');
 const themeQml = path.join(root, 'Settings/Theme.qml');
 
 function read(p){ return fs.readFileSync(p,'utf8'); }
@@ -42,14 +42,14 @@ function main(){
   const unknown = Array.from(used).filter(p => !def.has(p)).sort();
 
   if (unknown.length) {
-    console.error('\nUnknown Theme tokens (used in Theme.qml but not present in Theme.json):');
+    console.error('\nUnknown Theme tokens (used in Theme.qml but not present in Theme/.theme.json):');
     for (const p of unknown) console.error(' -', p);
   } else {
     console.log('No unknown Theme tokens.');
   }
 
   if (unused.length) {
-    console.log('\nUnused Theme tokens (present in Theme.json but not referenced in Theme.qml):');
+    console.log('\nUnused Theme tokens (present in Theme/.theme.json but not referenced in Theme.qml):');
     for (const p of unused) console.log(' -', p);
   } else {
     console.log('No unused Theme tokens.');

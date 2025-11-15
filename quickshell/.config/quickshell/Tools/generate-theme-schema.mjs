@@ -1,12 +1,12 @@
 #!/usr/bin/env node
-// Generate Docs/ThemeHierarchical.json from Theme parts (fallback to Theme.json)
+// Generate Docs/ThemeHierarchical.json from Theme parts (fallback to Theme/.theme.json)
 import fs from 'node:fs';
 import path from 'node:path';
 import { loadThemeFromParts, writeTheme } from './lib/theme-builder.mjs';
 
 const root = process.cwd();
 const partsDir = path.resolve(root, 'Theme');
-const themePath = path.resolve(root, 'Theme.json');
+const themePath = path.resolve(root, 'Theme/.theme.json');
 const outPath = path.resolve(root, 'Docs/ThemeHierarchical.json');
 
 try {
