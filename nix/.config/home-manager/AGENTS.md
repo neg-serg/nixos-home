@@ -359,6 +359,11 @@ consistent and activation quiet. This page shows what to use and how to validate
 
 ## Validation
 
+- Always end with a real build/test so regressions surface early; default to
+  `nix build .#homeConfigurations.neg.activationPackage` (or `just check` when
+  broader coverage matters) and mention the outcome if you have to skip it.
+- New files you add must be committed or staged before building; otherwise the
+  flake source will omit them and any derivation referencing them will fail.
 - Local eval: `nix flake check -L` (may build small docs/checks)
 - Fast feature view (no build): build `checks.x86_64-linux.hm-eval-neg-retro-off` and inspect JSON
 - HM switch (live): `home-manager switch --flake .#neg`
