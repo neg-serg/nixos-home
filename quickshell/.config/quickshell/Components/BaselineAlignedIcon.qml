@@ -66,6 +66,8 @@ Item {
     implicitHeight: (mode === "material") ? materialItem.implicitHeight
                    : (mode === "svg") ? svgItem.implicitHeight
                    : textItem.implicitHeight
+    width: implicitWidth
+    height: implicitHeight
 
     FontMetrics { id: fmLabel; font: (root.labelRef && root.labelRef.font) ? root.labelRef.font : Qt.font({ pixelSize: root._labelPx }) }
     // Probes for auto-tuning (hidden)

@@ -191,6 +191,13 @@
       }
     }
   },
+  "keyboard": {
+    "capsule": {
+      "iconSpacing": 2,
+      "labelPadding": 0,
+      "minLabelGap": 2
+    }
+  },
   "timers": {
     "timeTickMs": 1000,
     "wsRefreshDebounceMs": 120,

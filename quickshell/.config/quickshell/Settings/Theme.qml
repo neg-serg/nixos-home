@@ -518,6 +518,10 @@ Singleton {
     property var wsSubmapIconOverrides:(function(){ var v = val('ws.submap.icon.overrides', undefined); return (v && typeof v === 'object') ? v : ({}); })()
     // Color of the submap icon
     property color wsSubmapIconColor: val('ws.submap.icon.color', accentPrimary)
+    // Keyboard capsule spacing tokens
+    property int keyboardCapsuleIconSpacing: val('keyboard.capsule.iconSpacing', uiSpacingXSmall)
+    property int keyboardCapsuleLabelPadding: val('keyboard.capsule.labelPadding', uiSpacingNone)
+    property int keyboardCapsuleMinLabelGap: val('keyboard.capsule.minLabelGap', Math.max(1, Math.round(uiSpacingXSmall * 0.5)))
     // Workspace label/icon paddings
     // Values validated by ThemeConstraints in tooling
     property int wsLabelPadding:val('ws.label.padding', 6)

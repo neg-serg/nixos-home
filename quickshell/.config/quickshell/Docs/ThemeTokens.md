@@ -56,6 +56,7 @@ Additional UI tokens (nested)
       2. Tune `Theme.wsLabelPadding` and `Theme.wsLabelLeftPadding.*`; negative values are allowed thanks to the guard in `Components/CenteredCapsuleRow.qml`.
       3. For a global offset adjust `Theme.wsIconSpacing`; override `iconSpacing` locally when a module needs a bespoke gap.
       4. While debugging, log widths via `quickshell inspect` or temporary `console.log` statements in `leadingContent`/`labelItem` to understand each contribution.
+ - Keyboard capsule (Hypr layout indicator): keyboard.capsule.iconSpacing, keyboard.capsule.labelPadding, keyboard.capsule.minLabelGap keep inline glyph spacing predictable without forcing negative padding.
   - Submap baseline: ws.submap.icon.baselineOffset
   - Submap icon color: ws.submap.icon.color
   - Menu item radius: panel.menu.itemRadius

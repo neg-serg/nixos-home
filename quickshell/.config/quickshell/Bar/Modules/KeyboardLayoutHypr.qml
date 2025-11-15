@@ -44,8 +44,14 @@ CenteredCapsuleRow {
     readonly property bool inlineKeyboardIcon: kb.showKeyboardIcon && !kb.iconSquare
     readonly property bool inlineLabelTuning: inlineKeyboardIcon && kb.showLayoutLabel
 
-    property int inlineIconSpacing: Theme.uiSpacingXSmall
-    property int inlineLabelLeftPadding: Theme.uiSpacingNone - Theme.uiGapTiny
+    property int inlineIconSpacing: Math.max(0, Theme.keyboardCapsuleIconSpacing)
+    property int inlineLabelLeftPadding: Math.max(
+        0,
+        Math.max(
+            Theme.keyboardCapsuleLabelPadding,
+            Theme.keyboardCapsuleMinLabelGap - Math.max(0, kb.inlineIconSpacing)
+        )
+    )
 
     backgroundKey: "keyboard"
     cursorShape: Qt.PointingHandCursor
