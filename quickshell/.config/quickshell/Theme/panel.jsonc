@@ -1,7 +1,7 @@
 {
   "panel": {
     // Layout primitives for the top bar; keep values even to avoid pixel jitter.
-    "height": 26,
+    "height": 22,
     "sideMargin": 0,
     "widgetSpacing": 0,
     "separatorWidthFactor": 1,
@@ -11,7 +11,7 @@
       "height": 9,
       "rightShift": 1.15
     },
-    "moduleHeight": 36,
+    "moduleHeight": 22,
     "menuYOffset": 20,
     "pill": {
       // Hover pill controls consolidated menu/tooltip popups triggered from the bar.
