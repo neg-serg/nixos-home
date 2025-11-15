@@ -129,12 +129,12 @@ Scope {
                             anchors.top: parent.top
                             anchors.left: parent.left
                         }
-                        Rectangle {
-                            id: leftBarFill
-                            width: Math.min(leftBarBackground.width, Math.round(leftPanel.sideMargin + leftPanel.contentWidth))
-                            height: leftBarBackground.height
-                            color: leftPanel.barBgColor
-                            anchors.top: leftBarBackground.top
+                            Rectangle {
+                                id: leftBarFill
+                                width: Math.min(leftBarBackground.width, Math.ceil(leftPanel.sideMargin + leftPanel.contentWidth))
+                                height: leftBarBackground.height
+                                color: leftPanel.barBgColor
+                                anchors.top: leftBarBackground.top
                             anchors.left: leftBarBackground.left
                             // Keep visible; ShaderEffectSource will hide it from the scene
                             // only when the shader clip is active (via hideSource binding).
@@ -471,7 +471,7 @@ Scope {
                         }
                         Rectangle {
                             id: rightBarFill
-                            width: Math.min(rightBarBackground.width, Math.round(rightPanel.sideMargin + rightPanel.contentWidth))
+                            width: Math.min(rightBarBackground.width, Math.ceil(rightPanel.sideMargin + rightPanel.contentWidth))
                             height: rightBarBackground.height
                             color: rightPanel.barBgColor
                             anchors.top: rightBarBackground.top
