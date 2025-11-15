@@ -34,6 +34,7 @@ ConnectivityCapsule {
     readonly property bool hasInternet: ConnectivityState.hasInternet
     readonly property bool _hasLeading: vpnVisible || linkVisible
     readonly property int clusterSpacing: Math.max(0, Theme.networkCapsuleIconSpacing)
+    readonly property int iconHorizontalMargin: Math.max(0, Theme.networkCapsuleIconHorizontalMargin)
     readonly property color vpnIconColor: vpnConnected ? accentColor : vpnOffColor
     readonly property color linkIconColor: ConnUi.iconColor(hasLink, hasInternet, Settings.settings, Theme)
     readonly property string currentLinkIconName: useStatusFallbackIcons ? (!hasLink ? iconDisconnected : (!hasInternet ? iconNoInternet : iconConnected)) : _selectedIcon
@@ -62,6 +63,7 @@ ConnectivityCapsule {
             screen: root.screen
             labelRef: root.labelItem
             alignTarget: root.labelItem
+            outerHorizontalMargin: root.iconHorizontalMargin
             anchors.verticalCenter: parent.verticalCenter
         }
 
@@ -77,6 +79,7 @@ ConnectivityCapsule {
             screen: root.screen
             labelRef: root.labelItem
             alignTarget: root.labelItem
+            outerHorizontalMargin: root.iconHorizontalMargin
             anchors.verticalCenter: parent.verticalCenter
         }
     }

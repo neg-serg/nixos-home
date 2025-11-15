@@ -35,7 +35,11 @@ Additional UI tokens (nested)
   - Menu: panel.menu.itemFontScale (font size multiplier)
  - Bar layout: panel.netCluster.spacing (spacing between VPN and Network)
  - Side panel button visibility guard: sidePanel.button.activeVisibleMin; UI epsilon: ui.visibilityEpsilon
- - Network icon: network.icon.scale, network.icon.vAdjust
+ - Network capsule: network.capsule.iconSpacing, network.capsule.labelPadding,
+   network.capsule.minLabelGap, network.capsule.iconPadding, network.capsule.iconScale,
+   network.capsule.iconBaselineOffset, network.capsule.iconAlignMode,
+   network.capsule.iconHorizontalMargin (adds left/right padding inside the icon slot; defaults
+   to the keyboard capsule margin so VPN/link glyphs inherit the same inset)
  - Volume:
   - panel.volume.lowColor, panel.volume.highColor
   - panel.volume.fullHideMs (hide at exactly 100%)
@@ -56,7 +60,9 @@ Additional UI tokens (nested)
       2. Tune `Theme.wsLabelPadding` and `Theme.wsLabelLeftPadding.*`; negative values are allowed thanks to the guard in `Components/CenteredCapsuleRow.qml`.
       3. For a global offset adjust `Theme.wsIconSpacing`; override `iconSpacing` locally when a module needs a bespoke gap.
       4. While debugging, log widths via `quickshell inspect` or temporary `console.log` statements in `leadingContent`/`labelItem` to understand each contribution.
- - Keyboard capsule (Hypr layout indicator): keyboard.capsule.iconSpacing, keyboard.capsule.labelPadding, keyboard.capsule.minLabelGap keep inline glyph spacing predictable without forcing negative padding.
+- Keyboard capsule (Hypr layout indicator): keyboard.capsule.iconSpacing, keyboard.capsule.labelPadding,
+  keyboard.capsule.minLabelGap, keyboard.capsule.iconPadding, keyboard.capsule.iconHorizontalMargin.
+  The margin token controls the horizontal inset inside the icon slot (square and inline glyphs).
   - Submap baseline: ws.submap.icon.baselineOffset
   - Submap icon color: ws.submap.icon.color
   - Menu item radius: panel.menu.itemRadius

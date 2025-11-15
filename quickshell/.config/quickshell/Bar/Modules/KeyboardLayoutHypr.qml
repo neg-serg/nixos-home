@@ -47,12 +47,11 @@ CenteredCapsuleRow {
 
     readonly property int capsuleTextPadding: Math.max(0, Theme.keyboardCapsuleLabelPadding)
     readonly property int capsuleIconPadding: Math.max(0, Theme.keyboardCapsuleIconPadding)
+    readonly property int iconHorizontalMargin: Math.max(0, Theme.keyboardCapsuleIconHorizontalMargin)
     readonly property int capsuleMinLabelGap: Math.max(0, Theme.keyboardCapsuleMinLabelGap)
     readonly property int capsuleIconSpacing: Math.max(0, Theme.keyboardCapsuleIconSpacing)
     readonly property int activeIconSpacing: kb.glyphLeadingActive ? kb.capsuleIconSpacing : Theme.panelRowSpacingSmall
-    readonly property int labelPaddingForGlyphs: kb.glyphLeadingActive
-        ? Math.max(0, Math.max(kb.capsuleTextPadding, kb.capsuleMinLabelGap - kb.capsuleIconSpacing))
-        : -1
+    readonly property int labelPaddingForGlyphs: kb.glyphLeadingActive ? Math.max(0, Math.max(kb.capsuleTextPadding, kb.capsuleMinLabelGap - kb.capsuleIconSpacing)) : -1
 
     backgroundKey: "keyboard"
     cursorShape: Qt.PointingHandCursor
@@ -71,7 +70,7 @@ CenteredCapsuleRow {
     fontPixelSize: Math.round(Theme.fontSizeSmall * capsuleScale)
     textPadding: kb.capsuleTextPadding
     labelLeftPaddingOverride: kb.labelPaddingForGlyphs
-    minContentWidth: kb.iconSquare ? kb.desiredInnerHeight : 0
+    minContentWidth: kb.iconSquare ? kb.desiredInnerHeight + kb.iconHorizontalMargin * 2 : 0
 
     leadingContent: Item {
         id: glyphSlot
@@ -83,14 +82,28 @@ CenteredCapsuleRow {
         Item {
             id: squareIconSlot
             readonly property int box: kb.desiredInnerHeight
+            readonly property int horizontalMargin: kb.iconHorizontalMargin
             visible: kb.squareKeyboardIcon
-            width: visible ? box : 0
-            height: visible ? box : 0
-            implicitWidth: width
-            implicitHeight: height
+            implicitWidth: visible ? box + horizontalMargin * 2 : 0
+            implicitHeight: visible ? box : 0
+            width: implicitWidth
+            height: implicitHeight
+
+            Item {
+                id: squareIconFrame
+                anchors {
+                    top: parent.top
+                    bottom: parent.bottom
+                    left: parent.left
+                    right: parent.right
+                    leftMargin: squareIconSlot.horizontalMargin
+                    rightMargin: squareIconSlot.horizontalMargin
+                }
+                visible: parent.visible
+            }
 
             MaterialIcon {
-                anchors.centerIn: parent
+                anchors.centerIn: squareIconFrame
                 visible: parent.visible
                 icon: kb.materialIconName
                 color: kb.iconColor
@@ -103,14 +116,28 @@ CenteredCapsuleRow {
         Item {
             id: inlineIconSlot
             visible: kb.inlineKeyboardIcon
-            width: visible ? inlineIcon.implicitWidth : 0
-            height: visible ? kb.desiredInnerHeight : 0
-            implicitWidth: width
-            implicitHeight: height
+            readonly property int horizontalMargin: kb.iconHorizontalMargin
+            implicitWidth: visible ? inlineIcon.implicitWidth + horizontalMargin * 2 : 0
+            implicitHeight: visible ? kb.desiredInnerHeight : 0
+            width: implicitWidth
+            height: implicitHeight
+
+            Item {
+                id: inlineIconFrame
+                anchors {
+                    top: parent.top
+                    bottom: parent.bottom
+                    left: parent.left
+                    right: parent.right
+                    leftMargin: inlineIconSlot.horizontalMargin
+                    rightMargin: inlineIconSlot.horizontalMargin
+                }
+                visible: parent.visible
+            }
 
             BaselineAlignedIcon {
                 id: inlineIcon
-                anchors.verticalCenter: parent.verticalCenter
+                anchors.centerIn: inlineIconFrame
                 visible: parent.visible
                 mode: kb.iconMode === "material" ? "material" : "text"
                 icon: kb.materialIconName
@@ -132,21 +159,25 @@ CenteredCapsuleRow {
     }
 
     onClicked: {
-        switchProc.cmd = ["hyprctl", "switchxkblayout", "current", "next"]
-        switchProc.start()
+        switchProc.cmd = ["hyprctl", "switchxkblayout", "current", "next"];
+        switchProc.start();
     }
 
     Connections {
         target: Services.HyprlandWatcher
-        function onKeyboardDevicesChanged() { kb.applyDeviceSnapshot(Services.HyprlandWatcher.keyboardDevices); }
+        function onKeyboardDevicesChanged() {
+            kb.applyDeviceSnapshot(Services.HyprlandWatcher.keyboardDevices);
+        }
         // Event path: prefer payload from HyprlandWatcher for snappy UI; fallback snapshot only for non-main events.
         function onKeyboardLayoutEvent(deviceName, layoutName) {
-            const kbd = String(deviceName || "")
-            const layout = String(layoutName || "")
-            const fromMain = (norm(kbd) === kb.mainDeviceNeedle)
-            const evTxt = shortenLayout(layout)
-            if (evTxt && evTxt !== kb.layoutText) kb.layoutText = evTxt
-            if (!fromMain) Services.HyprlandWatcher.refreshDevices()
+            const kbd = String(deviceName || "");
+            const layout = String(layoutName || "");
+            const fromMain = (norm(kbd) === kb.mainDeviceNeedle);
+            const evTxt = shortenLayout(layout);
+            if (evTxt && evTxt !== kb.layoutText)
+                kb.layoutText = evTxt;
+            if (!fromMain)
+                Services.HyprlandWatcher.refreshDevices();
         }
     }
 
@@ -161,43 +192,50 @@ CenteredCapsuleRow {
         env: Services.HyprlandWatcher.hyprEnvObject
     }
 
-    function norm(s) { return (String(s || "").toLowerCase().replace(/[^a-z0-9]+/g, "-")) }
+    function norm(s) {
+        return (String(s || "").toLowerCase().replace(/[^a-z0-9]+/g, "-"));
+    }
     function deviceAllowed(name, identifier) {
-        const needle = (kb.deviceMatch || kb.deviceName || "").toLowerCase().trim()
-        if (!needle) return true
+        const needle = (kb.deviceMatch || kb.deviceName || "").toLowerCase().trim();
+        if (!needle)
+            return true;
         const n1 = (name || "").toLowerCase();
         const n2 = (identifier || "").toLowerCase();
-        if (n1.includes(needle) || n2.includes(needle)) return true
+        if (n1.includes(needle) || n2.includes(needle))
+            return true;
         // Try normalized match to be resilient to hyphens/spaces
-        return norm(name).includes(norm(needle)) || norm(identifier).includes(norm(needle))
+        return norm(name).includes(norm(needle)) || norm(identifier).includes(norm(needle));
     }
     function pickDevice(list) {
-        if (!Array.isArray(list) || list.length === 0) return null
+        if (!Array.isArray(list) || list.length === 0)
+            return null;
         // 1) If explicitly matched/pinned, honor it
-        const needle = (kb.deviceMatch || kb.deviceName || "").toLowerCase().trim()
+        const needle = (kb.deviceMatch || kb.deviceName || "").toLowerCase().trim();
         if (needle.length) {
             for (let k of list) {
-                if ((k.name || "").toLowerCase().includes(needle) ||
-                    (k.identifier || "").toLowerCase().includes(needle) ||
-                    norm(k.name).includes(norm(needle)) ||
-                    norm(k.identifier).includes(norm(needle)))
-                    return k
+                if ((k.name || "").toLowerCase().includes(needle) || (k.identifier || "").toLowerCase().includes(needle) || norm(k.name).includes(norm(needle)) || norm(k.identifier).includes(norm(needle)))
+                    return k;
             }
         }
         // 2) Prefer the main keyboard (actual input device)
-        for (let k of list) { if (k.main) return k }
+        for (let k of list) {
+            if (k.main)
+                return k;
+        }
         // 3) Otherwise a reasonable non-virtual choice with a keymap
         for (let k of list) {
-            const n = (k.name || "").toLowerCase()
-            if (!n.includes("virtual") && (k.active_keymap || k.layout)) return k
+            const n = (k.name || "").toLowerCase();
+            if (!n.includes("virtual") && (k.active_keymap || k.layout))
+                return k;
         }
         // 4) Fallback
-        return list[0]
+        return list[0];
     }
     function shortenLayout(s) {
-        if (!s) return "??"
-        s = String(s).trim()
-        const lower = s.toLowerCase()
+        if (!s)
+            return "??";
+        s = String(s).trim();
+        const lower = s.toLowerCase();
         // Common names and codes from Hyprland events/devices
         const map = {
             "english (us)": "en",
@@ -214,38 +252,48 @@ CenteredCapsuleRow {
             "german": "de",
             "french": "fr",
             "finnish": "fi"
-        }
-        if (map[lower]) return map[lower]
-        const m = s.match(/\(([^)]+)\)/)
+        };
+        if (map[lower])
+            return map[lower];
+        const m = s.match(/\(([^)]+)\)/);
         if (m && m[1]) {
-            const code = m[1].toLowerCase()
-            if (code === "us" || code.startsWith("en")) return "en"
-            if (code === "ru" || code.startsWith("ru")) return "ru"
-            return m[1].toUpperCase()
+            const code = m[1].toLowerCase();
+            if (code === "us" || code.startsWith("en"))
+                return "en";
+            if (code === "ru" || code.startsWith("ru"))
+                return "ru";
+            return m[1].toUpperCase();
         }
-        if (/\b(us|en)\b/i.test(s)) return "en"
-        if (/\bru\b/i.test(s)) return "ru"
-        return s.split(/\s+/)[0].toUpperCase().slice(0, 3)
+        if (/\b(us|en)\b/i.test(s))
+            return "en";
+        if (/\bru\b/i.test(s))
+            return "ru";
+        return s.split(/\s+/)[0].toUpperCase().slice(0, 3);
     }
 
     function applyDeviceSnapshot(devs) {
         try {
-            const list = Array.isArray(devs) ? devs : (Array.isArray(devs?.keyboards) ? devs.keyboards : [])
-            if (!Array.isArray(list) || list.length === 0) return
-            kb.knownKeyboards = list.map(k => (k.name || ""))
-            let main = null
+            const list = Array.isArray(devs) ? devs : (Array.isArray(devs?.keyboards) ? devs.keyboards : []);
+            if (!Array.isArray(list) || list.length === 0)
+                return;
+            kb.knownKeyboards = list.map(k => (k.name || ""));
+            let main = null;
             for (let k of list) {
-                if (k.main) { main = k; break }
+                if (k.main) {
+                    main = k;
+                    break;
+                }
             }
             if (main) {
-                kb.mainDeviceName = main.name || kb.mainDeviceName
-                kb.mainDeviceNeedle = norm(main.name || main.identifier || kb.mainDeviceName)
+                kb.mainDeviceName = main.name || kb.mainDeviceName;
+                kb.mainDeviceNeedle = norm(main.name || main.identifier || kb.mainDeviceName);
             }
-            const pick = pickDevice(list)
-            const chosen = pick || main || list[0]
+            const pick = pickDevice(list);
+            const chosen = pick || main || list[0];
             if (chosen) {
-                const txt = shortenLayout(chosen.active_keymap || chosen.layout || kb.layoutText)
-                if (txt && txt !== kb.layoutText) kb.layoutText = txt
+                const txt = shortenLayout(chosen.active_keymap || chosen.layout || kb.layoutText);
+                if (txt && txt !== kb.layoutText)
+                    kb.layoutText = txt;
             }
         } catch (e) {}
     }

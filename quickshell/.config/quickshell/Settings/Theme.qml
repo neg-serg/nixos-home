@@ -18,7 +18,7 @@ Singleton {
             if (currentScreen && currentScreen.name && overrides[currentScreen.name] !== undefined) {
                 return overrides[currentScreen.name];
             }
-        } catch (e) { /* ignore */ }
+        } catch (e) /* ignore */ {}
         return 1.0;
     }
 
@@ -54,13 +54,14 @@ Singleton {
     function textOn(bg, preferLight, preferDark, threshold) {
         try {
             var light = (preferLight !== undefined) ? preferLight : textPrimary;
-            var dark  = (preferDark  !== undefined) ? preferDark  : textSecondary;
-            var th = (threshold !== undefined && threshold !== null && isFinite(threshold))
-                ? Number(threshold) : contrastThreshold;
+            var dark = (preferDark !== undefined) ? preferDark : textSecondary;
+            var th = (threshold !== undefined && threshold !== null && isFinite(threshold)) ? Number(threshold) : contrastThreshold;
             return Color.contrastOn(bg, light, dark, th);
-        } catch (e) { return textPrimary; }
+        } catch (e) {
+            return textPrimary;
+        }
     }
-    
+
     // FileView to load theme data from JSON file
     FileView {
         id: themeFile
@@ -70,12 +71,14 @@ Singleton {
         // After adapter updates (file written/loaded), write and check deprecated tokens
         onAdapterUpdated: {
             writeAdapter();
-            try { root._checkDeprecatedTokens(); } catch (e) {}
-            root._themeLoaded = true
+            try {
+                root._checkDeprecatedTokens();
+            } catch (e) {}
+            root._themeLoaded = true;
         }
-        onLoadFailed: function(error) {
+        onLoadFailed: function (error) {
             if (error.toString().includes("No such file") || error === 2) {
-                writeAdapter() // File doesn't exist, create it with default values
+                writeAdapter(); // File doesn't exist, create it with default values
             }
         }
         JsonAdapter {
@@ -99,7 +102,6 @@ Singleton {
             property var vpn: ({})
             property var volume: ({})
         }
-        
     }
 
     // Final removal date for flat (legacy) tokens compatibility
@@ -111,103 +113,109 @@ Singleton {
 
     function _getNested(path) {
         try {
-            var obj = themeData; var parts = String(path).split('.');
-            for (var i=0;i<parts.length;i++) {
-                if (!obj) return undefined;
+            var obj = themeData;
+            var parts = String(path).split('.');
+            for (var i = 0; i < parts.length; i++) {
+                if (!obj)
+                    return undefined;
                 var k = parts[i];
                 obj = obj[k];
             }
             return obj;
-        } catch (e) { return undefined }
+        } catch (e) {
+            return undefined;
+        }
     }
     function val(path, fallback) {
         var v = _getNested(path);
-        if (v !== undefined && v !== null) return v;
+        if (v !== undefined && v !== null)
+            return v;
         // Strict mode: warn once per missing token, but be quiet for known legacy-compatible paths
         try {
             if (Settings.settings && Settings.settings.strictThemeTokens) {
                 var key = String(path);
                 // During startup before Theme.json is loaded, do not warn yet
-                if (!root._themeLoaded) return fallback;
+                if (!root._themeLoaded)
+                    return fallback;
                 // Optional override keys: do not warn when absent
                 if (!/^colors\.overrides\./.test(key)) {
                     // Legacy flat-compat mapping: if a corresponding flat key exists, suppress warning
                     var compat = ({
-                        'colors.background': 'background',
-                        'colors.surface': 'surface',
-                        'colors.surfaceVariant': 'surfaceVariant',
-                        'colors.text.primary': 'textPrimary',
-                        'colors.text.secondary': 'textSecondary',
-                        'colors.text.disabled': 'textDisabled',
-                        'colors.accent.primary': 'accentPrimary',
-                        'colors.status.error': 'error',
-                        'colors.status.warning': 'warning',
-                        'colors.highlight': 'highlight',
-                        'colors.onAccent': 'onAccent',
-                        'colors.outline': 'outline',
-                        'colors.shadow': 'shadow',
-                        'panel.height': 'panelHeight',
-                        'panel.sideMargin': 'panelSideMargin',
-                        'panel.widgetSpacing': 'panelWidgetSpacing',
-                        'panel.icons.iconSize': 'panelIconSize',
-                        'panel.icons.iconSizeSmall': 'panelIconSizeSmall',
-                        'panel.hotzone.width': 'panelHotzoneWidth',
-                        'panel.hotzone.height': 'panelHotzoneHeight',
-                        'panel.hotzone.rightShift': 'panelHotzoneRightShift',
-                        'panel.moduleHeight': 'panelModuleHeight',
-                        'panel.menuYOffset': 'panelMenuYOffset',
-                        'shape.cornerRadius': 'cornerRadius',
-                        'shape.cornerRadiusSmall': 'cornerRadiusSmall',
-                        'shape.cornerRadiusLarge': 'cornerRadiusLarge',
-                        'tooltip.delayMs': 'tooltipDelayMs',
-                        'tooltip.minSize': 'tooltipMinSize',
-                        'tooltip.margin': 'tooltipMargin',
-                        'tooltip.padding': 'tooltipPadding',
-                        'tooltip.borderWidth': 'tooltipBorderWidth',
-                        'tooltip.radius': 'tooltipRadius',
-                        'tooltip.fontPx': 'tooltipFontPx',
-                        'panel.pill.height': 'panelPillHeight',
-                        'panel.pill.iconSize': 'panelPillIconSize',
-                        'panel.pill.paddingH': 'panelPillPaddingH',
-                        'panel.pill.showDelayMs': 'panelPillShowDelayMs',
-                        'panel.pill.autoHidePauseMs': 'panelPillAutoHidePauseMs',
-                        'panel.pill.background': 'panelPillBackground',
-                        'panel.animations.stdMs': 'panelAnimStdMs',
-                        'panel.animations.fastMs': 'panelAnimFastMs',
-                        'panel.tray.longHoldMs': 'panelTrayLongHoldMs',
-                        'panel.tray.shortHoldMs': 'panelTrayShortHoldMs',
-                        'panel.tray.guardMs': 'panelTrayGuardMs',
-                        'panel.tray.overlayDismissDelayMs': 'panelTrayOverlayDismissDelayMs',
-                        'panel.rowSpacing': 'panelRowSpacing',
-                        'panel.rowSpacingSmall': 'panelRowSpacingSmall',
-                        'panel.volume.fullHideMs': 'panelVolumeFullHideMs',
-                        'panel.volume.lowColor': 'panelVolumeLowColor',
-                        'panel.volume.highColor': 'panelVolumeHighColor',
-                        'timers.timeTickMs': 'timeTickMs',
-                        'timers.wsRefreshDebounceMs': 'wsRefreshDebounceMs',
-                        'network.vpnPollMs': 'vpnPollMs',
-                        'network.restartBackoffMs': 'networkRestartBackoffMs',
-                        'network.linkPollMs': 'networkLinkPollMs',
-                        'media.hover.openDelayMs': 'mediaHoverOpenDelayMs',
-                        'media.hover.stillThresholdMs': 'mediaHoverStillThresholdMs',
-                        'spectrum.peakDecayIntervalMs': 'spectrumPeakDecayIntervalMs',
-                        'spectrum.barAnimMs': 'spectrumBarAnimMs',
-                        'calendar.rowSpacing': 'calendarRowSpacing',
-                        'calendar.cellSpacing': 'calendarCellSpacing',
-                        'calendar.sideMargin': 'calendarSideMargin',
-                        'panel.hover.fadeMs': 'panelHoverFadeMs',
-                        'panel.menu.width': 'panelMenuWidth',
-                        'panel.menu.submenuWidth': 'panelSubmenuWidth',
-                        'panel.menu.padding': 'panelMenuPadding',
-                        'panel.menu.itemSpacing': 'panelMenuItemSpacing',
-                        'panel.menu.itemHeight': 'panelMenuItemHeight',
-                        'panel.menu.radius': 'panelMenuRadius',
-                        'panel.menu.heightExtra': 'panelMenuHeightExtra',
-                        'panel.menu.anchorYOffset': 'panelMenuAnchorYOffset',
-                        'panel.menu.submenuGap': 'panelSubmenuGap',
-                        'panel.menu.chevronSize': 'panelMenuChevronSize',
-                        'panel.menu.iconSize': 'panelMenuIconSize'
-                    })[key];
+                            'colors.background': 'background',
+                            'colors.surface': 'surface',
+                            'colors.surfaceVariant': 'surfaceVariant',
+                            'colors.text.primary': 'textPrimary',
+                            'colors.text.secondary': 'textSecondary',
+                            'colors.text.disabled': 'textDisabled',
+                            'colors.accent.primary': 'accentPrimary',
+                            'colors.status.error': 'error',
+                            'colors.status.warning': 'warning',
+                            'colors.highlight': 'highlight',
+                            'colors.onAccent': 'onAccent',
+                            'colors.outline': 'outline',
+                            'colors.shadow': 'shadow',
+                            'panel.height': 'panelHeight',
+                            'panel.sideMargin': 'panelSideMargin',
+                            'panel.widgetSpacing': 'panelWidgetSpacing',
+                            'panel.icons.iconSize': 'panelIconSize',
+                            'panel.icons.iconSizeSmall': 'panelIconSizeSmall',
+                            'panel.hotzone.width': 'panelHotzoneWidth',
+                            'panel.hotzone.height': 'panelHotzoneHeight',
+                            'panel.hotzone.rightShift': 'panelHotzoneRightShift',
+                            'panel.moduleHeight': 'panelModuleHeight',
+                            'panel.menuYOffset': 'panelMenuYOffset',
+                            'shape.cornerRadius': 'cornerRadius',
+                            'shape.cornerRadiusSmall': 'cornerRadiusSmall',
+                            'shape.cornerRadiusLarge': 'cornerRadiusLarge',
+                            'tooltip.delayMs': 'tooltipDelayMs',
+                            'tooltip.minSize': 'tooltipMinSize',
+                            'tooltip.margin': 'tooltipMargin',
+                            'tooltip.padding': 'tooltipPadding',
+                            'tooltip.borderWidth': 'tooltipBorderWidth',
+                            'tooltip.radius': 'tooltipRadius',
+                            'tooltip.fontPx': 'tooltipFontPx',
+                            'panel.pill.height': 'panelPillHeight',
+                            'panel.pill.iconSize': 'panelPillIconSize',
+                            'panel.pill.paddingH': 'panelPillPaddingH',
+                            'panel.pill.showDelayMs': 'panelPillShowDelayMs',
+                            'panel.pill.autoHidePauseMs': 'panelPillAutoHidePauseMs',
+                            'panel.pill.background': 'panelPillBackground',
+                            'panel.animations.stdMs': 'panelAnimStdMs',
+                            'panel.animations.fastMs': 'panelAnimFastMs',
+                            'panel.tray.longHoldMs': 'panelTrayLongHoldMs',
+                            'panel.tray.shortHoldMs': 'panelTrayShortHoldMs',
+                            'panel.tray.guardMs': 'panelTrayGuardMs',
+                            'panel.tray.overlayDismissDelayMs': 'panelTrayOverlayDismissDelayMs',
+                            'panel.rowSpacing': 'panelRowSpacing',
+                            'panel.rowSpacingSmall': 'panelRowSpacingSmall',
+                            'panel.volume.fullHideMs': 'panelVolumeFullHideMs',
+                            'panel.volume.lowColor': 'panelVolumeLowColor',
+                            'panel.volume.highColor': 'panelVolumeHighColor',
+                            'timers.timeTickMs': 'timeTickMs',
+                            'timers.wsRefreshDebounceMs': 'wsRefreshDebounceMs',
+                            'network.vpnPollMs': 'vpnPollMs',
+                            'network.restartBackoffMs': 'networkRestartBackoffMs',
+                            'network.linkPollMs': 'networkLinkPollMs',
+                            'media.hover.openDelayMs': 'mediaHoverOpenDelayMs',
+                            'media.hover.stillThresholdMs': 'mediaHoverStillThresholdMs',
+                            'spectrum.peakDecayIntervalMs': 'spectrumPeakDecayIntervalMs',
+                            'spectrum.barAnimMs': 'spectrumBarAnimMs',
+                            'calendar.rowSpacing': 'calendarRowSpacing',
+                            'calendar.cellSpacing': 'calendarCellSpacing',
+                            'calendar.sideMargin': 'calendarSideMargin',
+                            'panel.hover.fadeMs': 'panelHoverFadeMs',
+                            'panel.menu.width': 'panelMenuWidth',
+                            'panel.menu.submenuWidth': 'panelSubmenuWidth',
+                            'panel.menu.padding': 'panelMenuPadding',
+                            'panel.menu.itemSpacing': 'panelMenuItemSpacing',
+                            'panel.menu.itemHeight': 'panelMenuItemHeight',
+                            'panel.menu.radius': 'panelMenuRadius',
+                            'panel.menu.heightExtra': 'panelMenuHeightExtra',
+                            'panel.menu.anchorYOffset': 'panelMenuAnchorYOffset',
+                            'panel.menu.submenuGap': 'panelSubmenuGap',
+                            'panel.menu.chevronSize': 'panelMenuChevronSize',
+                            'panel.menu.iconSize': 'panelMenuIconSize'
+                        })[key];
                     var hasCompat = compat && (themeData[compat] !== undefined);
                     if (!hasCompat) {
                         if (!root._strictWarned[key]) {
@@ -217,22 +225,38 @@ Singleton {
                     }
                 }
             }
-        } catch (e) { /* ignore */ }
+        } catch (e) /* ignore */ {}
         return fallback;
     }
 
     // --- Deprecated/unused token warnings ---
     function _checkDeprecatedTokens() {
         try {
-            if (!(Settings.settings && Settings.settings.strictThemeTokens)) return;
+            if (!(Settings.settings && Settings.settings.strictThemeTokens))
+                return;
             var deprecated = [
-                { path: 'rippleEffect', note: 'Token removed; ripple opacity is fixed internally' },
-                { path: 'accentDisabled', note: 'Use colors.text.disabled / Theme.textDisabled' },
-                { path: 'panelHoverOpacity', note: 'Use surfaceHover/surfaceActive for states' },
-                { path: 'overlay', note: 'Use colors.overrides.overlayWeak/overlayStrong or derived tokens' },
-                { path: 'baseOverlay', note: 'Use colors.overrides.overlayWeak/overlayStrong' }
+                {
+                    path: 'rippleEffect',
+                    note: 'Token removed; ripple opacity is fixed internally'
+                },
+                {
+                    path: 'accentDisabled',
+                    note: 'Use colors.text.disabled / Theme.textDisabled'
+                },
+                {
+                    path: 'panelHoverOpacity',
+                    note: 'Use surfaceHover/surfaceActive for states'
+                },
+                {
+                    path: 'overlay',
+                    note: 'Use colors.overrides.overlayWeak/overlayStrong or derived tokens'
+                },
+                {
+                    path: 'baseOverlay',
+                    note: 'Use colors.overrides.overlayWeak/overlayStrong'
+                }
             ];
-            for (var i=0;i<deprecated.length;i++) {
+            for (var i = 0; i < deprecated.length; i++) {
                 var d = deprecated[i];
                 var v = _getNested(d.path);
                 if (v !== undefined && v !== null) {
@@ -245,64 +269,74 @@ Singleton {
             }
 
             // Flat tokens presence warning (aggregate once)
-            var groupRoots = ['colors','panel','shape','tooltip','weather','sidePanel','ui','ws','timers','network','media','spectrum','time','calendar','vpn','volume'];
-            var ignoreKeys = { objectName: true };
+            var groupRoots = ['colors', 'panel', 'shape', 'tooltip', 'weather', 'sidePanel', 'ui', 'ws', 'timers', 'network', 'media', 'spectrum', 'time', 'calendar', 'vpn', 'volume'];
+            var ignoreKeys = {
+                objectName: true
+            };
             var flats = [];
             try {
                 for (var k in themeData) {
-                    if (ignoreKeys[k]) continue;
-                    if (groupRoots.indexOf(k) !== -1) continue;
+                    if (ignoreKeys[k])
+                        continue;
+                    if (groupRoots.indexOf(k) !== -1)
+                        continue;
                     var v = themeData[k];
                     var t = typeof v;
-                    if (t === 'function' || t === 'undefined') continue;
-                    if (t === 'object') continue; // nested groups (already covered)
+                    if (t === 'function' || t === 'undefined')
+                        continue;
+                    if (t === 'object')
+                        continue; // nested groups (already covered)
                     flats.push(k);
                 }
-            } catch(e) { /* ignore */ }
+            } catch (e) /* ignore */ {}
             if (flats.length > 0) {
                 var warnKey = 'flat::detected';
                 if (!root._strictWarned[warnKey]) {
-                    console.warn('[ThemeStrict] Flat tokens detected in Theme.json:', flats.slice(0,6).join(', '), '…');
+                    console.warn('[ThemeStrict] Flat tokens detected in Theme.json:', flats.slice(0, 6).join(', '), '…');
                     console.warn('[ThemeStrict] Flat tokens are deprecated and will be removed after', flatCompatRemovalDate, '— migrate to hierarchical tokens. See Docs/ThemeTokens.md#migration-flat-→-nested');
                     root._strictWarned[warnKey] = true;
                 }
             }
-        } catch (e) { /* ignore */ }
+        } catch (e) /* ignore */ {}
     }
 
     // Initial deprecated check
     Component.onCompleted: {
-        try { root._checkDeprecatedTokens(); } catch (e) {}
+        try {
+            root._checkDeprecatedTokens();
+        } catch (e) {}
     }
 
-        // Map string or numeric to a QML Easing.Type
-        function easingType(nameOrCode, fallbackName) {
-            try {
-                var map = {
-                    Linear: Easing.Linear,
-                    InQuad: Easing.InQuad,
-                    OutQuad: Easing.OutQuad,
-                    InOutQuad: Easing.InOutQuad,
-                    InCubic: Easing.InCubic,
-                    OutCubic: Easing.OutCubic,
-                    InOutCubic: Easing.InOutCubic,
-                    InSine: Easing.InSine,
-                    OutSine: Easing.OutSine,
-                    InOutSine: Easing.InOutSine,
-                    InBack: Easing.InBack,
-                    OutBack: Easing.OutBack,
-                    InOutBack: Easing.InOutBack
-                };
-                if (typeof nameOrCode === 'number') return nameOrCode;
-                var s = String(nameOrCode || '');
-                if (map[s] !== undefined) return map[s];
-                var fb = String(fallbackName || 'OutCubic');
-                return map[fb] !== undefined ? map[fb] : Easing.OutCubic;
-            } catch (e) {
-                return Easing.OutCubic;
-            }
+    // Map string or numeric to a QML Easing.Type
+    function easingType(nameOrCode, fallbackName) {
+        try {
+            var map = {
+                Linear: Easing.Linear,
+                InQuad: Easing.InQuad,
+                OutQuad: Easing.OutQuad,
+                InOutQuad: Easing.InOutQuad,
+                InCubic: Easing.InCubic,
+                OutCubic: Easing.OutCubic,
+                InOutCubic: Easing.InOutCubic,
+                InSine: Easing.InSine,
+                OutSine: Easing.OutSine,
+                InOutSine: Easing.InOutSine,
+                InBack: Easing.InBack,
+                OutBack: Easing.OutBack,
+                InOutBack: Easing.InOutBack
+            };
+            if (typeof nameOrCode === 'number')
+                return nameOrCode;
+            var s = String(nameOrCode || '');
+            if (map[s] !== undefined)
+                return map[s];
+            var fb = String(fallbackName || 'OutCubic');
+            return map[fb] !== undefined ? map[fb] : Easing.OutCubic;
+        } catch (e) {
+            return Easing.OutCubic;
         }
-    
+    }
+
     // Backgrounds
     property color background: val('colors.background', "#ef000000")
     // Surfaces & Elevation
@@ -318,19 +352,18 @@ Singleton {
     property color error: val('colors.status.error', "#FF6B81")
     // Highlights & Focus
     property color highlight: val('colors.highlight', "#94E1F9")
-    
+
     // Additional Theme Properties
     property color onAccent: val('colors.onAccent', "#FFFFFF")
     property color outline: val('colors.outline', "#3B4C5C")
     // Shadows & Overlays
     property color shadow: applyOpacity(val('colors.shadow', "#000000"), "B3")
-    
+
     property string fontFamily: "Iosevka" // Font Properties
     // Font size multiplier - adjust this in Settings.json to scale all fonts
     property real fontSizeMultiplier: Settings.settings.fontSizeMultiplier || 1.0
     // Global contrast threshold used by Color.contrastOn callers
-    property real contrastThreshold: (Settings.settings && Settings.settings.contrastThreshold !== undefined)
-        ? Settings.settings.contrastThreshold : 0.5
+    property real contrastThreshold: (Settings.settings && Settings.settings.contrastThreshold !== undefined) ? Settings.settings.contrastThreshold : 0.5
     // Base font sizes (multiplied by fontSizeMultiplier)
     property int fontSizeHeader: Math.round(32 * fontSizeMultiplier)     // Headers and titles
     property int fontSizeBody: Math.round(16 * fontSizeMultiplier)       // Body text and general content
@@ -369,7 +402,7 @@ Singleton {
     // Card background opacity atop accentDarkStrong
     property real weatherCardOpacity: val('weather.card.opacity', 0.85)
     // Optional horizontal center offset tweak
-    property int weatherCenterOffset:val('weather.centerOffset', -2)
+    property int weatherCenterOffset: val('weather.centerOffset', -2)
     // Pill indicator defaults
     property int panelPillHeight: val('panel.pill.height', 22)
     property int panelPillIconSize: val('panel.pill.iconSize', 22)
@@ -428,11 +461,11 @@ Singleton {
     property int calendarCellSpacing: val('calendar.cellSpacing', 2)
     property int calendarSideMargin: val('calendar.sideMargin', 2)
     // Side-panel popup timings/margins
-    property int sidePanelPopupSlideMs:val('sidePanel.popup.slideMs', 220)
-    property int sidePanelPopupAutoHideMs:val('sidePanel.popup.autoHideMs', 4000)
-    property int sidePanelPopupOuterMargin:val('sidePanel.popup.outerMargin', 4)
+    property int sidePanelPopupSlideMs: val('sidePanel.popup.slideMs', 220)
+    property int sidePanelPopupAutoHideMs: val('sidePanel.popup.autoHideMs', 4000)
+    property int sidePanelPopupOuterMargin: val('sidePanel.popup.outerMargin', 4)
     // Side-panel popup spacing (between inner items)
-    property int sidePanelPopupSpacing:val('sidePanel.popup.spacing', 0)
+    property int sidePanelPopupSpacing: val('sidePanel.popup.spacing', 0)
     // Media dominant-accent sampler/logic (extract hardcoded tuning)
     property int mediaAccentSamplerPx: val('media.accent.samplerPx', 48)
     property int mediaAccentRetryMs: val('media.accent.retryMs', 120)
@@ -448,22 +481,22 @@ Singleton {
     // Side-panel button hover rectangle visibility guard
     property real sidePanelButtonActiveVisibleMin: val('sidePanel.button.activeVisibleMin', 0.18)
     // Side-panel spacing medium
-    property int sidePanelSpacingMedium:val('sidePanel.spacingMedium', 8)
+    property int sidePanelSpacingMedium: val('sidePanel.spacingMedium', 8)
     // Hover behavior
-    property int panelHoverFadeMs:val('panel.hover.fadeMs', 120)
+    property int panelHoverFadeMs: val('panel.hover.fadeMs', 120)
     // Panel menu metrics
-    property int panelMenuWidth:val('panel.menu.width', 180)
-    property int panelSubmenuWidth:val('panel.menu.submenuWidth', 180)
-    property int panelMenuPadding:val('panel.menu.padding', 4)
-    property int panelMenuItemSpacing:val('panel.menu.itemSpacing', 2)
-    property int panelMenuItemHeight:val('panel.menu.itemHeight', 26)
-    property int panelMenuRadius:val('panel.menu.radius', 0)
-    property int panelMenuItemRadius:val('panel.menu.itemRadius', 0)
-    property int panelMenuHeightExtra:val('panel.menu.heightExtra', 12)
-    property int panelMenuAnchorYOffset:val('panel.menu.anchorYOffset', 4)
-    property int panelSubmenuGap:val('panel.menu.submenuGap', 12)
-    property int panelMenuChevronSize:val('panel.menu.chevronSize', 15)
-    property int panelMenuIconSize:val('panel.menu.iconSize', 16)
+    property int panelMenuWidth: val('panel.menu.width', 180)
+    property int panelSubmenuWidth: val('panel.menu.submenuWidth', 180)
+    property int panelMenuPadding: val('panel.menu.padding', 4)
+    property int panelMenuItemSpacing: val('panel.menu.itemSpacing', 2)
+    property int panelMenuItemHeight: val('panel.menu.itemHeight', 26)
+    property int panelMenuRadius: val('panel.menu.radius', 0)
+    property int panelMenuItemRadius: val('panel.menu.itemRadius', 0)
+    property int panelMenuHeightExtra: val('panel.menu.heightExtra', 12)
+    property int panelMenuAnchorYOffset: val('panel.menu.anchorYOffset', 4)
+    property int panelSubmenuGap: val('panel.menu.submenuGap', 12)
+    property int panelMenuChevronSize: val('panel.menu.chevronSize', 15)
+    property int panelMenuIconSize: val('panel.menu.iconSize', 16)
     // Panel menu item font scale (relative to Theme.fontSizeSmall)
     property real panelMenuItemFontScale: val('panel.menu.itemFontScale', 0.90)
     // Panel capsule border defaults
@@ -471,10 +504,8 @@ Singleton {
     property int panelCapsuleBorderWidth: val('panel.capsule.borderWidth', uiBorderWidth)
     property real panelCapsuleBorderInset: val('panel.capsule.borderInset', -panelCapsuleBorderWidth)
     property color panelCapsuleBorderColor: {
-        const overrideColor = val('panel.capsule.borderColor', undefined)
-        return overrideColor !== undefined
-            ? overrideColor
-            : Color.withAlpha(textPrimary, panelCapsuleBorderOpacity)
+        const overrideColor = val('panel.capsule.borderColor', undefined);
+        return overrideColor !== undefined ? overrideColor : Color.withAlpha(textPrimary, panelCapsuleBorderOpacity);
     }
     // Side panel exports
     property int sidePanelCornerRadius: val('sidePanel.cornerRadius', 9)
@@ -507,7 +538,7 @@ Singleton {
     property int uiBorderNone: val('ui.border.noneWidth', 0)
     property real uiIconEmphasisOpacity: val('ui.icon.emphasisOpacity', 0.9)
     // Workspace indicator tuning
-    property int wsIconSpacing:val('ws.icon.spacing', 1)
+    property int wsIconSpacing: val('ws.icon.spacing', 1)
     property real wsIconScale: val('ws.icon.scale', 1.4)
     property real wsIconSvgScale: val('ws.icon.svgScale', 0.92)
     property real wsIconDetachedScale: val('ws.icon.detachedScale', 1.15)
@@ -515,15 +546,18 @@ Singleton {
     property int wsIconDetachedPadding: val('ws.icon.detachedPadding', 0)
     property int wsIconDetachedBaselineOffset: val('ws.icon.detachedBaselineOffset', 0)
     // Optional overrides for submap icon mapping
-    property var wsSubmapIconOverrides:(function(){ var v = val('ws.submap.icon.overrides', undefined); return (v && typeof v === 'object') ? v : ({}); })()
+    property var wsSubmapIconOverrides: (function () {
+            var v = val('ws.submap.icon.overrides', undefined);
+            return (v && typeof v === 'object') ? v : ({});
+        })()
     // Color of the submap icon
     property color wsSubmapIconColor: val('ws.submap.icon.color', accentPrimary)
     // Workspace label/icon paddings
     // Values validated by ThemeConstraints in tooling
-    property int wsLabelPadding:val('ws.label.padding', 6)
-    property int wsLabelLeftPadding:val('ws.label.leftPadding.normal', 2)
-    property int wsLabelLeftPaddingTerminal:val('ws.label.leftPadding.terminal', -50)
-    property int wsIconInnerPadding:val('ws.icon.innerPadding', 1)
+    property int wsLabelPadding: val('ws.label.padding', 6)
+    property int wsLabelLeftPadding: val('ws.label.leftPadding.normal', 2)
+    property int wsLabelLeftPaddingTerminal: val('ws.label.leftPadding.terminal', -50)
+    property int wsIconInnerPadding: val('ws.icon.innerPadding', 1)
     // Keyboard capsule spacing tokens mirror workspace defaults unless overridden
     property int keyboardCapsuleIconSpacing: val('keyboard.capsule.iconSpacing', wsIconSpacing)
     property int keyboardCapsuleIconPadding: val('keyboard.capsule.iconPadding', wsIconInnerPadding)
@@ -531,6 +565,16 @@ Singleton {
     property int keyboardCapsuleIconBaselineOffset: val('keyboard.capsule.iconBaselineOffset', 0)
     property int keyboardCapsuleLabelPadding: val('keyboard.capsule.labelPadding', wsLabelPadding)
     property int keyboardCapsuleMinLabelGap: val('keyboard.capsule.minLabelGap', wsIconSpacing + wsLabelLeftPadding)
+    property int keyboardCapsuleIconHorizontalMargin: Math.max(0, val('keyboard.capsule.iconHorizontalMargin', 0))
+    // Network capsule tuning mirrors keyboard capsule behavior for consistent spacing
+    property int networkCapsuleIconSpacing: val('network.capsule.iconSpacing', keyboardCapsuleIconSpacing)
+    property int networkCapsuleIconPadding: val('network.capsule.iconPadding', keyboardCapsuleIconPadding)
+    property real networkCapsuleIconScale: val('network.capsule.iconScale', keyboardCapsuleIconScale)
+    property int networkCapsuleIconBaselineOffset: val('network.capsule.iconBaselineOffset', keyboardCapsuleIconBaselineOffset)
+    property int networkCapsuleLabelPadding: val('network.capsule.labelPadding', keyboardCapsuleLabelPadding)
+    property int networkCapsuleMinLabelGap: val('network.capsule.minLabelGap', keyboardCapsuleMinLabelGap)
+    property int networkCapsuleIconHorizontalMargin: Math.max(0, val('network.capsule.iconHorizontalMargin', keyboardCapsuleIconHorizontalMargin))
+    property string networkCapsuleIconAlignMode: val('network.capsule.iconAlignMode', "optical")
     // VPN indicator opacities
     property real vpnConnectedOpacity: val('vpn.connectedOpacity', 0.8)
     property real vpnDisconnectedOpacity: val('vpn.disconnectedOpacity', 0.45)
@@ -553,7 +597,7 @@ Singleton {
     property int mpdFlagsFallbackMs: val('media.mpd.flags.fallbackMs', 2500)
     // Time/Clock module
     property real timeFontScale: val('time.font.scale', 1.0)
-    property int timeFontWeight:val('time.font.weight', Font.Medium)
+    property int timeFontWeight: val('time.font.weight', Font.Medium)
     property color timeTextColor: val('time.text.color', textPrimary)
     // UI easing (configurable via string names)
     property int uiEasingQuick: easingType(val('ui.anim.easing.quick', 'OutQuad'), 'OutQuad')
@@ -595,22 +639,13 @@ Singleton {
     // Derived accent/surface/border tokens (formula-based)
     // Keep simple and perceptually stable; expose tokens for reuse
     // Each derived token may be overridden by matching *Override property in Theme.json
-    property color accentHover: (val('colors.overrides.accentHover', themeData.accentHoverOverride) !== undefined)
-        ? val('colors.overrides.accentHover', themeData.accentHoverOverride) : Color.towardsWhite(accentPrimary, 0.2)
-    property color accentActive: (val('colors.overrides.accentActive', themeData.accentActiveOverride) !== undefined)
-        ? val('colors.overrides.accentActive', themeData.accentActiveOverride) : Color.towardsBlack(accentPrimary, 0.2)
-    property color accentDarkStrong: (val('colors.overrides.accentDarkStrong', themeData.accentDarkStrongOverride) !== undefined)
-        ? val('colors.overrides.accentDarkStrong', themeData.accentDarkStrongOverride) : Color.towardsBlack(accentPrimary, 0.8)
-    property color surfaceHover: (val('colors.overrides.surfaceHover', themeData.surfaceHoverOverride) !== undefined)
-        ? val('colors.overrides.surfaceHover', themeData.surfaceHoverOverride) : Color.withAlpha(textPrimary, 0.06)
-    property color surfaceActive: (val('colors.overrides.surfaceActive', themeData.surfaceActiveOverride) !== undefined)
-        ? val('colors.overrides.surfaceActive', themeData.surfaceActiveOverride) : Color.withAlpha(textPrimary, 0.10)
-    property color borderSubtle: (val('colors.overrides.borderSubtle', themeData.borderSubtleOverride) !== undefined)
-        ? val('colors.overrides.borderSubtle', themeData.borderSubtleOverride) : Color.withAlpha(textPrimary, 0.15)
-    property color borderStrong: (val('colors.overrides.borderStrong', themeData.borderStrongOverride) !== undefined)
-        ? val('colors.overrides.borderStrong', themeData.borderStrongOverride) : Color.withAlpha(textPrimary, 0.30)
-    property color overlayWeak: (val('colors.overrides.overlayWeak', themeData.overlayWeakOverride) !== undefined)
-        ? val('colors.overrides.overlayWeak', themeData.overlayWeakOverride) : Color.withAlpha(shadow, 0.08)
-    property color overlayStrong: (val('colors.overrides.overlayStrong', themeData.overlayStrongOverride) !== undefined)
-        ? val('colors.overrides.overlayStrong', themeData.overlayStrongOverride) : Color.withAlpha(shadow, 0.18)
+    property color accentHover: (val('colors.overrides.accentHover', themeData.accentHoverOverride) !== undefined) ? val('colors.overrides.accentHover', themeData.accentHoverOverride) : Color.towardsWhite(accentPrimary, 0.2)
+    property color accentActive: (val('colors.overrides.accentActive', themeData.accentActiveOverride) !== undefined) ? val('colors.overrides.accentActive', themeData.accentActiveOverride) : Color.towardsBlack(accentPrimary, 0.2)
+    property color accentDarkStrong: (val('colors.overrides.accentDarkStrong', themeData.accentDarkStrongOverride) !== undefined) ? val('colors.overrides.accentDarkStrong', themeData.accentDarkStrongOverride) : Color.towardsBlack(accentPrimary, 0.8)
+    property color surfaceHover: (val('colors.overrides.surfaceHover', themeData.surfaceHoverOverride) !== undefined) ? val('colors.overrides.surfaceHover', themeData.surfaceHoverOverride) : Color.withAlpha(textPrimary, 0.06)
+    property color surfaceActive: (val('colors.overrides.surfaceActive', themeData.surfaceActiveOverride) !== undefined) ? val('colors.overrides.surfaceActive', themeData.surfaceActiveOverride) : Color.withAlpha(textPrimary, 0.10)
+    property color borderSubtle: (val('colors.overrides.borderSubtle', themeData.borderSubtleOverride) !== undefined) ? val('colors.overrides.borderSubtle', themeData.borderSubtleOverride) : Color.withAlpha(textPrimary, 0.15)
+    property color borderStrong: (val('colors.overrides.borderStrong', themeData.borderStrongOverride) !== undefined) ? val('colors.overrides.borderStrong', themeData.borderStrongOverride) : Color.withAlpha(textPrimary, 0.30)
+    property color overlayWeak: (val('colors.overrides.overlayWeak', themeData.overlayWeakOverride) !== undefined) ? val('colors.overrides.overlayWeak', themeData.overlayWeakOverride) : Color.withAlpha(shadow, 0.08)
+    property color overlayStrong: (val('colors.overrides.overlayStrong', themeData.overlayStrongOverride) !== undefined) ? val('colors.overrides.overlayStrong', themeData.overlayStrongOverride) : Color.withAlpha(shadow, 0.18)
 }
