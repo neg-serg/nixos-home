@@ -1,4 +1,6 @@
-_final: prev: {
+_final: prev: let
+  call = prev.callPackage;
+in {
   # Force hyprland-qtutils to a known-good version (0.1.5)
   hyprland-qtutils = prev.hyprland-qtutils.overrideAttrs (old: let
     version = "0.1.5";
@@ -60,4 +62,6 @@ _final: prev: {
       maintainers = with maintainers; [ ];
     };
   };
+
+  flight-gtk-theme = call ../flight-gtk-theme {};
 }

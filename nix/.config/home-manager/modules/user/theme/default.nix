@@ -68,6 +68,11 @@ with {
       package = pkgs.kora-icon-theme;
     };
 
+    theme = {
+      name = "Flight-Dark-GTK";
+      package = pkgs.flight-gtk-theme;
+    };
+
     gtk3 = {
       extraConfig.gtk-application-prefer-dark-theme = 1;
       extraCss = ''/*@import "colors.css";*/'';
