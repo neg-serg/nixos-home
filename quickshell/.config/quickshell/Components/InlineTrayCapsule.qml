@@ -18,6 +18,7 @@ LocalComponents.WidgetCapsule {
     backgroundColorOverride: inlineBackground
     borderColorOverride: inlineBorder
     borderWidthOverride: Theme.uiBorderWidth
+    minPadding: Settings.settings.systemTrayTightSpacing !== false ? 0 : 4
     paddingScale: inlinePaddingScale
     verticalPaddingScale: inlineVerticalPaddingScale
     centerContent: false

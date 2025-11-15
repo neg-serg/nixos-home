@@ -88,6 +88,7 @@ Item {
     property int accentVersion: 0
     // Accent readiness: hold accent color until palette is ready
     property bool accentReady: false
+    readonly property bool mediaBorderless: Settings.settings.mediaIconBorderless !== false
     onMediaAccentChanged: { accentVersion++; }
     Component.onCompleted: { colorSampler.requestPaint(); accentRetry.restart() }
     onVisibleChanged: { if (visible) { colorSampler.requestPaint(); accentRetry.restart() } }
@@ -138,6 +139,8 @@ Item {
         anchors.fill: parent
         backgroundKey: "media"
         centerContent: false
+        borderVisible: !mediaControl.mediaBorderless
+        backgroundColorOverride: mediaControl.mediaBorderless ? Theme.background : "transparent"
 
         Item {
             id: layoutHost
@@ -170,7 +173,7 @@ Item {
                         Rectangle {
                             id: albumArtwork
                             anchors.fill: parent
-                            color: Theme.surface
+                            color: mediaControl.mediaBorderless ? Theme.background : Theme.surface
                             border.color: "transparent"
                             border.width: Theme.uiBorderNone
                             clip: true

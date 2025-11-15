@@ -52,6 +52,7 @@ Row {
     readonly property int trayIconInset: Math.max(1, Math.round(trayIconSlot * 0.08))
     readonly property int trayIconFrame: Math.max(8, trayIconSlot - trayIconInset * 2)
     readonly property int trayIconSize: Math.max(8, trayIconFrame - Math.round(trayIconInset * 0.5))
+    readonly property bool tightSpacing: Settings.settings.systemTrayTightSpacing !== false
     spacing: Math.max(2, Math.round(Theme.panelRowSpacing * _scale * 0.5))
     Layout.alignment: Qt.AlignVCenter
     readonly property int capsuleHeight: trayIconSlot
@@ -93,7 +94,7 @@ Row {
         id: inlineBox
         visible: expanded
         anchors.verticalCenter: parent.verticalCenter
-        readonly property int inlinePadding: Math.max(2, root.inlinePaddingPx)
+        readonly property int inlinePadding: tightSpacing ? 0 : Math.max(2, root.inlinePaddingPx)
         width: collapsedRow.implicitWidth + inlinePadding
         height: collapsedRow.implicitHeight + inlinePadding
 
@@ -102,7 +103,7 @@ Row {
             anchors.fill: parent
             inlineBackground: inlineBgColor
             inlineBorder: inlineBorderColor
-            inlinePaddingScale: inlineCapsule.paddingScaleFor(root.inlinePaddingPx)
+            inlinePaddingScale: tightSpacing ? 0 : inlineCapsule.paddingScaleFor(root.inlinePaddingPx)
             inlineVerticalPaddingScale: inlineCapsule.paddingScaleFor(Math.max(2, root.inlinePaddingPx * 0.8))
             borderWidthOverride: 0
             borderVisible: false

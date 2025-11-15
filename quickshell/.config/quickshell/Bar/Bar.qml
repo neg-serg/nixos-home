@@ -714,7 +714,8 @@ Scope {
                                 Layout.preferredHeight: rightPanel.barHeightPx
                                 readonly property bool trayCapsuleHidden: Settings.settings.hideSystemTrayCapsule === true
                                 readonly property bool trayVisible: (!trayCapsuleHidden || systemTrayModule.expanded)
-                                readonly property int horizontalPadding: Math.max(4, Math.round(Theme.panelTrayInlinePadding * rightPanel.s * 0.75))
+                                readonly property bool tightSpacing: Settings.settings.systemTrayTightSpacing !== false
+                                readonly property int horizontalPadding: tightSpacing ? 0 : Math.max(4, Math.round(Theme.panelTrayInlinePadding * rightPanel.s * 0.75))
                                 readonly property color capsuleColor: WidgetBg.color(Settings.settings, "systemTray", Theme.background)
                                 readonly property real hoverMixAmount: 0.18
                                 readonly property color capsuleHoverColor: Color.mix(

@@ -110,6 +110,10 @@ Singleton {
             property string trayFallbackIcon: "broken_image"
             // Hide the inline tray capsule while keeping hover-based menu access
             property bool hideSystemTrayCapsule: true
+            // Align inline tray contents flush with capsule edges (true by default)
+            property bool systemTrayTightSpacing: true
+            // Render media capsule without borders/contrasting background
+            property bool mediaIconBorderless: false
 
             // Global contrast
             property real contrastThreshold: 0.5
