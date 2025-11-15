@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import qs.Settings
 import "../Helpers/Utils.js" as Utils
+import "../Helpers/Color.js" as ColorHelpers
 
 Item {
     id: revealPill
@@ -9,7 +10,7 @@ Item {
     // External properties
     property string icon: ""
     property string text: ""
-    property color pillColor: Theme.surfaceVariant
+    property color pillColor: ColorHelpers.withAlpha(Theme.surfaceVariant, 0.88)
     property color textColor: Theme.textPrimary
     property color iconCircleColor: Theme.accentPrimary
     property color iconTextColor: Theme.background
