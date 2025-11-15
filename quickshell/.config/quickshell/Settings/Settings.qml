@@ -114,6 +114,10 @@ Singleton {
             property bool systemTrayTightSpacing: true
             // Render media capsule without borders/contrasting background
             property bool mediaIconBorderless: false
+            // Remove panel-mode play/pause button border
+            property bool mediaPanelButtonBorderless: true
+            // Prefer enlarged borderless button in panel mode
+            property bool mediaPanelButtonLargerIcon: true
 
             // Global contrast
             property real contrastThreshold: 0.5

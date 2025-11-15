@@ -562,23 +562,30 @@ Item {
                         id: panelPlayButtonHost
                         anchors.top: parent.top
                         anchors.right: parent.right
-                        anchors.margins: Math.max(2, Math.round(mediaControl.panelOverlayContentPadding * 0.5))
-                        width: Math.min(Math.max(24, mediaControl.musicTextPx * 1.4), parent.width * 0.4)
+                        anchors.margins: Math.max(2, Math.round(mediaControl.panelOverlayContentPadding * (Settings.settings.mediaPanelButtonLargerIcon ? 0.25 : 0.5)))
+                        width: Math.min(
+                            Math.max(24, mediaControl.musicTextPx * (Settings.settings.mediaPanelButtonLargerIcon ? 1.6 : 1.4)),
+                            parent.width * (Settings.settings.mediaPanelButtonLargerIcon ? 0.5 : 0.4)
+                        )
                         height: width
 
                         Rectangle {
                             anchors.fill: parent
                             radius: width / 2
-                            color: Color.withAlpha(mediaControl.mediaAccent, 0.85)
-                            border.width: Theme.uiBorderWidth
-                            border.color: Color.withAlpha(Theme.textPrimary, 0.12)
+                            color: Settings.settings.mediaPanelButtonBorderless !== false
+                                ? Theme.background
+                                : Color.withAlpha(mediaControl.mediaAccent, 0.85)
+                            border.width: Settings.settings.mediaPanelButtonBorderless !== false ? 0 : Theme.uiBorderWidth
+                            border.color: Settings.settings.mediaPanelButtonBorderless !== false
+                                ? "transparent"
+                                : Color.withAlpha(Theme.textPrimary, 0.12)
                             visible: mediaControl.panelMode
                         }
 
                         MaterialIcon {
                             anchors.centerIn: parent
                             icon: MusicManager.isPlaying ? "pause" : "play_arrow"
-                            size: Math.round(width * 0.6)
+                            size: Math.round(width * (Settings.settings.mediaPanelButtonLargerIcon ? 0.75 : 0.6))
                             color: Theme.onAccent
                             visible: mediaControl.panelMode
                         }
