@@ -72,7 +72,7 @@
     };
 
     # Systemd (user) helpers to avoid repeating arrays in many modules
-    systemdUser = systemdUser;
+    inherit systemdUser;
 
     # Web helpers defaults
     # Provide a safe fallback default browser so modules can refer to
