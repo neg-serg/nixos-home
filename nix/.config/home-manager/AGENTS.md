@@ -247,6 +247,35 @@ consistent and activation quiet. This page shows what to use and how to validate
   - `discord`:
     - Env: `DISCORD_BOT_TOKEN` (wired into upstream `DISCORD_TOKEN`), optional `DISCORD_CHANNEL_IDS` to restrict usage at the policy layer.
     - Bot-only bridge: can read and write in joined guild channels; no DM access.
+  - `media-control`:
+    - Optional env overrides: `MCP_MPD_HOST`/`MCP_MPD_PORT` for MPD, `PIPEWIRE_SINK` for the target sink, `WPCTL_BIN` to point at a different `wpctl` binary (defaults to `${pkgs.wireplumber}/bin/wpctl`).
+    - Includes tools for playback + volume UX:
+      - `get_playback_status` — current MPD state (artist/title/queue/time/repeat flags).
+      - `control_playback` — `play`/`pause`/`toggle`/`next`/`previous`/`stop`/`clear` operations.
+      - `queue_artist` — bulk-add all tracks from an artist (with optional clear/autoplay).
+      - `adjust_volume` — wraps PipeWire `wpctl` to set/change/mute/toggle sink volume.
+    - Requires the MPD feature stack + PipeWire (Hyprland sessions already expose `@DEFAULT_AUDIO_SINK@`).
+  - `media-search`:
+    - Env defaults (`MCP_MEDIA_SEARCH_PATHS`) point to Documents/notes/Obsidian/Screenshots; override to add extra roots. Optional `MCP_MEDIA_SEARCH_CACHE` speeds up repeat OCR runs, `MCP_MEDIA_OCR_LANG` sets Tesseract languages, `TESSERACT_BIN` swaps the binary if needed.
+    - Tools:
+      - `list_documents` — enumerate indexed files with type/size metadata.
+      - `search_snippets` — fuzzy search across text/OCR output and return scored snippets.
+      - `extract_document` — dump (truncated) text for a given document id.
+    - Supports Markdown/plain text, PDFs, and PNG/JPEG/WebP/TIFF screenshots via Tesseract OCR. Cache lives under `$XDG_CACHE_HOME/mcp/media-search`.
+  - `agenda`:
+    - Env defaults pick up Vdirsyncer/Khal calendars: `MCP_AGENDA_ICS_PATHS` (colon-separated) and store ad-hoc notes in `$XDG_DATA_HOME/mcp/agenda/notes.json`. Tune `MCP_AGENDA_LOOKAHEAD_DAYS` and `MCP_AGENDA_TZ` per user.
+    - Tools:
+      - `list_upcoming` — timeline of upcoming events within a configurable window.
+      - `find_free_windows` — search for open slots between start/end with a duration constraint.
+      - `add_note_event` — append a lightweight reminder/note without touching calendar apps.
+    - Reads `.ics` files (including per-event dirs) plus the notes JSON; all timestamps normalized to the user’s timezone.
+  - `knowledge-vector`:
+    - Env: `MCP_KNOWLEDGE_PATHS` (Documents/notes/code roots), optional `MCP_KNOWLEDGE_CACHE` (defaults to `$XDG_CACHE_HOME/mcp/knowledge`), `MCP_KNOWLEDGE_MODEL` (defaults to `sentence-transformers/all-MiniLM-L6-v2`), `MCP_KNOWLEDGE_EXTRA_PATTERNS` for extra file globs.
+    - Tools:
+      - `list_documents` — metadata for indexed files + chunk counts.
+      - `vector_search` — returns top-k semantic matches with path/title/snippets.
+      - `add_manual_snippet` — inject ad-hoc context (stored under the cache dir).
+    - Indexes Markdown/plain text/code and PDFs (text extracted via pdfminer). Embeddings are cached to speed up restarts; manual snippets persist alongside the cache.
   - Browser automation (`playwright`, `chromium`):
     - `playwright`: persists profile/output under `$XDG_DATA_HOME/mcp/playwright`, browsers cached in `$XDG_CACHE_HOME/ms-playwright`. Pass `PLAYWRIGHT_HEADLESS` or `PLAYWRIGHT_CAPS` via env to tweak launch flags; CLI args `--user-data-dir/--output-dir` are pre-set.
     - `chromium`: uses `CHROMIUM_USER_DATA_DIR=$XDG_DATA_HOME/mcp/chromium/profile`; optional `CHROMIUM_PATH` to point at preinstalled builds.

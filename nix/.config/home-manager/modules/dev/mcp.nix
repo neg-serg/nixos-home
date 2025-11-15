@@ -14,6 +14,43 @@ let
   playwrightProfileDir = "${config.xdg.dataHome}/mcp/playwright/profile";
   playwrightOutputDir = "${config.xdg.dataHome}/mcp/playwright/output";
   playwrightBrowsersPath = "${config.xdg.cacheHome}/ms-playwright";
+  docDir = lib.attrByPath ["xdg" "userDirs" "documents"] "${config.home.homeDirectory}/doc" config;
+  picturesDir = lib.attrByPath ["xdg" "userDirs" "pictures"] "${config.home.homeDirectory}/pic" config;
+  mediaSearchPathsList = lib.unique (lib.filter (path: path != null && path != "") [
+    docDir
+    "${config.home.homeDirectory}/notes"
+    "${config.xdg.dataHome}/obsidian"
+    "${config.xdg.dataHome}/screenshots"
+    "${picturesDir}/shots"
+    "${picturesDir}/Screenshots"
+  ]);
+  mediaSearchPathsString =
+    if mediaSearchPathsList == []
+    then docDir
+    else lib.concatStringsSep ":" mediaSearchPathsList;
+  mediaSearchCacheDir = "${config.xdg.cacheHome}/mcp/media-search";
+  agendaIcsPathsList = lib.unique (lib.filter (path: path != null && path != "") [
+    "${config.xdg.configHome}/vdirsyncer/calendars"
+    "${config.xdg.dataHome}/calendars"
+    "${config.home.homeDirectory}/.local/share/calendars"
+  ]);
+  agendaIcsPathsString =
+    if agendaIcsPathsList == []
+    then "${config.xdg.configHome}/vdirsyncer/calendars"
+    else lib.concatStringsSep ":" agendaIcsPathsList;
+  agendaNotesFile = "${config.xdg.dataHome}/mcp/agenda/notes.json";
+  agendaNotesDir = builtins.dirOf agendaNotesFile;
+  agendaLookaheadDays = 7;
+  knowledgePathsList = lib.unique (mediaSearchPathsList ++ [
+    "${config.home.homeDirectory}/code"
+    "${config.home.homeDirectory}/projects"
+    "${config.home.homeDirectory}/workspace"
+  ]);
+  knowledgePathsString =
+    if knowledgePathsList == []
+    then docDir
+    else lib.concatStringsSep ":" knowledgePathsList;
+  knowledgeCacheDir = "${config.xdg.cacheHome}/mcp/knowledge";
 in
 lib.mkIf cfgDev (lib.mkMerge [
   # Central MCP servers config written to $XDG_CONFIG_HOME/mcp/mcp.json
@@ -45,6 +82,10 @@ lib.mkIf cfgDev (lib.mkMerge [
       githubBinary = "${pkgs.neg.github_mcp}/bin/github-mcp-server";
       gitlabBinary = "${pkgs.neg.gitlab_mcp}/bin/gitlab-mcp";
       discordBinary = "${pkgs.neg.discord_mcp}/bin/discordmcp";
+      mediaBinary = "${pkgs.neg.media_mcp}/bin/media-mcp";
+      mediaSearchBinary = "${pkgs.neg.media_search_mcp}/bin/media-search-mcp";
+      agendaBinary = "${pkgs.neg.agenda_mcp}/bin/agenda-mcp";
+      knowledgeBinary = "${pkgs.neg.knowledge_mcp}/bin/knowledge-mcp";
       playwrightBinary = "${pkgs.neg.playwright_mcp}/bin/playwright-mcp";
       chromiumBinary = "${pkgs.neg.chromium_mcp}/bin/mcp-chromium-cdp";
       meetingNotesBinary = "${pkgs.neg.meeting_notes_mcp}/bin/meeting-notes-mcp";
@@ -267,6 +308,46 @@ lib.mkIf cfgDev (lib.mkMerge [
           };
         };
 
+        media-control = {
+          command = mediaBinary;
+          env = {
+            MCP_MPD_HOST = config.media.audio.mpd.host;
+            MCP_MPD_PORT = toString config.media.audio.mpd.port;
+            PIPEWIRE_SINK = "@DEFAULT_AUDIO_SINK@";
+            WPCTL_BIN = "${pkgs.wireplumber}/bin/wpctl";
+          };
+        };
+
+        media-search = {
+          command = mediaSearchBinary;
+          env = {
+            MCP_MEDIA_SEARCH_PATHS = mediaSearchPathsString;
+            MCP_MEDIA_SEARCH_CACHE = mediaSearchCacheDir;
+            MCP_MEDIA_OCR_LANG = "{env:MCP_MEDIA_OCR_LANG}";
+            TESSERACT_BIN = "${pkgs.tesseract}/bin/tesseract";
+          };
+        };
+
+        agenda = {
+          command = agendaBinary;
+          env = {
+            MCP_AGENDA_ICS_PATHS = agendaIcsPathsString;
+            MCP_AGENDA_NOTES_FILE = agendaNotesFile;
+            MCP_AGENDA_LOOKAHEAD_DAYS = toString agendaLookaheadDays;
+            MCP_AGENDA_TZ = "{env:MCP_AGENDA_TZ}";
+          };
+        };
+
+        knowledge-vector = {
+          command = knowledgeBinary;
+          env = {
+            MCP_KNOWLEDGE_PATHS = knowledgePathsString;
+            MCP_KNOWLEDGE_CACHE = knowledgeCacheDir;
+            MCP_KNOWLEDGE_MODEL = "{env:MCP_KNOWLEDGE_MODEL}";
+            MCP_KNOWLEDGE_EXTRA_PATTERNS = "{env:MCP_KNOWLEDGE_EXTRA_PATTERNS}";
+          };
+        };
+
         playwright = {
           command = playwrightBinary;
           args = [
@@ -342,6 +423,10 @@ lib.mkIf cfgDev (lib.mkMerge [
       pkgs.neg.postgres_mcp
       pkgs.neg.redis_mcp
       pkgs.neg.discord_mcp
+      pkgs.neg.media_mcp
+      pkgs.neg.media_search_mcp
+      pkgs.neg.agenda_mcp
+      pkgs.neg.knowledge_mcp
       pkgs.neg.playwright_mcp
       pkgs.neg.chromium_mcp
       pkgs.neg.meeting_notes_mcp
@@ -358,6 +443,9 @@ lib.mkIf cfgDev (lib.mkMerge [
       playwrightProfileDir
       playwrightOutputDir
       playwrightBrowsersPath
+      mediaSearchCacheDir
+      agendaNotesDir
+      knowledgeCacheDir
     ];
   }
 

@@ -257,6 +257,10 @@ in {
             playwright-mcp = pkgs.neg.playwright_mcp;
             chromium-mcp = pkgs.neg.chromium_mcp;
             meeting-notes-mcp = pkgs.neg.meeting_notes_mcp;
+            media-mcp = pkgs.neg.media_mcp;
+            media-search-mcp = pkgs.neg.media_search_mcp;
+            agenda-mcp = pkgs.neg.agenda_mcp;
+            knowledge-mcp = pkgs.neg.knowledge_mcp;
           }
           // lib.optionalAttrs extrasFlag extrasSet;
 

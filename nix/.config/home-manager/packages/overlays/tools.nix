@@ -76,6 +76,18 @@ in {
     meeting_notes_mcp = call ../mcp/meeting-notes {};
     "meeting-notes-mcp" = meeting_notes_mcp;
 
+    media_mcp = call ../mcp/media-control {};
+    "media-mcp" = media_mcp;
+
+    media_search_mcp = call ../mcp/media-search {};
+    "media-search-mcp" = media_search_mcp;
+
+    agenda_mcp = call ../mcp/agenda {};
+    "agenda-mcp" = agenda_mcp;
+
+    knowledge_mcp = call ../mcp/knowledge {};
+    "knowledge-mcp" = knowledge_mcp;
+
     mcp_server_browserbase = call ../mcp/browserbase {};
     "mcp-server-browserbase" = mcp_server_browserbase;
 
