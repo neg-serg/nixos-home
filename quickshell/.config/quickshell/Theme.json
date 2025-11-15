@@ -84,9 +84,9 @@
     },
     "capsule": {
       "borderInset": -1,
-      "borderWidth": 1,
+      "borderWidth": 0,
       "borderOpacity": 0.08,
-      "borderColor": "#FF4D4D"
+      "borderColor": "#000000"
     },
     "computedFontScale": 0.6
   },
@@ -195,7 +195,7 @@
     "capsule": {
       "iconSpacing": 1,
       "iconPadding": 1,
-      "iconHorizontalMargin": 80,
+      "iconHorizontalMargin": 6,
       "iconScale": 1,
       "iconBaselineOffset": 0,
       "labelPadding": 0,

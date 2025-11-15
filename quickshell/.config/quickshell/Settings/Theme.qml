@@ -18,7 +18,7 @@ Singleton {
             if (currentScreen && currentScreen.name && overrides[currentScreen.name] !== undefined) {
                 return overrides[currentScreen.name];
             }
-        } catch (e) /* ignore */ {}
+        } catch (e) {}
         return 1.0;
     }
 
@@ -92,6 +92,7 @@ Singleton {
             property var weather: ({})
             property var sidePanel: ({})
             property var ui: ({})
+            property var keyboard: ({})
             property var ws: ({})
             property var timers: ({})
             property var network: ({})
@@ -225,7 +226,7 @@ Singleton {
                     }
                 }
             }
-        } catch (e) /* ignore */ {}
+        } catch (e) {}
         return fallback;
     }
 
@@ -288,7 +289,7 @@ Singleton {
                         continue; // nested groups (already covered)
                     flats.push(k);
                 }
-            } catch (e) /* ignore */ {}
+            } catch (e) {}
             if (flats.length > 0) {
                 var warnKey = 'flat::detected';
                 if (!root._strictWarned[warnKey]) {
@@ -297,7 +298,7 @@ Singleton {
                     root._strictWarned[warnKey] = true;
                 }
             }
-        } catch (e) /* ignore */ {}
+        } catch (e) {}
     }
 
     // Initial deprecated check
