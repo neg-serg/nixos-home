@@ -42,16 +42,17 @@ CenteredCapsuleRow {
      */
 
     readonly property bool inlineKeyboardIcon: kb.showKeyboardIcon && !kb.iconSquare
-    readonly property bool inlineLabelTuning: inlineKeyboardIcon && kb.showLayoutLabel
+    readonly property bool squareKeyboardIcon: kb.showKeyboardIcon && kb.iconSquare
+    readonly property bool glyphLeadingActive: kb.showLayoutLabel && (kb.inlineKeyboardIcon || kb.squareKeyboardIcon)
 
-    property int inlineIconSpacing: Math.max(0, Theme.keyboardCapsuleIconSpacing)
-    property int inlineLabelLeftPadding: Math.max(
-        0,
-        Math.max(
-            Theme.keyboardCapsuleLabelPadding,
-            Theme.keyboardCapsuleMinLabelGap - Math.max(0, kb.inlineIconSpacing)
-        )
-    )
+    readonly property int capsuleTextPadding: Math.max(0, Theme.keyboardCapsuleLabelPadding)
+    readonly property int capsuleIconPadding: Math.max(0, Theme.keyboardCapsuleIconPadding)
+    readonly property int capsuleMinLabelGap: Math.max(0, Theme.keyboardCapsuleMinLabelGap)
+    readonly property int capsuleIconSpacing: Math.max(0, Theme.keyboardCapsuleIconSpacing)
+    readonly property int activeIconSpacing: kb.glyphLeadingActive ? kb.capsuleIconSpacing : Theme.panelRowSpacingSmall
+    readonly property int labelPaddingForGlyphs: kb.glyphLeadingActive
+        ? Math.max(0, Math.max(kb.capsuleTextPadding, kb.capsuleMinLabelGap - kb.capsuleIconSpacing))
+        : -1
 
     backgroundKey: "keyboard"
     cursorShape: Qt.PointingHandCursor
@@ -61,16 +62,15 @@ CenteredCapsuleRow {
     materialIconName: "keyboard"
     iconColor: Theme.textSecondary
     iconAutoTune: true
-    iconSpacing: kb.showLayoutLabel
-        ? (kb.inlineKeyboardIcon ? kb.inlineIconSpacing : Theme.panelRowSpacingSmall)
-        : Theme.uiSpacingNone
+    iconSpacing: kb.showLayoutLabel ? kb.activeIconSpacing : Theme.uiSpacingNone
     labelVisible: kb.showLayoutLabel
     labelText: kb.layoutText
     labelColor: Theme.textPrimary
     labelFontFamily: Theme.fontFamily
     labelFontWeight: Font.Medium
     fontPixelSize: Math.round(Theme.fontSizeSmall * capsuleScale)
-    labelLeftPaddingOverride: kb.inlineLabelTuning ? kb.inlineLabelLeftPadding : -1
+    textPadding: kb.capsuleTextPadding
+    labelLeftPaddingOverride: kb.labelPaddingForGlyphs
     minContentWidth: kb.iconSquare ? kb.desiredInnerHeight : 0
 
     leadingContent: Item {
@@ -83,7 +83,7 @@ CenteredCapsuleRow {
         Item {
             id: squareIconSlot
             readonly property int box: kb.desiredInnerHeight
-            visible: kb.iconSquare && kb.showKeyboardIcon
+            visible: kb.squareKeyboardIcon
             width: visible ? box : 0
             height: visible ? box : 0
             implicitWidth: width
@@ -122,8 +122,10 @@ CenteredCapsuleRow {
                 autoTune: kb.iconAutoTune
                 labelRef: kb.showLayoutLabel ? kb.labelItem : null
                 alignTarget: kb.showLayoutLabel ? kb.labelItem : null
-                alignMode: kb.showLayoutLabel ? "baseline" : "optical"
-                padding: Theme.uiSpacingNone
+                alignMode: "optical"
+                scaleToken: Theme.keyboardCapsuleIconScale
+                baselineOffsetToken: Theme.keyboardCapsuleIconBaselineOffset - inlineIcon.baselineVisualDelta
+                padding: kb.capsuleIconPadding
                 screen: kb.screen
             }
         }

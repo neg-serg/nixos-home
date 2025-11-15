@@ -25,6 +25,7 @@ Item {
     property string fontStyleName: ""
     property color color: "white"
     property int padding: 0
+    readonly property int _padding: Math.max(0, padding)
 
     // Material mode properties
     property string icon: ""
@@ -57,8 +58,8 @@ Item {
     readonly property real _svgRenderHeight: root._svgTargetSize
     readonly property real _svgAscent: _svgRenderHeight / 2.0
     readonly property real _svgDescent: _svgRenderHeight / 2.0
-    readonly property real _svgImplicitWidth: _svgTargetSize + padding * 2
-    readonly property real _svgImplicitHeight: _svgTargetSize + padding * 2
+    readonly property real _svgImplicitWidth: _svgTargetSize + root._padding * 2
+    readonly property real _svgImplicitHeight: _svgTargetSize + root._padding * 2
 
     implicitWidth: (mode === "material") ? materialItem.implicitWidth
                   : (mode === "svg") ? svgItem.implicitWidth
@@ -135,7 +136,7 @@ Item {
         visible: root.mode === "text"
         text: root.text
         color: root.color
-        padding: root.padding
+        padding: root._padding
         font.family: root.fontFamily || Theme.fontFamily
         font.styleName: root.fontStyleName
         font.pixelSize: Math.max(1, Math.round(root._labelPx * root._effScale * root._autoScale))

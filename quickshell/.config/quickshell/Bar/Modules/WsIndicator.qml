@@ -104,7 +104,7 @@ CenteredCapsuleRow {
     iconColor: Theme.wsSubmapIconColor
     iconAutoTune: true
     iconPadding: Theme.wsIconInnerPadding
-    iconSpacing: Theme.wsIconSpacing
+    iconSpacing: Math.max(0, Theme.wsIconSpacing)
     labelIsRichText: true
     labelVisible: root.showLabel
     labelText: decoratedText
@@ -112,7 +112,7 @@ CenteredCapsuleRow {
     labelFontFamily: Theme.fontFamily
     labelFontWeight: Font.Medium
     labelColor: Theme.textPrimary
-    textPadding: Theme.wsLabelPadding
+    textPadding: Math.max(0, Theme.wsLabelPadding)
     labelLeftPaddingOverride: root.isTerminalWs ? Theme.wsLabelLeftPaddingTerminal : Theme.wsLabelLeftPadding
 
     leadingContent: Item {

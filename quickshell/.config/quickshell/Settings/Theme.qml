@@ -518,16 +518,19 @@ Singleton {
     property var wsSubmapIconOverrides:(function(){ var v = val('ws.submap.icon.overrides', undefined); return (v && typeof v === 'object') ? v : ({}); })()
     // Color of the submap icon
     property color wsSubmapIconColor: val('ws.submap.icon.color', accentPrimary)
-    // Keyboard capsule spacing tokens
-    property int keyboardCapsuleIconSpacing: val('keyboard.capsule.iconSpacing', uiSpacingXSmall)
-    property int keyboardCapsuleLabelPadding: val('keyboard.capsule.labelPadding', uiSpacingNone)
-    property int keyboardCapsuleMinLabelGap: val('keyboard.capsule.minLabelGap', Math.max(1, Math.round(uiSpacingXSmall * 0.5)))
     // Workspace label/icon paddings
     // Values validated by ThemeConstraints in tooling
     property int wsLabelPadding:val('ws.label.padding', 6)
     property int wsLabelLeftPadding:val('ws.label.leftPadding.normal', 2)
     property int wsLabelLeftPaddingTerminal:val('ws.label.leftPadding.terminal', -50)
     property int wsIconInnerPadding:val('ws.icon.innerPadding', 1)
+    // Keyboard capsule spacing tokens mirror workspace defaults unless overridden
+    property int keyboardCapsuleIconSpacing: val('keyboard.capsule.iconSpacing', wsIconSpacing)
+    property int keyboardCapsuleIconPadding: val('keyboard.capsule.iconPadding', wsIconInnerPadding)
+    property real keyboardCapsuleIconScale: val('keyboard.capsule.iconScale', 1.0)
+    property int keyboardCapsuleIconBaselineOffset: val('keyboard.capsule.iconBaselineOffset', 0)
+    property int keyboardCapsuleLabelPadding: val('keyboard.capsule.labelPadding', wsLabelPadding)
+    property int keyboardCapsuleMinLabelGap: val('keyboard.capsule.minLabelGap', wsIconSpacing + wsLabelLeftPadding)
     // VPN indicator opacities
     property real vpnConnectedOpacity: val('vpn.connectedOpacity', 0.8)
     property real vpnDisconnectedOpacity: val('vpn.disconnectedOpacity', 0.45)

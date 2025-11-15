@@ -193,9 +193,12 @@
   },
   "keyboard": {
     "capsule": {
-      "iconSpacing": 2,
+      "iconSpacing": 1,
+      "iconPadding": 1,
+      "iconScale": 1,
+      "iconBaselineOffset": 0,
       "labelPadding": 0,
-      "minLabelGap": 2
+      "minLabelGap": 3
     }
   },
   "timers": {
