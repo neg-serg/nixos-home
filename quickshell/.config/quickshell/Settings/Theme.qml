@@ -1,6 +1,7 @@
 // Theme.qml
 pragma Singleton
 import QtQuick
+import Qt.labs.folderlistmodel 2.15
 import "../Helpers/Utils.js" as Utils
 import "../Helpers/Color.js" as Color
 import Quickshell
@@ -47,6 +48,76 @@ Singleton {
         } catch (e) {
             return color; // conservative fallback
         }
+    }
+
+    // Theme parts directory (split Theme/*.json files)
+    property string _themePartsDir: root._resolveThemePartsDir()
+    readonly property string _themePartsUrl: _themePartsDir ? ("file://" + _themePartsDir) : ""
+    readonly property string _manifestFilePath: _themePartsDir ? (_themePartsDir + "/manifest.json") : ""
+    property var _themeManifestEntries: []
+    property var _themePartCache: ({})
+    property var _themePartLoaded: ({})
+    property var _themePartErrors: ({})
+    property string _lastWrittenThemeJson: ""
+
+    Timer {
+        id: themeMergeTimer
+        interval: 80
+        repeat: false
+        onTriggered: root._performThemeMerge()
+    }
+
+    Loader {
+        id: themePartsListingLoader
+        active: root._themePartsDir !== ""
+        sourceComponent: Component {
+            FolderListModel {
+                id: themePartsListing
+                folder: root._themePartsUrl
+                showDirs: false
+                nameFilters: ["*.json"]
+                onStatusChanged: root._refreshThemeParts("status")
+                onCountChanged: root._refreshThemeParts("count")
+            }
+        }
+    }
+
+    Loader {
+        id: themeManifestLoader
+        active: root._themePartsDir !== ""
+        sourceComponent: Component {
+            FileView {
+                id: themeManifestWatcher
+                path: root._manifestFilePath
+                watchChanges: true
+                blockLoading: false
+                onLoaded: root._updateThemeManifest(text())
+                onFileChanged: reload()
+                onLoadFailed: root._updateThemeManifest("")
+            }
+        }
+    }
+
+    ListModel { id: themePartsModel }
+
+    Component {
+        id: themePartWatcherDelegate
+        FileView {
+            property string partFileName: model.fileName
+            property string partFilePath: model.filePath
+            path: partFilePath
+            watchChanges: true
+            blockLoading: false
+            onLoaded: root._handleThemePartLoaded(partFileName, text())
+            onFileChanged: reload()
+            onLoadFailed: root._handleThemePartFailed(partFileName)
+        }
+    }
+
+    Instantiator {
+        id: themePartWatchers
+        model: root._themePartsDir !== "" ? themePartsModel : null
+        delegate: themePartWatcherDelegate
     }
 
     // Convenience: choose readable text color for a background
@@ -102,6 +173,238 @@ Singleton {
             property var calendar: ({})
             property var vpn: ({})
             property var volume: ({})
+        }
+    }
+
+    function _resolveThemePartsDir() {
+        try {
+            var tf = Settings.themeFile || "";
+            var idx = tf.lastIndexOf('/');
+            if (idx <= 0) return "";
+            return tf.slice(0, idx) + "/Theme";
+        } catch (e) {
+            return "";
+        }
+    }
+
+    function _updateThemeManifest(rawText) {
+        var entries = [];
+        try {
+            if (rawText && String(rawText).trim().length > 0) {
+                var parsed = JSON.parse(String(rawText));
+                if (Array.isArray(parsed)) {
+                    for (var i = 0; i < parsed.length; i++) {
+                        var entry = String(parsed[i] || "");
+                        if (entry)
+                            entries.push(entry);
+                    }
+                }
+            }
+        } catch (e) {
+            console.warn("[ThemeParts] Failed to parse manifest:", e);
+        }
+        _themeManifestEntries = entries;
+        _refreshThemeParts("manifest");
+    }
+
+    function _listAvailableThemeFiles() {
+        var out = [];
+        try {
+            var listing = themePartsListingLoader.item;
+            if (!listing)
+                return out;
+            var total = listing.count || 0;
+            for (var i = 0; i < total; i++) {
+                var entry = listing.get(i);
+                var name = entry && entry.fileName ? String(entry.fileName) : "";
+                if (!name)
+                    continue;
+                if (name === "manifest.json")
+                    continue;
+                if (!/\.json$/i.test(name))
+                    continue;
+                out.push(name);
+            }
+        } catch (e) {}
+        out.sort();
+        return out;
+    }
+
+    function _applyManifestOrder(files) {
+        if (!_themeManifestEntries || !_themeManifestEntries.length)
+            return files;
+        var seen = {};
+        var ordered = [];
+        for (var i = 0; i < files.length; i++)
+            seen[files[i]] = true;
+        for (var j = 0; j < _themeManifestEntries.length; j++) {
+            var entry = String(_themeManifestEntries[j] || "");
+            if (seen[entry]) {
+                ordered.push(entry);
+                delete seen[entry];
+            }
+        }
+        var leftovers = Object.keys(seen).sort();
+        for (var k = 0; k < leftovers.length; k++)
+            ordered.push(leftovers[k]);
+        return ordered;
+    }
+
+    function _refreshThemeParts(reason) {
+        if (!_themePartsDir || !_themePartsUrl) {
+            themePartsModel.clear();
+            _themePartCache = ({});
+            _themePartLoaded = ({});
+            _lastWrittenThemeJson = "";
+            return;
+        }
+        var files = _applyManifestOrder(_listAvailableThemeFiles());
+        var keep = {};
+        for (var i = 0; i < files.length; i++)
+            keep[files[i]] = true;
+        for (var cached in _themePartCache) {
+            if (!keep[cached]) {
+                delete _themePartCache[cached];
+                delete _themePartLoaded[cached];
+            }
+        }
+        themePartsModel.clear();
+        for (var j = 0; j < files.length; j++) {
+            var fname = files[j];
+            themePartsModel.append({
+                fileName: fname,
+                filePath: _themePartsDir + "/" + fname
+            });
+            if (_themePartLoaded[fname] !== true)
+                _themePartLoaded[fname] = false;
+        }
+        if (files.length === 0) {
+            themeMergeTimer.stop();
+        } else if (_allThemePartsReady()) {
+            _scheduleThemeMerge("refresh:" + reason);
+        }
+    }
+
+    function _handleThemePartLoaded(fileName, rawText) {
+        if (!fileName)
+            return;
+        var parsed = _parseJsonSafe(rawText, fileName);
+        if (parsed === null) {
+            _themePartLoaded[fileName] = false;
+            delete _themePartCache[fileName];
+            console.warn("[ThemeParts] Skip invalid JSON:", fileName);
+            return;
+        }
+        _themePartCache[fileName] = parsed;
+        _themePartLoaded[fileName] = true;
+        if (_allThemePartsReady()) {
+            _scheduleThemeMerge("part:" + fileName);
+        }
+    }
+
+    function _handleThemePartFailed(fileName) {
+        if (!fileName)
+            return;
+        _themePartLoaded[fileName] = false;
+        delete _themePartCache[fileName];
+        console.warn("[ThemeParts] Failed to load", fileName);
+    }
+
+    function _currentThemePartFiles() {
+        var list = [];
+        var count = themePartsModel.count || 0;
+        for (var i = 0; i < count; i++) {
+            var entry = themePartsModel.get(i);
+            if (entry && entry.fileName)
+                list.push(String(entry.fileName));
+        }
+        return list;
+    }
+
+    function _allThemePartsReady() {
+        var files = _currentThemePartFiles();
+        if (files.length === 0)
+            return false;
+        for (var i = 0; i < files.length; i++) {
+            if (_themePartLoaded[files[i]] !== true)
+                return false;
+        }
+        return true;
+    }
+
+    function _scheduleThemeMerge(reason) {
+        if (!_allThemePartsReady())
+            return;
+        themeMergeTimer.restart();
+    }
+
+    function _performThemeMerge() {
+        if (!_allThemePartsReady())
+            return;
+        var files = _currentThemePartFiles();
+        if (!files.length)
+            return;
+        var merged = {};
+        var origins = {};
+        for (var i = 0; i < files.length; i++) {
+            var file = files[i];
+            var payload = _themePartCache[file];
+            if (!payload)
+                continue;
+            _mergeThemeObjects(merged, payload, "", file, origins);
+        }
+        var serialized = "";
+        try {
+            serialized = JSON.stringify(merged, null, 2) + "\n";
+        } catch (e) {
+            console.warn("[ThemeParts] Failed to stringify merged theme:", e);
+            return;
+        }
+        if (serialized === _lastWrittenThemeJson)
+            return;
+        _lastWrittenThemeJson = serialized;
+        try {
+            themeFile.setText(serialized);
+        } catch (e2) {
+            console.warn("[ThemeParts] Failed to write Theme.json:", e2);
+        }
+    }
+
+    function _parseJsonSafe(raw, fileName) {
+        try {
+            if (!raw || !String(raw).trim().length)
+                return {};
+            return JSON.parse(String(raw));
+        } catch (e) {
+            console.warn("[ThemeParts] JSON parse error in", fileName + ":", e);
+            return null;
+        }
+    }
+
+    function _isPlainObject(value) {
+        return value !== null && typeof value === "object" && !Array.isArray(value);
+    }
+
+    function _mergeThemeObjects(target, source, ctx, origin, origins) {
+        if (!source)
+            return;
+        for (var key in source) {
+            if (!source.hasOwnProperty(key))
+                continue;
+            var value = source[key];
+            var pathKey = ctx ? (ctx + "." + key) : key;
+            if (!(key in target)) {
+                target[key] = value;
+                origins[pathKey] = origin;
+                continue;
+            }
+            var existing = target[key];
+            if (_isPlainObject(existing) && _isPlainObject(value)) {
+                _mergeThemeObjects(existing, value, pathKey, origin, origins);
+            } else {
+                var prev = origins[pathKey] || "<unknown>";
+                console.warn("[ThemeParts] Duplicate token", pathKey, "from", origin, "(previous:", prev + ")");
+            }
         }
     }
 
@@ -302,6 +605,7 @@ Singleton {
 
     // Initial deprecated check
     Component.onCompleted: {
+        _refreshThemeParts("startup");
         try {
             root._checkDeprecatedTokens();
         } catch (e) {}

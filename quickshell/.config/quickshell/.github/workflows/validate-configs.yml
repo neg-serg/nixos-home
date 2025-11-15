@@ -22,12 +22,6 @@ jobs:
             --settings quickshell/.config/quickshell/Settings.json \
             --schema quickshell/.config/quickshell/Docs/SettingsSchema.json
 
-      - name: Build Theme.json from parts
-        run: |
-          node quickshell/.config/quickshell/Tools/build-theme.mjs \
-            --dir quickshell/.config/quickshell/Theme \
-            --out quickshell/.config/quickshell/Theme.json
-
       - name: Validate Theme.json
         run: |
           node quickshell/.config/quickshell/Tools/validate-theme.mjs \

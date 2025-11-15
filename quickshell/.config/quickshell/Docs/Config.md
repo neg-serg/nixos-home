@@ -2,7 +2,7 @@ Quickshell Configuration: Settings.json and Theme.json options
 
 Locations
 - `~/.config/quickshell/Settings.json`: behavioral and global settings.
-- `~/.config/quickshell/Theme.json`: generated theme tokens (colors, sizes, animation, etc.). Edit the source files under `Theme/*.json` (merge order defined in `Theme/manifest.json`) and rebuild via `node Tools/build-theme.mjs` (file is gitignored, so run the builder after clone/pull).
+- `~/.config/quickshell/Theme.json`: generated theme tokens (colors, sizes, animation, etc.). Edit the source files under `Theme/*.json` (merge order defined in `Theme/manifest.json`). Quickshell watches that directory and rewrites `Theme.json` automatically; use `node Tools/build-theme.mjs` only when you need a manual rebuild outside a running session.
 - Base directory is `${XDG_CONFIG_HOME:-$HOME/.config}/quickshell/`. Files are created on first run with defaults.
 
 Format
