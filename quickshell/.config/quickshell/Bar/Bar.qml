@@ -112,10 +112,6 @@ Scope {
                     property real panelTintStrength: 1.0
                     property real panelTintFeatherTop: 0.08
                     property real panelTintFeatherBottom: 0.35
-                    // Debug: draw a right triangle above the network indicator cluster
-                    // Now controlled by Settings
-                    property bool debugNetTriangle: rootScope.diagnosticsEnabled && Settings.settings.debugTriangleLeft
-
                     readonly property real contentWidth: Math.max(
                         leftWidgetsRow.width,
                         leftWidgetsRow.implicitWidth || leftWidgetsRow.width || 0
@@ -124,15 +120,6 @@ Scope {
                         Item {
                             id: leftPanelContent
                             anchors.fill: parent
-
-                        // Full-surface debug tint to verify the window renders
-                        Rectangle {
-                            anchors.fill: parent
-                            z: 2000000
-                            color: "#80ffff00" // yellow, semi-transparent
-                            // Only if explicitly requested
-                            visible: (Quickshell.env("QS_WEDGE_TINT_TEST") || "") === "1"
-                        }
 
                         Rectangle {
                             id: leftBarBackground
@@ -214,7 +201,7 @@ Scope {
                                         var wpx = Math.min(targetPx, capPx);
                                         return Math.max(0.02, Math.min(0.98, wpx / faceW));
                                     })(),
-                                    Settings.settings.debugTriangleLeftSlopeUp ? 1 : 0,
+                                    1,
                                     1,
                                     0
                                 )
@@ -267,7 +254,7 @@ Scope {
                                         var wpx = Math.min(targetPx, capPx);
                                         return Math.max(0.02, Math.min(0.98, wpx / faceW));
                                     })(),
-                                    Settings.settings.debugTriangleLeftSlopeUp ? 1 : 0,
+                                    1,
                                     1,
                                     0
                                 )
@@ -289,57 +276,6 @@ Scope {
                             }
                         }
 
-                        // Extra on-screen debug overlay to be absolutely sure about geometry.
-                        // Drawn only when QS_WEDGE_DEBUG=1
-                        Canvas {
-                            id: leftWedgeOverlayDebug
-                            anchors.fill: leftBarFill
-                            z: 999999
-                            visible: rootScope.diagnosticsEnabled && ((Quickshell.env("QS_WEDGE_DEBUG") || "") === "1")
-                            property bool _loggedOnce: false
-                            onPaint: {
-                                var ctx = getContext('2d');
-                                ctx.reset();
-                                ctx.clearRect(0, 0, width, height);
-                                // Background highlight to prove this item renders
-                                ctx.fillStyle = 'rgba(255,255,0,0.50)';
-                                ctx.fillRect(0, 0, width, height);
-                                var ww = Number(Quickshell.env("QS_WEDGE_WIDTH_PCT") || "");
-                                var faceW = Math.max(1, leftBarFill.width);
-                                var targetPx = Math.max(1, Math.round(leftPanel.seamWidth));
-                                var capPx = Math.round(faceW * 0.35);
-                                var autoPx = Math.min(targetPx, capPx);
-                                var wnorm = (isFinite(ww) && ww > 0) ? Math.max(0.0, Math.min(1.0, ww/100.0)) : Math.max(0.02, Math.min(0.98, autoPx / faceW));
-                                var wpx = Math.max(1, Math.round(wnorm * width));
-                                ctx.fillStyle = 'rgba(255,0,255,0.45)';
-                                ctx.beginPath();
-                                if (Settings.settings.debugTriangleLeftSlopeUp) {
-                                    // bottom-left → top-right, wedge at right edge
-                                    ctx.moveTo(width - wpx, height);
-                                    ctx.lineTo(width, 0);
-                                    ctx.lineTo(width, height);
-                                } else {
-                                    // top-left → bottom-right, wedge at right edge
-                                    ctx.moveTo(width - wpx, 0);
-                                    ctx.lineTo(width, height);
-                                    ctx.lineTo(width, 0);
-                                }
-                                ctx.closePath();
-                                ctx.fill();
-                                // Outline for visibility
-                                ctx.strokeStyle = 'rgba(255,0,255,0.9)';
-                                ctx.lineWidth = 2;
-                                ctx.stroke();
-                                if (rootScope.diagnosticsEnabled && Settings.settings.debugLogs && !leftWedgeOverlayDebug._loggedOnce) {
-                                    leftWedgeOverlayDebug._loggedOnce = true;
-                                    console.log("[wedge:left:overlay] size=", width, height,
-                                                "leftBarFillW=", leftBarFill.width,
-                                                "seamW=", seamPanel.seamWidthPx,
-                                                "wnorm=", wnorm, "wpx=", wpx,
-                                                "slopeUp=", Settings.settings.debugTriangleLeftSlopeUp);
-                                }
-                            }
-                        }
                         Item {
                             id: leftSeamFill
                             width: Math.min(leftBarBackground.width, leftPanel.seamWidth)
@@ -385,17 +321,10 @@ Scope {
                                 // Cut triangle adjacent to the seam boundary (x = 0 in this local space)
                                 ctx.fillStyle = '#000000ff';
                                 ctx.beginPath();
-                                if (Settings.settings.debugTriangleLeftSlopeUp) {
-                                    // bottom-left → top-right
-                                    ctx.moveTo(0, height);
-                                    ctx.lineTo(width, 0);
-                                    ctx.lineTo(width, height);
-                                } else {
-                                    // top-left → bottom-right
-                                    ctx.moveTo(0, 0);
-                                    ctx.lineTo(width, height);
-                                    ctx.lineTo(width, 0);
-                                }
+                                // Default orientation: bottom-left → top-right
+                                ctx.moveTo(0, height);
+                                ctx.lineTo(width, 0);
+                                ctx.lineTo(width, height);
                                 ctx.closePath();
                                 ctx.fill();
                             }
@@ -451,37 +380,7 @@ Scope {
                                         throughputText: ConnectivityState.throughputText
                                     }
                                 }
-                            // Logical anchor position for the custom triangle placed "after network"
-                            // This doesn't consume layout width (preferredWidth=0), it's used only to compute x
-                            Item {
-                                id: netTriangleSlot
-                                Layout.alignment: Qt.AlignVCenter
-                                Layout.preferredWidth: 0
-                                visible: netCluster.visible
-                            }
                             LocalMods.WeatherButton { visible: Settings.settings.showWeatherInBar === true; Layout.alignment: Qt.AlignVCenter }
-                        }
-
-                        // Legacy debug triangle inside content (disabled)
-                        Canvas {
-                            id: netTriangle
-                            visible: false && leftPanel.debugNetTriangle && netCluster.visible
-                            antialiasing: true
-                            z: 100000
-                            property int sz: Math.max(8, Math.round(Theme.uiRadiusSmall * 1.5 * leftPanel.s))
-                            width: sz
-                            height: sz
-                            // Important: anchor to the top edge so the triangle stays within the panel surface
-                            // (when anchored to bottom of top edge it could land outside of the surface and be clipped).
-                            anchors.top: leftBarBackground.top
-                            anchors.topMargin: Math.round(1 * leftPanel.s)
-                            // Center horizontally over netCluster
-                            x: Math.round(netCluster.mapToItem(leftPanelContent, netCluster.width / 2, 0).x - width / 2)
-                            onVisibleChanged: requestPaint()
-                            onXChanged: requestPaint()
-                            onWidthChanged: requestPaint()
-                            onHeightChanged: requestPaint()
-                            onPaint: { /* disabled */ }
                         }
                     }
 
@@ -492,158 +391,6 @@ Scope {
                         hideSource: false
                         live: true
                         recursive: true
-                    }
-
-                    Item {
-                        id: netTriangleAnchor
-                        width: 0
-                        height: 0
-                        anchors.top: parent.top
-                        // Compute seam start in local coords: end of left fill minus seam width
-                        readonly property int _seamWidth: Math.max(1, leftPanel.seamWidth)
-                        readonly property real _fillWidth: leftBarFill ? leftBarFill.width : leftPanelContent.width
-                        readonly property real seamStartLocal: Math.max(
-                            0,
-                            Math.min(leftPanelContent.width - _seamWidth, _fillWidth - _seamWidth)
-                        )
-                    }
-
-                    // Alternative approach: render a local copy of the seam (fill + tint)
-                    // and clip it to a triangular wedge so it looks like a direct
-                    // continuation of the center seam, without sampling from layershell.
-                    Item {
-                        id: leftSeamWedge
-                        // Disabled to rely on subtractive masking of the main fill
-                        visible: false
-                        opacity: 1.0
-                        z: 9000000
-                        width: Math.max(1, leftPanel.seamWidth)
-                        height: leftPanel.barHeightPx
-                        anchors.top: parent.top
-                        anchors.left: leftPanelContent.left
-                        anchors.leftMargin: Math.round(netTriangleAnchor.seamStartLocal + leftPanel.seamWidth)
-                        anchors.topMargin: 0
-                        
-
-                        // Hidden visuals that replicate the seam look (base fill + tint)
-                        Item {
-                            id: leftWedgeVisuals
-                            anchors.fill: parent
-                            // Keep visible so ShaderEffectSource can capture it; we hide via hideSource below
-                            visible: true
-                            ShaderEffect {
-                                anchors.fill: parent
-                                fragmentShader: Qt.resolvedUrl("../shaders/seam_fill.frag.qsb")
-                                property color baseColor: seamPanel.seamBaseColor
-                                property vector4d params0: Qt.vector4d(
-                                    seamPanel.seamBaseOpacityTop,
-                                    seamPanel.seamBaseOpacityBottom - seamPanel.seamBaseOpacityTop,
-                                    0,
-                                    0
-                                )
-                            }
-                            ShaderEffect {
-                                visible: seamPanel.seamTintEnabled
-                                anchors.fill: parent
-                                fragmentShader: Qt.resolvedUrl("../shaders/seam_tint.frag.qsb")
-                                property color tintColor: seamPanel.seamTintColor
-                                property vector4d params0: Qt.vector4d(
-                                    seamPanel.seamTintLeftTop,
-                                    seamPanel.seamTintLeftBottom,
-                                    seamPanel.seamTintRightTop,
-                                    seamPanel.seamTintRightBottom
-                                )
-                                property vector4d params1: Qt.vector4d(
-                                    seamPanel.seamTintFeatherLeft,
-                                    seamPanel.seamTintFeatherRight,
-                                    seamPanel.seamTintOpacity,
-                                    0
-                                )
-                                property color baseColor: seamPanel.seamBaseColor
-                                blending: true
-                            }
-                        }
-
-                        // Route visuals through a ShaderEffectSource so OpacityMask always has a renderable source
-                        ShaderEffectSource {
-                            id: leftWedgeSource
-                            anchors.fill: parent
-                            sourceItem: leftWedgeVisuals
-                            hideSource: true
-                            live: true
-                            recursive: true
-                        }
-
-                        // Debug bright fill to localize the wedge on screen (disabled)
-                        Rectangle {
-                            id: leftWedgeDebugFill
-                            anchors.fill: parent
-                            color: "#00ff00"
-                            opacity: 0.8
-                            visible: false
-                            z: 5
-                        }
-
-                        // Explicit triangle to verify geometry (drawn above mask result)
-                        Canvas {
-                            id: leftWedgeDebugTriangle
-                            anchors.fill: parent
-                            visible: false
-                            z: 6
-                            onPaint: {
-                                var ctx = getContext('2d');
-                                ctx.reset();
-                                ctx.clearRect(0, 0, width, height);
-                                ctx.fillStyle = '#00ff00';
-                                ctx.beginPath();
-                                if (Settings.settings.debugTriangleLeftSlopeUp) {
-                                    ctx.moveTo(0, height);
-                                    ctx.lineTo(width, 0);
-                                    ctx.lineTo(width, height);
-                                } else {
-                                    ctx.moveTo(0, 0);
-                                    ctx.lineTo(width, height);
-                                    ctx.lineTo(width, 0);
-                                }
-                                ctx.closePath();
-                                ctx.fill();
-                            }
-                        }
-
-                        // Triangular mask: white = keep wedge, black = discard
-                        Canvas {
-                            id: leftWedgeMask
-                            anchors.fill: parent
-                            visible: false
-                            onPaint: {
-                                var ctx = getContext('2d');
-                                ctx.reset();
-                                // Start fully transparent (mask alpha = 0 everywhere)
-                                ctx.clearRect(0, 0, width, height);
-                                // Keep only the triangular wedge: draw opaque white (mask alpha = 1)
-                                ctx.fillStyle = '#ffffffff';
-                                ctx.beginPath();
-                                if (Settings.settings.debugTriangleLeftSlopeUp) {
-                                    // bottom-left → top-right
-                                    ctx.moveTo(0, height);
-                                    ctx.lineTo(width, 0);
-                                    ctx.lineTo(width, height);
-                                } else {
-                                    // top-left → bottom-right
-                                    ctx.moveTo(0, 0);
-                                    ctx.lineTo(width, height);
-                                    ctx.lineTo(width, 0);
-                                }
-                                ctx.closePath();
-                                ctx.fill();
-                            }
-                        }
-                        GE.OpacityMask {
-                            anchors.fill: parent
-                            // Use the actual seam visuals for the wedge instead of the debug fill
-                            source: leftWedgeSource
-                            maskSource: leftWedgeMask
-                        }
                     }
 
                     // (old Canvas triangle overlay removed to avoid blue tint overlay)
@@ -713,15 +460,6 @@ Scope {
                         Item {
                             id: rightPanelContent
                             anchors.fill: parent
-
-                        // Full-surface debug tint to verify the window renders
-                        Rectangle {
-                            anchors.fill: parent
-                            z: 2000000
-                            color: "#8000ffff" // cyan, semi-transparent
-                            // Only if explicitly requested
-                            visible: (Quickshell.env("QS_WEDGE_TINT_TEST") || "") === "1"
-                        }
 
                         Rectangle {
                             id: rightBarBackground
@@ -802,7 +540,7 @@ Scope {
                                         var wpx = Math.min(targetPx, capPx);
                                         return Math.max(0.02, Math.min(0.98, wpx / faceW));
                                     })(),
-                                    Settings.settings.debugTriangleRightSlopeUp ? 1 : 0,
+                                    1,
                                     -1,
                                     0
                                 )
@@ -853,7 +591,7 @@ Scope {
                                         var wpx = Math.min(targetPx, capPx);
                                         return Math.max(0.02, Math.min(0.98, wpx / faceW));
                                     })(),
-                                    Settings.settings.debugTriangleRightSlopeUp ? 1 : 0,
+                                    1,
                                     -1,
                                     0
                                 )
@@ -875,205 +613,6 @@ Scope {
                             }
                         }
 
-                        // Extra on-screen debug overlay to be absolutely sure about geometry.
-                        Canvas {
-                            id: rightWedgeOverlayDebug
-                            anchors.fill: rightBarFill
-                            z: 999999
-                            visible: rootScope.diagnosticsEnabled && ((Quickshell.env("QS_WEDGE_DEBUG") || "") === "1")
-                            property bool _loggedOnce: false
-                            onPaint: {
-                                var ctx = getContext('2d');
-                                ctx.reset();
-                                ctx.clearRect(0, 0, width, height);
-                                // Background highlight to prove this item renders
-                                ctx.fillStyle = 'rgba(0,255,255,0.50)';
-                                ctx.fillRect(0, 0, width, height);
-                                var ww = Number(Quickshell.env("QS_WEDGE_WIDTH_PCT") || "");
-                                var faceW = Math.max(1, rightBarFill.width);
-                                var targetPx = Math.max(1, Math.round(rightPanel.seamWidth));
-                                var capPx = Math.round(faceW * 0.35);
-                                var autoPx = Math.min(targetPx, capPx);
-                                var wnorm = (isFinite(ww) && ww > 0) ? Math.max(0.0, Math.min(1.0, ww/100.0)) : Math.max(0.02, Math.min(0.98, autoPx / faceW));
-                                var wpx = Math.max(1, Math.round(wnorm * width));
-                                ctx.fillStyle = 'rgba(255,0,255,0.45)';
-                                ctx.beginPath();
-                                if (Settings.settings.debugTriangleRightSlopeUp) {
-                                    // bottom-left → top-right, wedge at left edge
-                                    ctx.moveTo(0, height);
-                                    ctx.lineTo(wpx, 0);
-                                    ctx.lineTo(0, 0);
-                                } else {
-                                    // top-left → bottom-right, wedge at left edge
-                                    ctx.moveTo(0, 0);
-                                    ctx.lineTo(wpx, height);
-                                    ctx.lineTo(0, height);
-                                }
-                                ctx.closePath();
-                                ctx.fill();
-                                // Outline for visibility
-                                ctx.strokeStyle = 'rgba(255,0,255,0.9)';
-                                ctx.lineWidth = 2;
-                                ctx.stroke();
-                                if (rootScope.diagnosticsEnabled && Settings.settings.debugLogs && !rightWedgeOverlayDebug._loggedOnce) {
-                                    rightWedgeOverlayDebug._loggedOnce = true;
-                                    console.log("[wedge:right:overlay] size=", width, height,
-                                                "rightBarFillW=", rightBarFill.width,
-                                                "seamW=", seamPanel.seamWidthPx,
-                                                "wnorm=", wnorm, "wpx=", wpx,
-                                                "slopeUp=", Settings.settings.debugTriangleRightSlopeUp);
-                                }
-                            }
-                        }
-                        // Mirrored debug triangle on the right side: aligns to the left edge
-                        // of the right panel's seam (i.e., the left edge of rightBarFill).
-                        Item {
-                            id: rightNetTriangleAnchor
-                            width: 0
-                            height: 0
-                            anchors.top: parent.top
-                            readonly property int _seamWidth: Math.max(1, rightPanel.seamWidth)
-                            readonly property real _fillWidth: rightBarFill ? rightBarFill.width : rightPanelContent.width
-                            // Seam start measured from the left of rightPanelContent
-                            readonly property real seamStartLocal: Math.max(
-                                0,
-                                Math.min(rightPanelContent.width - _seamWidth, rightPanelContent.width - _fillWidth)
-                            )
-                        }
-
-                        // Symmetric seam wedge for the right side (disabled)
-                        Item {
-                            id: rightSeamWedge
-                            // Disabled to rely on subtractive masking of the main fill
-                            visible: false
-                            opacity: 1.0
-                            z: 9000000
-                            width: Math.max(1, rightPanel.seamWidth)
-                            height: rightPanel.barHeightPx
-                            anchors.top: parent.top
-                            anchors.left: rightPanelContent.left
-                            anchors.leftMargin: Math.round(rightNetTriangleAnchor.seamStartLocal - rightPanel.seamWidth)
-                            anchors.topMargin: 0
-                            
-
-                            Item {
-                                id: rightWedgeVisuals
-                                anchors.fill: parent
-                                // Keep visible so ShaderEffectSource can capture it; we hide via hideSource below
-                                visible: true
-                                ShaderEffect {
-                                    anchors.fill: parent
-                                    fragmentShader: Qt.resolvedUrl("../shaders/seam_fill.frag.qsb")
-                                property color baseColor: seamPanel.seamBaseColor
-                                property vector4d params0: Qt.vector4d(
-                                    seamPanel.seamBaseOpacityTop,
-                                    seamPanel.seamBaseOpacityBottom - seamPanel.seamBaseOpacityTop,
-                                    0,
-                                    0
-                                )
-                                }
-                                ShaderEffect {
-                                    visible: seamPanel.seamTintEnabled
-                                    anchors.fill: parent
-                                    fragmentShader: Qt.resolvedUrl("../shaders/seam_tint.frag.qsb")
-                                    property color tintColor: seamPanel.seamTintColor
-                                    property vector4d params0: Qt.vector4d(
-                                        seamPanel.seamTintLeftTop,
-                                        seamPanel.seamTintLeftBottom,
-                                        seamPanel.seamTintRightTop,
-                                        seamPanel.seamTintRightBottom
-                                    )
-                                    property vector4d params1: Qt.vector4d(
-                                        seamPanel.seamTintFeatherLeft,
-                                        seamPanel.seamTintFeatherRight,
-                                        seamPanel.seamTintOpacity,
-                                        0
-                                    )
-                                    property color baseColor: seamPanel.seamBaseColor
-                                    blending: true
-                                }
-                            }
-
-                            // Route visuals through a ShaderEffectSource so OpacityMask always has a renderable source
-                            ShaderEffectSource {
-                                id: rightWedgeSource
-                                anchors.fill: parent
-                                sourceItem: rightWedgeVisuals
-                                hideSource: true
-                                live: true
-                                recursive: true
-                            }
-
-                            // Debug bright fill to localize the wedge on screen (disabled)
-                            Rectangle {
-                                id: rightWedgeDebugFill
-                                anchors.fill: parent
-                                color: "#00ff00"
-                                opacity: 0.8
-                                visible: false
-                                z: 5
-                            }
-
-                            // Explicit triangle for right side
-                            Canvas {
-                                id: rightWedgeDebugTriangle
-                                anchors.fill: parent
-                                visible: false
-                                z: 6
-                                onPaint: {
-                                    var ctx = getContext('2d');
-                                    ctx.reset();
-                                    ctx.clearRect(0, 0, width, height);
-                                    ctx.fillStyle = '#00ff00';
-                                    ctx.beginPath();
-                                    if (Settings.settings.debugTriangleRightSlopeUp) {
-                                        ctx.moveTo(0, height);
-                                        ctx.lineTo(width, 0);
-                                        ctx.lineTo(0, 0);
-                                    } else {
-                                        ctx.moveTo(0, 0);
-                                        ctx.lineTo(width, height);
-                                        ctx.lineTo(0, height);
-                                    }
-                                    ctx.closePath();
-                                    ctx.fill();
-                                }
-                            }
-
-                            Canvas {
-                                id: rightWedgeMask
-                                anchors.fill: parent
-                                visible: false
-                                onPaint: {
-                                    var ctx = getContext('2d');
-                                    ctx.reset();
-                                    // Start fully transparent (mask alpha = 0 everywhere)
-                                    ctx.clearRect(0, 0, width, height);
-                                    // Keep only the triangular wedge: draw opaque white (mask alpha = 1)
-                                    ctx.fillStyle = '#ffffffff';
-                                    ctx.beginPath();
-                                    if (Settings.settings.debugTriangleRightSlopeUp) {
-                                        // bottom-left → top-right (vertical edge at x=0)
-                                        ctx.moveTo(0, height);
-                                        ctx.lineTo(width, 0);
-                                        ctx.lineTo(0, 0);
-                                    } else {
-                                        // top-left → bottom-right (vertical edge at x=0)
-                                        ctx.moveTo(0, 0);
-                                        ctx.lineTo(width, height);
-                                        ctx.lineTo(0, height);
-                                    }
-                                    ctx.closePath();
-                                    ctx.fill();
-                                }
-                            }
-                            GE.OpacityMask {
-                                anchors.fill: parent
-                                // Use the actual seam visuals for the wedge instead of the debug fill
-                                source: rightWedgeSource
-                                maskSource: rightWedgeMask
-                            }
-                        }
                         // (old right Canvas triangle overlay removed)
                         Item {
                             id: rightSeamFill
@@ -1119,17 +658,10 @@ Scope {
                                 // Cut triangle adjacent to the seam boundary (x = width in this local space)
                                 ctx.fillStyle = '#000000ff';
                                 ctx.beginPath();
-                                if (Settings.settings.debugTriangleRightSlopeUp) {
-                                    // bottom-left → top-right (vertical seam edge at the right)
-                                    ctx.moveTo(width, height);
-                                    ctx.lineTo(0, 0);
-                                    ctx.lineTo(0, height);
-                                } else {
-                                    // top-left → bottom-right
-                                    ctx.moveTo(width, 0);
-                                    ctx.lineTo(0, height);
-                                    ctx.lineTo(0, 0);
-                                }
+                                // Default orientation: bottom-left → top-right (seam edge on the right)
+                                ctx.moveTo(width, height);
+                                ctx.lineTo(0, 0);
+                                ctx.lineTo(0, height);
                                 ctx.closePath();
                                 ctx.fill();
                             }
@@ -1146,11 +678,21 @@ Scope {
                             anchors.right: rightBarBackground.right
                             anchors.rightMargin: rightPanel.sideMargin
                             spacing: 0
-                            Media {
-                                id: mediaModule
+                            Item {
+                                id: mediaRowSlot
                                 Layout.alignment: Qt.AlignVCenter
                                 Layout.fillWidth: true
-                                sidePanelPopup: sidebarPopup
+                                Layout.fillHeight: true
+                                Layout.preferredWidth: implicitWidth
+                                implicitWidth: mediaModule.parent === mediaRowSlot ? Math.max(mediaModule.implicitWidth, 1) : 0
+                                implicitHeight: mediaModule.parent === mediaRowSlot ? Math.max(mediaModule.implicitHeight, 1) : 0
+                                visible: mediaModule.parent === mediaRowSlot
+
+                                Media {
+                                    id: mediaModule
+                                    anchors.fill: parent
+                                    sidePanelPopup: sidebarPopup
+                                }
                             }
                             LocalMods.MpdFlags {
                                 id: mpdFlagsBar
@@ -1223,11 +765,32 @@ Scope {
                             }
                         }
 
+                        Item {
+                            id: mediaOverlayHost
+                            anchors.fill: rightBarBackground
+                            visible: mediaModule.panelMode
+                            z: -1
+                            clip: false
+                        }
+
                         MusicPopup {
                             id: sidebarPopup
                             anchorWindow: rightPanel
                             panelEdge: "bottom"
                         }
+
+                        states: [
+                            State {
+                                name: "mediaPanelOverlayActive"
+                                when: mediaModule.panelMode
+                                ParentChange { target: mediaModule; parent: mediaOverlayHost }
+                            },
+                            State {
+                                name: "mediaPanelOverlayInactive"
+                                when: !mediaModule.panelMode
+                                ParentChange { target: mediaModule; parent: mediaRowSlot }
+                            }
+                        ]
                     }
 
                     ShaderEffectSource {

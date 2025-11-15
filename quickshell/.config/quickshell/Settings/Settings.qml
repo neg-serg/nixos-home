@@ -7,7 +7,7 @@ Singleton {
     property string shellName: "quickshell"
     property string settingsDir: (Quickshell.env("XDG_CONFIG_HOME") || Quickshell.env("HOME") + "/.config") + "/" + shellName + "/"
     property string settingsFile: (settingsDir + "Settings.json")
-    property string themeFile: (settingsDir + "Theme.json")
+    property string themeFile: (settingsDir + "Theme/.theme.json")
     property var settings: settingAdapter
 
     Item {
@@ -47,19 +47,18 @@ Singleton {
             property bool debugNetwork: false
             // Quickshell bar seam debug overlay: fill full width instead of only the gap
             property bool debugSeamFullWidth: true
-            // Debug triangles near the seam (left/right) and their orientation
-            property bool debugTriangleLeft: true
-            property bool debugTriangleRight: true
-            // If true, diagonal goes bottom-left → top-right; if false, top-left → bottom-right
-            property bool debugTriangleLeftSlopeUp: true
-            property bool debugTriangleRightSlopeUp: true
-            // Triangle opacities (0.0..1.0)
-            // Default 0.3: lighter semi‑transparent overlay
-            property real debugTriangleLeftOpacity: 0.3
-            property real debugTriangleRightOpacity: 0.3
             property bool strictThemeTokens: false
             property bool useFahrenheit: false
             property bool showMediaInBar: false
+            property string mediaIconStretchMode: "compact"
+            property int mediaIconMinWidthPx: 0
+            property int mediaIconMaxWidthPx: 0
+            property int mediaIconPreferredWidthPx: 0
+            property real mediaIconStretchShare: 1.0
+            property int mediaIconOverlayPaddingPx: 0
+            property int mediaIconPanelOverlayPaddingPx: 12
+            property real mediaIconPanelOverlayWidthShare: 0.45
+            property real mediaIconPanelOverlayBgOpacity: 0.65
             // Weather button in bar
             property bool showWeatherInBar: false
             property bool reverseDayMonth: false

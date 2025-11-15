@@ -10,7 +10,7 @@ import qs.Settings
 
 Singleton {
     id: root
-    // Set true after Theme.json is loaded/applied at least once
+    // Set true after Theme/.theme.json is loaded/applied at least once
     property bool _themeLoaded: false
     // Per-monitor UI scaling (defaults to 1.0)
     function scale(currentScreen) {
@@ -50,7 +50,7 @@ Singleton {
         }
     }
 
-    // Theme parts directory (split Theme/*.json files)
+    // Theme parts directory (split Theme/*.jsonc files)
     property string _themePartsDir: root._resolveThemePartsDir()
     readonly property string _themePartsUrl: _themePartsDir ? ("file://" + _themePartsDir) : ""
     readonly property string _manifestFilePath: _themePartsDir ? (_themePartsDir + "/manifest.json") : ""
@@ -75,7 +75,7 @@ Singleton {
                 id: themePartsListing
                 folder: root._themePartsUrl
                 showDirs: false
-                nameFilters: ["*.json"]
+                nameFilters: ["*.json", "*.jsonc"]
                 onStatusChanged: root._refreshThemeParts("status")
                 onCountChanged: root._refreshThemeParts("count")
             }
@@ -154,8 +154,8 @@ Singleton {
         }
         JsonAdapter {
             id: themeData
-            // Defaults aligned with Theme.json; file values override these
-            // Declare nested group roots so nested tokens in Theme.json are readable
+            // Defaults aligned with Theme/.theme.json; file values override these
+            // Declare nested group roots so nested tokens in Theme/.theme.json are readable
             property var colors: ({})
             property var panel: ({})
             property var shape: ({})
@@ -181,7 +181,10 @@ Singleton {
             var tf = Settings.themeFile || "";
             var idx = tf.lastIndexOf('/');
             if (idx <= 0) return "";
-            return tf.slice(0, idx) + "/Theme";
+            var dir = tf.slice(0, idx);
+            if (/\/Theme$/.test(dir))
+                return dir;
+            return dir + "/Theme";
         } catch (e) {
             return "";
         }
@@ -191,7 +194,7 @@ Singleton {
         var entries = [];
         try {
             if (rawText && String(rawText).trim().length > 0) {
-                var parsed = JSON.parse(String(rawText));
+                var parsed = JSON.parse(root._stripJsonComments(String(rawText)));
                 if (Array.isArray(parsed)) {
                     for (var i = 0; i < parsed.length; i++) {
                         var entry = String(parsed[i] || "");
@@ -221,7 +224,10 @@ Singleton {
                     continue;
                 if (name === "manifest.json")
                     continue;
-                if (!/\.json$/i.test(name))
+                var lower = name.toLowerCase();
+                if (lower === ".theme.json")
+                    continue;
+                if (!/\.jsonc?$/.test(lower))
                     continue;
                 out.push(name);
             }
@@ -366,15 +372,73 @@ Singleton {
         try {
             themeFile.setText(serialized);
         } catch (e2) {
-            console.warn("[ThemeParts] Failed to write Theme.json:", e2);
+            console.warn("[ThemeParts] Failed to write Theme/.theme.json:", e2);
+        }
+    }
+
+    function _stripJsonComments(raw) {
+        try {
+            var input = String(raw || "");
+            if (!input.length)
+                return "";
+            if (input.charCodeAt(0) === 0xFEFF)
+                input = input.slice(1);
+            var out = "";
+            var inString = false;
+            var escaped = false;
+            var inSingle = false;
+            var inMulti = false;
+            for (var i = 0; i < input.length; i++) {
+                var ch = input[i];
+                var next = (i + 1 < input.length) ? input[i + 1] : "";
+                if (inSingle) {
+                    if (ch === '\n' || ch === '\r') {
+                        inSingle = false;
+                        out += ch;
+                    }
+                    continue;
+                }
+                if (inMulti) {
+                    if (ch === '*' && next === '/') {
+                        inMulti = false;
+                        i++;
+                    }
+                    continue;
+                }
+                if (!inString && ch === '/' && next === '/') {
+                    inSingle = true;
+                    i++;
+                    continue;
+                }
+                if (!inString && ch === '/' && next === '*') {
+                    inMulti = true;
+                    i++;
+                    continue;
+                }
+                out += ch;
+                if (inString) {
+                    if (!escaped && ch === '"')
+                        inString = false;
+                    escaped = (!escaped && ch === '\\');
+                    continue;
+                }
+                if (ch === '"') {
+                    inString = true;
+                    escaped = false;
+                }
+            }
+            return out;
+        } catch (e) {
+            return String(raw || "");
         }
     }
 
     function _parseJsonSafe(raw, fileName) {
         try {
-            if (!raw || !String(raw).trim().length)
+            var cleaned = root._stripJsonComments(String(raw || ""));
+            if (!cleaned || !String(cleaned).trim().length)
                 return {};
-            return JSON.parse(String(raw));
+            return JSON.parse(String(cleaned));
         } catch (e) {
             console.warn("[ThemeParts] JSON parse error in", fileName + ":", e);
             return null;
@@ -411,7 +475,7 @@ Singleton {
     // Final removal date for flat (legacy) tokens compatibility
     readonly property string flatCompatRemovalDate: "2025-11-01"
 
-    // --- Nested reader helpers (support hierarchical Theme.json with backward-compat) ---
+    // --- Nested reader helpers (support hierarchical Theme/.theme.json with backward-compat) ---
     // Internal cache of tokens we've already warned about (strict mode)
     property var _strictWarned: ({})
 
@@ -438,7 +502,7 @@ Singleton {
         try {
             if (Settings.settings && Settings.settings.strictThemeTokens) {
                 var key = String(path);
-                // During startup before Theme.json is loaded, do not warn yet
+                // During startup before Theme/.theme.json is loaded, do not warn yet
                 if (!root._themeLoaded)
                     return fallback;
                 // Optional override keys: do not warn when absent
@@ -595,7 +659,7 @@ Singleton {
             if (flats.length > 0) {
                 var warnKey = 'flat::detected';
                 if (!root._strictWarned[warnKey]) {
-                    console.warn('[ThemeStrict] Flat tokens detected in Theme.json:', flats.slice(0, 6).join(', '), '…');
+                    console.warn('[ThemeStrict] Flat tokens detected in Theme/.theme.json:', flats.slice(0, 6).join(', '), '…');
                     console.warn('[ThemeStrict] Flat tokens are deprecated and will be removed after', flatCompatRemovalDate, '— migrate to hierarchical tokens. See Docs/ThemeTokens.md#migration-flat-→-nested');
                     root._strictWarned[warnKey] = true;
                 }
@@ -751,6 +815,15 @@ Singleton {
     property int networkLinkPollMs: val('network.linkPollMs', 4000)
     property int mediaHoverOpenDelayMs: val('media.hover.openDelayMs', 320)
     property int mediaHoverStillThresholdMs: val('media.hover.stillThresholdMs', 180)
+    property string mediaIconMode: String(val('media.icon.mode', 'compact') || 'compact')
+    property real mediaIconStretchShare: val('media.icon.stretchShare', 1.0)
+    property int mediaIconMinWidthPx: val('media.icon.minWidthPx', 0)
+    property int mediaIconMaxWidthPx: val('media.icon.maxWidthPx', 0)
+    property int mediaIconPreferredWidthPx: val('media.icon.preferredWidthPx', 0)
+    property int mediaIconOverlayPaddingPx: val('media.icon.overlayPaddingPx', 0)
+    property int mediaIconPanelOverlayPaddingPx: val('media.icon.panel.overlayPaddingPx', 12)
+    property real mediaIconPanelOverlayBgOpacity: val('media.icon.panel.overlayBgOpacity', 0.65)
+    property real mediaIconPanelOverlayWidthShare: val('media.icon.panel.overlayWidthShare', 0.45)
     property int spectrumPeakDecayIntervalMs: val('spectrum.peakDecayIntervalMs', 50)
     property int spectrumBarAnimMs: val('spectrum.barAnimMs', 100)
     property int spectrumPeakThickness: val('spectrum.peakThickness', 2)
@@ -938,7 +1011,7 @@ Singleton {
     property real spectrumPeakOpacity: val('spectrum.peakOpacity', 0.7)
     // Derived accent/surface/border tokens (formula-based)
     // Keep simple and perceptually stable; expose tokens for reuse
-    // Each derived token may be overridden by matching *Override property in Theme.json
+    // Each derived token may be overridden by matching *Override property in Theme/.theme.json
     property color accentHover: (val('colors.overrides.accentHover', themeData.accentHoverOverride) !== undefined) ? val('colors.overrides.accentHover', themeData.accentHoverOverride) : Color.towardsWhite(accentPrimary, 0.2)
     property color accentDarkStrong: (val('colors.overrides.accentDarkStrong', themeData.accentDarkStrongOverride) !== undefined) ? val('colors.overrides.accentDarkStrong', themeData.accentDarkStrongOverride) : Color.towardsBlack(accentPrimary, 0.8)
     property color surfaceHover: (val('colors.overrides.surfaceHover', themeData.surfaceHoverOverride) !== undefined) ? val('colors.overrides.surfaceHover', themeData.surfaceHoverOverride) : Color.withAlpha(textPrimary, 0.06)
