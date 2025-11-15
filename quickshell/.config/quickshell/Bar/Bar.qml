@@ -75,6 +75,7 @@ Scope {
         property bool triangleFlipX: false
         property bool triangleFlipY: false
         property real triangleWidthFactor: 1.0
+        property real triangleVisualWidthPx: Math.max(1, Math.round(scaleFactor * 48))
         width: Math.max(1, Math.round(scaleFactor * Math.max(1, Theme.uiBorderWidth) * 16))
         height: Math.max(2, Math.round(panelHeightPx * 0.68 * 16))
         radius: 0
@@ -83,7 +84,11 @@ Scope {
         Layout.alignment: Qt.AlignVCenter
 
         TriangleOverlay {
-            anchors.fill: parent
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.left: (parent.triangleFlipX ? undefined : parent.left)
+            anchors.right: (parent.triangleFlipX ? parent.right : undefined)
+            width: Math.max(parent.width, parent.triangleVisualWidthPx)
+            height: parent.height
             color: parent.triangleColor
             flipX: parent.triangleFlipX
             flipY: parent.triangleFlipY
