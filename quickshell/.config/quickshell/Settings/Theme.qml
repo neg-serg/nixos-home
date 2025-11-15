@@ -180,7 +180,6 @@ Singleton {
                             'panel.pill.paddingH': 'panelPillPaddingH',
                             'panel.pill.showDelayMs': 'panelPillShowDelayMs',
                             'panel.pill.autoHidePauseMs': 'panelPillAutoHidePauseMs',
-                            'panel.pill.background': 'panelPillBackground',
                             'panel.animations.stdMs': 'panelAnimStdMs',
                             'panel.animations.fastMs': 'panelAnimFastMs',
                             'panel.tray.longHoldMs': 'panelTrayLongHoldMs',
@@ -410,7 +409,6 @@ Singleton {
     property int panelPillPaddingH: val('panel.pill.paddingH', 14)
     property int panelPillShowDelayMs: val('panel.pill.showDelayMs', 500)
     property int panelPillAutoHidePauseMs: val('panel.pill.autoHidePauseMs', 2500)
-    property color panelPillBackground: val('panel.pill.background', "#000000")
     // Animation timings
     property int panelAnimStdMs: val('panel.animations.stdMs', 250)
     property int panelAnimFastMs: val('panel.animations.fastMs', 200)

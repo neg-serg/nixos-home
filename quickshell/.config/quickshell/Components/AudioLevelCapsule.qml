@@ -9,7 +9,7 @@ LocalComponents.WidgetCapsule {
     id: root
 
     property string settingsKey: ""
-    property color pillBackground: WidgetBg.color(Settings.settings, settingsKey, Theme.panelPillBackground)
+    property color pillBackground: WidgetBg.color(Settings.settings, settingsKey)
     property color gradientLow: Theme.panelVolumeLowColor
     property color gradientHigh: Theme.panelVolumeHighColor
     property string iconOff: "volume_off"
@@ -32,18 +32,14 @@ LocalComponents.WidgetCapsule {
     readonly property alias pill: pillIndicator
 
     signal wheelStep(int direction)
-    signal clicked()
+    signal clicked
 
     backgroundKey: settingsKey
     centerContent: true
 
     visible: false
-    width: collapseWhenHidden
-        ? (visible ? implicitWidth : 0)
-        : implicitWidth
-    height: collapseWhenHidden
-        ? (visible ? implicitHeight : 0)
-        : implicitHeight
+    width: collapseWhenHidden ? (visible ? implicitWidth : 0) : implicitWidth
+    height: collapseWhenHidden ? (visible ? implicitHeight : 0) : implicitHeight
     Layout.preferredWidth: width
     Layout.preferredHeight: height
     Layout.minimumWidth: width
@@ -64,26 +60,27 @@ LocalComponents.WidgetCapsule {
 
     function levelColorFor(value) {
         var t = Utils.clamp(value / 100.0, 0, 1);
-        return Qt.rgba(
-            gradientLow.r + (gradientHigh.r - gradientLow.r) * t,
-            gradientLow.g + (gradientHigh.g - gradientLow.g) * t,
-            gradientLow.b + (gradientHigh.b - gradientLow.b) * t,
-            1
-        );
+        return Qt.rgba(gradientLow.r + (gradientHigh.r - gradientLow.r) * t, gradientLow.g + (gradientHigh.g - gradientLow.g) * t, gradientLow.b + (gradientHigh.b - gradientLow.b) * t, 1);
     }
 
     function resolveIconCategory(value, mutedValue) {
-        if (mutedValue) return "off";
-        if (value <= iconOffThreshold) return "off";
-        if (value < iconLowThreshold) return "down";
-        if (value >= iconHighThreshold) return "up";
+        if (mutedValue)
+            return "off";
+        if (value <= iconOffThreshold)
+            return "off";
+        if (value < iconLowThreshold)
+            return "down";
+        if (value >= iconHighThreshold)
+            return "up";
         return lastIconCategory === "down" ? "down" : "up";
     }
 
     function iconNameForCategory(category) {
         switch (category) {
-        case "off": return iconOff;
-        case "down": return iconLow;
+        case "off":
+            return iconOff;
+        case "down":
+            return iconLow;
         case "up":
         default:
             return iconHigh;
@@ -97,7 +94,8 @@ LocalComponents.WidgetCapsule {
 
         pillIndicator.text = clamped + labelSuffix;
         const category = resolveIconCategory(clamped, mutedValue);
-        if (category !== "off") lastIconCategory = category;
+        if (category !== "off")
+            lastIconCategory = category;
         pillIndicator.icon = iconNameForCategory(category);
 
         const levelColor = levelColorFor(clamped);
@@ -163,7 +161,8 @@ LocalComponents.WidgetCapsule {
                 pillIndicator.hide();
             }
             onWheel: wheel => {
-                if (wheel.angleDelta.y === 0) return;
+                if (wheel.angleDelta.y === 0)
+                    return;
                 root.wheelStep(wheel.angleDelta.y > 0 ? 1 : -1);
             }
         }
@@ -172,7 +171,5 @@ LocalComponents.WidgetCapsule {
     default property alias extraContent: overlayLayer.data
 
     implicitWidth: horizontalPadding * 2 + Math.max(pillIndicator.width, capsuleMetrics.inner)
-    implicitHeight: forceHeightFromMetrics
-        ? Math.max(capsuleMetrics.height, pillIndicator.height + verticalPadding * 2)
-        : pillIndicator.height + verticalPadding * 2
+    implicitHeight: forceHeightFromMetrics ? Math.max(capsuleMetrics.height, pillIndicator.height + verticalPadding * 2) : pillIndicator.height + verticalPadding * 2
 }
