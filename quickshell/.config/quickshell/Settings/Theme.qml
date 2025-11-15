@@ -786,7 +786,7 @@ Singleton {
     property int panelTrayGuardMs: val('panel.tray.guardMs', 120)
     property int panelTrayOverlayDismissDelayMs: val('panel.tray.overlayDismissDelayMs', 5000)
     // Inline expanded tray background extra padding (unscaled px)
-    property int panelTrayInlinePadding: val('panel.tray.inlinePadding', 6)
+    property int panelTrayInlinePadding: val('panel.tray.inlinePadding', 8)
     // Generic row spacing
     property int panelRowSpacing: val('panel.rowSpacing', 8)
     property int panelRowSpacingSmall: val('panel.rowSpacingSmall', 4)

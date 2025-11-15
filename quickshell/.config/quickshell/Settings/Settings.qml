@@ -108,6 +108,8 @@ Singleton {
             property bool collapseSystemTray: true
             property string collapsedTrayIcon: "expand_more"
             property string trayFallbackIcon: "broken_image"
+            // Hide the inline tray capsule while keeping hover-based menu access
+            property bool hideSystemTrayCapsule: true
 
             // Global contrast
             property real contrastThreshold: 0.5

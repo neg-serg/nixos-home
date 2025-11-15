@@ -28,7 +28,7 @@
       "shortHoldMs": 1500,
       "guardMs": 120,
       "overlayDismissDelayMs": 5000,
-      "inlinePadding": 6
+      "inlinePadding": 8
     },
     "rowSpacing": 8,
     "rowSpacingSmall": 4,

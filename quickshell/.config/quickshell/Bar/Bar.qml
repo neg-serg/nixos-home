@@ -710,8 +710,12 @@ Scope {
                             Item {
                                 id: systemTrayWrapper
                                 Layout.alignment: Qt.AlignVCenter
-                                readonly property int padding: Math.max(2, Math.round(rightPanel.widgetSpacing * 0.45))
-                                readonly property color capsuleColor: WidgetBg.color(Settings.settings, "systemTray", "rgba(10, 12, 20, 0.2)")
+                                Layout.fillHeight: true
+                                Layout.preferredHeight: rightPanel.barHeightPx
+                                readonly property bool trayCapsuleHidden: Settings.settings.hideSystemTrayCapsule === true
+                                readonly property bool trayVisible: (!trayCapsuleHidden || systemTrayModule.expanded)
+                                readonly property int horizontalPadding: Math.max(4, Math.round(Theme.panelTrayInlinePadding * rightPanel.s * 0.75))
+                                readonly property color capsuleColor: WidgetBg.color(Settings.settings, "systemTray", Theme.background)
                                 readonly property real hoverMixAmount: 0.18
                                 readonly property color capsuleHoverColor: Color.mix(
                                                                            capsuleColor,
@@ -726,19 +730,25 @@ Scope {
                                                                  || systemTrayModule.panelHover
                                                                  || systemTrayModule.hotHover
                                                                  || systemTrayModule.expanded
-                                implicitWidth: systemTrayBackground.width
-                                implicitHeight: systemTrayBackground.height
+                                readonly property int capsuleWidth: Math.max(1, systemTrayModule.implicitWidth) + systemTrayWrapper.horizontalPadding * 2
+                                readonly property int capsuleHeight: rightPanel.barHeightPx
+                                implicitWidth: trayVisible ? capsuleWidth : 0
+                                implicitHeight: trayVisible ? capsuleHeight : 0
+                                Layout.preferredWidth: implicitWidth
+                                Layout.minimumWidth: implicitWidth
+                                Layout.maximumWidth: implicitWidth
                                 HoverHandler { id: trayHover }
 
                                 Rectangle {
                                     id: systemTrayBackground
-                                    radius: Theme.cornerRadiusSmall
+                                    visible: systemTrayWrapper.trayVisible
+                                    radius: 0
                                     color: systemTrayWrapper.hovered ? systemTrayWrapper.capsuleHoverColor
                                                                      : systemTrayWrapper.capsuleColor
-                                    width: Math.max(1, systemTrayModule.implicitWidth) + systemTrayWrapper.padding * 2
-                                    height: Math.max(1, systemTrayWrapper.trayContentHeight) + systemTrayWrapper.padding * 2
-                                    border.width: Theme.uiBorderWidth
-                                    border.color: Color.withAlpha(Theme.textPrimary, 0.08)
+                                    width: systemTrayWrapper.capsuleWidth
+                                    height: systemTrayWrapper.capsuleHeight
+                                    border.width: 0
+                                    border.color: "transparent"
                                     antialiasing: true
                                 }
 
@@ -747,11 +757,10 @@ Scope {
                                     shell: rootScope.shell
                                     screen: modelData
                                     trayMenu: externalTrayMenu
-                                    anchors.centerIn: systemTrayBackground
-                                    inlineBgColor: systemTrayWrapper.capsuleColor
-                                    inlineBorderColor: systemTrayWrapper.hovered
-                                        ? Color.withAlpha(Theme.textPrimary, 0.12)
-                                        : Color.withAlpha(Theme.textPrimary, 0.08)
+                                    anchors.centerIn: systemTrayWrapper.trayVisible ? systemTrayBackground : systemTrayWrapper
+                                    inlineBgColor: Theme.background
+                                    inlineBorderColor: "transparent"
+                                    opacity: systemTrayWrapper.trayVisible ? 1 : 0
                                 }
                             }
                             CustomTrayMenu { id: externalTrayMenu }

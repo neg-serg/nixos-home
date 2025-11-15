@@ -17,7 +17,7 @@ Item {
     property var sidePanelPopup: null
     readonly property real capsuleScale: capsule.capsuleScale
     readonly property var capsuleMetrics: capsule.capsuleMetrics
-    property int baseHeight: capsule.capsuleHeight
+    property int baseHeight: Math.max(capsule.capsuleHeight, Math.round(Theme.panelHeight * capsule.capsuleScale))
     readonly property int capsuleInnerSize: capsule.capsuleInner
     property real albumActionIconScale: 0.6
     property string iconLayoutMode: {
@@ -33,8 +33,8 @@ Item {
         if (isFinite(themeShare) && themeShare >= 0 && themeShare <= 1) return themeShare;
         return 1.0;
     }
-    readonly property real iconPreferredWidth: _resolveIconPx(Settings.settings.mediaIconPreferredWidthPx, Theme.mediaIconPreferredWidthPx, capsuleInnerSize)
-    readonly property real iconMinWidth: Math.min(iconPreferredWidth, _resolveIconPx(Settings.settings.mediaIconMinWidthPx, Theme.mediaIconMinWidthPx, capsuleInnerSize))
+    readonly property real iconPreferredWidth: _resolveIconPx(Settings.settings.mediaIconPreferredWidthPx, Theme.mediaIconPreferredWidthPx, mediaControl.baseHeight)
+    readonly property real iconMinWidth: Math.min(iconPreferredWidth, _resolveIconPx(Settings.settings.mediaIconMinWidthPx, Theme.mediaIconMinWidthPx, mediaControl.baseHeight))
     readonly property real iconMaxWidth: {
         var v = _resolveIconPx(Settings.settings.mediaIconMaxWidthPx, Theme.mediaIconMaxWidthPx, 0);
         return (v > 0) ? Math.max(v, iconPreferredWidth) : Number.MAX_VALUE;

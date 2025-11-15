@@ -46,9 +46,15 @@ Row {
     readonly property real _scale: Theme.scale(root.screen || Screen)
     readonly property var capsuleMetrics: CapsuleMetrics.metrics(Theme, _scale)
     readonly property int capsuleInnerSize: capsuleMetrics.inner
+    readonly property int panelHeightPx: Math.max(1, Math.round(Theme.panelHeight * _scale))
+    readonly property int inlinePaddingPx: Math.max(2, Math.round(Theme.panelTrayInlinePadding * _scale))
+    readonly property int trayIconSlot: Math.max(capsuleInnerSize, panelHeightPx)
+    readonly property int trayIconInset: Math.max(1, Math.round(trayIconSlot * 0.08))
+    readonly property int trayIconFrame: Math.max(8, trayIconSlot - trayIconInset * 2)
+    readonly property int trayIconSize: Math.max(8, trayIconFrame - Math.round(trayIconInset * 0.5))
     spacing: Math.max(2, Math.round(Theme.panelRowSpacing * _scale * 0.5))
     Layout.alignment: Qt.AlignVCenter
-    readonly property int capsuleHeight: capsuleMetrics.height
+    readonly property int capsuleHeight: trayIconSlot
     height: capsuleHeight
     Layout.preferredHeight: capsuleHeight
 
@@ -87,7 +93,7 @@ Row {
         id: inlineBox
         visible: expanded
         anchors.verticalCenter: parent.verticalCenter
-        readonly property real inlinePadding: Math.max(2, Theme.panelTrayInlinePadding)
+        readonly property int inlinePadding: Math.max(2, root.inlinePaddingPx)
         width: collapsedRow.implicitWidth + inlinePadding
         height: collapsedRow.implicitHeight + inlinePadding
 
@@ -96,8 +102,10 @@ Row {
             anchors.fill: parent
             inlineBackground: inlineBgColor
             inlineBorder: inlineBorderColor
-            inlinePaddingScale: 1
-            inlineVerticalPaddingScale: 1
+            inlinePaddingScale: inlineCapsule.paddingScaleFor(root.inlinePaddingPx)
+            inlineVerticalPaddingScale: inlineCapsule.paddingScaleFor(Math.max(2, root.inlinePaddingPx * 0.8))
+            borderWidthOverride: 0
+            borderVisible: false
             forceHeightFromMetrics: false
         }
 
@@ -123,24 +131,26 @@ Row {
             Repeater {
                 model: systemTray.items
                 delegate: Item {
-                    width: capsuleInnerSize
-                    height: capsuleInnerSize
+                    width: trayIconSlot
+                    height: trayIconSlot
                     visible: modelData
                     // No per-icon animation; show immediately
                     opacity: 1
                     x: 0
                     Rectangle {
                         anchors.centerIn: parent
-                        width: Math.max(10, capsuleInnerSize - Theme.panelTrayInlinePadding)
-                        height: Math.max(10, capsuleInnerSize - Theme.panelTrayInlinePadding)
+                        width: trayIconFrame
+                        height: trayIconFrame
                         radius: Theme.cornerRadiusSmall
-                        // Use a dark overlay for hover to avoid white-ish look
-                        color: trayItemMouseArea.containsMouse ? Theme.overlayWeak : "transparent"
+                        // Keep idle background opaque to avoid transparency halo; hover still uses overlay tint
+                        color: trayItemMouseArea.containsMouse ? Theme.overlayWeak : Theme.surfaceHover
+                        border.width: 0
+                        border.color: "transparent"
                         clip: true
                         TrayIcon {
                             id: icon
                             anchors.centerIn: parent
-                            size: Math.max(10, capsuleInnerSize - Theme.panelTrayInlinePadding * 1.5)
+                            size: trayIconSize
                             source: modelData?.icon || ""
                             grayscale: trayOverlay.expanded
                             opacity: ready ? 1 : 0
