@@ -2,6 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { loadThemeFromParts } from './lib/theme-builder.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, '..');
@@ -24,7 +25,13 @@ function flatten(obj, base = '') {
 }
 
 function main(){
-  const theme = JSON.parse(read(themeJson));
+  let theme = null;
+  const partsDir = path.join(root, 'Theme');
+  if (fs.existsSync(partsDir)) {
+    ({ theme } = loadThemeFromParts({ partsDir }));
+  } else {
+    theme = JSON.parse(read(themeJson));
+  }
   const qml = read(themeQml);
   const def = new Set(flatten(theme));
   const re = /val\('([^']+)'/g;

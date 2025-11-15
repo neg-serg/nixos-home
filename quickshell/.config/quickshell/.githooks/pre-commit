@@ -4,6 +4,11 @@ set -euo pipefail
 root="$(git rev-parse --show-toplevel)"
 cd "$root"
 
+# Rebuild Theme.json from split parts before running validators
+node quickshell/.config/quickshell/Tools/build-theme.mjs \
+  --dir quickshell/.config/quickshell/Theme \
+  --out quickshell/.config/quickshell/Theme.json
+
 # Validate Settings.json in repo
 node quickshell/.config/quickshell/Tools/validate-settings.mjs \
   --settings quickshell/.config/quickshell/Settings.json \

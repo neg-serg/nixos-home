@@ -4,6 +4,9 @@ fmt:
 check:
     nix flake check -L
 
+theme-watch:
+    node quickshell/.config/quickshell/Tools/watch-theme.mjs
+
 lint:
     set -eu
     statix check -- .

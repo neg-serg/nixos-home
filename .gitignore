@@ -261,3 +261,4 @@ shell/.config/nushell/nupm/cache/
 shell/.config/nushell/plugin.msgpackz
 # Quickshell local settings (generated per-machine)
 quickshell/.config/quickshell/Settings.json
+quickshell/.config/quickshell/Theme.json

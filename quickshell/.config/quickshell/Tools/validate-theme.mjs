@@ -3,7 +3,7 @@
  * validate-theme.mjs — Dev script to validate Theme.json against a hierarchical schema
  *
  * Usage:
- *   node Tools/validate-theme.mjs [--theme Theme.json] [--schema Docs/ThemeHierarchical.json] [--constraints Docs/ThemeConstraints.json] [--strict] [--verbose]
+ *   node Tools/validate-theme.mjs [--theme Theme.json] [--schema Docs/ThemeHierarchical.json] [--constraints Docs/ThemeConstraints.json] [--parts Theme] [--strict] [--verbose]
  *
  * Checks:
  * - Unknown (extra) tokens not present in the schema
@@ -13,6 +13,7 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
+import { loadThemeFromParts } from './lib/theme-builder.mjs';
 
 const cwd = process.cwd();
 function readJson(p) {
@@ -58,12 +59,24 @@ function flatten(obj, base = '') {
 }
 
 function parseArgs(argv) {
-  const args = { theme: 'Theme.json', schema: 'Docs/ThemeHierarchical.json', constraints: 'Docs/ThemeConstraints.json', strict: false, verbose: false };
+  const args = {
+    theme: 'Theme.json',
+    schema: 'Docs/ThemeHierarchical.json',
+    constraints: 'Docs/ThemeConstraints.json',
+    parts: null,
+    strict: false,
+    verbose: false,
+    preferParts: true,
+    partsDisabled: false
+  };
   for (let i = 2; i < argv.length; i++) {
     const a = argv[i];
     if (a === '--theme') { args.theme = argv[++i]; continue; }
     if (a === '--schema') { args.schema = argv[++i]; continue; }
     if (a === '--constraints') { args.constraints = argv[++i]; continue; }
+    if (a === '--parts') { args.parts = argv[++i]; args.partsDisabled = false; args.preferParts = true; continue; }
+    if (a === '--no-parts') { args.parts = null; args.partsDisabled = true; args.preferParts = false; continue; }
+    if (a === '--prefer-parts' || a === '--from-parts') { args.preferParts = true; continue; }
     if (a === '--strict') { args.strict = true; continue; }
     if (a === '--verbose') { args.verbose = true; continue; }
   }
@@ -71,11 +84,39 @@ function parseArgs(argv) {
 }
 
 
+function resolvePartsDir(args, cwd, themePath) {
+  if (args.partsDisabled) return null;
+  const candidates = [];
+  if (args.parts) {
+    candidates.push(path.resolve(cwd, args.parts));
+  }
+  const siblingDir = path.join(path.dirname(themePath), 'Theme');
+  candidates.push(siblingDir);
+  const seen = new Set();
+  for (const dir of candidates) {
+    if (!dir || seen.has(dir)) continue;
+    seen.add(dir);
+    if (fs.existsSync(dir)) return dir;
+  }
+  return null;
+}
+
+function getThemeData(args, cwd) {
+  const themePath = path.resolve(cwd, args.theme);
+  const partsDir = resolvePartsDir(args, cwd, themePath);
+  const shouldUseParts = Boolean(partsDir && (args.preferParts || !fs.existsSync(themePath)));
+  if (shouldUseParts) {
+    const { theme } = loadThemeFromParts({ partsDir });
+    return { theme, themePath };
+  }
+  const theme = readJson(themePath);
+  return { theme, themePath };
+}
+
 function main() {
   const args = parseArgs(process.argv);
-  const themePath = path.resolve(cwd, args.theme);
+  const { theme, themePath } = getThemeData(args, cwd);
   const schemaPath = path.resolve(cwd, args.schema);
-  const theme = readJson(themePath);
   const schema = readJson(schemaPath);
   const constraints = fs.existsSync(args.constraints) ? readJson(path.resolve(cwd, args.constraints)) : {};
 

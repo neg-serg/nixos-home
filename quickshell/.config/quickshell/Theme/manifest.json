@@ -1,0 +1,19 @@
+[
+  "colors.json",
+  "panel.json",
+  "shape.json",
+  "tooltip.json",
+  "sidePanel.json",
+  "ui.json",
+  "ws.json",
+  "keyboard.json",
+  "timers.json",
+  "network.json",
+  "media.json",
+  "spectrum.json",
+  "calendar.json",
+  "weather.json",
+  "vpn.json",
+  "time.json",
+  "volume.json"
+]

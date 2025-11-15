@@ -2,6 +2,11 @@ Theme Color Tokens and Derivations
 
 Overview
 See also: Docs/RichText.md for helpers used to color brackets and time spans in rich text labels (Media, NetworkUsage, WsIndicator).
+- Source layout: each logical block lives under `Theme/*.json` (colors, panel, tooltip, etc.). Edit those files instead of the monolithic Theme.json.
+- Merge order is defined in `Theme/manifest.json` (paths relative to the Theme directory); append new sections there so the generated `Theme.json` stays stable.
+- Compose the public `Theme.json` via `node Tools/build-theme.mjs` (writes/updates the merged file). Use `--check` in CI/hooks to confirm it is in sync.
+- `Theme.json` itself is gitignored; remember to run `node Tools/build-theme.mjs` after cloning or pulling updates so Quickshell sees the merged file locally.
+- Validators (`Tools/validate-theme.mjs`, `Tools/lint-theme-tokens.mjs`, `Tools/generate-theme-schema.mjs`) automatically read from the split parts; no extra flags are needed unless you pass `--no-parts`.
 - Base palette (user-configurable in Theme.json):
   - background
   - surface/surfaceVariant
@@ -124,10 +129,11 @@ Debugging
 - Strict token warnings: set `Settings.settings.strictThemeTokens` to true to log a warning whenever a Theme token is missing and a fallback is used. Helps ensure themes define all tokens you rely on.
 
 Tools
+- Compose final Theme.json: `node Tools/build-theme.mjs` (add `--check` to ensure it is current without writing).
 - Validation: `node Tools/validate-theme.mjs [--theme Theme.json] [--schema Docs/ThemeHierarchical.json] [--strict]`
-  - Reports unknown (extra) and missing tokens (missing is informational; `--strict` fails on unknown only).
+  - Automatically reads from `Theme/` parts when present; reports unknown (extra) and missing tokens (missing is informational; `--strict` fails on unknown only).
 - Generate example schema: `node Tools/generate-theme-schema.mjs`
-  - Rebuilds `Docs/ThemeHierarchical.json` from the repository `Theme.json` (single source for docs), preventing drift.
+  - Rebuilds `Docs/ThemeHierarchical.json` from the merged theme (prefers `Theme/*.json`, falls back to `Theme.json`), preventing drift.
 
 Deprecations and Migration
 - Deprecated (removed): media.time.fontScale — removed in Sep 2025 as time spans follow main text size. Remove from Theme.json; no replacement needed.
