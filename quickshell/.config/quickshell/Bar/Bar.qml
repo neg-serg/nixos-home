@@ -75,8 +75,8 @@ Scope {
         property bool triangleFlipX: false
         property bool triangleFlipY: false
         property real triangleWidthFactor: 1.0
-        width: Math.max(1, Math.round(scaleFactor * 48))
-        height: Math.max(1, panelHeightPx)
+        width: Math.max(1, Math.round(scaleFactor * Math.max(1, Theme.uiBorderWidth) * 16))
+        height: Math.max(2, Math.round(panelHeightPx * 0.68 * 16))
         radius: 0
         color: Color.withAlpha(Theme.textPrimary, alpha)
         opacity: 1.0
