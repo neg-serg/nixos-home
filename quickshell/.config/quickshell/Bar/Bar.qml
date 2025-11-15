@@ -20,16 +20,77 @@ Scope {
     property real barHeight: 0 // Expose current bar height for other components (e.g. window mirroring)
     property bool diagnosticsEnabled: false
 
+    component TriangleOverlay : Canvas {
+        property color color: Theme.background
+        property bool flipX: false
+        property bool flipY: false
+        property real xCoverage: 1.0
+
+        antialiasing: true
+        enabled: visible
+        contextType: "2d"
+
+        onPaint: {
+            var ctx = getContext("2d");
+            var w = width;
+            var h = height;
+            ctx.clearRect(0, 0, w, h);
+            if (w <= 0 || h <= 0) {
+                return;
+            }
+            var coverage = Math.max(0.0, Math.min(1.0, xCoverage));
+            var span = Math.max(1, w * coverage);
+            span = Math.min(span, w);
+            var xBase = flipX ? w : 0;
+            var xEdge = flipX ? Math.max(0, w - span) : span;
+            var yBase = flipY ? 0 : h;
+            var yOpp = flipY ? h : 0;
+            ctx.lineWidth = 0;
+            ctx.lineJoin = "miter";
+            ctx.lineCap = "butt";
+            ctx.beginPath();
+            ctx.moveTo(xBase, yBase);
+            ctx.lineTo(xBase, yOpp);
+            ctx.lineTo(xEdge, yBase);
+            ctx.closePath();
+            ctx.fillStyle = color;
+            ctx.fill();
+        }
+
+        onWidthChanged: requestPaint()
+        onHeightChanged: requestPaint()
+        onColorChanged: requestPaint()
+        onFlipXChanged: requestPaint()
+        onFlipYChanged: requestPaint()
+        onXCoverageChanged: requestPaint()
+        Component.onCompleted: requestPaint()
+    }
+
     component PanelSeparator : Rectangle {
         required property real scaleFactor
         required property int panelHeightPx
         property real alpha: 0.0
-        width: Math.max(1, Math.round(scaleFactor * Math.max(1, Theme.uiBorderWidth) * 16))
-        height: Math.max(2, Math.round(panelHeightPx * 0.68 * 16))
+        property bool triangleEnabled: false
+        property color triangleColor: Theme.background
+        property bool triangleFlipX: false
+        property bool triangleFlipY: false
+        property real triangleWidthFactor: 1.0
+        width: Math.max(1, Math.round(scaleFactor * 48))
+        height: Math.max(1, panelHeightPx)
         radius: 0
         color: Color.withAlpha(Theme.textPrimary, alpha)
         opacity: 1.0
         Layout.alignment: Qt.AlignVCenter
+
+        TriangleOverlay {
+            anchors.fill: parent
+            color: parent.triangleColor
+            flipX: parent.triangleFlipX
+            flipY: parent.triangleFlipY
+            xCoverage: parent.triangleWidthFactor
+            z: parent.z + 0.5
+            visible: parent.triangleEnabled && parent.visible
+        }
     }
 
     Item {
@@ -363,6 +424,9 @@ Scope {
                             PanelSeparator {
                                 scaleFactor: leftPanel.s
                                 panelHeightPx: leftPanel.barHeightPx
+                                triangleEnabled: true
+                                triangleColor: "#ff00ffff"
+                                triangleWidthFactor: 0.3
                             }
                             WsIndicator {
                                 id: wsindicator
@@ -374,6 +438,9 @@ Scope {
                             PanelSeparator {
                                 scaleFactor: leftPanel.s
                                 panelHeightPx: leftPanel.barHeightPx
+                                triangleEnabled: true
+                                triangleColor: "#00ff00ff"
+                                triangleWidthFactor: 0.55
                             }
                             RowLayout {
                                 id: kbCluster
@@ -392,6 +459,9 @@ Scope {
                                 scaleFactor: leftPanel.s
                                 panelHeightPx: leftPanel.barHeightPx
                                 visible: netCluster.visible
+                                triangleEnabled: netCluster.visible
+                                triangleColor: "#0000ffff"
+                                triangleWidthFactor: 0.75
                             }
                                 Row {
                                     id: netCluster
@@ -409,8 +479,15 @@ Scope {
                                 scaleFactor: leftPanel.s
                                 panelHeightPx: leftPanel.barHeightPx
                                 visible: (Settings.settings.showWeatherInBar === true)
+                                triangleEnabled: (Settings.settings.showWeatherInBar === true)
+                                triangleColor: "#ffaa00ff"
+                                triangleWidthFactor: 0.9
                             }
-                            LocalMods.WeatherButton { visible: Settings.settings.showWeatherInBar === true; Layout.alignment: Qt.AlignVCenter }
+                            LocalMods.WeatherButton {
+                                id: weatherButton
+                                visible: Settings.settings.showWeatherInBar === true
+                                Layout.alignment: Qt.AlignVCenter
+                            }
                         }
                     }
 
@@ -499,11 +576,11 @@ Scope {
                             anchors.top: parent.top
                             anchors.right: parent.right
                         }
-                        Rectangle {
-                            id: rightBarFill
-                            width: Math.min(rightBarBackground.width, Math.ceil(rightPanel.sideMargin + rightPanel.contentWidth))
-                            height: rightBarBackground.height
-                            color: rightPanel.barBgColor
+                            Rectangle {
+                                id: rightBarFill
+                                width: Math.min(rightBarBackground.width, Math.ceil(rightPanel.sideMargin + rightPanel.contentWidth))
+                                height: rightBarBackground.height
+                                color: rightPanel.barBgColor
                             anchors.top: rightBarBackground.top
                             anchors.right: rightBarBackground.right
                             // Keep visible; ShaderEffectSource will hide it from the scene
