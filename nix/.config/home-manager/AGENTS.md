@@ -26,9 +26,8 @@ consistent and activation quiet. This page shows what to use and how to validate
     applicable in this repo.
   - Assume Qt 6+ features: review the latest Qt 6 porting notes and Quickshell release notes/docs
     before suggesting changes so you stay aligned with new APIs and incompatibilities.
-  - Validate every edited/new QML file with the official tooling (e.g., `qmllint path/to/file.qml`,
-    `qmlformat --check path/to/file.qml`) from `pkgs.qt6.qtdeclarative`/`qttools`. If you can’t run
-    them yourself, explicitly ask the user to do so before considering the work done.
+  - (Tooling note) Automated QML linters/format checkers are currently unavailable; focus on the
+    style/conventions above until the validation path is restored.
 
 - XDG helpers (preferred)
 
