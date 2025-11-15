@@ -20,6 +20,18 @@ Scope {
     property real barHeight: 0 // Expose current bar height for other components (e.g. window mirroring)
     property bool diagnosticsEnabled: false
 
+    component PanelSeparator : Rectangle {
+        required property real scaleFactor
+        required property int panelHeightPx
+        property real alpha: 0.0
+        width: Math.max(1, Math.round(scaleFactor * Math.max(1, Theme.uiBorderWidth) * 16))
+        height: Math.max(2, Math.round(panelHeightPx * 0.68 * 16))
+        radius: 0
+        color: Color.withAlpha(Theme.textPrimary, alpha)
+        opacity: 1.0
+        Layout.alignment: Qt.AlignVCenter
+    }
+
     Item {
         id: barRootItem
         anchors.fill: parent
@@ -348,12 +360,20 @@ Scope {
                             anchors.leftMargin: leftPanel.sideMargin
                             spacing: leftPanel.interWidgetSpacing
                             ClockWidget { Layout.alignment: Qt.AlignVCenter }
+                            PanelSeparator {
+                                scaleFactor: leftPanel.s
+                                panelHeightPx: leftPanel.barHeightPx
+                            }
                             WsIndicator {
                                 id: wsindicator
                                 Layout.alignment: Qt.AlignVCenter
                                 workspaceGlyphDetached: true
                                 showSubmapIcon: false
                                 showLabel: true
+                            }
+                            PanelSeparator {
+                                scaleFactor: leftPanel.s
+                                panelHeightPx: leftPanel.barHeightPx
                             }
                             RowLayout {
                                 id: kbCluster
@@ -368,6 +388,11 @@ Scope {
                                     iconSquare: false
                                 }
                             }
+                            PanelSeparator {
+                                scaleFactor: leftPanel.s
+                                panelHeightPx: leftPanel.barHeightPx
+                                visible: netCluster.visible
+                            }
                                 Row {
                                     id: netCluster
                                     Layout.alignment: Qt.AlignVCenter
@@ -380,6 +405,11 @@ Scope {
                                         throughputText: ConnectivityState.throughputText
                                     }
                                 }
+                            PanelSeparator {
+                                scaleFactor: leftPanel.s
+                                panelHeightPx: leftPanel.barHeightPx
+                                visible: (Settings.settings.showWeatherInBar === true)
+                            }
                             LocalMods.WeatherButton { visible: Settings.settings.showWeatherInBar === true; Layout.alignment: Qt.AlignVCenter }
                         }
                     }
