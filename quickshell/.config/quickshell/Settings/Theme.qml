@@ -688,15 +688,15 @@ Singleton {
     property int panelModuleHeight: val('panel.moduleHeight', 36)
     property int panelMenuYOffset: val('panel.menuYOffset', 20)
     // Corners
-    property int cornerRadius: val('shape.cornerRadius', 8)
-    property int cornerRadiusSmall: val('shape.cornerRadiusSmall', 4)
+    property int cornerRadius: val('shape.cornerRadius', 0)
+    property int cornerRadiusSmall: val('shape.cornerRadiusSmall', 0)
     // Tooltip
     property int tooltipDelayMs: val('tooltip.delayMs', 1500)
     property int tooltipMinSize: val('tooltip.minSize', 20)
     property int tooltipMargin: val('tooltip.margin', 12)
     property int tooltipPadding: val('tooltip.padding', 8)
     property int tooltipBorderWidth: val('tooltip.borderWidth', 1)
-    property int tooltipRadius: val('tooltip.radius', 2)
+    property int tooltipRadius: val('tooltip.radius', 0)
     property int tooltipFontPx: val('tooltip.fontPx', 14)
     property real tooltipOpacity: val('tooltip.opacity', 0.98)
     property real tooltipSmallScaleRatio: val('tooltip.smallScaleRatio', 0.71)
@@ -708,7 +708,7 @@ Singleton {
     // Optional horizontal center offset tweak
     property int weatherCenterOffset: val('weather.centerOffset', -2)
     // Pill indicator defaults
-    property int panelPillHeight: val('panel.pill.height', 22)
+    property int panelPillHeight: val('panel.pill.height', panelHeight)
     property int panelPillIconSize: val('panel.pill.iconSize', 22)
     property int panelPillPaddingH: val('panel.pill.paddingH', 14)
     property int panelPillShowDelayMs: val('panel.pill.showDelayMs', 500)
@@ -811,7 +811,7 @@ Singleton {
         return overrideColor !== undefined ? overrideColor : Color.withAlpha(textPrimary, panelCapsuleBorderOpacity);
     }
     // Side panel exports
-    property int sidePanelCornerRadius: val('sidePanel.cornerRadius', 9)
+    property int sidePanelCornerRadius: val('sidePanel.cornerRadius', 0)
     property int sidePanelSpacing: val('sidePanel.spacing', 12)
     property int sidePanelSpacingTight: val('sidePanel.spacingTight', 6)
     property int sidePanelSpacingSmall: val('sidePanel.spacingSmall', 4)
@@ -819,7 +819,7 @@ Singleton {
     // Inner blocks radius for side panel cards/sections
     property int sidePanelInnerRadius: val('sidePanel.innerRadius', 0)
     // Hover background radius factor for side panel buttons (0..1 of height)
-    property real sidePanelButtonHoverRadiusFactor: val('sidePanel.buttonHoverRadiusFactor', 0.5)
+    property real sidePanelButtonHoverRadiusFactor: val('sidePanel.buttonHoverRadiusFactor', 0)
     // Side panel selector minimal width
     property int sidePanelSelectorMinWidth: val('sidePanel.selector.minWidth', 120)
     property int sidePanelWeatherWidth: val('sidePanel.weather.width', 440)
@@ -827,8 +827,8 @@ Singleton {
     property real sidePanelWeatherLeftColumnRatio: val('sidePanel.weather.leftColumnRatio', 0.32)
     property int uiIconSizeLarge: val('ui.iconSizeLarge', 28)
     // Overlay radius and larger corner
-    property int panelOverlayRadius: val('panel.overlayRadius', 20)
-    property int cornerRadiusLarge: val('shape.cornerRadiusLarge', 12)
+    property int panelOverlayRadius: val('panel.overlayRadius', 0)
+    property int cornerRadiusLarge: val('shape.cornerRadiusLarge', 0)
     property int uiSpacingXSmall: val('ui.spacing.xsmall', 2)
     property int uiGapTiny: val('ui.gap.tiny', 1)
     property int uiControlHeight: val('ui.control.height', 48)
@@ -878,9 +878,6 @@ Singleton {
     property int networkCapsuleMinLabelGap: val('network.capsule.minLabelGap', keyboardCapsuleMinLabelGap)
     property int networkCapsuleIconHorizontalMargin: Math.max(0, val('network.capsule.iconHorizontalMargin', keyboardCapsuleIconHorizontalMargin))
     property string networkCapsuleIconAlignMode: val('network.capsule.iconAlignMode', "optical")
-    // VPN indicator opacities
-    property real vpnConnectedOpacity: val('vpn.connectedOpacity', 0.8)
-    property real vpnDisconnectedOpacity: val('vpn.disconnectedOpacity', 0.45)
     // VPN icon/layout tuning and accent mix
     property real vpnAccentSaturateBoost: val('vpn.accent.saturateBoost', 0.12)
     property real vpnAccentLightenTowardWhite: val('vpn.accent.lightenTowardWhite', 0.20)
@@ -928,8 +925,8 @@ Singleton {
     property bool calendarDowItalic: val('calendar.dow.italic', true)
     property bool calendarDowUnderline: val('calendar.dow.underline', true)
     // Calendar shape factors
-    property real calendarCellRadiusFactor: val('calendar.cell.radiusFactor', 0.33)
-    property real calendarHolidayDotRadiusFactor: val('calendar.holidayDot.radiusFactor', 0.5)
+    property real calendarCellRadiusFactor: val('calendar.cell.radiusFactor', 0)
+    property real calendarHolidayDotRadiusFactor: val('calendar.holidayDot.radiusFactor', 0)
     // Calendar opacities
     property real calendarTitleOpacity: val('calendar.opacity.title', 0.7)
     property real calendarDowOpacity: val('calendar.opacity.dow', 0.9)
@@ -943,12 +940,10 @@ Singleton {
     // Keep simple and perceptually stable; expose tokens for reuse
     // Each derived token may be overridden by matching *Override property in Theme.json
     property color accentHover: (val('colors.overrides.accentHover', themeData.accentHoverOverride) !== undefined) ? val('colors.overrides.accentHover', themeData.accentHoverOverride) : Color.towardsWhite(accentPrimary, 0.2)
-    property color accentActive: (val('colors.overrides.accentActive', themeData.accentActiveOverride) !== undefined) ? val('colors.overrides.accentActive', themeData.accentActiveOverride) : Color.towardsBlack(accentPrimary, 0.2)
     property color accentDarkStrong: (val('colors.overrides.accentDarkStrong', themeData.accentDarkStrongOverride) !== undefined) ? val('colors.overrides.accentDarkStrong', themeData.accentDarkStrongOverride) : Color.towardsBlack(accentPrimary, 0.8)
     property color surfaceHover: (val('colors.overrides.surfaceHover', themeData.surfaceHoverOverride) !== undefined) ? val('colors.overrides.surfaceHover', themeData.surfaceHoverOverride) : Color.withAlpha(textPrimary, 0.06)
     property color surfaceActive: (val('colors.overrides.surfaceActive', themeData.surfaceActiveOverride) !== undefined) ? val('colors.overrides.surfaceActive', themeData.surfaceActiveOverride) : Color.withAlpha(textPrimary, 0.10)
     property color borderSubtle: (val('colors.overrides.borderSubtle', themeData.borderSubtleOverride) !== undefined) ? val('colors.overrides.borderSubtle', themeData.borderSubtleOverride) : Color.withAlpha(textPrimary, 0.15)
-    property color borderStrong: (val('colors.overrides.borderStrong', themeData.borderStrongOverride) !== undefined) ? val('colors.overrides.borderStrong', themeData.borderStrongOverride) : Color.withAlpha(textPrimary, 0.30)
     property color overlayWeak: (val('colors.overrides.overlayWeak', themeData.overlayWeakOverride) !== undefined) ? val('colors.overrides.overlayWeak', themeData.overlayWeakOverride) : Color.withAlpha(shadow, 0.08)
     property color overlayStrong: (val('colors.overrides.overlayStrong', themeData.overlayStrongOverride) !== undefined) ? val('colors.overrides.overlayStrong', themeData.overlayStrongOverride) : Color.withAlpha(shadow, 0.18)
 }

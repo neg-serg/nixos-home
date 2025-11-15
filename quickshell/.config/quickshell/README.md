@@ -19,7 +19,7 @@ Notes
 
 Migration Log
 - 2025-11: Decorative separators were removed across the bar, menus, and docs. Delete any local overrides such as `mediaTitleSeparator`, `panel.menu.separatorHeight`, `panel.sepOvershoot`, and every `ui.separator.*` token in custom `Settings.json`/`Theme.json`. Use spacing/padding only; rebuild shaders after updating themes.
-- 2025-11: Panel rows are now fully transparent. Every widget is responsible for its own rounded capsule background using `Helpers/WidgetBg.js` and the `Settings.settings.widgetBackgrounds` map (see Docs/PANELS.md). Keep individual capsules near 20 % opacity for the requested “soft glass” feel.
+- 2025-11: Panel rows are now fully transparent. Every widget is responsible for its own rounded capsule background using `Helpers/WidgetBg.js` and the `Settings.settings.widgetBackgrounds` map (see Docs/PANELS.md). Keep individual capsules near 80 % opacity for the requested darker pill look.
 - 2025-11: The left/right window margins are controlled by `panelSideMarginPx` (Settings.json). This value overrides `Theme.panel.sideMargin` so both panels hug the screen edges equally; remove any hand-tuned padding from modules.
 - 2025-11: `Components/WidgetCapsule.qml` is the canonical capsule wrapper (hover tint, border, padding, metrics). When touching a widget that draws its own pill, replace ad-hoc `Rectangle` logic with this component and only override `backgroundKey`, `paddingScale`, or `hoverColorOverride` if the module truly requires it.
 - 2025-11: `Components/CenteredCapsuleRow.qml` combines `WidgetCapsule` with a baseline-aligned icon+label row; use it instead of hand-built `Row`/`FontMetrics` stacks for SmallInlineStat-style modules (network, VPN, keyboard indicator, etc.).

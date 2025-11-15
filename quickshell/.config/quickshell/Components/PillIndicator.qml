@@ -18,6 +18,7 @@ Item {
     property int iconSize: Math.round(Theme.panelPillIconSize * Theme.scale(Screen))
     property int pillPaddingHorizontal: Theme.panelPillPaddingH
     property bool autoHide: false
+    property int pillCornerRadius: Math.max(0, Math.round(Theme.cornerRadiusSmall * Theme.scale(Screen)))
     // Optional override for how long the pill stays visible before auto-hiding
     property int autoHidePauseMs: Theme.panelPillAutoHidePauseMs
     // Optional override for how long to wait before showing the pill
@@ -44,9 +45,8 @@ Item {
         x: (iconCircle.x + iconCircle.width / 2) - width
         opacity: showPill ? 1 : 0
         color: pillColor
-        // Halve the rounding of the pill corners
-        topLeftRadius: pillHeight / 4
-        bottomLeftRadius: pillHeight / 4
+        topLeftRadius: pillCornerRadius
+        bottomLeftRadius: pillCornerRadius
         anchors.verticalCenter: parent.verticalCenter
 
         Text {

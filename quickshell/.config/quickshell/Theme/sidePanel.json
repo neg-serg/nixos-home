@@ -6,7 +6,7 @@
       "autoHideMs": 4000,
       "outerMargin": 4
     },
-    "cornerRadius": 9,
+    "cornerRadius": 0,
     "innerRadius": 0,
     "buttonHoverRadiusFactor": 0.5,
     "selector": {

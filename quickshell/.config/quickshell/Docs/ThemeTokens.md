@@ -17,12 +17,10 @@ See also: Docs/RichText.md for helpers used to color brackets and time spans in 
 
 - Derived tokens (computed in Settings/Theme.qml):
   - accentHover: lighter accent for hover states
-  - accentActive: darker accent for active/pressed states
   - accentDarkStrong: strong darkened accent (used for “dark accent” UIs)
   - surfaceHover: subtle overlay for hover on surfaces
   - surfaceActive: slightly stronger overlay for pressed states
   - borderSubtle: low-emphasis border color
-  - borderStrong: higher-emphasis border color
   - overlayWeak/overlayStrong: backdrop overlays
 
 Additional UI tokens (nested)
@@ -86,16 +84,15 @@ Additional UI tokens (nested)
   - Calendar layout: calendar.dow.spacing, calendar.dow.sideMargin, calendar.grid.spacing
  - Spectrum bars: spectrum.barGap, spectrum.minBarWidth
   - Spectrum opacities: spectrum.fillOpacity, spectrum.peakOpacity
-  - VPN opacities: vpn.connectedOpacity, vpn.disconnectedOpacity
   - VPN icon/layout: vpn.icon.scale, vpn.icon.vAdjust, vpn.icon.spacing; vpn.text.padding
   - VPN accent tuning: vpn.accent.saturateBoost, vpn.accent.lightenTowardWhite; vpn.desaturateAmount
   - Calendar opacities: calendar.opacity.title, calendar.opacity.dow, calendar.opacity.otherMonthDay
 
 Overrides (advanced)
 - You can override any derived token by adding an "Override" key in Theme.json:
-  - accentHoverOverride, accentActiveOverride, accentDarkStrongOverride
+  - accentHoverOverride, accentDarkStrongOverride
   - surfaceHoverOverride, surfaceActiveOverride
-  - borderSubtleOverride, borderStrongOverride
+  - borderSubtleOverride
   - overlayWeakOverride, overlayStrongOverride
 - If an override is present, it wins; otherwise the token is computed by formula.
 - Keep Theme.json minimal; only add overrides if you truly need to diverge.
@@ -111,8 +108,8 @@ Guidance
 - Prefer Theme tokens over literals. Use base tokens for backgrounds; derived tokens for states:
   - Hover backgrounds: Theme.surfaceHover
   - Pressed/active: Theme.surfaceActive
-  - Accent hover/active: Theme.accentHover / Theme.accentActive
-  - Borders: Theme.borderSubtle / Theme.borderStrong
+  - Accent hover: Theme.accentHover
+  - Borders: Theme.borderSubtle
   - Dark accent tint blocks: Theme.accentDarkStrong
 - Text on dynamic backgrounds: Theme.textOn(bg[, preferLight, preferDark, threshold])
 - Avoid hardcoded Qt.rgba mixes for state colors; use derived tokens or Color helpers.

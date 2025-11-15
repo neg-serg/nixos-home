@@ -31,7 +31,7 @@
     "moduleHeight": 36,
     "menuYOffset": 20,
     "pill": {
-      "height": 22,
+      "height": 28,
       "iconSize": 22,
       "paddingH": 14,
       "showDelayMs": 500,
@@ -86,9 +86,9 @@
     "computedFontScale": 0.6
   },
   "shape": {
-    "cornerRadius": 8,
-    "cornerRadiusSmall": 4,
-    "cornerRadiusLarge": 12
+    "cornerRadius": 0,
+    "cornerRadiusSmall": 0,
+    "cornerRadiusLarge": 0
   },
   "tooltip": {
     "delayMs": 1500,
@@ -108,7 +108,7 @@
       "autoHideMs": 4000,
       "outerMargin": 4
     },
-    "cornerRadius": 9,
+    "cornerRadius": 0,
     "innerRadius": 0,
     "buttonHoverRadiusFactor": 0.5,
     "selector": {
@@ -298,8 +298,6 @@
     "centerOffset": -2
   },
   "vpn": {
-    "connectedOpacity": 0.8,
-    "disconnectedOpacity": 0.45,
     "accent": {
       "saturateBoost": 0.12,
       "lightenTowardWhite": 0.2

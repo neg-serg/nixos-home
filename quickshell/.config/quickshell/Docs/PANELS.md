@@ -34,15 +34,15 @@ Notes:
 
 ### Widget capsules (per-module backgrounds)
 - Panel rows are now fully transparent; every widget owns its own rounded capsule.
-- Colors come from `Settings.settings.widgetBackgrounds`. Each module looks up its name, then `default`, and finally falls back to `rgba(12, 14, 20, 0.2)` (≈80 % transparent).
+- Colors come from `Settings.settings.widgetBackgrounds`. Each module looks up its name, then `default`, and finally falls back to `rgba(12, 14, 20, 0.8)` (≈20 % transparent).
 - Known keys: `clock`, `workspaces`, `network`, `vpn`, `weather`, `media`, `systemTray`, `volume`, `microphone`, `mpdFlags`. You can add more as new widgets adopt the helper.
 - Example:
 
 ```json
 {
   "widgetBackgrounds": {
-    "default": "rgba(10, 12, 20, 0.2)",
-    "media": "rgba(15, 18, 30, 0.25)",
+    "default": "rgba(10, 12, 20, 0.8)",
+    "media": "rgba(15, 18, 30, 0.85)",
     "systemTray": "#201f2dcc"
   }
 }
@@ -50,7 +50,7 @@ Notes:
 
 Tips:
 - Stick to CSS-style colors (`rgba()`, `#rrggbbaa`, `hsl()`).
-- Keep base alpha in the 0.15–0.3 range for the requested “mostly transparent” look.
+- Keep base alpha in the 0.7–0.85 range for the requested darker main-panel capsules.
 - Capsule padding/height are standardized via `Helpers/CapsuleMetrics.js`. For icon+label widgets prefer `Components/CenteredCapsuleRow.qml`, which already wraps `WidgetCapsule`, centers content, and handles font/icon alignment without custom rows.
 - Prefer the shared `Components/WidgetCapsule.qml` wrapper whenever you add/edit a widget: it already looks up colors via `Helpers/WidgetBg.js`, applies hover tint/borders, and mirrors the capsule metrics. Override `backgroundKey`, `hoverColorOverride`, `paddingScale`, or `verticalPaddingScale` only when a module truly needs different spacing.
 - If the capsule needs click/tap behavior, use `Components/CapsuleButton.qml` (or wrappers like `CenteredCapsuleRow`) instead of hand-written `MouseArea`+`HoverHandler`.
@@ -116,15 +116,15 @@ Keep this order intact so separators remain unnecessary and hover hot-zones are 
 
 ### Капсулы виджетов (фон для каждого модуля)
 - Ряды панели теперь полностью прозрачные; каждый виджет рисует свою скруглённую «капсулу».
-- Цвета берутся из `Settings.settings.widgetBackgrounds`. Модуль ищет ключ со своим именем, затем `default`, а после — запасной `rgba(12, 14, 20, 0.2)` (≈80 % прозрачности).
+- Цвета берутся из `Settings.settings.widgetBackgrounds`. Модуль ищет ключ со своим именем, затем `default`, а после — запасной `rgba(12, 14, 20, 0.8)` (≈20 % прозрачности).
 - Известные ключи: `clock`, `workspaces`, `network`, `vpn`, `weather`, `media`, `systemTray`, `volume`, `microphone`, `mpdFlags`. Добавляйте новые по мере появления модулей.
 - Пример:
 
 ```json
 {
   "widgetBackgrounds": {
-    "default": "rgba(10, 12, 20, 0.2)",
-    "media": "rgba(15, 18, 30, 0.25)",
+    "default": "rgba(10, 12, 20, 0.8)",
+    "media": "rgba(15, 18, 30, 0.85)",
     "systemTray": "#201f2dcc"
   }
 }
@@ -132,7 +132,7 @@ Keep this order intact so separators remain unnecessary and hover hot-zones are 
 
 Подсказки:
 - Используйте css-цвета (`rgba()`, `#rrggbbaa`, `hsl()`).
-- Держите базовую прозрачность в диапазоне 0.15–0.3, чтобы фон выглядел «почти прозрачным», как требуется.
+- Держите базовую непрозрачность в диапазоне 0.7–0.85, чтобы основной ряд панели выглядел заметно темнее.
 - Паддинги и высота капсул унифицированы через `Helpers/CapsuleMetrics.js`. Для типовых «иконка + текст» используйте `Components/CenteredCapsuleRow.qml` — там уже есть `WidgetCapsule`, центрирование и выравнивание по базовой линии, так что индивидуальные Row/FontMetrics не нужны.
 - Для всех новых/обновлённых модулей используйте общий компонент `Components/WidgetCapsule.qml`: он сам подбирает цвет через `Helpers/WidgetBg.js`, настраивает hover-подсветку, рамку и метрики. Свойства `backgroundKey`, `hoverColorOverride`, `paddingScale`, `verticalPaddingScale` меняйте только если конкретному виджету действительно нужны другие отступы.
 - Нужна кликабельная капсула — начинайте с `Components/CapsuleButton.qml` (или тех, кто его использует), чтобы не размножать `MouseArea`/`TapHandler`.

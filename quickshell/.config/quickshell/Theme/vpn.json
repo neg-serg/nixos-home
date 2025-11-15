@@ -1,7 +1,5 @@
 {
   "vpn": {
-    "connectedOpacity": 0.8,
-    "disconnectedOpacity": 0.45,
     "accent": {
       "saturateBoost": 0.12,
       "lightenTowardWhite": 0.2
