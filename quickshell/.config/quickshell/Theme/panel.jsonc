@@ -4,6 +4,8 @@
     "height": 26,
     "sideMargin": 0,
     "widgetSpacing": 0,
+    "separatorWidthFactor": 1,
+    "separatorOpacity": 0.88,
     "hotzone": {
       "width": 16,
       "height": 9,

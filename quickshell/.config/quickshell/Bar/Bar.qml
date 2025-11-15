@@ -66,18 +66,69 @@ Scope {
         Component.onCompleted: requestPaint()
     }
 
+    function makeTriangleVariant(widthPx, heightPx, variantSelector) {
+        const w = Math.max(1, Math.round(widthPx || 0));
+        const h = Math.max(1, Math.round(heightPx || 0));
+        const variants = [
+            { key: "identity", flipX: false, flipY: false },
+            { key: "flipX", flipX: true, flipY: false },
+            { key: "flipY", flipX: false, flipY: true },
+            { key: "flipXY", flipX: true, flipY: true }
+        ];
+        let idx = 0;
+        if (typeof variantSelector === "string") {
+            const lowered = variantSelector.trim().toLowerCase();
+            const nameToIdx = { identity: 0, normal: 0, flipx: 1, flipy: 2, flipxy: 3, rotate: 3 };
+            idx = nameToIdx[lowered] !== undefined ? nameToIdx[lowered] : 0;
+        } else if (variantSelector !== undefined && variantSelector !== null && variantSelector !== "") {
+            const numeric = Number(variantSelector);
+            if (isFinite(numeric)) {
+                idx = Math.floor(numeric) % variants.length;
+                if (idx < 0)
+                    idx += variants.length;
+            }
+        }
+        const transform = variants[idx] || variants[0];
+        const baseVerts = [
+            Qt.point(0, h),
+            Qt.point(0, 0),
+            Qt.point(w, 0)
+        ];
+        const mapPoint = (pt) => Qt.point(
+            transform.flipX ? (w - pt.x) : pt.x,
+            transform.flipY ? (h - pt.y) : pt.y
+        );
+        return {
+            key: transform.key,
+            flipX: transform.flipX,
+            flipY: transform.flipY,
+            vertices: baseVerts.map(mapPoint)
+        };
+    }
+
+    function makeTriangleVariantSet(widthPx, heightPx) {
+        const out = [];
+        for (let i = 0; i < 4; i++) {
+            out.push(makeTriangleVariant(widthPx, heightPx, i));
+        }
+        return out;
+    }
+
     component PanelSeparator : Rectangle {
         required property real scaleFactor
         required property int panelHeightPx
         property real alpha: 0.0
         property bool triangleEnabled: false
-        property color triangleColor: Theme.background
-        property bool triangleFlipX: false
-        property bool triangleFlipY: false
+        property color triangleColor: Theme.panelPillColor
         property real triangleWidthFactor: 1.0
-        property real triangleVisualWidthPx: Math.max(1, Math.round(scaleFactor * 48))
-        width: Math.max(1, Math.round(scaleFactor * Math.max(1, Theme.uiBorderWidth)))
-        height: Math.max(1, Math.round(panelHeightPx * 0.68))
+        width: Math.max(1, Math.round(scaleFactor * Math.max(1, Theme.uiBorderWidth) * 16))
+        height: Math.max(2, Math.round(panelHeightPx * 0.68 * 16))
+        property var triangleVariant: "flipY"
+        readonly property var triangleVariantSpec: rootScope.makeTriangleVariant(width, height, triangleVariant)
+        readonly property bool triangleFlipX: triangleVariantSpec.flipX
+        readonly property bool triangleFlipY: triangleVariantSpec.flipY
+        readonly property var triangleVertices: triangleVariantSpec.vertices
+        readonly property var triangleVariants: rootScope.makeTriangleVariantSet(width, height)
         radius: 0
         color: Color.withAlpha(Theme.textPrimary, alpha)
         opacity: 1.0
@@ -87,7 +138,7 @@ Scope {
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: (parent.triangleFlipX ? undefined : parent.left)
             anchors.right: (parent.triangleFlipX ? parent.right : undefined)
-            width: Math.max(parent.width, parent.triangleVisualWidthPx)
+            width: parent.width
             height: parent.height
             color: parent.triangleColor
             flipX: parent.triangleFlipX
@@ -430,7 +481,6 @@ Scope {
                                 scaleFactor: leftPanel.s
                                 panelHeightPx: leftPanel.barHeightPx
                                 triangleEnabled: true
-                                triangleColor: "#ff00ffff"
                                 triangleWidthFactor: 0.3
                             }
                             WsIndicator {
@@ -444,7 +494,6 @@ Scope {
                                 scaleFactor: leftPanel.s
                                 panelHeightPx: leftPanel.barHeightPx
                                 triangleEnabled: true
-                                triangleColor: "#00ff00ff"
                                 triangleWidthFactor: 0.55
                             }
                             RowLayout {
@@ -465,7 +514,6 @@ Scope {
                                 panelHeightPx: leftPanel.barHeightPx
                                 visible: netCluster.visible
                                 triangleEnabled: netCluster.visible
-                                triangleColor: "#0000ffff"
                                 triangleWidthFactor: 0.75
                             }
                                 Row {
@@ -485,7 +533,6 @@ Scope {
                                 panelHeightPx: leftPanel.barHeightPx
                                 visible: (Settings.settings.showWeatherInBar === true)
                                 triangleEnabled: (Settings.settings.showWeatherInBar === true)
-                                triangleColor: "#ffaa00ff"
                                 triangleWidthFactor: 0.9
                             }
                             LocalMods.WeatherButton {

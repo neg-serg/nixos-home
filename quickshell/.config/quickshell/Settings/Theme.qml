@@ -742,6 +742,8 @@ Singleton {
     property int panelHeight: val('panel.height', 28)
     property int panelSideMargin: val('panel.sideMargin', 18)
     property int panelWidgetSpacing: val('panel.widgetSpacing', 12)
+    property real panelSeparatorOpacity: val('panel.separatorOpacity', 0.88)
+    property real panelSeparatorWidthFactor: val('panel.separatorWidthFactor', 1)
     // Panel icon sizing
     property int panelIconSize: val('panel.icons.iconSize', 24)
     property int panelIconSizeSmall: val('panel.icons.iconSizeSmall', 16)
@@ -777,6 +779,7 @@ Singleton {
     property int panelPillPaddingH: val('panel.pill.paddingH', 14)
     property int panelPillShowDelayMs: val('panel.pill.showDelayMs', 500)
     property int panelPillAutoHidePauseMs: val('panel.pill.autoHidePauseMs', 2500)
+    property color panelPillColor: Color.withAlpha(background, 0.88)
     // Animation timings
     property int panelAnimStdMs: val('panel.animations.stdMs', 250)
     property int panelAnimFastMs: val('panel.animations.fastMs', 200)

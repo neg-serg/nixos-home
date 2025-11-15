@@ -10,7 +10,7 @@ Item {
     // External properties
     property string icon: ""
     property string text: ""
-    property color pillColor: ColorHelpers.withAlpha(Theme.background, 0.88)
+    property color pillColor: Theme.panelPillColor
     property color textColor: Theme.textPrimary
     property color iconCircleColor: Theme.accentPrimary
     property color iconTextColor: Theme.background
