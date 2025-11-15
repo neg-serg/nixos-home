@@ -80,7 +80,8 @@ with lib;
                       then wrapped
                       else pkgs.quickshell;
                     exe = lib.getExe' pkg "qs";
-                  in "${exe}";
+                    logPath = "%t/quickshell/qs-theme.log";
+                  in "${exe} --log ${logPath}";
                   Environment = ["RUST_LOG=info,quickshell.dbus.properties=error"];
                   # Allow a gentle config reload when requested by HM activation
                   ExecReload = "${pkgs.coreutils}/bin/kill -HUP $MAINPID";
@@ -88,6 +89,8 @@ with lib;
                   RestartSec = "1";
                   Slice = "background-graphical.slice";
                   TimeoutStopSec = "5s";
+                  RuntimeDirectory = "quickshell";
+                  RuntimeDirectoryMode = "0700";
                 };
                 Unit.PartOf = ["graphical-session.target"];
               }
