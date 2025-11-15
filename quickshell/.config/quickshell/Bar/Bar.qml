@@ -468,15 +468,13 @@ Scope {
                                     id: netCluster
                                     Layout.alignment: Qt.AlignVCenter
                                     spacing: Math.round(Theme.panelNetClusterSpacing * leftPanel.s)
-                                    LocalMods.VpnAmneziaIndicator {
-                                        id: amneziaVpn
-                                        showLabel: false
-                                        iconRounded: true
+                                    LocalMods.NetClusterCapsule {
+                                        id: netCapsule
+                                        Layout.alignment: Qt.AlignVCenter
+                                        screen: leftPanel.screen
+                                        vpnIconRounded: true
+                                        throughputText: ConnectivityState.throughputText
                                     }
-                                    LocalMods.NetworkLinkIndicator {
-                                        id: netLinkIndicator
-                                    }
-                                    NetworkUsage { id: net }
                                 }
                             // Logical anchor position for the custom triangle placed "after network"
                             // This doesn't consume layout width (preferredWidth=0), it's used only to compute x

@@ -27,7 +27,7 @@ Migration Log
 - 2025-11: `Components/AudioLevelCapsule.qml` is the shared volume/microphone wrapper. It already embeds `PillIndicator`, handles hover/scroll, and collapse-on-hide logic — do not recreate this pattern in modules.
 - 2025-11: `Components/InlineTrayCapsule.qml` holds the inline SystemTray background/border defaults. Reuse it for any other inline reveal capsules instead of repeating the configuration block.
 - 2025-11: `Helpers/ConnectivityUi.js` centralizes сетевые цвета и форматтеры (`formatThroughput`, `iconColor`), so VPN/link/usage modules stay in sync.
-- 2025-11: Connectivity UI changes — VPN, the new standalone `NetworkLinkIndicator`, and `NetworkUsage` must live inside the “net cluster” (left bar). The indicator picks a random Material icon from the `graph-*` / `schema` / `family_*` pool on each launch. Only the icon changes color (orange for “no internet”, pink for “no link”); throughput text stays neutral.
+- 2025-11: Connectivity UI changes — VPN + link glyphs + throughput now live inside a single `LocalMods.NetClusterCapsule` on the left bar. The link glyph still picks a random icon from the `graph-*` / `schema` / `family_*` pool, and only the icon shifts color (orange for “no internet”, pink for “no link”); throughput text stays neutral.
 
 Systemd user service (single instance)
 1. Copy the unit file: `mkdir -p ~/.config/systemd/user && cp Tools/systemd/quickshell-panel.service ~/.config/systemd/user/`.

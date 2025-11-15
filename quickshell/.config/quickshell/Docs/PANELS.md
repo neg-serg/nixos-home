@@ -79,10 +79,10 @@ Right bar widgets are capsule-based and spacing-free. Left → right order:
 Keep this order intact so separators remain unnecessary and hover hot-zones are predictable.
 
 ### Network cluster behavior
-- The “net cluster” lives on the left bar: `LocalMods.VpnAmneziaIndicator`, `NetworkLinkIndicator`, then `NetworkUsage`.
-- `NetworkLinkIndicator` picks a random Material icon from `graph_1`…`graph_7`, `schema`, or `family_history` when the bar loads. Tweak the pool via the module’s `iconPool` list if needed.
+- The “net cluster” on the left bar now uses a single `LocalMods.NetClusterCapsule`: VPN + link icons share the leading slot while throughput text lives in the label lane.
+- `NetClusterCapsule` keeps the old `NetworkLinkIndicator` icon pool (random pick from `graph_1`…`graph_7`, `schema`, or `family_history`). Override `iconPool`/`iconConnected`/`iconNoInternet`/`iconDisconnected` to customize.
 - Only the icon changes color on failure: warning (`Settings.networkNoInternetColor`) when there is link but no internet; error (`Settings.networkNoLinkColor`) when the physical link drops. Throughput text remains in the neutral color. Use `Helpers/ConnectivityUi.js` to keep formatting/colors consistent across VPN/link/speed modules.
-- Icon scale/baseline adjustments come from `Theme.network.icon.scale` / `.vAdjust`. The capsule reuses the same hover tint logic as other widgets, so alignment stays consistent.
+- Icon scale/baseline adjustments come from `Theme.network.icon.scale` / `.vAdjust`. Capsule padding/spacing still follow the same Theme tokens, so alignment stays identical even when VPN visibility toggles.
 
 ---
 
@@ -161,8 +161,7 @@ Keep this order intact so separators remain unnecessary and hover hot-zones are 
 Не меняйте порядок — так не нужны разделители, а рабочие зоны мыши предсказуемы.
 
 ### Поведение сетевого кластера
-- «Нет-кластер» живёт на левой панели: `LocalMods.VpnAmneziaIndicator`, `NetworkLinkIndicator`, затем `NetworkUsage`.
-- `NetworkLinkIndicator` при старте случайно выбирает Material-иконку из набора `graph_1`…`graph_7`, `schema`, `family_history`. При необходимости скорректируйте список через свойство `iconPool`.
+- «Нет-кластер» на левой панели теперь рисуется одной `LocalMods.NetClusterCapsule`: иконки VPN и линка делят общий leading-slot, а текст трафика остаётся в центральной метке.
+- `NetClusterCapsule` сохранила рандомизацию `NetworkLinkIndicator` (иконка из `graph_1`…`graph_7`, `schema`, `family_history`). Переопределите `iconPool`/`iconConnected`/`iconNoInternet`/`iconDisconnected`, если нужен другой набор.
 - При проблемах меняется только цвет иконки: warning (`Settings.networkNoInternetColor`), если линк есть, но «интернет не пингуется», и error (`Settings.networkNoLinkColor`), если физический линк пропал. Текст скоростей всегда остаётся нейтральным. Цвета/форматирование вынесены в `Helpers/ConnectivityUi.js`, чтобы VPN/Link/Usage выглядели одинаково.
-- Цвета/форматирование для VPN/Link/Usage берите из `Helpers/ConnectivityUi.js`, чтобы все три виджета выглядели одинаково.
-- Масштаб и вертикальный сдвиг иконок задаются `Theme.network.icon.scale` / `.vAdjust`. Капсула использует те же hover-правила, что и остальные виджеты, поэтому выравнивание единообразное.
+- Масштаб и вертикальный сдвиг иконок задаются `Theme.network.icon.scale` / `.vAdjust`. Все паддинги и spacing по-прежнему подчиняются Theme, поэтому выключенная VPN-иконка не ломает выравнивание.
