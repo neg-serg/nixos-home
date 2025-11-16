@@ -891,7 +891,7 @@ Scope {
                                     height: rightPanel.barHeightPx
                                     anchors.left: parent.left
                                     anchors.verticalCenter: parent.verticalCenter
-                                    z: mediaModule.z + 0.01
+                                    z: mediaModule.z - 1
                                     color: Theme.panelPillColor
                                     opacity: 0.88
                                     visible: mediaModule.visible
@@ -900,7 +900,6 @@ Scope {
                                 Media {
                                     id: mediaModule
                                     anchors.fill: parent
-                                    anchors.leftMargin: mediaPillar.visible ? mediaPillar.width : 0
                                     sidePanelPopup: sidebarPopup
                                 }
                             }
