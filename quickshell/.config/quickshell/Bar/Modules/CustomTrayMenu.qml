@@ -7,7 +7,6 @@ import qs.Settings
 import qs.Components
 import "../../Helpers/Utils.js" as Utils
 import "../../Helpers/Color.js" as Color
-import "../../Components" as LocalComponents
 
     PopupWindow {
         id: trayMenu
@@ -75,11 +74,45 @@ import "../../Components" as LocalComponents
         z: 0;
     }
 
-    LocalComponents.MenuListPane {
-        id: listView
-        opener: opener
-        submenuHostComponent: submenuHostComp
-        menuWindow: trayMenu
+    ListView {
+        id: listView;
+        anchors.fill: parent;
+        anchors.margins: Theme.panelMenuPadding;
+        spacing: Theme.panelMenuItemSpacing;
+        interactive: false;
+        enabled: trayMenu.visible;
+        clip: true;
+
+        model: ScriptModel {
+            id: rootMenuModel;
+            values: (function() {
+                try {
+                    const ch = opener && opener.children ? opener.children : null;
+                    if (!ch) return [];
+                    const v = ch.values;
+                    if (typeof v === 'function') return [...v.call(ch)];
+                    if (v && v.length !== undefined) return v;
+                    if (ch && ch.length !== undefined) return ch;
+                    return [];
+                } catch (_) { return [] }
+            })()
+        }
+
+        readonly property color _hoverColor: Theme.surfaceHover
+
+        delegate: Item {
+            required property var modelData
+            width: listView.width
+            height: entryItem.height
+            DelegateEntry {
+                id: entryItem
+                // Ensure we pass the ListView delegate's modelData, not any outer modelData (e.g., screen)
+                entryData: parent.modelData
+                listViewRef: listView
+                submenuHostComponent: submenuHostComp
+                menuWindow: trayMenu
+            }
+        }
     }
 
     Component {

@@ -5,7 +5,6 @@ import Quickshell
 import qs.Components
 import qs.Settings
 import "../Helpers/Utils.js" as Utils
-import "." as LocalComponents
 
 PopupWindow {
     id: subMenu
@@ -50,10 +49,41 @@ PopupWindow {
         z: 0
     }
 
-    LocalComponents.MenuListPane {
+    ListView {
         id: listView
-        opener: opener
-        submenuHostComponent: subMenu.submenuHostComponent
-        menuWindow: subMenu
+        anchors.fill: parent
+        anchors.margins: Theme.panelMenuPadding
+        spacing: Theme.panelMenuItemSpacing
+        interactive: false
+        enabled: subMenu.visible
+        clip: true
+
+        model: ScriptModel {
+            id: subMenuModel;
+            values: (function() {
+                try {
+                    const ch = opener && opener.children ? opener.children : null;
+                    if (!ch) return [];
+                    const v = ch.values;
+                    if (typeof v === 'function') return [...v.call(ch)];
+                    if (v && v.length !== undefined) return v;
+                    if (ch && ch.length !== undefined) return ch;
+                    return [];
+                } catch (_) { return [] }
+            })()
+        }
+
+        delegate: Item {
+            required property var modelData
+            width: listView.width
+            height: entryItem.height
+            DelegateEntry {
+                id: entryItem
+                entryData: parent.modelData
+                listViewRef: listView
+                submenuHostComponent: subMenu.submenuHostComponent
+                menuWindow: subMenu
+            }
+        }
     }
 }
