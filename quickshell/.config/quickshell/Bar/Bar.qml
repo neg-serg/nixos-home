@@ -1491,7 +1491,3 @@ Scope {
         }
     }
 }
-                    Component.onCompleted: {
-                        if (shadowPanel.contentItem)
-                            shadowPanel.contentItem.enabled = false;
-                    }
