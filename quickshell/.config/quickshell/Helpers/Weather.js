@@ -1,36 +1,26 @@
 // In-memory caches with TTL
 var _geoCache = {}; // key: cityLower -> { value: {lat, lon}, expiry: ts, errorUntil?: ts }
 var _weatherCache = {}; // key: cityLower -> { value: weatherObject, expiry: ts, errorUntil?: ts }
-// Shared HTTP helper
-try { Qt.include("./Http.js"); } catch (e) { }
-// Reliable local reference (with fallback shim)
-var _httpGetJson = (typeof httpGetJson === 'function') ? httpGetJson : function(url, timeoutMs, success, fail, userAgent) {
-    try {
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", url, true);
-        if (timeoutMs !== undefined && timeoutMs !== null) xhr.timeout = timeoutMs;
-        try {
-            if (xhr.setRequestHeader) {
-                try { xhr.setRequestHeader('Accept', 'application/json'); } catch (e1) {}
-                if (userAgent) { try { xhr.setRequestHeader('User-Agent', String(userAgent)); } catch (e2) {} }
-            }
-        } catch (e3) {}
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState !== XMLHttpRequest.DONE) return;
-            var status = xhr.status;
-            if (status === 200) {
-                try { success && success(JSON.parse(xhr.responseText)); }
-                catch (e) { fail && fail({ type: 'parse', message: 'Failed to parse JSON' }); }
-            } else {
-                var retryAfter = 0; try { var ra = xhr.getResponseHeader && xhr.getResponseHeader('Retry-After'); if (ra) retryAfter = Number(ra) * 1000; } catch (e4) {}
-                fail && fail({ type: 'http', status: status, retryAfter: retryAfter });
-            }
-        };
-        xhr.ontimeout = function(){ fail && fail({ type: 'timeout' }); };
-        xhr.onerror = function(){ fail && fail({ type: 'network' }); };
-        xhr.send();
-    } catch (e) { fail && fail({ type: 'exception', message: String(e) }); }
+try { Qt.include("./HttpCache.js"); } catch (e) { }
+var __httpCache = (typeof HttpCache === "object") ? HttpCache : null;
+var _httpGetJson = __httpCache && __httpCache.httpGetJson ? __httpCache.httpGetJson : function(url, timeoutMs, success, fail, userAgent) {
+    fail && fail({ type: 'exception', message: 'HttpCache helper missing' });
 };
+var _now = __httpCache && __httpCache.now ? __httpCache.now : function() { return Date.now(); };
+var _buildUrl = __httpCache && __httpCache.buildUrl ? __httpCache.buildUrl : function(base, paramsObj) {
+    var qs = [];
+    var obj = paramsObj || {};
+    for (var key in obj) {
+        if (!obj.hasOwnProperty(key)) continue;
+        var val = obj[key];
+        if (val === undefined || val === null) continue;
+        qs.push(encodeURIComponent(key) + "=" + encodeURIComponent(String(val)));
+    }
+    return qs.length ? (base + "?" + qs.join("&")) : base;
+};
+var _readCache = __httpCache && __httpCache.readEntry ? __httpCache.readEntry : function() { return null; };
+var _writeCacheSuccess = __httpCache && __httpCache.writeSuccess ? __httpCache.writeSuccess : function(store, key, value, ttlMs) { store[key] = { value: value, expiry: _now() + ttlMs }; };
+var _writeCacheError = __httpCache && __httpCache.writeError ? __httpCache.writeError : function(store, key, errTtl) { store[key] = { errorUntil: _now() + errTtl }; };
 
 
 // Defaults (can be overridden via options argument)
@@ -40,61 +30,6 @@ var DEFAULTS = {
     errorTtlMs: 2 * 60 * 1000,           // 2m backoff for 429/5xx
     timeoutMs: 8000                      // 8s timeout
 };
-
-function now() { return Date.now(); }
-
-function qsFrom(obj) {
-    var parts = [];
-    for (var k in obj) {
-        if (!obj.hasOwnProperty(k)) continue;
-        var v = obj[k];
-        if (v === undefined || v === null) continue;
-        parts.push(encodeURIComponent(k) + "=" + encodeURIComponent(String(v)));
-    }
-    return parts.join("&");
-}
-
-function buildUrl(base, paramsObj) {
-    try {
-        if (typeof URL !== 'undefined' && typeof URLSearchParams !== 'undefined') {
-            var u = new URL(base);
-            var p = new URLSearchParams();
-            for (var key in paramsObj) {
-                if (!paramsObj.hasOwnProperty(key)) continue;
-                var val = paramsObj[key];
-                if (val === undefined || val === null) continue;
-                p.set(key, String(val));
-            }
-            u.search = p.toString();
-            return u.toString();
-        }
-    } catch (e) { /* fallthrough */ }
-    var qs = qsFrom(paramsObj);
-    return qs ? (base + "?" + qs) : base;
-}
-
-function readCache(store, key) {
-    var entry = store[key];
-    if (!entry) return null;
-    var t = now();
-    if (entry.errorUntil && t < entry.errorUntil) {
-        return { error: true, retryAt: entry.errorUntil };
-    }
-    if (entry.expiry && t < entry.expiry) {
-        return { value: entry.value };
-    }
-    // expired
-    delete store[key];
-    return null;
-}
-
-function writeCacheSuccess(store, key, value, ttlMs) {
-    store[key] = { value: value, expiry: now() + ttlMs };
-}
-
-function writeCacheError(store, key, errorTtlMs) {
-    store[key] = { errorUntil: now() + errorTtlMs };
-}
 
 // Use httpGetJson from Helpers/Http.js
 
@@ -111,7 +46,7 @@ function fetchCoordinates(city, callback, errorCallback, options) {
         return;
     }
 
-    var cached = readCache(_geoCache, key);
+    var cached = _readCache(_geoCache, key);
     if (cached) {
         if (cached.error) {
             errorCallback && errorCallback("Geocoding temporarily unavailable; retry later");
@@ -123,7 +58,7 @@ function fetchCoordinates(city, callback, errorCallback, options) {
         }
     }
 
-    var geoUrl = buildUrl("https://geocoding-api.open-meteo.com/v1/search", {
+    var geoUrl = _buildUrl("https://geocoding-api.open-meteo.com/v1/search", {
         name: city,
         language: "en",
         format: "json",
@@ -138,14 +73,14 @@ function fetchCoordinates(city, callback, errorCallback, options) {
             if (geoData && geoData.results && geoData.results.length > 0) {
                 var lat = geoData.results[0].latitude;
                 var lon = geoData.results[0].longitude;
-                writeCacheSuccess(_geoCache, key, { lat: lat, lon: lon }, cfg.geocodeTtlMs);
+                _writeCacheSuccess(_geoCache, key, { lat: lat, lon: lon }, cfg.geocodeTtlMs);
                 callback(lat, lon);
             } else {
-                writeCacheError(_geoCache, key, cfg.errorTtlMs);
+                _writeCacheError(_geoCache, key, cfg.errorTtlMs);
                 errorCallback && errorCallback("City not found");
             }
         } catch (e) {
-            writeCacheError(_geoCache, key, cfg.errorTtlMs);
+            _writeCacheError(_geoCache, key, cfg.errorTtlMs);
             errorCallback && errorCallback("Failed to parse geocoding data");
         }
     }, function(err) {
@@ -193,13 +128,13 @@ function fetchWeather(latitude, longitude, callback, errorCallback, options) {
     var _ua = (options && options.userAgent) ? String(options.userAgent) : "Quickshell";
     var dbg = !!(options && options.debug);
     _httpGetJson(url, cfg.timeoutMs, function(weatherData) {
-        if (cacheKey) writeCacheSuccess(_weatherCache, cacheKey, weatherData, cfg.weatherTtlMs);
+        if (cacheKey) _writeCacheSuccess(_weatherCache, cacheKey, weatherData, cfg.weatherTtlMs);
         callback(weatherData);
     }, function(err) {
         if (cacheKey && err) {
             var backoff = (err.retryAfter && err.retryAfter > 0) ? err.retryAfter : 0;
             if (!backoff && (err.status === 429 || (err.status >= 500 && err.status <= 599))) backoff = cfg.errorTtlMs;
-            if (backoff) writeCacheError(_weatherCache, cacheKey, backoff);
+            if (backoff) _writeCacheError(_weatherCache, cacheKey, backoff);
         }
         errorCallback && errorCallback("Weather fetch error: " + (err.status || err.type || "unknown"));
     }, _ua);

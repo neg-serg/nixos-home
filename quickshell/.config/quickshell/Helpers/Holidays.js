@@ -1,39 +1,13 @@
-try { Qt.include("./Http.js"); } catch (e) { }
-// Reliable local reference to HTTP helper (with fallback shim)
-var _httpGetJson = (typeof httpGetJson === 'function') ? httpGetJson : function(url, timeoutMs, success, fail, userAgent) {
-    try {
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", url, true);
-        if (timeoutMs !== undefined && timeoutMs !== null) xhr.timeout = timeoutMs;
-        try {
-            if (xhr.setRequestHeader) {
-                try { xhr.setRequestHeader('Accept', 'application/json'); } catch (e1) {}
-                if (userAgent) { try { xhr.setRequestHeader('User-Agent', String(userAgent)); } catch (e2) {} }
-            }
-        } catch (e3) {}
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState !== XMLHttpRequest.DONE) return;
-            var status = xhr.status;
-            if (status === 200) {
-                try { success && success(JSON.parse(xhr.responseText)); }
-                catch (e) { fail && fail({ type: 'parse' }); }
-            } else {
-                var retryAfter = 0; try { var ra = xhr.getResponseHeader && xhr.getResponseHeader('Retry-After'); if (ra) retryAfter = Number(ra) * 1000; } catch (e4) {}
-                fail && fail({ type: 'http', status: status, retryAfter: retryAfter });
-            }
-        };
-        xhr.ontimeout = function(){ fail && fail({ type: 'timeout' }); };
-        xhr.onerror = function(){ fail && fail({ type: 'network' }); };
-        xhr.send();
-    } catch (e) { fail && fail({ type: 'exception' }); }
+try { Qt.include("./HttpCache.js"); } catch (e) { }
+var __httpCache = (typeof HttpCache === "object") ? HttpCache : null;
+var _httpGetJson = __httpCache && __httpCache.httpGetJson ? __httpCache.httpGetJson : function(url, timeoutMs, success, fail, userAgent) {
+    fail && fail({ type: 'exception', message: 'HttpCache helper missing' });
 };
 var _countryCode = null;
 var _regionCode = null;
 var _regionName = null;
 var _locationExpiry = 0;
 var _holidaysCache = {}; // key: "year-country" -> { value, expiry, errorUntil }
-// Shared HTTP helper
-try { Qt.include("./Http.js") /* deprecated include; kept for compatibility if needed */; } catch (e) { }
 
 var DEFAULTS = {
     locationTtlMs: 24 * 60 * 60 * 1000,  // 24h
@@ -42,59 +16,21 @@ var DEFAULTS = {
     timeoutMs: 8000                      // 8s timeout
 };
 
-function now() { return Date.now(); }
-
-function qsFrom(obj) {
-    var parts = [];
-    for (var k in obj) {
-        if (!obj.hasOwnProperty(k)) continue;
-        var v = obj[k];
-        if (v === undefined || v === null) continue;
-        parts.push(encodeURIComponent(k) + "=" + encodeURIComponent(String(v)));
+var _now = __httpCache && __httpCache.now ? __httpCache.now : function() { return Date.now(); };
+var _buildUrl = __httpCache && __httpCache.buildUrl ? __httpCache.buildUrl : function(base, paramsObj) {
+    var qs = [];
+    var obj = paramsObj || {};
+    for (var key in obj) {
+        if (!obj.hasOwnProperty(key)) continue;
+        var val = obj[key];
+        if (val === undefined || val === null) continue;
+        qs.push(encodeURIComponent(key) + "=" + encodeURIComponent(String(val)));
     }
-    return parts.join("&");
-}
-
-function buildUrl(base, paramsObj) {
-    try {
-        if (typeof URL !== 'undefined' && typeof URLSearchParams !== 'undefined') {
-            var u = new URL(base);
-            var p = new URLSearchParams();
-            for (var key in paramsObj) {
-                if (!paramsObj.hasOwnProperty(key)) continue;
-                var val = paramsObj[key];
-                if (val === undefined || val === null) continue;
-                p.set(key, String(val));
-            }
-            u.search = p.toString();
-            return u.toString();
-        }
-    } catch (e) { /* fallthrough */ }
-    var qs = qsFrom(paramsObj);
-    return qs ? (base + "?" + qs) : base;
-}
-
-function readCache(store, key) {
-    var entry = store[key];
-    if (!entry) return null;
-    var t = now();
-    if (entry.errorUntil && t < entry.errorUntil) {
-        return { error: true };
-    }
-    if (entry.expiry && t < entry.expiry) {
-        return { value: entry.value };
-    }
-    delete store[key];
-    return null;
-}
-
-function writeCacheSuccess(store, key, value, ttlMs) {
-    store[key] = { value: value, expiry: now() + ttlMs };
-}
-
-function writeCacheError(store, key, errorTtlMs) {
-    store[key] = { errorUntil: now() + errorTtlMs };
-}
+    return qs.length ? (base + "?" + qs.join("&")) : base;
+};
+var _readCache = __httpCache && __httpCache.readEntry ? __httpCache.readEntry : function() { return null; };
+var _writeCacheSuccess = __httpCache && __httpCache.writeSuccess ? __httpCache.writeSuccess : function(store, key, value) { store[key] = { value: value }; };
+var _writeCacheError = __httpCache && __httpCache.writeError ? __httpCache.writeError : function(store, key) { store[key] = { errorUntil: _now() + 60000 }; };
 
 // Use httpGetJson from Helpers/Http.js
 
@@ -105,14 +41,14 @@ function getCountryCode(callback, errorCallback, options) {
         errorTtlMs: options.errorTtlMs || DEFAULTS.errorTtlMs,
         timeoutMs: options.timeoutMs || DEFAULTS.timeoutMs
     };
-    var t = now();
+    var t = _now();
     if (_countryCode && t < _locationExpiry) {
         callback(_countryCode);
         return;
     }
 
     var _ua = (options && options.userAgent) ? String(options.userAgent) : "Quickshell";
-    var url = buildUrl("https://nominatim.openstreetmap.org/search", {
+    var url = _buildUrl("https://nominatim.openstreetmap.org/search", {
         city: Settings.settings.weatherCity || "",
         country: "",
         format: "json",
@@ -125,7 +61,7 @@ function getCountryCode(callback, errorCallback, options) {
             _countryCode = (response && response[0] && response[0].address && response[0].address.country_code) ? response[0].address.country_code : "US";
             _regionCode = (response && response[0] && response[0].address && response[0].address["ISO3166-2-lvl4"]) ? response[0].address["ISO3166-2-lvl4"] : "";
             _regionName = (response && response[0] && response[0].address && response[0].address.state) ? response[0].address.state : "";
-            _locationExpiry = now() + cfg.locationTtlMs;
+            _locationExpiry = _now() + cfg.locationTtlMs;
             callback(_countryCode);
         } catch (e) {
             errorCallback && errorCallback("Failed to parse location data");
@@ -135,7 +71,7 @@ function getCountryCode(callback, errorCallback, options) {
         if (err) {
             var backoff = (err.retryAfter && err.retryAfter > 0) ? err.retryAfter : 0;
             if (!backoff && (err.status === 429 || (err.status >= 500 && err.status <= 599))) backoff = cfg.errorTtlMs;
-            if (backoff > 0) _locationExpiry = now() + backoff;
+            if (backoff > 0) _locationExpiry = _now() + backoff;
         }
         errorCallback && errorCallback("Location lookup error: " + (err.status || err.type || "unknown"));
     }, _ua);
@@ -149,7 +85,7 @@ function getHolidays(year, countryCode, callback, errorCallback, options) {
         timeoutMs: options.timeoutMs || DEFAULTS.timeoutMs
     };
     var cacheKey = year + "-" + (countryCode || "");
-    var cached = readCache(_holidaysCache, cacheKey);
+    var cached = _readCache(_holidaysCache, cacheKey);
     if (cached) {
         if (cached.error) {
             errorCallback && errorCallback("Holidays temporarily unavailable; retry later");
@@ -165,7 +101,7 @@ function getHolidays(year, countryCode, callback, errorCallback, options) {
     _httpGetJson(url, cfg.timeoutMs, function(list) {
         try {
             var augmented = filterHolidaysByRegion(list || []);
-            writeCacheSuccess(_holidaysCache, cacheKey, augmented, cfg.holidaysTtlMs);
+            _writeCacheSuccess(_holidaysCache, cacheKey, augmented, cfg.holidaysTtlMs);
             callback(augmented);
         } catch (e) {
             errorCallback && errorCallback("Failed to process holidays");
@@ -174,7 +110,7 @@ function getHolidays(year, countryCode, callback, errorCallback, options) {
         if (err) {
             var backoff = (err.retryAfter && err.retryAfter > 0) ? err.retryAfter : 0;
             if (!backoff && (err.status === 429 || (err.status >= 500 && err.status <= 599))) backoff = cfg.errorTtlMs;
-            if (backoff > 0) writeCacheError(_holidaysCache, cacheKey, backoff);
+            if (backoff > 0) _writeCacheError(_holidaysCache, cacheKey, backoff);
         }
         errorCallback && errorCallback("Holidays fetch error: " + (err.status || err.type || "unknown"));
     }, _ua);
