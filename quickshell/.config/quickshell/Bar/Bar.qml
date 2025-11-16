@@ -702,6 +702,7 @@ Scope {
                                 triangleEnabled: true
                                 triangleWidthFactor: 0.75
                                 mirrorTriangle: false
+                                widthScale: 2.0
                                 backgroundKey: "network"
                             }
                             LocalMods.WeatherButton {
