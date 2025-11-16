@@ -3,6 +3,7 @@ import QtQml
 import qs.Settings
 import Quickshell.Services.Mpris
 import qs.Services as Services
+import "../Helpers/MusicIds.js" as MusicIds
 
 // Tracks MPRIS players and exposes currentPlayer.
 // Selection rules (Settings.playerSelectionPriority): pinnedPlaying, mpdPlaying, anyPlaying, mpdRecent, pinned, recent, manual, first.
@@ -21,16 +22,7 @@ Item {
         } catch (e) { return ""; }
     }
 
-    function isPlayerMpd(p) {
-        try {
-            if (!p) return false;
-            var idStr    = String((p.service || p.busName || "")).toLowerCase();
-            var nameStr  = String(p.name || "").toLowerCase();
-            var identStr = String(p.identity || "").toLowerCase();
-            var re = /(mpd|mpdris|mopidy|music\s*player\s*daemon)/;
-            return re.test(idStr) || re.test(nameStr) || re.test(identStr);
-        } catch (e) { return false; }
-    }
+    function isPlayerMpd(p) { return MusicIds.isPlayerMpd(p); }
 
     function touchActive(p) {
         try {

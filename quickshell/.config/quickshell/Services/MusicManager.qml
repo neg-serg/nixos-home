@@ -4,6 +4,7 @@ import Quickshell.Services.Mpris
 import qs.Services
 import qs.Settings
 import qs.Components
+import "../Helpers/MusicIds.js" as MusicIds
 // Settings are schema-validated; avoid runtime clamps
 
 Item {
@@ -11,18 +12,10 @@ Item {
 
     // Identify whether a player is MPD-like (mpd/mpdris/mopidy)
     function isPlayerMpd(player) {
-        try {
-            var p = player || currentPlayer;
-            if (!p) return false;
-            var idStr    = String((p.service || p.busName || "")).toLowerCase();
-            var nameStr  = String(p.name || "").toLowerCase();
-            var identStr = String(p.identity || "").toLowerCase();
-            var re = /(mpd|mpdris|mopidy|music\s*player\s*daemon)/;
-            return re.test(idStr) || re.test(nameStr) || re.test(identStr);
-        } catch (e) { return false; }
+        return MusicIds.isPlayerMpd(player || currentPlayer);
     }
 
-    function isCurrentMpdPlayer() { return isPlayerMpd(currentPlayer); }
+    function isCurrentMpdPlayer() { return MusicIds.isPlayerMpd(currentPlayer); }
     MusicPlayers { id: players }
     MusicPosition { id: position; currentPlayer: players.currentPlayer }
     property alias currentPlayer: players.currentPlayer
