@@ -431,6 +431,15 @@ Scope {
                             anchors.fill: parent
 
                     Rectangle {
+                        id: leftBarBackdrop
+                        width: Math.max(1, leftPanel.width)
+                        height: leftPanel.barHeightPx
+                        color: "black"
+                        anchors.top: parent.top
+                        anchors.left: parent.left
+                        z: -1
+                    }
+                    Rectangle {
                         id: leftBarBackground
                         width: Math.max(1, leftPanel.width)
                         height: leftPanel.barHeightPx
@@ -804,6 +813,15 @@ Scope {
                             id: rightPanelContent
                             anchors.fill: parent
 
+                    Rectangle {
+                        id: rightBarBackdrop
+                        width: Math.max(1, rightPanel.width)
+                        height: rightPanel.barHeightPx
+                        color: "black"
+                        anchors.top: parent.top
+                        anchors.right: parent.right
+                        z: -1
+                    }
                     Rectangle {
                         id: rightBarBackground
                         width: Math.max(1, rightPanel.width)
