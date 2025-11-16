@@ -301,7 +301,7 @@ Scope {
                 readonly property bool monitorEnabled: (Settings.settings.barMonitors.includes(modelData.name)
                                                         || (Settings.settings.barMonitors.length === 0))
 
-                PanelWindow {
+                PanelLayer {
                     id: reservePanel
                     screen: modelData
                     color: "transparent"
@@ -318,21 +318,27 @@ Scope {
                     property real s: Theme.scale(reservePanel.screen)
                     property int barHeightPx: Math.round(Theme.panelHeight * s)
 
-                    Rectangle {
-                        id: reserveBackground
-                        width: parent.width
-                        height: reservePanel.barHeightPx
-                        color: "transparent"
-                    }
+                    Component {
+                        Item {
+                            anchors.fill: parent
 
-                    MouseArea {
-                        anchors.fill: parent
-                        hoverEnabled: false
-                        acceptedButtons: Qt.NoButton
+                            Rectangle {
+                                id: reserveBackground
+                                width: parent.width
+                                height: reservePanel.barHeightPx
+                                color: "transparent"
+                            }
+
+                            MouseArea {
+                                anchors.fill: parent
+                                hoverEnabled: false
+                                acceptedButtons: Qt.NoButton
+                            }
+                        }
                     }
                 }
 
-                PanelWindow {
+                PanelLayer {
                     id: shadowPanel
                     screen: modelData
                     color: "transparent"
@@ -352,20 +358,26 @@ Scope {
                     implicitHeight: barHeightPx
                     Component.onCompleted: { if (contentItem) contentItem.enabled = false }
 
-                    ShaderEffect {
-                        anchors.fill: parent
-                        visible: shadowPanel.visible
-                        property color baseColor: Theme.panelPillColor
-                        property color accentColor: Theme.panelPillColor
-                        property vector4d params0: Qt.vector4d(0.0, 0.0, 0.0, 0.0)
-                        property vector4d params1: Qt.vector4d(0.0, 0.0, 0.93, 0.0)
-                        fragmentShader: Qt.resolvedUrl("../shaders/diag.frag.qsb")
-                    }
+                    Component {
+                        Item {
+                            anchors.fill: parent
 
-                    MouseArea {
-                        anchors.fill: parent
-                        hoverEnabled: false
-                        acceptedButtons: Qt.NoButton
+                            ShaderEffect {
+                                anchors.fill: parent
+                                visible: shadowPanel.visible
+                                property color baseColor: Theme.panelPillColor
+                                property color accentColor: Theme.panelPillColor
+                                property vector4d params0: Qt.vector4d(0.0, 0.0, 0.0, 0.0)
+                                property vector4d params1: Qt.vector4d(0.0, 0.0, 0.93, 0.0)
+                                fragmentShader: Qt.resolvedUrl("../shaders/diag.frag.qsb")
+                            }
+
+                            MouseArea {
+                                anchors.fill: parent
+                                hoverEnabled: false
+                                acceptedButtons: Qt.NoButton
+                            }
+                        }
                     }
                 }
 
