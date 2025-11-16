@@ -3,6 +3,8 @@ import qs.Components
 import qs.Settings
 import "../../Components" as LocalComponents
 import "../../Helpers/Color.js" as Color
+import "../../Helpers/Format.js" as Format
+import "../../Helpers/RichText.js" as Rich
 import "../../Helpers/ConnectivityUi.js" as ConnUi
 
 ConnectivityCapsule {
@@ -42,8 +44,10 @@ ConnectivityCapsule {
     backgroundKey: "network"
     iconVisible: false
     glyphLeadingActive: _hasLeading
-    labelText: throughputText
+    labelIsRichText: true
+    labelText: _richThroughputText
     labelVisible: throughputText && throughputText.length > 0
+    readonly property string _richThroughputText: _formatThroughputRich(throughputText)
 
     leadingContent: Row {
         id: iconRow
@@ -96,6 +100,33 @@ ConnectivityCapsule {
     function desaturateColor(c, amount) {
         const clamped = Math.min(1, Math.max(0, amount || 0));
         return mixColor(c, grayOf(c), clamped);
+    }
+
+    function vpnAccentColor() {
+        const boost = Theme.vpnAccentSaturateBoost || 0;
+        const desat = Theme.vpnDesaturateAmount || 0;
+        const base = Color.saturate(Theme.accentPrimary, boost);
+        return desaturateColor(base, desat);
+    }
+
+    readonly property color slashAccentColor: (function() {
+        const first = Color.saturate(vpnAccentColor(), 0.2);
+        const towardBlack = Color.towardsBlack(first, 0.3);
+        const satAgain = Color.saturate(towardBlack, 0.2);
+        return Color.towardsBlack(satAgain, 0.3);
+    })()
+    readonly property string _slashAccentCss: Format.colorCss(slashAccentColor, 1)
+
+    function _formatThroughputRich(text) {
+        const raw = (text === undefined || text === null) ? "" : String(text);
+        if (!raw.length)
+            return "";
+        const slashIdx = raw.indexOf("/");
+        if (slashIdx === -1)
+            return Rich.esc(raw);
+        const left = Rich.esc(raw.slice(0, slashIdx));
+        const right = Rich.esc(raw.slice(slashIdx + 1));
+        return left + Rich.sepSpan(_slashAccentCss, "/", true) + right;
     }
 
     function _pickRandomIcon() {
