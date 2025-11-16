@@ -988,6 +988,7 @@ Scope {
                                 triangleWidthFactor: 0.75
                                 mirrorTriangle: false
                                 widthScale: 1.0
+                                flipAcrossVerticalAxis: true
                             }
                             PillSeparator {
                                 scaleFactor: rightPanel.s
