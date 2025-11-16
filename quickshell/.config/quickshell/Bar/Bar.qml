@@ -149,6 +149,7 @@ Scope {
     }
 
     component PanelSeparator : Rectangle {
+        id: panelSeparator
         required property real scaleFactor
         required property int panelHeightPx
         property real alpha: 0.0
@@ -278,19 +279,16 @@ Scope {
             onHeightChanged: requestPaint()
         }
 
-        Connections {
-            target: parent
-            function onTriangleWidthFactorChanged() { hypotenuseStroke.requestPaint(); }
-            function onMirrorTriangleWidthFactorChanged() { hypotenuseStroke.requestPaint(); }
-            function onTriangleFlipXChanged() { hypotenuseStroke.requestPaint(); }
-            function onTriangleFlipYChanged() { hypotenuseStroke.requestPaint(); }
-            function onHighlightColorChanged() { hypotenuseStroke.requestPaint(); }
-            function onHighlightWidthChanged() { hypotenuseStroke.requestPaint(); }
-            function onHighlightMirrorChanged() { hypotenuseStroke.requestPaint(); }
-            function onUseMirrorTriangleOnlyChanged() { hypotenuseStroke.requestPaint(); }
-            function onUsePrimaryTriangleOnlyChanged() { hypotenuseStroke.requestPaint(); }
-            function onFlipAcrossVerticalAxisChanged() { hypotenuseStroke.requestPaint(); }
-        }
+        onTriangleWidthFactorChanged: hypotenuseStroke.requestPaint()
+        onMirrorTriangleWidthFactorChanged: hypotenuseStroke.requestPaint()
+        onTriangleFlipXChanged: hypotenuseStroke.requestPaint()
+        onTriangleFlipYChanged: hypotenuseStroke.requestPaint()
+        onHighlightColorChanged: hypotenuseStroke.requestPaint()
+        onHighlightWidthChanged: hypotenuseStroke.requestPaint()
+        onHighlightMirrorChanged: hypotenuseStroke.requestPaint()
+        onUseMirrorTriangleOnlyChanged: hypotenuseStroke.requestPaint()
+        onUsePrimaryTriangleOnlyChanged: hypotenuseStroke.requestPaint()
+        onFlipAcrossVerticalAxisChanged: hypotenuseStroke.requestPaint()
     }
 
     component PillSeparator : PanelSeparator {
