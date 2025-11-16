@@ -12,6 +12,8 @@
       numpy # numerical computing
       annoy # approximate nearest neighbors
       orjson # fast JSON parser/serializer
+      mutagen # audio metadata tagging utilities
+      pillow # Python Imaging Library fork
       psutil # process and system utilities
       requests # HTTP client
       tabulate # pretty tables for text/CLI
