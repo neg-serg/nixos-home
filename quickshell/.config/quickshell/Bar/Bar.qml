@@ -872,7 +872,7 @@ Scope {
                         Rectangle {
                             id: rightPillar
                             readonly property color pillarColor: WidgetBg.color(Settings.settings, "media", Theme.panelPillColor)
-                            width: Math.max(10, Math.round(Theme.panelHeight * rightPanel.s * 0.35))
+                            width: Math.max(14, Math.round(Theme.panelHeight * rightPanel.s * 0.6))
                             height: rightPanel.barHeightPx
                             anchors.right: rightBarBackground.left
                             anchors.verticalCenter: rightBarBackground.verticalCenter
