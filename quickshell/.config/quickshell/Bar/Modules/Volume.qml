@@ -15,7 +15,10 @@ LocalMods.AudioEndpointTile {
     changeMethod: "changeVolume"
     toggleOnClick: false
     tooltipTitle: "Volume"
-    tooltipHint: "Left click for advanced settings.\nScroll up/down to change volume."
+    tooltipHints: [
+        "Left click for advanced settings.",
+        "Scroll up/down to change volume."
+    ]
     enableAdvancedToggle: true
 
     Item { id: ioSelector; visible: false }

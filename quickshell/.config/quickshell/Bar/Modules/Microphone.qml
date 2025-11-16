@@ -15,5 +15,8 @@ LocalMods.AudioEndpointTile {
     toggleMethod: "toggleMicMute"
     toggleOnClick: true
     tooltipTitle: "Microphone"
-    tooltipHint: "Left click to toggle mute.\nScroll up/down to change level."
+    tooltipHints: [
+        "Left click to toggle mute.",
+        "Scroll up/down to change level."
+    ]
 }
