@@ -825,19 +825,16 @@ Scope {
                             anchors.fill: parent
 
                     Rectangle {
-<<<<<<< HEAD
-=======
                         id: rightBarBackdrop
                         width: Math.max(1, rightPanel.width)
                         height: rightPanel.barHeightPx
                         color: "#000000"
-                        opacity: 0.5
+                        opacity: 0.8
                         anchors.top: parent.top
                         anchors.right: parent.right
                         z: -1
                     }
                     Rectangle {
->>>>>>> parent of e14aa84a ([gui/quickshell] Bar: deepen backdrop opacity)
                         id: rightBarBackground
                         width: Math.max(1, rightPanel.width)
                         height: rightPanel.barHeightPx
