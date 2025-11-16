@@ -985,7 +985,7 @@ Scope {
                                 scaleFactor: rightPanel.s
                                 panelHeightPx: rightPanel.barHeightPx
                                 triangleEnabled: true
-                                triangleWidthFactor: 0.75
+                                triangleWidthFactor: 0.95
                                 mirrorTriangle: false
                                 widthScale: 1.0
                                 flipAcrossVerticalAxis: true
