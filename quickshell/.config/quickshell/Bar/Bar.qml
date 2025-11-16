@@ -314,6 +314,7 @@ Scope {
                     implicitHeight: reserveBackground.height
                     exclusionMode: ExclusionMode.Normal
                     exclusiveZone: barHeightPx
+                    // Qt.WindowTransparentForInput isn’t available in this build; skip flag tweak.
                     property real s: Theme.scale(reservePanel.screen)
                     property int barHeightPx: Math.round(Theme.panelHeight * s)
 
@@ -323,6 +324,12 @@ Scope {
                         height: reservePanel.barHeightPx
                         color: "transparent"
                     }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        hoverEnabled: false
+                        acceptedButtons: Qt.NoButton
+                    }
                 }
 
                 PanelWindow {
@@ -330,15 +337,16 @@ Scope {
                     screen: modelData
                     color: "transparent"
                     WlrLayershell.namespace: "quickshell-bar-shadow"
-                    WlrLayershell.layer: (((Quickshell.env("QS_WEDGE_DEBUG") || "") === "1")
-                                          || ((Quickshell.env("QS_WEDGE_SHADER_TEST") || "") === "1"))
-                        ? WlrLayer.Overlay : WlrLayer.Top
+                    readonly property bool _forceOverlay: (((Quickshell.env("QS_WEDGE_DEBUG") || "") === "1")
+                                                             || ((Quickshell.env("QS_WEDGE_SHADER_TEST") || "") === "1"))
+                    WlrLayershell.layer: shadowPanel._forceOverlay ? WlrLayer.Overlay : WlrLayer.Bottom
                     anchors.bottom: true
                     anchors.left: true
                     anchors.right: true
                     visible: monitorEnabled
                     exclusionMode: ExclusionMode.Ignore
                     exclusiveZone: 0
+                    // flag unavailable; keep default
                     property real s: Theme.scale(shadowPanel.screen)
                     property int barHeightPx: Math.round(Theme.panelHeight * s)
                     implicitHeight: barHeightPx
@@ -352,6 +360,12 @@ Scope {
                         property vector4d params0: Qt.vector4d(0.0, 0.0, 0.0, 0.0)
                         property vector4d params1: Qt.vector4d(0.0, 0.0, 0.93, 0.0)
                         fragmentShader: Qt.resolvedUrl("../shaders/diag.frag.qsb")
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        hoverEnabled: false
+                        acceptedButtons: Qt.NoButton
                     }
                 }
 
@@ -370,6 +384,7 @@ Scope {
                     anchors.right: false
                     implicitWidth: leftPanel.screen ? Math.round(leftPanel.screen.width / 2) : 960
                     visible: monitorEnabled
+                    onVisibleChanged: {}
                     implicitHeight: leftBarBackground.height
                     exclusionMode: ExclusionMode.Ignore
                     exclusiveZone: 0
@@ -722,6 +737,12 @@ Scope {
                         recursive: true
                     }
 
+                    MouseArea {
+                        anchors.fill: parent
+                        hoverEnabled: false
+                        acceptedButtons: Qt.NoButton
+                    }
+
                     // (old Canvas triangle overlay removed to avoid blue tint overlay)
                 }
 
@@ -740,6 +761,7 @@ Scope {
                     anchors.left: false
                     implicitWidth: rightPanel.screen ? Math.round(rightPanel.screen.width / 2) : 960
                     visible: monitorEnabled
+                    onVisibleChanged: {}
                     implicitHeight: rightBarBackground.height
                     exclusionMode: ExclusionMode.Ignore
                     exclusiveZone: 0
@@ -1154,6 +1176,12 @@ Scope {
                         recursive: true
                     }
 
+                    MouseArea {
+                        anchors.fill: parent
+                        hoverEnabled: false
+                        acceptedButtons: Qt.NoButton
+                    }
+
                     property string _lastAlbum: ""
                     function maybeShowOnAlbumChange() {
                         try {
@@ -1236,6 +1264,8 @@ Scope {
                         ? (seamPanel.rawGapWidth > 0)
                         : (seamPanel.geometryReady)
                     )
+                    // flag unavailable; keep default
+                    onVisibleChanged: {}
                     exclusionMode: ExclusionMode.Ignore
                     exclusiveZone: 0
                     WlrLayershell.namespace: "quickshell-bar-seam"
