@@ -13,7 +13,7 @@ Rectangle {
     property color backgroundColorOverride: "transparent"
     property bool hoverEnabled: true
     property color hoverColorOverride: "transparent"
-    property real hoverMixAmount: 0.18
+    property real hoverMixAmount: 0
     property color hoverMixColor: Qt.rgba(1, 1, 1, 1)
     property bool borderVisible: true
     property color borderColorOverride: "transparent"

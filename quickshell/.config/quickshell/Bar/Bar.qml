@@ -1081,20 +1081,11 @@ Scope {
                                 readonly property bool tightSpacing: Settings.settings.systemTrayTightSpacing !== false
                                 readonly property int horizontalPadding: tightSpacing ? 0 : Math.max(4, Math.round(Theme.panelTrayInlinePadding * rightPanel.s * 0.75))
                                 readonly property color capsuleColor: WidgetBg.color(Settings.settings, "systemTray", Theme.background)
-                                readonly property real hoverMixAmount: 0.18
-                                readonly property color capsuleHoverColor: Color.mix(
-                                                                           capsuleColor,
-                                                                           Qt.rgba(1, 1, 1, 1),
-                                                                           hoverMixAmount)
                                 readonly property real trayContentHeight: (
                                     systemTrayModule.capsuleHeight !== undefined
                                         ? systemTrayModule.capsuleHeight
                                         : (systemTrayModule.implicitHeight || systemTrayModule.height || 0)
                                 )
-                                readonly property bool hovered: trayHover.hovered
-                                                                 || systemTrayModule.panelHover
-                                                                 || systemTrayModule.hotHover
-                                                                 || systemTrayModule.expanded
                                 readonly property int capsuleWidth: Math.max(1, systemTrayModule.implicitWidth) + systemTrayWrapper.horizontalPadding * 2
                                 readonly property int capsuleHeight: rightPanel.barHeightPx
                                 implicitWidth: trayVisible ? capsuleWidth : 0
@@ -1102,14 +1093,12 @@ Scope {
                                 Layout.preferredWidth: implicitWidth
                                 Layout.minimumWidth: implicitWidth
                                 Layout.maximumWidth: implicitWidth
-                                HoverHandler { id: trayHover }
 
                                 Rectangle {
                                     id: systemTrayBackground
                                     visible: systemTrayWrapper.trayVisible
                                     radius: 0
-                                    color: systemTrayWrapper.hovered ? systemTrayWrapper.capsuleHoverColor
-                                                                     : systemTrayWrapper.capsuleColor
+                                    color: systemTrayWrapper.capsuleColor
                                     width: systemTrayWrapper.capsuleWidth
                                     height: systemTrayWrapper.capsuleHeight
                                     border.width: 0

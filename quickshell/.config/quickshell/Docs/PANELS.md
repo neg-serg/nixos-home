@@ -48,7 +48,7 @@ Tips:
 - Stick to CSS-style colors (`rgba()`, `#rrggbbaa`, `hsl()`).
 - Keep base alpha in the 0.7–0.85 range for the requested darker main-panel capsules.
 - Capsule padding/height are standardized via `Helpers/CapsuleMetrics.js`. For icon+label widgets prefer `Components/CenteredCapsuleRow.qml`, which already wraps `WidgetCapsule`, centers content, and handles font/icon alignment without custom rows.
-- Prefer the shared `Components/WidgetCapsule.qml` wrapper whenever you add/edit a widget: it already looks up colors via `Helpers/WidgetBg.js`, applies hover tint/borders, and mirrors the capsule metrics. Override `backgroundKey`, `hoverColorOverride`, `paddingScale`, or `verticalPaddingScale` only when a module truly needs different spacing.
+- Prefer the shared `Components/WidgetCapsule.qml` wrapper whenever you add/edit a widget: it already looks up colors via `Helpers/WidgetBg.js`, applies borders, and mirrors the capsule metrics. Override `backgroundKey`, `paddingScale`, or `verticalPaddingScale` only when a module truly needs different spacing.
 - If the capsule needs click/tap behavior, use `Components/CapsuleButton.qml` (or wrappers like `CenteredCapsuleRow`) instead of hand-written `MouseArea`+`HoverHandler`.
 - Audio-level widgets (volume/microphone) must go through `Components/AudioLevelCapsule.qml`; it embeds `PillIndicator`, handles hover/scroll, and collapses cleanly when hidden.
 - Inline reveal capsules (system tray hover box, future inline menus) should use `Components/InlineTrayCapsule.qml` so borders/hover/clip settings stay consistent.
@@ -68,7 +68,7 @@ Tips:
 Right bar widgets are capsule-based and spacing-free. Left → right order:
 1. `Media` capsule (optional, follows `showMediaInBar` and player activity).
 2. `LocalMods.MpdFlags` (only when MPD is the active player and Media capsule is visible).
-3. System tray wrapper (rounded capsule around `SystemTray` with hover tint).
+3. System tray wrapper (rounded capsule around `SystemTray`).
 4. `Microphone` capsule (conditional on mic service visibility).
 5. `Volume` capsule.
 
