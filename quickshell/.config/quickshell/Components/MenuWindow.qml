@@ -9,6 +9,7 @@ PopupWindow {
     id: menuWindow
     required property var menuHandle
     required property Component submenuHostComponent
+    visible: false
     property alias listView: listView
     property alias openerItem: opener
     property var anchorItem: null
