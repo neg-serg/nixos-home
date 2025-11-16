@@ -18,7 +18,6 @@ Scope {
     property var shell
     property alias visible: barRootItem.visible
     property real barHeight: 0 // Expose current bar height for other components (e.g. window mirroring)
-    property bool diagnosticsEnabled: false
     function mixColor(a, b, t) {
         return Qt.rgba(a.r * (1 - t) + b.r * t,
                        a.g * (1 - t) + b.g * t,
@@ -193,15 +192,6 @@ Scope {
         opacity: 1.0
         Layout.alignment: Qt.AlignVCenter
 
-        function logTriangleColor(origin) {
-            try {
-                console.debug("[PanelSeparator]", origin, "key:", backgroundKey || "<none>",
-                              "override:", backgroundColorOverride, "final:", triangleColor);
-            } catch (e) {}
-        }
-
-        Component.onCompleted: logTriangleColor("completed")
-        onTriangleColorChanged: logTriangleColor("colorChanged")
 
         TriangleOverlay {
             anchors.verticalCenter: parent.verticalCenter
@@ -533,10 +523,6 @@ Scope {
                                     ((Quickshell.env("QS_WEDGE_SHADER_TEST") || "") === "1") ? 1.0 : 0.0,
                                     0,0)
                                 blending: true
-                                Component.onCompleted: {
-                                    if (rootScope.diagnosticsEnabled && Settings.settings.debugLogs)
-                                        console.log("[wedge:left:tint] shader ready", params0.x, params1.x)
-                                }
                             }
                         }
                         // Subtractive wedge using a shader clip over the base face (lazy-loaded)
@@ -550,13 +536,6 @@ Scope {
                                     || ((Quickshell.env("QS_WEDGE_DEBUG") || "") === "1")
                                     || ((Quickshell.env("QS_WEDGE_SHADER_TEST") || "") === "1")
                                     || (Settings.settings.enableWedgeClipShader === true)
-                            onActiveChanged: {
-                                if (rootScope.diagnosticsEnabled && Settings.settings.debugLogs) {
-                                    console.log("[bar:left] wedge shader active:", leftFaceClipLoader.active,
-                                                "debug=", (Quickshell.env("QS_WEDGE_DEBUG")||""),
-                                                "widthPct=", (Quickshell.env("QS_WEDGE_WIDTH_PCT")||""))
-                                }
-                            }
                             sourceComponent: ShaderEffect {
                                 fragmentShader: Qt.resolvedUrl("../shaders/wedge_clip.frag.qsb")
                                 // Clip the base face (pure fill color) to subtract the wedge
@@ -587,10 +566,6 @@ Scope {
                                     ((Quickshell.env("QS_WEDGE_SHADER_TEST") || "") === "1") ? 1.0 : 0.0,
                                     0, 0)
                                 blending: true
-                                Component.onCompleted: {
-                                    if (rootScope.diagnosticsEnabled && Settings.settings.debugLogs)
-                                        console.log("[wedge:left:base] shader ready", params0.x, params1.x)
-                                }
                             }
                         }
 
@@ -916,10 +891,6 @@ Scope {
                                     ((Quickshell.env("QS_WEDGE_SHADER_TEST") || "") === "1") ? 1.0 : 0.0,
                                     0,0)
                                 blending: true
-                                Component.onCompleted: {
-                                    if (rootScope.diagnosticsEnabled && Settings.settings.debugLogs)
-                                        console.log("[wedge:right:tint] shader ready", params0.x, params1.x)
-                                }
                             }
                         }
                         // Subtractive wedge using a shader clip over the base face (lazy-loaded)
@@ -931,13 +902,6 @@ Scope {
                                     || ((Quickshell.env("QS_WEDGE_DEBUG") || "") === "1")
                                     || ((Quickshell.env("QS_WEDGE_SHADER_TEST") || "") === "1")
                                     || (Settings.settings.enableWedgeClipShader === true)
-                            onActiveChanged: {
-                                if (rootScope.diagnosticsEnabled && Settings.settings.debugLogs) {
-                                    console.log("[bar:right] wedge shader active:", rightFaceClipLoader.active,
-                                                "debug=", (Quickshell.env("QS_WEDGE_DEBUG")||""),
-                                                "widthPct=", (Quickshell.env("QS_WEDGE_WIDTH_PCT")||""))
-                                }
-                            }
                             sourceComponent: ShaderEffect {
                                 fragmentShader: Qt.resolvedUrl("../shaders/wedge_clip.frag.qsb")
                                 // Clip the base face (pure fill color) to subtract the wedge
@@ -968,10 +932,6 @@ Scope {
                                     ((Quickshell.env("QS_WEDGE_SHADER_TEST") || "") === "1") ? 1.0 : 0.0,
                                     0, 0)
                                 blending: true
-                                Component.onCompleted: {
-                                    if (rootScope.diagnosticsEnabled && Settings.settings.debugLogs)
-                                        console.log("[wedge:right:base] shader ready", params0.x, params1.x)
-                                }
                             }
                         }
 
@@ -1268,14 +1228,10 @@ Scope {
                     // Readiness filter: when enabled, only show seam once geometry stabilizes.
                     // Prevents early full-width flash while rows are still measuring.
                     property bool useReadinessFilter: true
-                    // Debug switch: force seam visible regardless of readiness to verify rendering/ordering
-                    property bool debugForceVisible: rootScope.diagnosticsEnabled
                     visible: monitorEnabled && (
-                        seamPanel.debugForceVisible || (
-                            !seamPanel.useReadinessFilter
-                            ? (seamPanel.rawGapWidth > 0)
-                            : (seamPanel.geometryReady)
-                        )
+                        !seamPanel.useReadinessFilter
+                        ? (seamPanel.rawGapWidth > 0)
+                        : (seamPanel.geometryReady)
                     )
                     exclusionMode: ExclusionMode.Ignore
                     exclusiveZone: 0
@@ -1286,15 +1242,15 @@ Scope {
                     property int seamHeightPx: Math.round(Theme.panelHeight * s)
                     property real seamTaperTop: 0.12
                     property real seamTaperBottom: 0.65
-                    property real seamEffectOpacity: seamPanel.debugForceVisible ? 1.0 : 0.85
+                    property real seamEffectOpacity: 0.85
                     property color seamFillColor: Color.mix(Theme.surfaceVariant, Theme.background, 0.35)
                     property bool seamTintEnabled: true
                     // Use theme accent for seam tint to avoid hardcoded red
                     property color seamTintColor: Theme.accentPrimary
-                    property real seamTintOpacity: seamPanel.debugForceVisible ? 1.0 : 0.9
+                    property real seamTintOpacity: 0.9
                     property color seamBaseColor: Theme.background
-                    property real seamBaseOpacityTop: seamPanel.debugForceVisible ? 1.0 : 0.5
-                    property real seamBaseOpacityBottom: seamPanel.debugForceVisible ? 1.0 : 0.65
+                    property real seamBaseOpacityTop: 0.5
+                    property real seamBaseOpacityBottom: 0.65
                     function seamClamp01(v) { return Math.max(0.0, Math.min(1.0, v)); }
                     function seamEdgeBaseForTilt(tiltSign, frac) {
                         var f = seamClamp01(frac);
@@ -1311,10 +1267,6 @@ Scope {
                     property real seamTintBottomInsetPx: Math.round(Theme.panelWidgetSpacing * 0.2 * s)
                     property real seamTintFeatherPx: Math.max(1, Math.round(Theme.uiRadiusSmall * 0.35 * s))
                     readonly property real monitorWidth: seamPanel.screen ? seamPanel.screen.width : seamPanel.width
-                    // Debug: enable to overlay bounding boxes and logs
-                    property bool debugSeam: rootScope.diagnosticsEnabled
-                    // Debug: when true, the accent debug overlay fills the entire panel width
-                    property bool debugFillFullWidth: rootScope.diagnosticsEnabled && Settings.settings.debugSeamFullWidth
                     // Consider geometry "ready" only when left/right fills are measured and gap is sane
                     readonly property bool leftReady: _leftFillWidth > Math.max(8, leftPanel.sideMargin + leftPanel.widgetSpacing)
                     readonly property bool rightReady: _rightFillWidth > Math.max(8, rightPanel.sideMargin + rightPanel.widgetSpacing)
@@ -1409,7 +1361,6 @@ Scope {
                                 )
                                 property color baseColor: seamPanel.seamBaseColor
                                 blending: true
-                            Component.onCompleted: if (rootScope.diagnosticsEnabled && Settings.settings.debugLogs) console.log("[seam-panel]", "shader ready", seamPanel.seamWidthPx, seamPanel.seamTintColor)
                             }
                             Row {
                                 z: 10
@@ -1436,52 +1387,6 @@ Scope {
                         // (removed) Previously we punched holes in the seam visuals.
                         // The new approach is to mask panel fills instead, so the seam
                         // remains intact and shows through the wedges.
-                    }
-
-                    // Debug overlay: visualize computed regions with solid boxes always visible
-                    Item {
-                        visible: seamPanel.debugSeam && (!seamPanel.useReadinessFilter || seamPanel.geometryReady)
-                        anchors.fill: parent
-                        z: 200000
-
-                        // (cyan frame removed)
-
-                        // Raw gap region [gapStart .. gapEnd]
-                        Rectangle {
-                            x: seamPanel.debugFillFullWidth ? 0 : seamPanel.gapStart
-                            width: seamPanel.debugFillFullWidth ? parent.width : Math.max(1, seamPanel.rawGapWidth)
-                            height: seamPanel.seamHeightPx
-                            anchors.bottom: parent.bottom
-                            // Use theme accent for the raw gap overlay instead of hardcoded green
-                            color: Color.withAlpha(Theme.accentPrimary, 0.20)
-                        }
-
-                        // (red seam box removed)
-
-                        // Readable text with key numbers
-                        Rectangle {
-                            anchors.left: parent.left
-                            anchors.bottom: parent.bottom
-                            color: "#a0000000"
-                            radius: 4
-                            border.color: "#80ffffff"
-                            border.width: 1
-                            width: debugText.implicitWidth + 12
-                            height: debugText.implicitHeight + 8
-                            Text {
-                                id: debugText
-                                anchors.margins: 4
-                                anchors.fill: parent
-                                color: "#ffff66"
-                                font.pixelSize: 12
-                                text: "gap=" + Math.round(seamPanel.rawGapWidth)
-                                      + " leftFill=" + Math.round(seamPanel._leftFillWidth)
-                                      + " rightFill=" + Math.round(seamPanel._rightFillWidth)
-                                      + " seamLeft=" + Math.round(seamPanel.seamLeftMargin)
-                                      + " seamW=" + Math.round(seamPanel.seamWidthPx)
-                                      + " monW=" + Math.round(seamPanel.monitorWidth)
-                            }
-                        }
                     }
 
                     // (debug logging removed)
