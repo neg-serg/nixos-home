@@ -369,7 +369,7 @@ Scope {
                     property int seamWidth: Math.max(8, Math.round(widgetSpacing * 0.85))
                     // Panel background transparency is configurable via Settings:
                     // - panelBgAlphaScale: 0..1 multiplier applied to the base theme alpha
-                    property color barBgColor: rootScope.panelBgColor(Theme.background)
+                    property color barBgColor: "transparent"
                     property real seamTaperTop: 0.25
                     property real seamTaperBottom: 0.9
                     property real seamOpacity: 0.55
@@ -401,14 +401,24 @@ Scope {
                             id: leftPanelContent
                             anchors.fill: parent
 
-                        Rectangle {
-                            id: leftBarBackground
-                            width: Math.max(1, leftPanel.width)
-                            height: leftPanel.barHeightPx
-                            color: "transparent"
-                            anchors.top: parent.top
-                            anchors.left: parent.left
-                        }
+                    Rectangle {
+                        id: leftBarBackground
+                        width: Math.max(1, leftPanel.width)
+                        height: leftPanel.barHeightPx
+                        color: "transparent"
+                        anchors.top: parent.top
+                        anchors.left: parent.left
+                    }
+                    Rectangle {
+                        id: leftBarShadow
+                        width: leftBarBackground.width
+                        height: leftBarBackground.height
+                        color: Color.withAlpha(Theme.panelPillColor, 0.5)
+                        anchors.top: leftBarBackground.bottom
+                        anchors.left: leftBarBackground.left
+                        visible: leftPanel.visible
+                        z: -1
+                    }
                             Rectangle {
                                 id: leftBarFill
                                 width: Math.min(leftBarBackground.width, Math.ceil(leftPanel.sideMargin + leftPanel.contentWidth))
@@ -742,7 +752,7 @@ Scope {
                     property int seamWidth: Math.max(8, Math.round(widgetSpacing * 0.85))
                     // Panel background transparency is configurable via Settings:
                     // - panelBgAlphaScale: 0..1 multiplier applied to the base theme alpha
-                    property color barBgColor: rootScope.panelBgColor(Theme.background)
+                    property color barBgColor: "transparent"
                     property real seamTaperTop: 0.25
                     property real seamTaperBottom: 0.9
                     property real seamOpacity: 0.55
@@ -775,14 +785,24 @@ Scope {
                             id: rightPanelContent
                             anchors.fill: parent
 
-                        Rectangle {
-                            id: rightBarBackground
-                            width: Math.max(1, rightPanel.width)
-                            height: rightPanel.barHeightPx
-                            color: "transparent"
-                            anchors.top: parent.top
-                            anchors.right: parent.right
-                        }
+                    Rectangle {
+                        id: rightBarBackground
+                        width: Math.max(1, rightPanel.width)
+                        height: rightPanel.barHeightPx
+                        color: "transparent"
+                        anchors.top: parent.top
+                        anchors.right: parent.right
+                    }
+                    Rectangle {
+                        id: rightBarShadow
+                        width: rightBarBackground.width
+                        height: rightBarBackground.height
+                        color: Color.withAlpha(Theme.panelPillColor, 0.5)
+                        anchors.top: rightBarBackground.bottom
+                        anchors.right: rightBarBackground.right
+                        visible: rightPanel.visible
+                        z: -1
+                    }
                             Rectangle {
                                 id: rightBarFill
                                 width: Math.min(rightBarBackground.width, Math.ceil(rightPanel.sideMargin + rightPanel.contentWidth))
