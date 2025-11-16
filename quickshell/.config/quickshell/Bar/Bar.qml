@@ -957,6 +957,15 @@ Scope {
                             anchors.right: rightBarBackground.right
                             anchors.rightMargin: rightPanel.sideMargin
                             spacing: 0
+                            PanelSeparator {
+                                id: mediaLeadingSeparator
+                                scaleFactor: rightPanel.s
+                                panelHeightPx: rightPanel.barHeightPx
+                                triangleEnabled: true
+                                triangleWidthFactor: 0.75
+                                mirrorTriangle: false
+                                widthScale: 1.0
+                            }
                             PillSeparator {
                                 scaleFactor: rightPanel.s
                                 panelHeightPx: rightPanel.barHeightPx
