@@ -885,6 +885,54 @@ Scope {
                                 implicitHeight: mediaModule.parent === mediaRowSlot ? Math.max(mediaModule.implicitHeight, 1) : 0
                                 visible: mediaModule.parent === mediaRowSlot
 
+                                Item {
+                                    id: mediaTrapezoid
+                                    readonly property real s: rightPanel.s
+                                    readonly property string _trapFallbackHex: (function() {
+                                        if (typeof Theme.panelPillColor === "string") return Theme.panelPillColor;
+                                        function hex(v) {
+                                            var x = Math.max(0, Math.min(255, Math.round(v * 255)));
+                                            var h = x.toString(16);
+                                            return h.length < 2 ? "0" + h : h;
+                                        }
+                                        var c = Theme.panelPillColor;
+                                        var a = (c.a !== undefined) ? c.a : 1;
+                                        return "#" + hex(a) + hex(c.r || 0) + hex(c.g || 0) + hex(c.b || 0);
+                                    })()
+                                    readonly property color trapColor: WidgetBg.color(Settings.settings, "media", _trapFallbackHex)
+                                    readonly property int rectWidth: Math.max(6, Math.round(rightPanel.barHeightPx * 0.22))
+                                    anchors.right: mediaModule.left
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    width: rectWidth + mediaTrapTriangle.width
+                                    height: rightPanel.barHeightPx
+                                    visible: mediaModule.visible
+                                    z: parent.z - 1
+
+                                    Rectangle {
+                                        id: mediaTrapRect
+                                        anchors.left: parent.left
+                                        anchors.verticalCenter: parent.verticalCenter
+                                        width: mediaTrapezoid.rectWidth
+                                        height: parent.height
+                                        radius: 0
+                                        color: mediaTrapezoid.trapColor
+                                        opacity: 0.9
+                                    }
+
+                                    PanelSeparator {
+                                        id: mediaTrapTriangle
+                                        anchors.left: mediaTrapRect.right
+                                        anchors.verticalCenter: parent.verticalCenter
+                                        scaleFactor: mediaTrapezoid.s
+                                        panelHeightPx: parent.height
+                                        triangleEnabled: true
+                                        triangleWidthFactor: 0.45
+                                        mirrorTriangle: false
+                                        backgroundColorOverride: mediaTrapezoid.trapColor
+                                        alpha: 0.0
+                                    }
+                                }
+
                                 Media {
                                     id: mediaModule
                                     anchors.fill: parent
