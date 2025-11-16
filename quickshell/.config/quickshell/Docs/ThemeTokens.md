@@ -142,7 +142,7 @@ Flat keys were historically supported alongside nested tokens. They are deprecat
 Core mappings (examples):
 
 - Colors: background → colors.background; surface → colors.surface; surfaceVariant → colors.surfaceVariant; textPrimary → colors.text.primary; textSecondary → colors.text.secondary; textDisabled → colors.text.disabled; accentPrimary → colors.accent.primary; error → colors.status.error; warning → colors.status.warning; highlight → colors.highlight; onAccent → colors.onAccent; outline → colors.outline; shadow → colors.shadow
-- Panel: panelHeight → panel.height; panelSideMargin → panel.sideMargin; panelWidgetSpacing → panel.widgetSpacing; panelModuleHeight → panel.moduleHeight; panelMenuYOffset → panel.menuYOffset
+- Panel: panelHeight → panel.height; panelScaleFactor → panel.scale; panelSideMargin → panel.sideMargin; panelWidgetSpacing → panel.widgetSpacing; panelModuleHeight → panel.moduleHeight; panelMenuYOffset → panel.menuYOffset
 - Panel icons: panelIconSize → panel.icons.iconSize; panelIconSizeSmall → panel.icons.iconSizeSmall (deprecated; not wired into capsule sizing, so left undefined in the default theme)
 - Hotzone: panelHotzoneWidth → panel.hotzone.width; panelHotzoneHeight → panel.hotzone.height; panelHotzoneRightShift → panel.hotzone.rightShift
 - Shape: cornerRadius → shape.cornerRadius; cornerRadiusSmall → shape.cornerRadiusSmall; cornerRadiusLarge → shape.cornerRadiusLarge

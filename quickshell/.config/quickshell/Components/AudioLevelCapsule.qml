@@ -36,6 +36,9 @@ LocalComponents.WidgetCapsule {
 
     backgroundKey: settingsKey
     centerContent: true
+    forceHeightFromMetrics: false
+    verticalPaddingScale: 0
+    verticalPaddingMin: 0
 
     visible: false
     width: collapseWhenHidden ? (visible ? implicitWidth : 0) : implicitWidth

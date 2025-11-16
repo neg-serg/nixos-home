@@ -20,15 +20,18 @@
     "onAccent": "#FFFFFF"
   },
   "panel": {
-    "height": 28,
-    "sideMargin": 18,
-    "widgetSpacing": 12,
+    "height": 22,
+    "scale": 1.0,
+    "sideMargin": 0,
+    "widgetSpacing": 0,
+    "separatorWidthFactor": 1,
+    "separatorOpacity": 0.88,
     "hotzone": {
       "width": 16,
       "height": 9,
       "rightShift": 1.15
     },
-    "moduleHeight": 36,
+    "moduleHeight": 22,
     "menuYOffset": 20,
     "pill": {
       "height": 28,
@@ -46,7 +49,7 @@
       "shortHoldMs": 1500,
       "guardMs": 120,
       "overlayDismissDelayMs": 5000,
-      "inlinePadding": 6
+      "inlinePadding": 8
     },
     "rowSpacing": 8,
     "rowSpacingSmall": 4,

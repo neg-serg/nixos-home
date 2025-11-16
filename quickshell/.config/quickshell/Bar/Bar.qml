@@ -553,25 +553,24 @@ Scope {
                                 mirrorTriangle: netCluster.visible
                                 backgroundKey: "keyboard"
                             }
-                                Row {
-                                    id: netCluster
-                                    Layout.alignment: Qt.AlignVCenter
-                                    spacing: Math.round(Theme.panelNetClusterSpacing * leftPanel.s)
-                                    LocalMods.NetClusterCapsule {
+                            Row {
+                                id: netCluster
+                                Layout.alignment: Qt.AlignVCenter
+                                spacing: Math.round(Theme.panelNetClusterSpacing * leftPanel.s)
+                                LocalMods.NetClusterCapsule {
                                         id: netCapsule
                                         Layout.alignment: Qt.AlignVCenter
                                         screen: leftPanel.screen
                                         vpnIconRounded: true
                                         throughputText: ConnectivityState.throughputText
-                                    }
                                 }
+                            }
                             PanelSeparator {
                                 scaleFactor: leftPanel.s
                                 panelHeightPx: leftPanel.barHeightPx
-                                visible: (Settings.settings.showWeatherInBar === true)
-                                triangleEnabled: (Settings.settings.showWeatherInBar === true)
-                                triangleWidthFactor: 0.9
-                                mirrorTriangle: (Settings.settings.showWeatherInBar === true)
+                                triangleEnabled: true
+                                triangleWidthFactor: 0.55
+                                mirrorTriangle: false
                                 backgroundKey: "network"
                             }
                             LocalMods.WeatherButton {

@@ -12,15 +12,20 @@ Singleton {
     id: root
     // Set true after Theme/.theme.json is loaded/applied at least once
     property bool _themeLoaded: false
-    // Per-monitor UI scaling (defaults to 1.0)
+    // Per-monitor UI scaling (defaults to theme global scale)
     function scale(currentScreen) {
+        var base = Number(Theme.panelScaleFactor);
+        if (!isFinite(base) || base <= 0)
+            base = 1.0;
         try {
             const overrides = Settings.settings.monitorScaleOverrides || {};
             if (currentScreen && currentScreen.name && overrides[currentScreen.name] !== undefined) {
-                return overrides[currentScreen.name];
+                const raw = Number(overrides[currentScreen.name]);
+                if (isFinite(raw) && raw > 0)
+                    return raw * base;
             }
         } catch (e) {}
-        return 1.0;
+        return base;
     }
 
     function applyOpacity(color, opacity) {
@@ -739,6 +744,7 @@ Singleton {
     property int fontSizeCaption: Math.round(12 * fontSizeMultiplier)    // Captions and fine print
 
     // Panel metrics (logical)
+    property real panelScaleFactor: Utils.clamp(val('panel.scale', 1.0) * fontSizeMultiplier, 0.25, 2.5)
     property int panelHeight: val('panel.height', 28)
     property int panelSideMargin: val('panel.sideMargin', 18)
     property int panelWidgetSpacing: val('panel.widgetSpacing', 12)
@@ -774,7 +780,7 @@ Singleton {
     // Optional horizontal center offset tweak
     property int weatherCenterOffset: val('weather.centerOffset', -2)
     // Pill indicator defaults
-    property int panelPillHeight: val('panel.pill.height', panelHeight)
+    property int panelPillHeight: val('panel.pill.height', panelHeight + 2)
     property int panelPillIconSize: val('panel.pill.iconSize', 22)
     property int panelPillPaddingH: val('panel.pill.paddingH', 14)
     property int panelPillShowDelayMs: val('panel.pill.showDelayMs', 500)

@@ -24,6 +24,11 @@
     "min": 16,
     "max": 64
   },
+  "panel.scale": {
+    "type": "number",
+    "min": 0.25,
+    "max": 2.5
+  },
   "panel.hotzone.width": {
     "type": "integer",
     "min": 4,

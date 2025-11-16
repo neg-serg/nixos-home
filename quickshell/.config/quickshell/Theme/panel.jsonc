@@ -2,6 +2,7 @@
   "panel": {
     // Layout primitives for the top bar; keep values even to avoid pixel jitter.
     "height": 22,
+    "scale": 1.15,
     "sideMargin": 0,
     "widgetSpacing": 0,
     "separatorWidthFactor": 1,

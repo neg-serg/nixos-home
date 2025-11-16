@@ -21,6 +21,7 @@ Rectangle {
     property real paddingScale: 1.0
     property real minPadding: 4
     property real verticalPaddingScale: 0.6
+    property real verticalPaddingMin: 2
     property bool forceHeightFromMetrics: true
     property bool centerContent: true
     property real cornerRadiusOverride: -1
@@ -40,7 +41,7 @@ Rectangle {
             ? backgroundColorOverride
             : WidgetBg.color(Settings.settings, backgroundKey, fallbackColor)
     readonly property int horizontalPadding: Math.max(minPadding, Math.round(_metrics.padding * paddingScale))
-    readonly property int verticalPadding: Math.max(2, Math.round(_metrics.padding * verticalPaddingScale))
+    readonly property int verticalPadding: Math.max(verticalPaddingMin, Math.round(_metrics.padding * verticalPaddingScale))
     readonly property color _hoverColor: ColorHelpers.mix(_baseColor, hoverMixColor, hoverMixAmount)
     readonly property real _borderWidth: borderWidthOverride >= 0
             ? borderWidthOverride
