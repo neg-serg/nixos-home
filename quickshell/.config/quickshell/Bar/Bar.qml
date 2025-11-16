@@ -313,7 +313,7 @@ Scope {
             width: parent.width
             height: rootScope.barHeight
             visible: parent.visible && rootScope.barHeight > 0
-            z: 2
+            z: 1000
             property color baseColor: Theme.panelPillColor
             property color accentColor: Theme.panelPillColor
             property vector4d params0: Qt.vector4d(0.0, 0.0, 0.0, 0.0)
