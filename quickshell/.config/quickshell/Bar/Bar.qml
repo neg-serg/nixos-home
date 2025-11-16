@@ -994,6 +994,7 @@ Scope {
                                 scaleFactor: rightPanel.s
                                 panelHeightPx: rightPanel.barHeightPx
                                 triangleEnabled: false
+                                widthScale: 0.5
                             }
                             Item {
                                 id: mediaRowSlot
