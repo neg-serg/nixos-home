@@ -5,6 +5,7 @@ import Quickshell
 import qs.Components
 import qs.Settings
 import "../Helpers/Utils.js" as Utils
+import "../Helpers/MenuUtils.js" as MenuUtils
 
 PopupWindow {
     id: subMenu
@@ -60,17 +61,7 @@ PopupWindow {
 
         model: ScriptModel {
             id: subMenuModel;
-            values: (function() {
-                try {
-                    const ch = opener && opener.children ? opener.children : null;
-                    if (!ch) return [];
-                    const v = ch.values;
-                    if (typeof v === 'function') return [...v.call(ch)];
-                    if (v && v.length !== undefined) return v;
-                    if (ch && ch.length !== undefined) return ch;
-                    return [];
-                } catch (_) { return [] }
-            })()
+            values: MenuUtils.unwindMenuChildren(opener)
         }
 
         delegate: Item {

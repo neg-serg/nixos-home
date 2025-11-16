@@ -7,6 +7,7 @@ import qs.Settings
 import qs.Components
 import "../../Helpers/Utils.js" as Utils
 import "../../Helpers/Color.js" as Color
+import "../../Helpers/MenuUtils.js" as MenuUtils
 
     PopupWindow {
         id: trayMenu
@@ -85,17 +86,7 @@ import "../../Helpers/Color.js" as Color
 
         model: ScriptModel {
             id: rootMenuModel;
-            values: (function() {
-                try {
-                    const ch = opener && opener.children ? opener.children : null;
-                    if (!ch) return [];
-                    const v = ch.values;
-                    if (typeof v === 'function') return [...v.call(ch)];
-                    if (v && v.length !== undefined) return v;
-                    if (ch && ch.length !== undefined) return ch;
-                    return [];
-                } catch (_) { return [] }
-            })()
+            values: MenuUtils.unwindMenuChildren(opener)
         }
 
         readonly property color _hoverColor: Theme.surfaceHover
