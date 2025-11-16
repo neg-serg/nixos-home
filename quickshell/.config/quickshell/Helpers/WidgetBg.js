@@ -16,8 +16,5 @@ function color(settingsObj, key, fallback) {
     } else {
         resolved = fallback || fallbackColor;
     }
-    try {
-        console.debug("[WidgetBg.color]", key || "default", resolved);
-    } catch (e) {}
     return resolved;
 }
