@@ -869,17 +869,6 @@ Scope {
                             maskSource: rightSeamMask
                         }
 
-                        Rectangle {
-                            id: rightPillar
-                            width: Math.max(20, Math.round(Theme.panelHeight * rightPanel.s * 0.8))
-                            height: rightPanel.barHeightPx
-                            anchors.left: rightSeamFill.right
-                            anchors.verticalCenter: rightBarBackground.verticalCenter
-                            z: 10
-                            color: "#ff3b30"
-                            opacity: 1.0
-                        }
-
                         RowLayout {
                             id: rightWidgetsRow
                             anchors.verticalCenter: rightBarBackground.verticalCenter
@@ -896,9 +885,22 @@ Scope {
                                 implicitHeight: mediaModule.parent === mediaRowSlot ? Math.max(mediaModule.implicitHeight, 1) : 0
                                 visible: mediaModule.parent === mediaRowSlot
 
+                                Rectangle {
+                                    id: mediaPillar
+                                    width: Math.max(20, Math.round(Theme.panelHeight * rightPanel.s * 0.8))
+                                    height: rightPanel.barHeightPx
+                                    anchors.left: parent.left
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    z: mediaModule.z + 0.01
+                                    color: "#ff3b30"
+                                    opacity: 1.0
+                                    visible: mediaModule.visible
+                                }
+
                                 Media {
                                     id: mediaModule
                                     anchors.fill: parent
+                                    anchors.leftMargin: mediaPillar.visible ? mediaPillar.width : 0
                                     sidePanelPopup: sidebarPopup
                                 }
                             }
