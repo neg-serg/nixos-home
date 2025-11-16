@@ -885,79 +885,9 @@ Scope {
                                 implicitHeight: mediaModule.parent === mediaRowSlot ? Math.max(mediaModule.implicitHeight, 1) : 0
                                 visible: mediaModule.parent === mediaRowSlot
 
-                                Item {
-                                    id: mediaTrapezoid
-                                    readonly property real s: rightPanel.s
-                                    readonly property string _trapFallbackHex: (function() {
-                                        if (typeof Theme.panelPillColor === "string") return Theme.panelPillColor;
-                                        function hex(v) {
-                                            var x = Math.max(0, Math.min(255, Math.round(v * 255)));
-                                            var h = x.toString(16);
-                                            return h.length < 2 ? "0" + h : h;
-                                        }
-                                        var c = Theme.panelPillColor;
-                                        var a = (c.a !== undefined) ? c.a : 1;
-                                        return "#" + hex(a) + hex(c.r || 0) + hex(c.g || 0) + hex(c.b || 0);
-                                    })()
-                                    readonly property color trapColor: WidgetBg.color(Settings.settings, "media", _trapFallbackHex)
-                                    readonly property int rectWidth: Math.max(4, Math.round(rightPanel.barHeightPx * 0.18))
-                                    readonly property int triangleWidth: Math.max(4, Math.round(rightPanel.barHeightPx * 0.35))
-                                    anchors.left: parent.left
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    width: rectWidth + triangleWidth
-                                    height: rightPanel.barHeightPx
-                                    visible: mediaModule.visible
-                                    z: mediaModule.z + 0.01
-                                    clip: false
-
-                                    Rectangle {
-                                        id: mediaTrapRect
-                                        anchors.left: parent.left
-                                        anchors.verticalCenter: parent.verticalCenter
-                                        width: mediaTrapezoid.rectWidth
-                                        height: parent.height
-                                        radius: 0
-                                        color: mediaTrapezoid.trapColor
-                                        opacity: 1.0
-                                    }
-
-                                    Item {
-                                        id: mediaTrapTriangle
-                                        anchors.left: mediaTrapRect.right
-                                        anchors.verticalCenter: parent.verticalCenter
-                                        width: mediaTrapezoid.triangleWidth
-                                        height: parent.height
-                                        visible: mediaTrapezoid.visible
-                                        z: parent.z
-                                        Canvas {
-                                            id: mediaTrapCanvas
-                                            anchors.fill: parent
-                                            visible: parent.visible
-                                            onPaint: {
-                                                var ctx = getContext("2d");
-                                                ctx.clearRect(0, 0, width, height);
-                                                ctx.fillStyle = mediaTrapezoid.trapColor;
-                                                ctx.beginPath();
-                                                ctx.moveTo(0, height / 2);
-                                                ctx.lineTo(width, 0);
-                                                ctx.lineTo(width, height);
-                                                ctx.closePath();
-                                                ctx.fill();
-                                            }
-                                        }
-                                        onWidthChanged: mediaTrapCanvas.requestPaint()
-                                        onHeightChanged: mediaTrapCanvas.requestPaint()
-                                        Connections {
-                                            target: mediaTrapezoid
-                                            function onTrapColorChanged() { mediaTrapCanvas.requestPaint(); }
-                                        }
-                                    }
-                                }
-
                                 Media {
                                     id: mediaModule
                                     anchors.fill: parent
-                                    anchors.leftMargin: mediaTrapezoid.visible ? mediaTrapezoid.width : 0
                                     sidePanelPopup: sidebarPopup
                                 }
                             }
