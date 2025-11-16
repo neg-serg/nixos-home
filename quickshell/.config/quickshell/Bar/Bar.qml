@@ -434,7 +434,8 @@ Scope {
                         id: leftBarBackdrop
                         width: Math.max(1, leftPanel.width)
                         height: leftPanel.barHeightPx
-                        color: Qt.rgba(0, 0, 0, 0.5)
+                        color: "#000000"
+                        opacity: 0.5
                         anchors.top: parent.top
                         anchors.left: parent.left
                         z: -1
@@ -817,7 +818,8 @@ Scope {
                         id: rightBarBackdrop
                         width: Math.max(1, rightPanel.width)
                         height: rightPanel.barHeightPx
-                        color: Qt.rgba(0, 0, 0, 0.5)
+                        color: "#000000"
+                        opacity: 0.5
                         anchors.top: parent.top
                         anchors.right: parent.right
                         z: -1
