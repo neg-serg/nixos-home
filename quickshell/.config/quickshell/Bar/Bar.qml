@@ -900,13 +900,15 @@ Scope {
                                         return "#" + hex(a) + hex(c.r || 0) + hex(c.g || 0) + hex(c.b || 0);
                                     })()
                                     readonly property color trapColor: WidgetBg.color(Settings.settings, "media", _trapFallbackHex)
-                                    readonly property int rectWidth: Math.max(6, Math.round(rightPanel.barHeightPx * 0.22))
-                                    anchors.right: mediaModule.left
+                                    readonly property int rectWidth: Math.max(4, Math.round(rightPanel.barHeightPx * 0.18))
+                                    readonly property int triangleWidth: Math.max(4, Math.round(rightPanel.barHeightPx * 0.35))
+                                    anchors.left: parent.left
                                     anchors.verticalCenter: parent.verticalCenter
-                                    width: rectWidth + mediaTrapTriangle.width
+                                    width: rectWidth + triangleWidth
                                     height: rightPanel.barHeightPx
                                     visible: mediaModule.visible
-                                    z: parent.z - 1
+                                    z: mediaModule.z + 0.01
+                                    clip: false
 
                                     Rectangle {
                                         id: mediaTrapRect
@@ -916,26 +918,46 @@ Scope {
                                         height: parent.height
                                         radius: 0
                                         color: mediaTrapezoid.trapColor
-                                        opacity: 0.9
+                                        opacity: 1.0
                                     }
 
-                                    PanelSeparator {
+                                    Item {
                                         id: mediaTrapTriangle
                                         anchors.left: mediaTrapRect.right
                                         anchors.verticalCenter: parent.verticalCenter
-                                        scaleFactor: mediaTrapezoid.s
-                                        panelHeightPx: parent.height
-                                        triangleEnabled: true
-                                        triangleWidthFactor: 0.45
-                                        mirrorTriangle: false
-                                        backgroundColorOverride: mediaTrapezoid.trapColor
-                                        alpha: 0.0
+                                        width: mediaTrapezoid.triangleWidth
+                                        height: parent.height
+                                        visible: mediaTrapezoid.visible
+                                        z: parent.z
+                                        Canvas {
+                                            id: mediaTrapCanvas
+                                            anchors.fill: parent
+                                            visible: parent.visible
+                                            onPaint: {
+                                                var ctx = getContext("2d");
+                                                ctx.clearRect(0, 0, width, height);
+                                                ctx.fillStyle = mediaTrapezoid.trapColor;
+                                                ctx.beginPath();
+                                                ctx.moveTo(0, height / 2);
+                                                ctx.lineTo(width, 0);
+                                                ctx.lineTo(width, height);
+                                                ctx.closePath();
+                                                ctx.fill();
+                                            }
+                                        }
+                                        onWidthChanged: mediaTrapCanvas.requestPaint()
+                                        onHeightChanged: mediaTrapCanvas.requestPaint()
+                                        Connections {
+                                            target: mediaTrapezoid
+                                            function onTrapColorChanged() { mediaTrapCanvas.requestPaint(); }
+                                        }
                                     }
                                 }
 
                                 Media {
                                     id: mediaModule
                                     anchors.fill: parent
+                                    anchors.leftMargin: mediaTrapezoid.visible ? mediaTrapezoid.width : 0
                                     sidePanelPopup: sidebarPopup
                                 }
                             }
