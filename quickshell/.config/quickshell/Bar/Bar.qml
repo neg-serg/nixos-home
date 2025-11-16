@@ -887,12 +887,12 @@ Scope {
 
                                 Rectangle {
                                     id: mediaPillar
-                                    width: Math.max(20, Math.round(Theme.panelHeight * rightPanel.s * 0.8))
+                                    width: Math.max(12, Math.round(Theme.panelHeight * rightPanel.s * 0.5))
                                     height: rightPanel.barHeightPx
                                     anchors.left: parent.left
                                     anchors.verticalCenter: parent.verticalCenter
                                     z: mediaModule.z + 0.01
-                                    color: "#ff3b30"
+                                    color: Theme.panelPillColor
                                     opacity: 1.0
                                     visible: mediaModule.visible
                                 }
