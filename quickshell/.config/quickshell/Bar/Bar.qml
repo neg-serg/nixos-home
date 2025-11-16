@@ -413,7 +413,7 @@ Scope {
                         id: leftBarShadow
                         width: leftBarBackground.width
                         height: leftBarBackground.height
-                        color: Color.withAlpha(Theme.panelPillColor, 0.5)
+                        color: Color.withAlpha(Theme.panelPillColor, 0.93)
                         anchors.top: leftBarBackground.bottom
                         anchors.left: leftBarBackground.left
                         visible: leftPanel.visible
@@ -797,7 +797,7 @@ Scope {
                         id: rightBarShadow
                         width: rightBarBackground.width
                         height: rightBarBackground.height
-                        color: Color.withAlpha(Theme.panelPillColor, 0.5)
+                        color: Color.withAlpha(Theme.panelPillColor, 0.93)
                         anchors.top: rightBarBackground.bottom
                         anchors.right: rightBarBackground.right
                         visible: rightPanel.visible
