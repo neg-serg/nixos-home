@@ -305,22 +305,6 @@ Scope {
         id: barRootItem
         anchors.fill: parent
 
-        ShaderEffect {
-            id: panelShadow
-            anchors.top: parent.top
-            anchors.topMargin: rootScope.barHeight
-            anchors.horizontalCenter: parent.horizontalCenter
-            width: parent.width
-            height: rootScope.barHeight
-            visible: parent.visible && rootScope.barHeight > 0
-            z: 1000
-            property color baseColor: Theme.panelPillColor
-            property color accentColor: Theme.panelPillColor
-            property vector4d params0: Qt.vector4d(0.0, 0.0, 0.0, 0.0)
-            property vector4d params1: Qt.vector4d(0.0, 0.0, 0.93, 0.0)
-            fragmentShader: Qt.resolvedUrl("../shaders/diag.frag.qsb")
-        }
-
         Variants {
             model: Quickshell.screens
 
@@ -350,6 +334,35 @@ Scope {
                         width: parent.width
                         height: reservePanel.barHeightPx
                         color: "transparent"
+                    }
+                }
+
+                PanelWindow {
+                    id: shadowPanel
+                    screen: modelData
+                    color: "transparent"
+                    WlrLayershell.namespace: "quickshell-bar-shadow"
+                    WlrLayershell.layer: (((Quickshell.env("QS_WEDGE_DEBUG") || "") === "1")
+                                          || ((Quickshell.env("QS_WEDGE_SHADER_TEST") || "") === "1"))
+                        ? WlrLayer.Overlay : WlrLayer.Top
+                    anchors.bottom: true
+                    anchors.left: true
+                    anchors.right: true
+                    visible: monitorEnabled
+                    exclusionMode: ExclusionMode.Ignore
+                    exclusiveZone: 0
+                    property real s: Theme.scale(shadowPanel.screen)
+                    property int barHeightPx: Math.round(Theme.panelHeight * s)
+                    implicitHeight: barHeightPx
+
+                    ShaderEffect {
+                        anchors.fill: parent
+                        visible: shadowPanel.visible
+                        property color baseColor: Theme.panelPillColor
+                        property color accentColor: Theme.panelPillColor
+                        property vector4d params0: Qt.vector4d(0.0, 0.0, 0.0, 0.0)
+                        property vector4d params1: Qt.vector4d(0.0, 0.0, 0.93, 0.0)
+                        fragmentShader: Qt.resolvedUrl("../shaders/diag.frag.qsb")
                     }
                 }
 
