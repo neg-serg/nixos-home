@@ -352,6 +352,7 @@ Scope {
                     property real s: Theme.scale(shadowPanel.screen)
                     property int barHeightPx: Math.round(Theme.panelHeight * s)
                     implicitHeight: barHeightPx
+                    Component.onCompleted: ui.enableInput = false
 
                     ShaderEffect {
                         anchors.fill: parent
