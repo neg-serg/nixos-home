@@ -128,7 +128,12 @@ Scope {
         property real triangleWidthFactor: 1.0
         property bool mirrorTriangle: false
         property real mirrorTriangleWidthFactor: triangleWidthFactor
-        width: Math.max(1, Math.round(scaleFactor * Math.max(1, Theme.uiBorderWidth) * 16))
+        property real widthScale: 1.0
+        property bool highlightHypotenuse: false
+        property bool highlightMirror: false
+        property color highlightColor: Theme.accentPrimary
+        property real highlightWidth: Math.max(1, Math.round(scaleFactor * 2))
+        width: Math.max(1, Math.round(widthScale * scaleFactor * Math.max(1, Theme.uiBorderWidth) * 16))
         height: Math.max(2, Math.round(panelHeightPx))
         property var triangleVariant: "flipY"
         readonly property var triangleVariantSpec: rootScope.makeTriangleVariant(width, height, triangleVariant)
@@ -177,6 +182,57 @@ Scope {
             xCoverage: parent.mirrorTriangleWidthFactor
             z: parent.z + 0.5
             visible: parent.triangleEnabled && parent.mirrorTriangle && parent.visible
+        }
+
+        Canvas {
+            id: hypotenuseStroke
+            anchors.fill: parent
+            visible: parent.highlightHypotenuse && parent.triangleEnabled
+            z: parent.z + 1
+            antialiasing: true
+
+            function drawHypotenuse(flipX, flipY, coverage, useMirror) {
+                var w = width;
+                var h = height;
+                if (w <= 0 || h <= 0)
+                    return;
+                var cov = Math.max(0.0, Math.min(1.0, coverage));
+                var span = Math.max(1, Math.min(w, w * cov));
+                var drawFlipX = useMirror ? !flipX : flipX;
+                var drawFlipY = useMirror ? !flipY : flipY;
+                var xBase = drawFlipX ? w : 0;
+                var xEdge = drawFlipX ? Math.max(0, w - span) : span;
+                var yBase = drawFlipY ? 0 : h;
+                var yOpp = drawFlipY ? h : 0;
+                var ctx = getContext("2d");
+                ctx.clearRect(0, 0, w, h);
+                ctx.lineWidth = Math.max(1, parent.highlightWidth);
+                ctx.lineCap = "round";
+                ctx.lineJoin = "round";
+                ctx.strokeStyle = parent.highlightColor;
+                ctx.beginPath();
+                ctx.moveTo(xEdge, yBase);
+                ctx.lineTo(xBase, yOpp);
+                ctx.stroke();
+            }
+
+            onPaint: drawHypotenuse(parent.triangleFlipX, parent.triangleFlipY,
+                                    parent.highlightMirror ? parent.mirrorTriangleWidthFactor : parent.triangleWidthFactor,
+                                    parent.highlightMirror)
+            onVisibleChanged: requestPaint()
+            onWidthChanged: requestPaint()
+            onHeightChanged: requestPaint()
+        }
+
+        Connections {
+            target: parent
+            function onTriangleWidthFactorChanged() { hypotenuseStroke.requestPaint(); }
+            function onMirrorTriangleWidthFactorChanged() { hypotenuseStroke.requestPaint(); }
+            function onTriangleFlipXChanged() { hypotenuseStroke.requestPaint(); }
+            function onTriangleFlipYChanged() { hypotenuseStroke.requestPaint(); }
+            function onHighlightColorChanged() { hypotenuseStroke.requestPaint(); }
+            function onHighlightWidthChanged() { hypotenuseStroke.requestPaint(); }
+            function onHighlightMirrorChanged() { hypotenuseStroke.requestPaint(); }
         }
     }
 
@@ -508,14 +564,6 @@ Scope {
                             anchors.leftMargin: leftPanel.sideMargin
                             spacing: leftPanel.interWidgetSpacing
                             ClockWidget { Layout.alignment: Qt.AlignVCenter }
-                            PanelSeparator {
-                                scaleFactor: leftPanel.s
-                                panelHeightPx: leftPanel.barHeightPx
-                                triangleEnabled: true
-                                triangleWidthFactor: 0.3
-                                mirrorTriangle: true
-                                backgroundKey: "clock"
-                            }
                             WsIndicator {
                                 id: wsindicator
                                 Layout.alignment: Qt.AlignVCenter
@@ -527,8 +575,9 @@ Scope {
                                 scaleFactor: leftPanel.s
                                 panelHeightPx: leftPanel.barHeightPx
                                 triangleEnabled: true
-                                triangleWidthFactor: 0.55
+                                triangleWidthFactor: 0.75
                                 mirrorTriangle: true
+                                widthScale: 2.0
                                 backgroundKey: "workspaces"
                             }
                             RowLayout {
@@ -551,6 +600,11 @@ Scope {
                                 triangleEnabled: netCluster.visible
                                 triangleWidthFactor: 0.75
                                 mirrorTriangle: netCluster.visible
+                                widthScale: 2.0
+                                highlightHypotenuse: netCluster.visible
+                                highlightMirror: true
+                                highlightColor: Theme.accentPrimary
+                                highlightWidth: Math.max(2, Math.round(leftPanel.s * 3))
                                 backgroundKey: "keyboard"
                             }
                             Row {
@@ -569,7 +623,7 @@ Scope {
                                 scaleFactor: leftPanel.s
                                 panelHeightPx: leftPanel.barHeightPx
                                 triangleEnabled: true
-                                triangleWidthFactor: 0.55
+                                triangleWidthFactor: 0.75
                                 mirrorTriangle: false
                                 backgroundKey: "network"
                             }
