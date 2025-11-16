@@ -885,18 +885,6 @@ Scope {
                                 implicitHeight: mediaModule.parent === mediaRowSlot ? Math.max(mediaModule.implicitHeight, 1) : 0
                                 visible: mediaModule.parent === mediaRowSlot
 
-                                Rectangle {
-                                    id: mediaPillar
-                                    width: Math.max(12, Math.round(Theme.panelHeight * rightPanel.s * 0.5))
-                                    height: rightPanel.barHeightPx
-                                    anchors.left: parent.left
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    z: mediaModule.z + 1
-                                    color: Theme.panelPillColor
-                                    opacity: 0.88
-                                    visible: mediaModule.visible
-                                }
-
                                 Media {
                                     id: mediaModule
                                     anchors.fill: parent
