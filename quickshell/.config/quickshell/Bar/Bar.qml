@@ -871,9 +871,9 @@ Scope {
 
                         Rectangle {
                             id: rightPillar
-                            width: Math.max(14, Math.round(Theme.panelHeight * rightPanel.s * 0.6))
+                            width: Math.max(16, Math.round(Theme.panelHeight * rightPanel.s * 0.65))
                             height: rightPanel.barHeightPx
-                            anchors.right: rightBarBackground.left
+                            anchors.left: rightBarBackground.left
                             anchors.verticalCenter: rightBarBackground.verticalCenter
                             z: 10
                             color: "#ff3b30"
