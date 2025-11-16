@@ -893,7 +893,7 @@ Scope {
                                     anchors.verticalCenter: parent.verticalCenter
                                     z: mediaModule.z + 0.01
                                     color: Theme.panelPillColor
-                                    opacity: 1.0
+                                    opacity: 0.88
                                     visible: mediaModule.visible
                                 }
 
