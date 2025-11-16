@@ -409,15 +409,19 @@ Scope {
                         anchors.top: parent.top
                         anchors.left: parent.left
                     }
-                    Rectangle {
+                    ShaderEffect {
                         id: leftBarShadow
-                        width: leftBarBackground.width
-                        height: leftBarBackground.height
-                        color: Color.withAlpha(Theme.panelPillColor, 0.93)
                         anchors.top: leftBarBackground.bottom
                         anchors.left: leftBarBackground.left
+                        width: leftBarBackground.width
+                        height: leftBarBackground.height
                         visible: leftPanel.visible
                         z: -1
+                        property color baseColor: Theme.panelPillColor
+                        property color accentColor: Theme.panelPillColor
+                        property vector4d params0: Qt.vector4d(0.0, 0.0, 0.0, 0.0)
+                        property vector4d params1: Qt.vector4d(0.0, 0.0, 0.93, 0.0)
+                        fragmentShader: Qt.resolvedUrl("../shaders/diag.frag.qsb")
                     }
                             Rectangle {
                                 id: leftBarFill
@@ -793,15 +797,19 @@ Scope {
                         anchors.top: parent.top
                         anchors.right: parent.right
                     }
-                    Rectangle {
+                    ShaderEffect {
                         id: rightBarShadow
-                        width: rightBarBackground.width
-                        height: rightBarBackground.height
-                        color: Color.withAlpha(Theme.panelPillColor, 0.93)
                         anchors.top: rightBarBackground.bottom
                         anchors.right: rightBarBackground.right
+                        width: rightBarBackground.width
+                        height: rightBarBackground.height
                         visible: rightPanel.visible
                         z: -1
+                        property color baseColor: Theme.panelPillColor
+                        property color accentColor: Theme.panelPillColor
+                        property vector4d params0: Qt.vector4d(0.0, 0.0, 0.0, 0.0)
+                        property vector4d params1: Qt.vector4d(0.0, 0.0, 0.93, 0.0)
+                        fragmentShader: Qt.resolvedUrl("../shaders/diag.frag.qsb")
                     }
                             Rectangle {
                                 id: rightBarFill
