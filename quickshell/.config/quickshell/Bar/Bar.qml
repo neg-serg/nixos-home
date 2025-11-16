@@ -398,7 +398,7 @@ Scope {
                     property int seamWidth: Math.max(8, Math.round(widgetSpacing * 0.85))
                     // Panel background transparency is configurable via Settings:
                     // - panelBgAlphaScale: 0..1 multiplier applied to the base theme alpha
-                    property color barBgColor: "transparent"
+                    property color barBgColor: rootScope.panelBgColor(Theme.background)
                     property real seamTaperTop: 0.25
                     property real seamTaperBottom: 0.9
                     property real seamOpacity: 0.55
@@ -771,7 +771,7 @@ Scope {
                     property int seamWidth: Math.max(8, Math.round(widgetSpacing * 0.85))
                     // Panel background transparency is configurable via Settings:
                     // - panelBgAlphaScale: 0..1 multiplier applied to the base theme alpha
-                    property color barBgColor: "transparent"
+                    property color barBgColor: rootScope.panelBgColor(Theme.background)
                     property real seamTaperTop: 0.25
                     property real seamTaperBottom: 0.9
                     property real seamOpacity: 0.55
