@@ -153,6 +153,10 @@ Scope {
         property bool highlightMirror: false
         property color highlightColor: Theme.accentPrimary
         property real highlightWidth: Math.max(1, Math.round(scaleFactor * 2))
+        // Advanced controls to toggle which wedges render and whether they should flip horizontally.
+        property bool useMirrorTriangleOnly: false
+        property bool usePrimaryTriangleOnly: false
+        property bool flipAcrossVerticalAxis: false
         width: Math.max(1, Math.round(widthScale * scaleFactor * Math.max(1, Theme.uiBorderWidth) * 16))
         height: Math.max(2, Math.round(panelHeightPx))
         property var triangleVariant: "flipY"
@@ -161,6 +165,14 @@ Scope {
         readonly property bool triangleFlipY: triangleVariantSpec.flipY
         readonly property var triangleVertices: triangleVariantSpec.vertices
         readonly property var triangleVariants: rootScope.makeTriangleVariantSet(width, height)
+        readonly property bool _preferPrimary: usePrimaryTriangleOnly && useMirrorTriangleOnly
+        readonly property bool primaryTriangleEnabled: (triangleEnabled && visible
+                                                        && !(useMirrorTriangleOnly && !usePrimaryTriangleOnly))
+        readonly property bool mirrorTriangleEnabled: (triangleEnabled && mirrorTriangle && visible
+                                                        && !(usePrimaryTriangleOnly && !useMirrorTriangleOnly)
+                                                        && !_preferPrimary)
+        readonly property bool primaryFlipX: flipAcrossVerticalAxis ? !triangleFlipX : triangleFlipX
+        readonly property bool mirrorFlipX: flipAcrossVerticalAxis ? triangleFlipX : !triangleFlipX
         radius: 0
         color: Color.withAlpha(Theme.textPrimary, alpha)
         opacity: 1.0
@@ -183,11 +195,11 @@ Scope {
             width: parent.width
             height: parent.height
             color: parent.triangleColor
-            flipX: parent.triangleFlipX
+            flipX: parent.primaryFlipX
             flipY: parent.triangleFlipY
             xCoverage: parent.triangleWidthFactor
             z: parent.z + 0.5
-            visible: parent.triangleEnabled && parent.visible
+            visible: parent.primaryTriangleEnabled && !parent.useMirrorTriangleOnly
         }
 
         TriangleOverlay {
@@ -197,17 +209,17 @@ Scope {
             width: parent.width
             height: parent.height
             color: parent.triangleColor
-            flipX: !parent.triangleFlipX
+            flipX: parent.mirrorFlipX
             flipY: !parent.triangleFlipY
             xCoverage: parent.mirrorTriangleWidthFactor
             z: parent.z + 0.5
-            visible: parent.triangleEnabled && parent.mirrorTriangle && parent.visible
+            visible: parent.mirrorTriangleEnabled && !parent.usePrimaryTriangleOnly
         }
 
         Canvas {
             id: hypotenuseStroke
             anchors.fill: parent
-            visible: parent.highlightHypotenuse && parent.triangleEnabled
+            visible: parent.highlightHypotenuse && (parent.primaryTriangleEnabled || parent.mirrorTriangleEnabled)
             z: parent.z + 1
             antialiasing: true
 
@@ -218,8 +230,8 @@ Scope {
                     return;
                 var cov = Math.max(0.0, Math.min(1.0, coverage));
                 var span = Math.max(1, Math.min(w, w * cov));
-                var drawFlipX = useMirror ? !flipX : flipX;
-                var drawFlipY = useMirror ? !flipY : flipY;
+                var drawFlipX = useMirror ? parent.mirrorFlipX : parent.primaryFlipX;
+                var drawFlipY = useMirror ? !parent.triangleFlipY : parent.triangleFlipY;
                 var xBase = drawFlipX ? w : 0;
                 var xEdge = drawFlipX ? Math.max(0, w - span) : span;
                 var yBase = drawFlipY ? 0 : h;
@@ -236,9 +248,17 @@ Scope {
                 ctx.stroke();
             }
 
-            onPaint: drawHypotenuse(parent.triangleFlipX, parent.triangleFlipY,
-                                    parent.highlightMirror ? parent.mirrorTriangleWidthFactor : parent.triangleWidthFactor,
-                                    parent.highlightMirror)
+            onPaint: {
+                var targetMirror = parent.highlightMirror || (!parent.primaryTriangleEnabled && parent.mirrorTriangleEnabled);
+                var span = targetMirror ? parent.mirrorTriangleWidthFactor : parent.triangleWidthFactor;
+                var canDraw = targetMirror ? parent.mirrorTriangleEnabled : parent.primaryTriangleEnabled;
+                if (!canDraw) {
+                    var ctx = getContext("2d");
+                    ctx.clearRect(0, 0, width, height);
+                    return;
+                }
+                drawHypotenuse(parent.triangleFlipX, parent.triangleFlipY, span, targetMirror);
+            }
             onVisibleChanged: requestPaint()
             onWidthChanged: requestPaint()
             onHeightChanged: requestPaint()
@@ -253,6 +273,9 @@ Scope {
             function onHighlightColorChanged() { hypotenuseStroke.requestPaint(); }
             function onHighlightWidthChanged() { hypotenuseStroke.requestPaint(); }
             function onHighlightMirrorChanged() { hypotenuseStroke.requestPaint(); }
+            function onUseMirrorTriangleOnlyChanged() { hypotenuseStroke.requestPaint(); }
+            function onUsePrimaryTriangleOnlyChanged() { hypotenuseStroke.requestPaint(); }
+            function onFlipAcrossVerticalAxisChanged() { hypotenuseStroke.requestPaint(); }
         }
     }
 
