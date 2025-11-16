@@ -654,7 +654,7 @@ Scope {
                                 widthScale: 2.0
                                 highlightHypotenuse: netCluster.visible
                                 highlightMirror: true
-                                highlightColor: rootScope.vpnAccentColor()
+                                highlightColor: Color.towardsBlack(Color.saturate(Color.towardsBlack(Color.saturate(rootScope.vpnAccentColor(), 0.2), 0.3), 0.2), 0.3)
                                 highlightWidth: Math.max(2, Math.round(leftPanel.s * 3))
                                 backgroundKey: "keyboard"
                             }
