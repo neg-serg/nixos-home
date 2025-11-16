@@ -990,7 +990,7 @@ Scope {
                                 widthScale: 1.0
                                 flipAcrossVerticalAxis: true
                                 highlightHypotenuse: true
-                                highlightColor: Color.towardsBlack(Color.saturate(rootScope.vpnAccentColor(), 0.2), 0.3)
+                                highlightColor: Color.towardsBlack(Color.saturate(Color.towardsBlack(Color.saturate(rootScope.vpnAccentColor(), 0.2), 0.3), 0.2), 0.3)
                                 highlightWidth: Math.max(2, Math.round(rightPanel.s * 3))
                             }
                             PillSeparator {
