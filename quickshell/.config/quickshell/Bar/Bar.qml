@@ -954,7 +954,7 @@ Scope {
                             anchors.verticalCenter: rightBarBackground.verticalCenter
                             anchors.right: rightBarBackground.right
                             anchors.rightMargin: rightPanel.sideMargin
-                            spacing: 0
+                            spacing: rightPanel.interWidgetSpacing
                             Item {
                                 id: mediaRowSlot
                                 Layout.alignment: Qt.AlignVCenter
@@ -1049,6 +1049,13 @@ Scope {
                             Volume {
                                 id: widgetsVolume
                                 Layout.alignment: Qt.AlignVCenter
+                            }
+                            PillSeparator {
+                                scaleFactor: rightPanel.s
+                                panelHeightPx: rightPanel.barHeightPx
+                                triangleEnabled: true
+                                triangleWidthFactor: 0.75
+                                mirrorTriangle: true
                             }
                         }
 
