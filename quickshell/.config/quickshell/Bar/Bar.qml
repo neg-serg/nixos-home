@@ -260,6 +260,8 @@ Scope {
         readonly property color pillColor: Theme.panelPillColor
         backgroundColorOverride: pillColor
         fallbackColor: pillColor
+        color: pillColor
+        alpha: pillColor.a
     }
 
     Item {
@@ -954,7 +956,12 @@ Scope {
                             anchors.verticalCenter: rightBarBackground.verticalCenter
                             anchors.right: rightBarBackground.right
                             anchors.rightMargin: rightPanel.sideMargin
-                            spacing: rightPanel.interWidgetSpacing
+                            spacing: 0
+                            PillSeparator {
+                                scaleFactor: rightPanel.s
+                                panelHeightPx: rightPanel.barHeightPx
+                                triangleEnabled: false
+                            }
                             Item {
                                 id: mediaRowSlot
                                 Layout.alignment: Qt.AlignVCenter
@@ -1049,13 +1056,6 @@ Scope {
                             Volume {
                                 id: widgetsVolume
                                 Layout.alignment: Qt.AlignVCenter
-                            }
-                            PillSeparator {
-                                scaleFactor: rightPanel.s
-                                panelHeightPx: rightPanel.barHeightPx
-                                triangleEnabled: true
-                                triangleWidthFactor: 0.75
-                                mirrorTriangle: true
                             }
                         }
 
