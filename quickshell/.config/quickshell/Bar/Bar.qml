@@ -891,7 +891,7 @@ Scope {
                                     height: rightPanel.barHeightPx
                                     anchors.left: parent.left
                                     anchors.verticalCenter: parent.verticalCenter
-                                    z: mediaModule.z - 1
+                                    z: mediaModule.z + 1
                                     color: Theme.panelPillColor
                                     opacity: 0.88
                                     visible: mediaModule.visible
