@@ -871,13 +871,13 @@ Scope {
 
                         Rectangle {
                             id: rightPillar
-                            readonly property var _pillarColorRaw: WidgetBg.color(Settings.settings, "media", Theme.accentPrimary)
                             width: Math.max(14, Math.round(Theme.panelHeight * rightPanel.s * 0.6))
                             height: rightPanel.barHeightPx
                             anchors.right: rightBarBackground.left
                             anchors.verticalCenter: rightBarBackground.verticalCenter
                             z: 10
-                            color: Color.withAlpha(_pillarColorRaw, 1.0)
+                            color: "#ff3b30"
+                            opacity: 1.0
                         }
 
                         RowLayout {
