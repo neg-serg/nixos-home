@@ -343,6 +343,7 @@ Scope {
                     WlrLayershell.layer: (((Quickshell.env("QS_WEDGE_DEBUG") || "") === "1")
                                           || ((Quickshell.env("QS_WEDGE_SHADER_TEST") || "") === "1"))
                         ? WlrLayer.Overlay : WlrLayer.Top
+                    flags: Qt.Window | Qt.FramelessWindowHint | Qt.WindowTransparentForInput
                     anchors.bottom: true
                     anchors.left: true
                     anchors.right: true
