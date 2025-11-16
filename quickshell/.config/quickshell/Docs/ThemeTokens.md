@@ -147,7 +147,7 @@ Core mappings (examples):
 - Hotzone: panelHotzoneWidth → panel.hotzone.width; panelHotzoneHeight → panel.hotzone.height; panelHotzoneRightShift → panel.hotzone.rightShift
 - Shape: cornerRadius → shape.cornerRadius; cornerRadiusSmall → shape.cornerRadiusSmall; cornerRadiusLarge → shape.cornerRadiusLarge
 - Tooltip: tooltipDelayMs → tooltip.delayMs; tooltipMinSize → tooltip.minSize; tooltipMargin → tooltip.margin; tooltipPadding → tooltip.padding; tooltipBorderWidth → tooltip.borderWidth; tooltipRadius → tooltip.radius; tooltipFontPx → tooltip.fontPx
-- Pill: panelPillHeight → panel.pill.height; panelPillIconSize → panel.pill.iconSize; panelPillPaddingH → panel.pill.paddingH; panelPillShowDelayMs → panel.pill.showDelayMs; panelPillAutoHidePauseMs → panel.pill.autoHidePauseMs
+- Pill: panelPillHeight → panel.pill.height; panelPillIconSize → panel.pill.iconSize; panelPillPaddingH → panel.pill.paddingH; panelPillShowDelayMs → panel.pill.showDelayMs; panelPillAutoHidePauseMs → panel.pill.autoHidePauseMs; panelPillColor → panel.pill.color
 - Animations: panelAnimStdMs → panel.animations.stdMs; panelAnimFastMs → panel.animations.fastMs
 - Tray: panelTrayLongHoldMs → panel.tray.longHoldMs; panelTrayShortHoldMs → panel.tray.shortHoldMs; panelTrayGuardMs → panel.tray.guardMs; panelTrayOverlayDismissDelayMs → panel.tray.overlayDismissDelayMs; panelTrayInlinePadding → panel.tray.inlinePadding
 - Spacing/rows: panelRowSpacing → panel.rowSpacing; panelRowSpacingSmall → panel.rowSpacingSmall

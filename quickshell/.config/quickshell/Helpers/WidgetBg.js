@@ -1,6 +1,6 @@
 .pragma library
 
-const fallbackColor = "rgba(12, 14, 20, 0.8)";
+const fallbackColor = "#000000";
 
 function isColor(value) {
     return typeof value === "string" && value.length > 0;

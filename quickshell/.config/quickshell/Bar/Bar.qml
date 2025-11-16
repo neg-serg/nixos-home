@@ -120,7 +120,7 @@ Scope {
         property real alpha: 0.0
         property bool triangleEnabled: false
         property string backgroundKey: ""
-        property color fallbackColor: Qt.rgba(10 / 255, 12 / 255, 20 / 255, 0.8)
+        property color fallbackColor: Qt.rgba(0, 0, 0, 1)
         property color backgroundColorOverride: "transparent"
         property color triangleColor: backgroundColorOverride.a > 0
             ? backgroundColorOverride

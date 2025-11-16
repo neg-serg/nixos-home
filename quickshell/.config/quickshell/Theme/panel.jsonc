@@ -20,7 +20,8 @@
       "iconSize": 22,
       "paddingH": 14,
       "showDelayMs": 500,
-      "autoHidePauseMs": 2500
+      "autoHidePauseMs": 2500,
+      "color": "#000000"
     },
     "animations": {
       "stdMs": 250,

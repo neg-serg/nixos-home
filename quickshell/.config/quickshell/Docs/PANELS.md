@@ -34,14 +34,15 @@ Notes:
 
 ### Widget capsules (per-module backgrounds)
 - Panel rows are now fully transparent; every widget owns its own rounded capsule.
-- Colors come from `Settings.settings.widgetBackgrounds`. Each module looks up its name, then `default`, and finally falls back to `rgba(12, 14, 20, 0.8)` (≈20 % transparent).
+- Colors come from `Settings.settings.widgetBackgrounds`. Each module looks up its name, then `default`, and finally falls back to `#000000` (fully opaque).
+- `Components/WidgetCapsule` now hardcodes the same `#000000` fallback so every capsule (and pill) is solid unless you override the helper or provide per-widget colors.
 - Known keys: `clock`, `workspaces`, `network`, `vpn`, `weather`, `media`, `systemTray`, `volume`, `microphone`, `mpdFlags`. You can add more as new widgets adopt the helper.
 - Example:
 
 ```json
 {
   "widgetBackgrounds": {
-    "default": "rgba(10, 12, 20, 0.8)",
+    "default": "#000000",
     "media": "rgba(15, 18, 30, 0.85)",
     "systemTray": "#201f2dcc"
   }
@@ -116,14 +117,15 @@ Keep this order intact so separators remain unnecessary and hover hot-zones are 
 
 ### Капсулы виджетов (фон для каждого модуля)
 - Ряды панели теперь полностью прозрачные; каждый виджет рисует свою скруглённую «капсулу».
-- Цвета берутся из `Settings.settings.widgetBackgrounds`. Модуль ищет ключ со своим именем, затем `default`, а после — запасной `rgba(12, 14, 20, 0.8)` (≈20 % прозрачности).
+- Цвета берутся из `Settings.settings.widgetBackgrounds`. Модуль ищет ключ со своим именем, затем `default`, а после — запасной `#000000` (полностью непрозрачный).
+- Общий `Components/WidgetCapsule` теперь жёстко использует тот же `#000000` как запасной цвет, так что капсулы (и pill) сплошные, пока вы явно не переопределите helper или карту.
 - Известные ключи: `clock`, `workspaces`, `network`, `vpn`, `weather`, `media`, `systemTray`, `volume`, `microphone`, `mpdFlags`. Добавляйте новые по мере появления модулей.
 - Пример:
 
 ```json
 {
   "widgetBackgrounds": {
-    "default": "rgba(10, 12, 20, 0.8)",
+    "default": "#000000",
     "media": "rgba(15, 18, 30, 0.85)",
     "systemTray": "#201f2dcc"
   }
