@@ -318,22 +318,20 @@ Scope {
                     property real s: Theme.scale(reservePanel.screen)
                     property int barHeightPx: Math.round(Theme.panelHeight * s)
 
-                    Component {
-                        Item {
+                    Item {
+                        anchors.fill: parent
+
+                        Rectangle {
+                            id: reserveBackground
+                            width: parent.width
+                            height: reservePanel.barHeightPx
+                            color: "transparent"
+                        }
+
+                        MouseArea {
                             anchors.fill: parent
-
-                            Rectangle {
-                                id: reserveBackground
-                                width: parent.width
-                                height: reservePanel.barHeightPx
-                                color: "transparent"
-                            }
-
-                            MouseArea {
-                                anchors.fill: parent
-                                hoverEnabled: false
-                                acceptedButtons: Qt.NoButton
-                            }
+                            hoverEnabled: false
+                            acceptedButtons: Qt.NoButton
                         }
                     }
                 }
@@ -358,30 +356,28 @@ Scope {
                     implicitHeight: barHeightPx
                     Component.onCompleted: { if (contentItem) contentItem.enabled = false }
 
-                    Component {
-                        Item {
+                    Item {
+                        anchors.fill: parent
+
+                        ShaderEffect {
                             anchors.fill: parent
+                            visible: shadowPanel.visible
+                            property color baseColor: Theme.panelPillColor
+                            property color accentColor: Theme.panelPillColor
+                            property vector4d params0: Qt.vector4d(0.0, 0.0, 0.0, 0.0)
+                            property vector4d params1: Qt.vector4d(0.0, 0.0, 0.93, 0.0)
+                            fragmentShader: Qt.resolvedUrl("../shaders/diag.frag.qsb")
+                        }
 
-                            ShaderEffect {
-                                anchors.fill: parent
-                                visible: shadowPanel.visible
-                                property color baseColor: Theme.panelPillColor
-                                property color accentColor: Theme.panelPillColor
-                                property vector4d params0: Qt.vector4d(0.0, 0.0, 0.0, 0.0)
-                                property vector4d params1: Qt.vector4d(0.0, 0.0, 0.93, 0.0)
-                                fragmentShader: Qt.resolvedUrl("../shaders/diag.frag.qsb")
-                            }
-
-                            MouseArea {
-                                anchors.fill: parent
-                                hoverEnabled: false
-                                acceptedButtons: Qt.NoButton
-                            }
+                        MouseArea {
+                            anchors.fill: parent
+                            hoverEnabled: false
+                            acceptedButtons: Qt.NoButton
                         }
                     }
                 }
 
-                PanelWindow {
+                PanelLayer {
                     id: leftPanel
                     screen: modelData
                     color: "transparent"
@@ -758,7 +754,7 @@ Scope {
                     // (old Canvas triangle overlay removed to avoid blue tint overlay)
                 }
 
-                PanelWindow {
+                PanelLayer {
                     id: rightPanel
                     screen: modelData
                     color: "transparent"
@@ -1247,7 +1243,7 @@ Scope {
 
                 }
 
-                PanelWindow {
+                PanelLayer {
                     id: seamPanel
                     screen: modelData
                     color: "transparent"
