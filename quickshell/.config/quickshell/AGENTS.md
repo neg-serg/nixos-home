@@ -29,7 +29,7 @@ Debugging tips (use where applicable)
 - Wayland screenshots: `grim -g "$(slurp)" shot.png`.
 
 Settings knobs
-- Panel background transparency is configurable via `Settings.settings.panelBgAlphaScale` (preferred, 0..1) or `panelBgAlphaFactor` (>0 divisor). See Docs/PANELS.md.
+- Panel background transparency is configurable via `Settings.settings.panelBgAlphaScale` (0..1 multiplier). See Docs/PANELS.md.
 
 Style / contribution
 - Keep changes minimal and focused; follow existing QML/JS style.

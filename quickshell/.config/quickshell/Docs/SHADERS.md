@@ -224,7 +224,7 @@ Wayland screenshot: `grim -g "$(slurp)" wedge.png`.
 - Клин (треугольное вычитание) виден на обеих панелях; `QS_WEDGE_DEBUG=1` показывает мадженту внутри клина; `QS_WEDGE_SHADER_TEST=1` подтверждает, что ShaderEffect реально рисуется.
 - Источники скрываются при активном шейдере (`ShaderEffectSource.hideSource ← Loader.active`), чтобы исходные прямоугольники не закрывали «дыру».
 - Z‑порядок клип‑лоадеров поднят (например, `z: 50`) для наглядности в отладке; при необходимости панели ставятся в `WlrLayer.Overlay`.
-- Прозрачность фона панелей теперь настраивается: `panelBgAlphaScale`/`panelBgAlphaFactor` (см. `Docs/PANELS.md`).
+- Прозрачность фона панелей теперь настраивается через `panelBgAlphaScale` (см. `Docs/PANELS.md`).
 
 Что не получилось/проблемы по пути (и как обошли):
 - Флаги `qsb --vk/--sl` не поддерживаются локальной версией — перешли на GLSL‑только.
@@ -247,7 +247,7 @@ Worked:
 - Wedge subtraction visible on both bars; `QS_WEDGE_DEBUG=1` shows magenta overlay; `QS_WEDGE_SHADER_TEST=1` proves ShaderEffect paints.
 - Sources are hidden when the shader is active (`ShaderEffectSource.hideSource ← Loader.active`) so the original rects don’t fill the hole.
 - Raised z for clip loaders (e.g., `z: 50`) and optional `WlrLayer.Overlay` during debug to ensure visibility.
-- Panel background transparency configurable via `panelBgAlphaScale` / `panelBgAlphaFactor` (see `Docs/PANELS.md`).
+- Panel background transparency is configurable via `panelBgAlphaScale` (see `Docs/PANELS.md`).
 
 Didn’t work initially / issues encountered (and fixes):
 - Local `qsb` doesn’t accept `--vk/--sl` → use GLSL only.

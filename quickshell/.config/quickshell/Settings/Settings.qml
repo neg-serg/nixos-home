@@ -33,10 +33,8 @@ Singleton {
             id: settingAdapter
             // Bar / Panel visuals
             // Panel background transparency controls:
-            // - panelBgAlphaScale: 0..1 multiplier (preferred). Example: 0.2 = ~5x more transparent.
-            // - panelBgAlphaFactor: >0 divisor (fallback). Example: 5 = ~5x more transparent.
+            // - panelBgAlphaScale: 0..1 multiplier applied to the base theme alpha. Example: 0.2 ≈ five times more transparent.
             property real panelBgAlphaScale: 0.2
-            property real panelBgAlphaFactor: 0
 
             // Enable wedge clip ShaderEffect path (env vars can override in debug)
             property bool enableWedgeClipShader: false

@@ -39,6 +39,20 @@ Scope {
         const base = Color.saturate(Theme.accentPrimary, boost);
         return desaturateColor(base, desat);
     }
+    readonly property real _defaultPanelAlphaScale: 0.2
+    function panelBgAlphaScale() {
+        const raw = Settings.settings ? Settings.settings.panelBgAlphaScale : undefined;
+        let val = Number(raw);
+        if (!isFinite(val))
+            val = _defaultPanelAlphaScale;
+        return Math.max(0.0, Math.min(1.0, val));
+    }
+    function panelBgColor(baseColor) {
+        const scale = panelBgAlphaScale();
+        const hsl = Color.toHsl(baseColor);
+        const baseAlpha = (hsl && hsl.a !== undefined) ? hsl.a : 1.0;
+        return Color.withAlpha(baseColor, baseAlpha * scale);
+    }
 
     component TriangleOverlay : Canvas {
         property color color: Theme.background
@@ -354,9 +368,8 @@ Scope {
                     property int interWidgetSpacing: Math.max(widgetSpacing, Math.round(widgetSpacing * 1.35))
                     property int seamWidth: Math.max(8, Math.round(widgetSpacing * 0.85))
                     // Panel background transparency is configurable via Settings:
-                    // - panelBgAlphaScale: 0..1 multiplier (preferred)
-                    // - panelBgAlphaFactor: >0 divisor (fallback), e.g. 5 means 5x more transparent
-                    property color barBgColor: Color.withAlpha(Theme.background, 0.0)
+                    // - panelBgAlphaScale: 0..1 multiplier applied to the base theme alpha
+                    property color barBgColor: rootScope.panelBgColor(Theme.background)
                     property real seamTaperTop: 0.25
                     property real seamTaperBottom: 0.9
                     property real seamOpacity: 0.55
@@ -728,9 +741,8 @@ Scope {
                     property int interWidgetSpacing: Math.max(widgetSpacing, Math.round(widgetSpacing * 1.35))
                     property int seamWidth: Math.max(8, Math.round(widgetSpacing * 0.85))
                     // Panel background transparency is configurable via Settings:
-                    // - panelBgAlphaScale: 0..1 multiplier (preferred)
-                    // - panelBgAlphaFactor: >0 divisor (fallback), e.g. 5 means 5x more transparent
-                    property color barBgColor: Color.withAlpha(Theme.background, 0.0)
+                    // - panelBgAlphaScale: 0..1 multiplier applied to the base theme alpha
+                    property color barBgColor: rootScope.panelBgColor(Theme.background)
                     property real seamTaperTop: 0.25
                     property real seamTaperBottom: 0.9
                     property real seamOpacity: 0.55
