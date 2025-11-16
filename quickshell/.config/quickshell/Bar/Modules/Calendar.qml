@@ -6,6 +6,7 @@ import QtQuick.Layouts
 import qs.Components
 import qs.Settings
 import "../../Helpers/Color.js" as Color
+import "../../Helpers/TooltipText.js" as TooltipText
 
 OverlayToggleCapsule {
     id: calendarOverlay
@@ -175,9 +176,16 @@ OverlayToggleCapsule {
                             hoverEnabled: true
                             onEntered: {
                                 if (isHoliday) {
-                                    holidayTooltip.text = holidayInfo.map(function(h) {
-                                        return h.localName + (h.name !== h.localName ? " (" + h.name + ")" : "") + (h.global ? " [Global]" : "");
-                                    }).join(", ");
+                                    holidayTooltip.text = TooltipText.compose(
+                                        (holidayInfo && holidayInfo.length > 1) ? "Holidays" : (holidayInfo[0]?.localName || "Holiday"),
+                                        "",
+                                        holidayInfo.map(function(h) {
+                                            var name = h.localName;
+                                            if (h.name && h.name !== h.localName) name += " (" + h.name + ")";
+                                            if (h.global) name += " [Global]";
+                                            return name;
+                                        })
+                                    );
                                     holidayTooltip.targetItem = parent;
                                     holidayTooltip.visibleWhen = true;
                                 }

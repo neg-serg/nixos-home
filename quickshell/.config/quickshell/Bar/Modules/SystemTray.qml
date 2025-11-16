@@ -6,6 +6,7 @@ import Quickshell.Services.SystemTray
 import Quickshell.Widgets
 import qs.Settings
 import qs.Components
+import "../../Helpers/TooltipText.js" as TooltipText
 import qs.Services as Services
 import "../../Helpers/CapsuleMetrics.js" as CapsuleMetrics
 
@@ -320,7 +321,11 @@ Row {
 
             PanelTooltip {
                 id: trayTooltip
-                text: modelData.tooltipTitle || modelData.name || modelData.id || "Tray Item"
+                text: TooltipText.compose(
+                    modelData.tooltipTitle || modelData.name || modelData.id || "Tray Item",
+                    "",
+                    []
+                )
                 targetItem: trayIcon
                 delayMs: Services.TrayController.tooltipDelayMs
                 visibleWhen: false

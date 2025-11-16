@@ -5,6 +5,7 @@ import Quickshell.Wayland
 import qs.Settings
 import qs.Widgets.SidePanel
 import qs.Services as Services
+import "../../Helpers/TooltipText.js" as TooltipText
 
 OverlayToggleCapsule {
     id: root
@@ -64,11 +65,11 @@ OverlayToggleCapsule {
                 const c = Math.round(data.current_weather.temperature);
                 const useF = Settings.settings.useFahrenheit || false;
                 const t = useF ? Math.round(c * 9/5 + 32) + "°F" : c + "°C";
-                return (city ? (city + ": ") : "") + t;
+                return TooltipText.compose(city || "Weather", t, []);
             }
-            return city ? ("Погода: " + city) : "Погода";
+            return TooltipText.compose("Weather", city, []);
         } catch (e) {
-            return "Погода";
+            return "Weather";
         }
     }
 
