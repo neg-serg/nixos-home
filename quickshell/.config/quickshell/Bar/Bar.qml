@@ -433,7 +433,7 @@ Scope {
                         width: Math.max(1, leftPanel.width)
                         height: leftPanel.barHeightPx
                         color: "#000000"
-                        opacity: 0.8
+                        opacity: 0.5
                         anchors.top: parent.top
                         anchors.left: parent.left
                         z: -1
@@ -817,7 +817,7 @@ Scope {
                         width: Math.max(1, rightPanel.width)
                         height: rightPanel.barHeightPx
                         color: "#000000"
-                        opacity: 0.8
+                        opacity: 0.5
                         anchors.top: parent.top
                         anchors.right: parent.right
                         z: -1
