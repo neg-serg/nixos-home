@@ -305,6 +305,22 @@ Scope {
         id: barRootItem
         anchors.fill: parent
 
+        ShaderEffect {
+            id: panelShadow
+            anchors.top: parent.top
+            anchors.topMargin: rootScope.barHeight
+            anchors.horizontalCenter: parent.horizontalCenter
+            width: parent.width
+            height: rootScope.barHeight
+            visible: parent.visible && rootScope.barHeight > 0
+            z: -5
+            property color baseColor: Theme.panelPillColor
+            property color accentColor: Theme.panelPillColor
+            property vector4d params0: Qt.vector4d(0.0, 0.0, 0.0, 0.0)
+            property vector4d params1: Qt.vector4d(0.0, 0.0, 0.93, 0.0)
+            fragmentShader: Qt.resolvedUrl("../shaders/diag.frag.qsb")
+        }
+
         Variants {
             model: Quickshell.screens
 
@@ -408,20 +424,6 @@ Scope {
                         color: "transparent"
                         anchors.top: parent.top
                         anchors.left: parent.left
-                    }
-                    ShaderEffect {
-                        id: leftBarShadow
-                        anchors.top: leftBarBackground.bottom
-                        anchors.left: leftBarBackground.left
-                        width: leftBarBackground.width
-                        height: leftBarBackground.height
-                        visible: leftPanel.visible
-                        z: -1
-                        property color baseColor: Theme.panelPillColor
-                        property color accentColor: Theme.panelPillColor
-                        property vector4d params0: Qt.vector4d(0.0, 0.0, 0.0, 0.0)
-                        property vector4d params1: Qt.vector4d(0.0, 0.0, 0.93, 0.0)
-                        fragmentShader: Qt.resolvedUrl("../shaders/diag.frag.qsb")
                     }
                             Rectangle {
                                 id: leftBarFill
@@ -796,20 +798,6 @@ Scope {
                         color: "transparent"
                         anchors.top: parent.top
                         anchors.right: parent.right
-                    }
-                    ShaderEffect {
-                        id: rightBarShadow
-                        anchors.top: rightBarBackground.bottom
-                        anchors.right: rightBarBackground.right
-                        width: rightBarBackground.width
-                        height: rightBarBackground.height
-                        visible: rightPanel.visible
-                        z: -1
-                        property color baseColor: Theme.panelPillColor
-                        property color accentColor: Theme.panelPillColor
-                        property vector4d params0: Qt.vector4d(0.0, 0.0, 0.0, 0.0)
-                        property vector4d params1: Qt.vector4d(0.0, 0.0, 0.93, 0.0)
-                        fragmentShader: Qt.resolvedUrl("../shaders/diag.frag.qsb")
                     }
                             Rectangle {
                                 id: rightBarFill
