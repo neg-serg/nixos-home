@@ -815,16 +815,6 @@ Scope {
                             anchors.fill: parent
 
                     Rectangle {
-                        id: rightBarBackdrop
-                        width: Math.max(1, rightPanel.width)
-                        height: rightPanel.barHeightPx
-                        color: "#000000"
-                        opacity: 0.8
-                        anchors.top: parent.top
-                        anchors.right: parent.right
-                        z: -1
-                    }
-                    Rectangle {
                         id: rightBarBackground
                         width: Math.max(1, rightPanel.width)
                         height: rightPanel.barHeightPx
