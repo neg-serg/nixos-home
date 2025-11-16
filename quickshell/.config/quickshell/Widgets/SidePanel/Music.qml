@@ -9,6 +9,7 @@ import qs.Services
 import "../../Helpers/Color.js" as Color
 import "../../Helpers/Format.js" as Format
 import "../../Helpers/RichText.js" as Rich
+import "." as MusicWidgets
 
 Rectangle {
     id: musicCard
@@ -398,155 +399,95 @@ Rectangle {
                     
 
                             // Artist
-                            RowLayout {
+                            MusicWidgets.MusicDetailRow {
                                 visible: !!MusicManager.trackArtist
-                                Layout.fillWidth: true
-                            spacing: Math.round(Theme.sidePanelSpacingTight * Theme.scale(screen))
-                                MaterialIcon {
-                                    // Artist icon
-                                    icon: "person"
-                                    color: detailsCol.musicAccentReady ? detailsCol.musicAccent : playerUI.musicTextColor
-                                    size: Math.round(playerUI.musicFontPx * 1.05)
-                                }
-                                Text {
-                                    Layout.fillWidth: true
-                                    text: MusicManager.trackArtist
-                                    color: playerUI.musicTextColor
-                                    font.family: Theme.fontFamily
-                                    font.pixelSize: playerUI.musicTextPx
-                                    font.weight: Font.DemiBold
-                                    wrapMode: Text.NoWrap
-                                    elide: Text.ElideRight
-                                }
+                                screen: musicCard.screen
+                                iconName: "person"
+                                iconColor: detailsCol.musicAccentReady ? detailsCol.musicAccent : playerUI.musicTextColor
+                                iconSizeMultiplier: 1.05
+                                fontPixelSize: playerUI.musicTextPx
+                                textValue: MusicManager.trackArtist
+                                textColor: playerUI.musicTextColor
                             }
 
                             // Album artist (if different)
-                            RowLayout {
+                            MusicWidgets.MusicDetailRow {
                                 visible: !!MusicManager.trackAlbumArtist && MusicManager.trackAlbumArtist !== MusicManager.trackArtist
-                                Layout.fillWidth: true
-                                spacing: Math.round(Theme.sidePanelSpacingTight * Theme.scale(screen))
-                                MaterialIcon {
-                                    // Album artist icon
-                                    icon: "person"
-                                    color: detailsCol.musicAccentReady ? detailsCol.musicAccent : playerUI.musicTextColor
-                                    size: Math.round(playerUI.musicFontPx * 1.05)
-                                }
-                                Text {
-                                    Layout.fillWidth: true
-                                    text: MusicManager.trackAlbumArtist
-                                    color: playerUI.musicTextColor
-                                    font.family: Theme.fontFamily
-                                    font.pixelSize: playerUI.musicTextPx
-                                    font.weight: Font.DemiBold
-                                    wrapMode: Text.NoWrap
-                                    elide: Text.ElideRight
-                                }
+                                screen: musicCard.screen
+                                iconName: "person"
+                                iconColor: detailsCol.musicAccentReady ? detailsCol.musicAccent : playerUI.musicTextColor
+                                iconSizeMultiplier: 1.05
+                                fontPixelSize: playerUI.musicTextPx
+                                textValue: MusicManager.trackAlbumArtist
+                                textColor: playerUI.musicTextColor
                             }
 
                             // Album
-                            RowLayout {
+                            MusicWidgets.MusicDetailRow {
                                 visible: !!MusicManager.trackAlbum
-                                Layout.fillWidth: true
-                                spacing: Math.round(Theme.sidePanelSpacingTight * Theme.scale(screen))
-                                MaterialIcon {
-                                    // Album icon
-                                    icon: "album"
-                                    color: detailsCol.musicAccentReady ? detailsCol.musicAccent : playerUI.musicTextColor
-                                    size: Math.round(playerUI.musicFontPx * 1.05)
-                                }
-                                Text {
-                                    Layout.fillWidth: true
-                                    text: MusicManager.trackAlbum
-                                    color: playerUI.musicTextColor
-                                    font.family: Theme.fontFamily
-                                    font.pixelSize: playerUI.musicTextPx
-                                    font.weight: Font.DemiBold
-                                    wrapMode: Text.NoWrap
-                                    elide: Text.ElideRight
-                                }
+                                screen: musicCard.screen
+                                iconName: "album"
+                                iconColor: detailsCol.musicAccentReady ? detailsCol.musicAccent : playerUI.musicTextColor
+                                fontPixelSize: playerUI.musicTextPx
+                                textValue: MusicManager.trackAlbum
+                                textColor: playerUI.musicTextColor
                             }
 
                             
 
                             // Genre (if available)
-                            RowLayout {
+                            MusicWidgets.MusicDetailRow {
                                 visible: !!MusicManager.trackGenre
-                                Layout.fillWidth: true
-                                spacing: Math.round(Theme.sidePanelSpacingTight * Theme.scale(screen))
-                                MaterialIcon {
-                                    // Genre icon
-                                    icon: "category"
-                                    color: detailsCol.musicAccentReady ? detailsCol.musicAccent : playerUI.musicTextColor
-                                    size: Math.round(playerUI.musicFontPx * 1.05)
-                                    Layout.alignment: Qt.AlignVCenter
-                                }
-                                Text {
-                                    Layout.fillWidth: true
-                                    text: MusicManager.trackGenre
-                                    color: playerUI.musicTextColor
-                                    font.family: Theme.fontFamily
-                                    font.pixelSize: playerUI.musicTextPx
-                                    font.weight: Font.DemiBold
-                                    wrapMode: Text.NoWrap
-                                    elide: Text.ElideRight
-                                    Layout.alignment: Qt.AlignVCenter
-                                }
+                                screen: musicCard.screen
+                                iconName: "category"
+                                iconColor: detailsCol.musicAccentReady ? detailsCol.musicAccent : playerUI.musicTextColor
+                                fontPixelSize: playerUI.musicTextPx
+                                textValue: MusicManager.trackGenre
+                                textColor: playerUI.musicTextColor
+                                textAlignment: Qt.AlignVCenter
+                                iconAlignment: Qt.AlignVCenter
                             }
 
                             // Year (hide when Date is present)
-                            RowLayout {
+                            MusicWidgets.MusicDetailRow {
                                 visible: !!MusicManager.trackYear && !MusicManager.trackDateStr
-                                Layout.fillWidth: true
-                                spacing: Math.round(Theme.sidePanelSpacingTight * Theme.scale(screen))
-                                MaterialIcon { icon: "calendar_month"; color: detailsCol.musicAccentReady ? detailsCol.musicAccent : playerUI.musicTextColor; size: Math.round(playerUI.musicFontPx * 1.15); Layout.alignment: Qt.AlignVCenter }
-                                Text {
-                                    Layout.fillWidth: true
-                                    text: MusicManager.trackYear
-                                    color: playerUI.musicTextColor
-                                    font.family: Theme.fontFamily
-                                    font.pixelSize: playerUI.musicTextPx
-                                    font.weight: Font.DemiBold
-                                    elide: Text.ElideRight
-                                    Layout.alignment: Qt.AlignVCenter
-                                }
+                                screen: musicCard.screen
+                                iconName: "calendar_month"
+                                iconColor: detailsCol.musicAccentReady ? detailsCol.musicAccent : playerUI.musicTextColor
+                                iconSizeMultiplier: 1.15
+                                fontPixelSize: playerUI.musicTextPx
+                                textValue: MusicManager.trackYear
+                                textColor: playerUI.musicTextColor
+                                textAlignment: Qt.AlignVCenter
+                                iconAlignment: Qt.AlignVCenter
                             }
 
                             // Label/Publisher (if available)
-                            RowLayout {
+                            MusicWidgets.MusicDetailRow {
                                 visible: !!MusicManager.trackLabel
-                                Layout.fillWidth: true
-                                spacing: Math.round(Theme.sidePanelSpacingTight * Theme.scale(screen))
-                                MaterialIcon { icon: "sell"; color: detailsCol.musicAccentReady ? detailsCol.musicAccent : playerUI.musicTextColor; size: Math.round(playerUI.musicFontPx * 1.15); Layout.alignment: Qt.AlignVCenter }
-                                Text {
-                                    Layout.fillWidth: true
-                                    text: MusicManager.trackLabel
-                                    color: playerUI.musicTextColor
-                                    font.family: Theme.fontFamily
-                                    font.pixelSize: playerUI.musicTextPx
-                                    font.weight: Font.DemiBold
-                                    wrapMode: Text.NoWrap
-                                    elide: Text.ElideRight
-                                    Layout.alignment: Qt.AlignVCenter
-                                }
+                                screen: musicCard.screen
+                                iconName: "sell"
+                                iconColor: detailsCol.musicAccentReady ? detailsCol.musicAccent : playerUI.musicTextColor
+                                iconSizeMultiplier: 1.15
+                                fontPixelSize: playerUI.musicTextPx
+                                textValue: MusicManager.trackLabel
+                                textColor: playerUI.musicTextColor
+                                textAlignment: Qt.AlignVCenter
+                                iconAlignment: Qt.AlignVCenter
                             }
 
                             // Composer (if available)
-                            RowLayout {
+                            MusicWidgets.MusicDetailRow {
                                 visible: !!MusicManager.trackComposer
-                                Layout.fillWidth: true
-                                spacing: Math.round(Theme.sidePanelSpacingTight * Theme.scale(screen))
-                                MaterialIcon { icon: "piano"; color: detailsCol.musicAccentReady ? detailsCol.musicAccent : playerUI.musicTextColor; size: Math.round(playerUI.musicFontPx * 1.15); Layout.alignment: Qt.AlignVCenter }
-                                Text {
-                                    Layout.fillWidth: true
-                                    text: MusicManager.trackComposer
-                                    color: playerUI.musicTextColor
-                                    font.family: Theme.fontFamily
-                                    font.pixelSize: playerUI.musicTextPx
-                                    font.weight: Font.DemiBold
-                                    wrapMode: Text.NoWrap
-                                    elide: Text.ElideRight
-                                    Layout.alignment: Qt.AlignVCenter
-                                }
+                                screen: musicCard.screen
+                                iconName: "piano"
+                                iconColor: detailsCol.musicAccentReady ? detailsCol.musicAccent : playerUI.musicTextColor
+                                iconSizeMultiplier: 1.15
+                                fontPixelSize: playerUI.musicTextPx
+                                textValue: MusicManager.trackComposer
+                                textColor: playerUI.musicTextColor
+                                textAlignment: Qt.AlignVCenter
+                                iconAlignment: Qt.AlignVCenter
                             }
 
                             // Codec (hidden; included in Quality)
@@ -572,73 +513,49 @@ Rectangle {
                             }
 
                             // Quality summary (combined)
-                            RowLayout {
+                            MusicWidgets.MusicDetailRow {
                                 visible: !!MusicManager.trackQualitySummary
-                                Layout.fillWidth: true
-                                spacing: Math.round(Theme.sidePanelSpacingTight * Theme.scale(screen))
-                                MaterialIcon {
-                                    // Quality icon
-                                    icon: "high_quality"
-                                    color: detailsCol.musicAccentReady ? detailsCol.musicAccent : playerUI.musicTextColor
-                                    size: Math.round(playerUI.musicFontPx * 1.05)
-                                    Layout.alignment: Qt.AlignVCenter
-                                }
-                                Text {
-                                    Layout.fillWidth: true
-                                    // Drop decorative dots; keep plain text
-                                    textFormat: Text.RichText
-                                    text: (function(){
-                                        const raw = String(MusicManager.trackQualitySummary || "");
-                                        if (!raw) return "";
-                                        const accentCss = detailsCol.musicAccentCss;
-                                        // Manually escape while injecting spans so markup is not double-escaped
-                                        let out = "";
-                                        for (let i = 0; i < raw.length; ) {
-                                            const cp = raw.codePointAt(i);
-                                            const ch = String.fromCodePoint(cp);
-                                            if (cp >= 0xE000 && cp <= 0xF8FF) {
-                                                out += Rich.colorSpan(accentCss, ch);
-                                            } else if (ch === "\u00B7") {
-                                                out += " ";
-                                            } else {
-                                                out += Rich.esc(ch);
-                                            }
-                                            i += (cp > 0xFFFF) ? 2 : 1;
+                                screen: musicCard.screen
+                                iconName: "high_quality"
+                                iconColor: detailsCol.musicAccentReady ? detailsCol.musicAccent : playerUI.musicTextColor
+                                fontPixelSize: playerUI.musicTextPx
+                                textFormat: Text.RichText
+                                textValue: (function(){
+                                    const raw = String(MusicManager.trackQualitySummary || "");
+                                    if (!raw) return "";
+                                    const accentCss = detailsCol.musicAccentCss;
+                                    let out = "";
+                                    for (let i = 0; i < raw.length; ) {
+                                        const cp = raw.codePointAt(i);
+                                        const ch = String.fromCodePoint(cp);
+                                        if (cp >= 0xE000 && cp <= 0xF8FF) {
+                                            out += Rich.colorSpan(accentCss, ch);
+                                        } else if (ch === "\u00B7") {
+                                            out += " ";
+                                        } else {
+                                            out += Rich.esc(ch);
                                         }
-                                        return out;
-                                    })()
-                                    color: playerUI.musicTextColor
-                                    font.family: Theme.fontFamily
-                                    font.pixelSize: playerUI.musicTextPx
-                                    font.weight: Font.DemiBold
-                                    wrapMode: Text.NoWrap
-                                    elide: Text.ElideRight
-                                    Layout.alignment: Qt.AlignVCenter
-                                }
+                                        i += (cp > 0xFFFF) ? 2 : 1;
+                                    }
+                                    return out;
+                                })()
+                                textColor: playerUI.musicTextColor
+                                textAlignment: Qt.AlignVCenter
+                                iconAlignment: Qt.AlignVCenter
                             }
 
                             // DSD rate (icon + value, consistent with other rows)
-                            RowLayout {
+                            MusicWidgets.MusicDetailRow {
                                 visible: !!MusicManager.trackDsdRateStr
-                                Layout.fillWidth: true
-                                spacing: Math.round(Theme.sidePanelSpacingTight * Theme.scale(screen))
-                                MaterialIcon {
-                                    // DSD rate icon
-                                    icon: "speed"
-                                    color: detailsCol.musicAccent
-                                    size: Math.round(playerUI.musicFontPx * 1.15)
-                                    Layout.alignment: Qt.AlignVCenter
-                                }
-                                Text {
-                                    Layout.fillWidth: true
-                                    text: MusicManager.trackDsdRateStr
-                                    color: playerUI.musicTextColor
-                                    font.family: Theme.fontFamily
-                                    font.pixelSize: playerUI.musicTextPx
-                                    font.weight: Font.DemiBold
-                                    elide: Text.ElideRight
-                                    Layout.alignment: Qt.AlignVCenter
-                                }
+                                screen: musicCard.screen
+                                iconName: "speed"
+                                iconColor: detailsCol.musicAccent
+                                iconSizeMultiplier: 1.15
+                                fontPixelSize: playerUI.musicTextPx
+                                textValue: MusicManager.trackDsdRateStr
+                                textColor: playerUI.musicTextColor
+                                textAlignment: Qt.AlignVCenter
+                                iconAlignment: Qt.AlignVCenter
                             }
 
                             // Bit depth (hidden; included in Quality)
@@ -778,26 +695,17 @@ Rectangle {
                             
 
                             // Date (if available)
-                            RowLayout {
+                            MusicWidgets.MusicDetailRow {
                                 visible: !!MusicManager.trackDateStr
-                                Layout.fillWidth: true
-                                spacing: Math.round(Theme.sidePanelSpacingTight * Theme.scale(screen))
-                                MaterialIcon {
-                                    // Date icon
-                                    icon: "calendar_month"
-                                    color: detailsCol.musicAccentReady ? detailsCol.musicAccent : playerUI.musicTextColor
-                                    size: Math.round(playerUI.musicFontPx * 1.15)
-                                    Layout.alignment: Qt.AlignVCenter
-                                }
-                                Text {
-                                    Layout.fillWidth: true
-                                    text: MusicManager.trackDateStr
-                                    color: playerUI.musicTextColor
-                                    font.family: Theme.fontFamily
-                                    font.pixelSize: playerUI.musicTextPx
-                                    font.weight: Font.DemiBold
-                                    Layout.alignment: Qt.AlignVCenter
-                                }
+                                screen: musicCard.screen
+                                iconName: "calendar_month"
+                                iconColor: detailsCol.musicAccentReady ? detailsCol.musicAccent : playerUI.musicTextColor
+                                iconSizeMultiplier: 1.15
+                                fontPixelSize: playerUI.musicTextPx
+                                textValue: MusicManager.trackDateStr
+                                textColor: playerUI.musicTextColor
+                                textAlignment: Qt.AlignVCenter
+                                iconAlignment: Qt.AlignVCenter
                             }
 
                             
