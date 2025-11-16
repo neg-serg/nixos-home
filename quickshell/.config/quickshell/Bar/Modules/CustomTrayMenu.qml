@@ -51,7 +51,9 @@ import "../../Helpers/Color.js" as Color
         Qt.callLater(() => trayMenu.anchor.updateAnchor())
     }
 
-    function hideMenu() { visible = false; destroySubmenusRecursively(listView) }
+    function hideMenu() {
+        visible = false; destroySubmenusRecursively(listView)
+    }
 
     Item {
         anchors.fill: parent;

@@ -1201,7 +1201,9 @@ Scope {
                         acceptedButtons: Qt.NoButton
                         propagateComposedEvents: true
                         z: 10000
-                        onEntered: { systemTrayModule.panelHover = true; rightPanel.panelHovering = true }
+                        onEntered: {
+                            systemTrayModule.panelHover = true; rightPanel.panelHovering = true
+                        }
                         onExited: {
                             systemTrayModule.panelHover = false
                             rightPanel.panelHovering = false
