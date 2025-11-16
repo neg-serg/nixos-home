@@ -989,6 +989,9 @@ Scope {
                                 mirrorTriangle: false
                                 widthScale: 1.0
                                 flipAcrossVerticalAxis: true
+                                highlightHypotenuse: true
+                                highlightColor: rootScope.vpnAccentColor()
+                                highlightWidth: Math.max(2, Math.round(rightPanel.s * 3))
                             }
                             PillSeparator {
                                 scaleFactor: rightPanel.s
