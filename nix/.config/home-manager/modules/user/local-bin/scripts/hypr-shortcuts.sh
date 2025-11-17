@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# hypr-shortcuts: Walker-powered quick commands for Hyprland helpers
+# hypr-shortcuts: Vicinae-powered quick commands for Hyprland helpers
 set -euo pipefail
 IFS=$'\n\t'
 
@@ -7,9 +7,9 @@ log() {
   printf 'hypr-shortcuts: %s\n' "$*" >&2
 }
 
-walker_bin="${WALKER_BIN:-$(command -v walker 2>/dev/null || true)}"
-if [ -z "$walker_bin" ]; then
-  log "walker binary not found in PATH"
+vicinae_bin="${VICINAE_BIN:-$(command -v vicinae 2>/dev/null || true)}"
+if [ -z "$vicinae_bin" ]; then
+  log "vicinae binary not found in PATH"
   exit 1
 fi
 
@@ -44,8 +44,8 @@ require_signature() {
   printf '%s\n' "$sig"
 }
 
-walker_menu() {
-  "$walker_bin" --dmenu --placeholder "shortcuts ❯❯"
+vicinae_menu() {
+  "$vicinae_bin" dmenu --placeholder "shortcuts ❯❯" --section-title "Shortcuts {count}" --navigation-title "Shortcuts"
 }
 
 pick_secret() {
@@ -56,7 +56,7 @@ pick_secret() {
   fi
   listing="$(printf '%s\n' "$listing" | sed '/^\s*$/d')"
   [ -n "$listing" ] || return 1
-  printf '%s\n' "$listing" | "$walker_bin" --dmenu --placeholder "gopass ❯❯"
+  printf '%s\n' "$listing" | "$vicinae_bin" dmenu --placeholder "gopass ❯❯" --navigation-title "gopass" --section-title "Entries {count}"
 }
 
 fetch_window() {
@@ -101,7 +101,7 @@ choices=(
   "Update/Change password"
 )
 
-selection="$(printf '%s\n' "${choices[@]}" | walker_menu)" || exit 0
+selection="$(printf '%s\n' "${choices[@]}" | vicinae_menu)" || exit 0
 case "$selection" in
   "Fetch window")
     fetch_window

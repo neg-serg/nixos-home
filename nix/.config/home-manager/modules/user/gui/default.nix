@@ -5,7 +5,6 @@
     ./flameshot.nix
     ./hyprland.nix
     ./kitty.nix
-    ./walker.nix
     ./vicinae.nix
     ./handlr.nix
     ./rofi.nix
