@@ -78,8 +78,11 @@ When the right panel hides (monitor removed, bar toggled, etc.), its seam window
 
 ### Network cluster behavior
 - The “net cluster” on the left bar now uses a single `LocalMods.NetClusterCapsule`: VPN + link icons share the leading slot while throughput text lives in the label lane.
-- `NetClusterCapsule` keeps the old `NetworkLinkIndicator` icon pool (random pick from `graph_1`…`graph_7`, `schema`, or `family_history`). Override `iconPool`/`iconConnected`/`iconNoInternet`/`iconDisconnected` to customize.
-- Only the icon changes color on failure: warning (`Settings.networkNoInternetColor`) when there is link but no internet; error (`Settings.networkNoLinkColor`) when the physical link drops. Throughput text remains in the neutral color. Use `Helpers/ConnectivityUi.js` to keep formatting/colors consistent across VPN/link/speed modules.
+- `NetClusterCapsule` now always uses the Material `lan` glyph for the link status unless you explicitly override `linkIconDefault`. The status fallback icons (`iconConnected`/`iconNoInternet`/`iconDisconnected`) still apply when `useStatusFallbackIcons` is enabled, and VPN glyph swaps are doable via `vpnIconDefault`.
+- Only the icon changes color on failure: warning (`Settings.networkNoInternetColor`) when there is link but no internet; error (`Settings.networkNoLinkColor`) when the physical link drops. In the healthy state the link glyph now reuses the accent color so Ethernet activity pops more, while throughput text remains neutral. Use `Helpers/ConnectivityUi.js` to keep formatting/colors consistent across VPN/link/speed modules.
+- To tighten the VPN/ethernet icon pair, the capsule now subtracts half of `network.capsule.iconPadding` from the leading slot spacing/margins. Bump that Theme token back up if you need more breathing room.
+- Default theme tokens now pin `network.capsule.iconPadding` to `0`, so the VPN/link pair hugs even closer without affecting other modules.
+- Additional per-slot trim for the VPN glyph comes from `network.capsule.vpnHorizontalMarginTrim` (default `2px`). Raise it for a tighter pair, or drop it to `0` if you prefer the historical symmetric inset.
 - Icon scale/baseline adjustments come from `Theme.network.icon.scale` / `.vAdjust`. Capsule padding/spacing still follow the same Theme tokens, so alignment stays identical even when VPN visibility toggles.
 
 ---
@@ -158,6 +161,9 @@ When the right panel hides (monitor removed, bar toggled, etc.), its seam window
 
 ### Поведение сетевого кластера
 - «Нет-кластер» на левой панели теперь рисуется одной `LocalMods.NetClusterCapsule`: иконки VPN и линка делят общий leading-slot, а текст трафика остаётся в центральной метке.
-- `NetClusterCapsule` сохранила рандомизацию `NetworkLinkIndicator` (иконка из `graph_1`…`graph_7`, `schema`, `family_history`). Переопределите `iconPool`/`iconConnected`/`iconNoInternet`/`iconDisconnected`, если нужен другой набор.
-- При проблемах меняется только цвет иконки: warning (`Settings.networkNoInternetColor`), если линк есть, но «интернет не пингуется», и error (`Settings.networkNoLinkColor`), если физический линк пропал. Текст скоростей всегда остаётся нейтральным. Цвета/форматирование вынесены в `Helpers/ConnectivityUi.js`, чтобы VPN/Link/Usage выглядели одинаково.
+- `NetClusterCapsule` теперь всегда показывает `lan`, если вы явно не переопределили `linkIconDefault`. Резервные иконки состояний (`iconConnected`/`iconNoInternet`/`iconDisconnected`) продолжают использоваться, когда включён `useStatusFallbackIcons`, а VPN‑глиф можно поменять через `vpnIconDefault`.
+- При проблемах меняется только цвет иконки: warning (`Settings.networkNoInternetColor`), если линк есть, но «интернет не пингуется», и error (`Settings.networkNoLinkColor`), если физический линк пропал. В норме глиф линка теперь красится в accent, чтобы Ethernet заметнее выделялся, а текст скоростей остаётся нейтральным. Цвета/форматирование вынесены в `Helpers/ConnectivityUi.js`, чтобы VPN/Link/Usage выглядели одинаково.
+- Чтобы иконки VPN и Ethernet стояли ближе, мы теперь вычитаем половину `network.capsule.iconPadding` из spacing/внешнего отступа leading-слота. Хотите больше воздуха — увеличьте соответствующий токен в Theme.
+- В дефолтной теме `network.capsule.iconPadding` теперь равен `0`, поэтому пара VPN/линк сидит максимально плотно и не влияет на остальные модули.
+- Дополнительную подрезку конкретно для VPN задаёт `network.capsule.vpnHorizontalMarginTrim` (по умолчанию `2px`). Увеличьте значение — и иконки будут ещё ближе; поставьте `0`, если нужен симметричный отступ как раньше.
 - Масштаб и вертикальный сдвиг иконок задаются `Theme.network.icon.scale` / `.vAdjust`. Все паддинги и spacing по-прежнему подчиняются Theme, поэтому выключенная VPN-иконка не ломает выравнивание.

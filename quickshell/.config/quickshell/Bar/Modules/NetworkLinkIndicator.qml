@@ -6,7 +6,8 @@ NetClusterCapsule {
 
     property bool showLabel: false
     property string labelTextValue: "NET"
-    property alias iconPool: root.iconPool
+    property alias linkIconDefault: root.linkIconDefault
+    property alias vpnIconDefault: root.vpnIconDefault
     property alias iconConnected: root.iconConnected
     property alias iconNoInternet: root.iconNoInternet
     property alias iconDisconnected: root.iconDisconnected

@@ -38,11 +38,12 @@ Additional UI tokens (nested)
   - Menu: panel.menu.itemFontScale (font size multiplier)
  - Bar layout: panel.netCluster.spacing (spacing between VPN and Network)
  - Side panel button visibility guard: sidePanel.button.activeVisibleMin; UI epsilon: ui.visibilityEpsilon
- - Network capsule: network.capsule.iconSpacing, network.capsule.labelPadding,
-   network.capsule.minLabelGap, network.capsule.iconPadding, network.capsule.iconScale,
-   network.capsule.iconBaselineOffset, network.capsule.iconAlignMode,
-   network.capsule.iconHorizontalMargin (adds left/right padding inside the icon slot; defaults
-   to the keyboard capsule margin so VPN/link glyphs inherit the same inset)
+- - Network capsule: network.capsule.iconSpacing, network.capsule.labelPadding,
+-   network.capsule.minLabelGap, network.capsule.iconPadding, network.capsule.iconScale,
+-   network.capsule.iconBaselineOffset, network.capsule.iconAlignMode,
+-   network.capsule.iconHorizontalMargin (adds left/right padding inside the icon slot; defaults
+-   to the keyboard capsule margin so VPN/link glyphs inherit the same inset),
+-   network.capsule.vpnHorizontalMarginTrim (per-slot trim that only tightens the VPN glyph)
  - Volume:
   - panel.volume.lowColor, panel.volume.highColor
   - panel.volume.fullHideMs (hide at exactly 100%)

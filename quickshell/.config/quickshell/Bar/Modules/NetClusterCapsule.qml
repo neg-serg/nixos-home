@@ -24,22 +24,29 @@ ConnectivityCapsule {
     property color accentColor: desaturateColor(accentBase, desaturateAmount)
     property color vpnOffColor: Theme.textDisabled
 
-    property var iconPool: (["graph_1", "graph_2", "graph_3", "graph_4", "graph_5", "graph_6", "graph_7", "schema", "family_history"])
+    property string linkIconDefault: "lan"
+    property string vpnIconDefault: "verified_user"
     property string iconConnected: "network_check"
     property string iconNoInternet: "network_ping"
     property string iconDisconnected: "link_off"
     property bool useStatusFallbackIcons: false
-    property string _selectedIcon: "schema"
 
     readonly property bool vpnConnected: ConnectivityState.vpnConnected
     readonly property bool hasLink: ConnectivityState.hasLink
     readonly property bool hasInternet: ConnectivityState.hasInternet
     readonly property bool _hasLeading: vpnVisible || linkVisible
-    readonly property int clusterSpacing: Math.max(0, Theme.networkCapsuleIconSpacing)
-    readonly property int iconHorizontalMargin: Math.max(0, Theme.networkCapsuleIconHorizontalMargin)
+    readonly property int _baseClusterSpacing: Math.max(0, Theme.networkCapsuleIconSpacing)
+    readonly property int _baseIconMargin: Math.max(0, Theme.networkCapsuleIconHorizontalMargin)
+    readonly property int _iconPaddingToken: Math.max(0, Theme.networkCapsuleIconPadding)
+    readonly property int _compactPadding: Math.min(_iconPaddingToken, Math.round(_baseClusterSpacing / 2))
+    readonly property int clusterSpacing: Math.max(0, _baseClusterSpacing - _compactPadding)
+    readonly property int iconHorizontalMargin: Math.max(0, _baseIconMargin - Math.round(_compactPadding / 2))
+    readonly property int vpnSlotHorizontalMargin: Math.max(0, iconHorizontalMargin - Theme.networkCapsuleVpnHorizontalMarginTrim)
     readonly property color vpnIconColor: vpnConnected ? accentColor : vpnOffColor
-    readonly property color linkIconColor: ConnUi.iconColor(hasLink, hasInternet, Settings.settings, Theme)
-    readonly property string currentLinkIconName: useStatusFallbackIcons ? (!hasLink ? iconDisconnected : (!hasInternet ? iconNoInternet : iconConnected)) : _selectedIcon
+    readonly property color linkIconColor: (!hasLink)
+        ? ConnUi.errorColor(Settings.settings, Theme)
+        : (!hasInternet ? ConnUi.warningColor(Settings.settings, Theme) : accentColor)
+    readonly property string currentLinkIconName: useStatusFallbackIcons ? (!hasLink ? iconDisconnected : (!hasInternet ? iconNoInternet : iconConnected)) : linkIconDefault
 
     backgroundKey: "network"
     iconVisible: false
@@ -61,13 +68,13 @@ ConnectivityCapsule {
             square: root.iconSquare
             box: root.desiredInnerHeight
             mode: "material"
-            icon: "verified_user"
+            icon: root.vpnIconDefault
             rounded: root.vpnIconRounded
             color: root.vpnIconColor
             screen: root.screen
             labelRef: root.labelItem
             alignTarget: root.labelItem
-            outerHorizontalMargin: root.iconHorizontalMargin
+            outerHorizontalMargin: root.vpnSlotHorizontalMargin
             anchors.verticalCenter: parent.verticalCenter
         }
 
@@ -129,16 +136,4 @@ ConnectivityCapsule {
         return left + Rich.sepSpan(_slashAccentCss, "/", true) + right;
     }
 
-    function _pickRandomIcon() {
-        try {
-            const pool = Array.isArray(iconPool) && iconPool.length ? iconPool : ["schema"];
-            const idx = Math.floor(Math.random() * pool.length);
-            _selectedIcon = pool[Math.max(0, Math.min(pool.length - 1, idx))];
-        } catch (e) {
-            _selectedIcon = "schema";
-        }
-    }
-
-    Component.onCompleted: _pickRandomIcon()
-    onIconPoolChanged: _pickRandomIcon()
 }
