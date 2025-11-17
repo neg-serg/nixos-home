@@ -16,7 +16,7 @@ ConnectivityCapsule {
     property bool vpnIconRounded: false
     property bool linkIconRounded: false
     property bool iconSquare: true
-    property bool iconDebugFrames: true
+    property bool iconDebugFrames: false
     property color iconDebugFrameColor: "#ff0000"
     property real iconDebugFrameWidth: 1.5
 
