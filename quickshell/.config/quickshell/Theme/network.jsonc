@@ -4,7 +4,8 @@
     "restartBackoffMs": 1500,
     "linkPollMs": 4000,
     "capsule": {
-      "iconPadding": -8
+      "iconPadding": 0,
+      "gapTightenPx": 8
     }
   }
 }

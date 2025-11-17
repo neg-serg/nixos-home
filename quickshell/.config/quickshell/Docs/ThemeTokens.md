@@ -42,7 +42,8 @@ Additional UI tokens (nested)
 -   network.capsule.minLabelGap, network.capsule.iconPadding, network.capsule.iconScale,
 -   network.capsule.iconBaselineOffset, network.capsule.iconAlignMode,
 -   network.capsule.iconHorizontalMargin (adds left/right padding inside the icon slot; defaults
--   to the keyboard capsule margin so VPN/link glyphs inherit the same inset)
+-   to the keyboard capsule margin so VPN/link glyphs inherit the same inset),
+-   network.capsule.gapTightenPx (subtract from VPN/link spacing and halve for margins)
  - Volume:
   - panel.volume.lowColor, panel.volume.highColor
   - panel.volume.fullHideMs (hide at exactly 100%)

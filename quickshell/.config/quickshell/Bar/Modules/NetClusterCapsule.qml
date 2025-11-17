@@ -40,10 +40,9 @@ ConnectivityCapsule {
     readonly property bool _hasLeading: vpnVisible || linkVisible
     readonly property int _baseClusterSpacing: Math.max(0, Theme.networkCapsuleIconSpacing)
     readonly property int _baseIconMargin: Math.max(0, Theme.networkCapsuleIconHorizontalMargin)
-    readonly property int _iconPaddingToken: Theme.networkCapsuleIconPadding
-    readonly property int _tightenAmount: Math.min(Math.abs(_iconPaddingToken), Math.round(_baseClusterSpacing / 2))
-    readonly property int clusterSpacing: Math.max(0, _baseClusterSpacing - _tightenAmount)
-    readonly property int iconHorizontalMargin: Math.max(0, _baseIconMargin - Math.round(_tightenAmount / 2))
+    readonly property int _gapTighten: Math.min(Math.max(0, Theme.networkCapsuleGapTightenPx), Math.round(_baseClusterSpacing))
+    readonly property int clusterSpacing: Math.max(0, _baseClusterSpacing - _gapTighten)
+    readonly property int iconHorizontalMargin: Math.max(0, _baseIconMargin - Math.round(_gapTighten / 2))
     readonly property color vpnIconColor: vpnConnected ? accentColor : vpnOffColor
     readonly property color linkIconColor: (!hasLink)
         ? ConnUi.errorColor(Settings.settings, Theme)
