@@ -746,7 +746,7 @@ Singleton {
 
     // Panel metrics (logical)
     property real panelScaleFactor: Utils.clamp(val('panel.scale', 1.0) * fontSizeMultiplier, 0.25, 2.5)
-    property int panelHeight: val('panel.height', 28)
+    property int panelHeight: val('panel.height', 22)
     property int panelSideMargin: val('panel.sideMargin', 18)
     property int panelWidgetSpacing: val('panel.widgetSpacing', 12)
     property real panelSeparatorOpacity: val('panel.separatorOpacity', 0.88)
@@ -781,7 +781,7 @@ Singleton {
     // Optional horizontal center offset tweak
     property int weatherCenterOffset: val('weather.centerOffset', -2)
     // Pill indicator defaults
-    property int panelPillHeight: val('panel.pill.height', panelHeight + 2)
+    property int panelPillHeight: val('panel.pill.height', panelHeight)
     property int panelPillIconSize: val('panel.pill.iconSize', 22)
     property int panelPillPaddingH: val('panel.pill.paddingH', 14)
     property int panelPillShowDelayMs: val('panel.pill.showDelayMs', 500)

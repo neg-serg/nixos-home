@@ -74,6 +74,8 @@ Right bar widgets are capsule-based and spacing-free. Left → right order:
 
 Keep this order intact so separators remain unnecessary and hover hot-zones are predictable.
 
+When the right panel hides (monitor removed, bar toggled, etc.), its seam window and separators still disappear in lockstep, but the shader-backed background fill now stays so the translucent plate remains instead of popping away.
+
 ### Network cluster behavior
 - The “net cluster” on the left bar now uses a single `LocalMods.NetClusterCapsule`: VPN + link icons share the leading slot while throughput text lives in the label lane.
 - `NetClusterCapsule` keeps the old `NetworkLinkIndicator` icon pool (random pick from `graph_1`…`graph_7`, `schema`, or `family_history`). Override `iconPool`/`iconConnected`/`iconNoInternet`/`iconDisconnected` to customize.
@@ -151,6 +153,8 @@ Keep this order intact so separators remain unnecessary and hover hot-zones are 
 5. Капсула `Volume`.
 
 Не меняйте порядок — так не нужны разделители, а рабочие зоны мыши предсказуемы.
+
+Когда правая часть панели скрывается (монитор отключён, панель выключена и т. п.), seam-окно и разделители по‑прежнему убираются синхронно, а шейдерный прямоугольник полупрозрачного фона остаётся на месте, чтобы не было резких скачков визуала.
 
 ### Поведение сетевого кластера
 - «Нет-кластер» на левой панели теперь рисуется одной `LocalMods.NetClusterCapsule`: иконки VPN и линка делят общий leading-slot, а текст трафика остаётся в центральной метке.

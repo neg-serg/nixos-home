@@ -151,6 +151,10 @@ Scope {
         id: panelSeparator
         required property real scaleFactor
         required property int panelHeightPx
+        // Control overall visibility: panelActive is toggled by parent panel,
+        // while userVisible lets callers add per-instance conditions.
+        property bool panelActive: true
+        property bool userVisible: true
         property real alpha: 0.0
         property bool triangleEnabled: false
         property string backgroundKey: ""
@@ -163,6 +167,8 @@ Scope {
         property bool mirrorTriangle: false
         property real mirrorTriangleWidthFactor: triangleWidthFactor
         property real widthScale: 1.0
+        readonly property real _heightRaw: panelHeightPx
+        readonly property int triangleHeightPx: Math.max(2, Math.round(_heightRaw))
         property bool highlightHypotenuse: false
         property bool highlightMirror: false
         property color highlightColor: Theme.accentPrimary
@@ -171,8 +177,10 @@ Scope {
         property bool useMirrorTriangleOnly: false
         property bool usePrimaryTriangleOnly: false
         property bool flipAcrossVerticalAxis: false
-        width: Math.max(1, Math.round(widthScale * scaleFactor * Math.max(1, Theme.uiBorderWidth) * 16))
-        height: Math.max(2, Math.round(panelHeightPx))
+        width: Math.max(1, Math.round(widthScale * Theme.panelSeparatorWidthFactor * scaleFactor * Math.max(1, Theme.uiBorderWidth) * 16))
+        height: triangleHeightPx
+        implicitHeight: triangleHeightPx
+        Layout.preferredHeight: triangleHeightPx
         property var triangleVariant: "flipY"
         readonly property var triangleVariantSpec: rootScope.makeTriangleVariant(width, height, triangleVariant)
         readonly property bool triangleFlipX: triangleVariantSpec.flipX
@@ -191,12 +199,13 @@ Scope {
         color: Color.withAlpha(Theme.textPrimary, alpha)
         opacity: 1.0
         Layout.alignment: Qt.AlignVCenter
+        visible: panelActive && userVisible
 
 
         TriangleOverlay {
             anchors.verticalCenter: parent.verticalCenter
-            anchors.left: (parent.triangleFlipX ? undefined : parent.left)
-            anchors.right: (parent.triangleFlipX ? parent.right : undefined)
+            anchors.left: (parent.primaryFlipX ? undefined : parent.left)
+            anchors.right: (parent.primaryFlipX ? parent.right : undefined)
             width: parent.width
             height: parent.height
             color: parent.triangleColor
@@ -209,8 +218,8 @@ Scope {
 
         TriangleOverlay {
             anchors.verticalCenter: parent.verticalCenter
-            anchors.left: (!parent.triangleFlipX ? undefined : parent.left)
-            anchors.right: (!parent.triangleFlipX ? parent.right : undefined)
+            anchors.left: (!parent.mirrorFlipX ? undefined : parent.left)
+            anchors.right: (!parent.mirrorFlipX ? parent.right : undefined)
             width: parent.width
             height: parent.height
             color: parent.triangleColor
@@ -696,7 +705,7 @@ Scope {
                             PanelSeparator {
                                 scaleFactor: leftPanel.s
                                 panelHeightPx: leftPanel.barHeightPx
-                                visible: netCluster.visible
+                                userVisible: netCluster.visible
                                 triangleEnabled: netCluster.visible
                                 triangleWidthFactor: 0.75
                                 mirrorTriangle: netCluster.visible
@@ -775,6 +784,22 @@ Scope {
                     exclusiveZone: 0
                     property real s: Theme.scale(rightPanel.screen)
                     property int barHeightPx: Math.round(Theme.panelHeight * s)
+                    readonly property bool _mediaSlotVisible: !!(mediaModule && mediaModule.visible)
+                    readonly property bool _mediaOverlayVisible: !!(mediaOverlayHost && mediaOverlayHost.visible)
+                    readonly property bool _mpdFlagsVisible: !!(mpdFlagsBar && mpdFlagsBar.visible)
+                    readonly property bool _trayVisible: !!(systemTrayWrapper && systemTrayWrapper.trayVisible)
+                    readonly property bool _microphoneVisible: !!(widgetsMicrophone && widgetsMicrophone.visible)
+                    readonly property bool _volumeVisible: !!(widgetsVolume && widgetsVolume.visible)
+                    readonly property bool _hasPanelContent: (
+                        _mediaSlotVisible
+                        || _mediaOverlayVisible
+                        || _mpdFlagsVisible
+                        || _trayVisible
+                        || _microphoneVisible
+                        || _volumeVisible
+                    )
+                    readonly property bool baseFillVisible: monitorEnabled
+                    readonly property bool renderActive: baseFillVisible && _hasPanelContent
                     readonly property real _sideMarginBase: (
                         Settings.settings.panelSideMarginPx !== undefined
                         && Settings.settings.panelSideMarginPx !== null
@@ -828,6 +853,7 @@ Scope {
                         anchors.top: parent.top
                         anchors.right: parent.right
                         z: -1
+                        visible: rightPanel.baseFillVisible
                     }
                     Rectangle {
                         id: rightBarBackground
@@ -836,6 +862,7 @@ Scope {
                         color: "transparent"
                         anchors.top: parent.top
                         anchors.right: parent.right
+                        visible: rightPanel.baseFillVisible
                     }
                             Rectangle {
                                 id: rightBarFill
@@ -846,6 +873,7 @@ Scope {
                             anchors.right: rightBarBackground.right
                             // Keep visible; ShaderEffectSource will hide it from the scene
                             // only when the shader clip is active (via hideSource binding).
+                            visible: rightPanel.baseFillVisible
                         }
                         // Cut a triangular window from the left edge of rightBarFill
                         // so the underlying seam (in seamPanel) shows through exactly.
@@ -867,7 +895,7 @@ Scope {
                             // Keep the tint effect enabled when panelTintEnabled. The
                             // ShaderEffectSource below hides it when the clipped-tint path
                             // is active.
-                            visible: rightPanel.panelTintEnabled
+                            visible: rightPanel.baseFillVisible && rightPanel.panelTintEnabled
                             fragmentShader: Qt.resolvedUrl("../shaders/panel_tint_mix.frag.qsb")
                             property var sourceSampler: rightPanelSource
                             property color tintColor: rightPanel.panelTintColor
@@ -929,10 +957,12 @@ Scope {
                             id: rightFaceClipLoader
                             anchors.fill: rightBarFill
                             z: 50
-                            active: ((Quickshell.env("QS_ENABLE_WEDGE_CLIP") || "") === "1")
+                            active: rightPanel.renderActive && (
+                                    ((Quickshell.env("QS_ENABLE_WEDGE_CLIP") || "") === "1")
                                     || ((Quickshell.env("QS_WEDGE_DEBUG") || "") === "1")
                                     || ((Quickshell.env("QS_WEDGE_SHADER_TEST") || "") === "1")
                                     || (Settings.settings.enableWedgeClipShader === true)
+                            )
                             sourceComponent: ShaderEffect {
                                 fragmentShader: Qt.resolvedUrl("../shaders/wedge_clip.frag.qsb")
                                 // Clip the base face (pure fill color) to subtract the wedge
@@ -977,7 +1007,9 @@ Scope {
                             // Draw local seam wedge only when the shader path is active,
                             // and hide it while QS_WEDGE_DEBUG is enabled so the shader's
                             // magenta overlay remains visible for validation.
-                            visible: rightFaceClipLoader.active === true && ((Quickshell.env("QS_WEDGE_DEBUG") || "") !== "1")
+                            visible: rightPanel.renderActive
+                                && rightFaceClipLoader.active === true
+                                && ((Quickshell.env("QS_WEDGE_DEBUG") || "") !== "1")
                             ShaderEffect {
                                 id: rightSeamFX
                                 anchors.fill: parent
@@ -1035,6 +1067,7 @@ Scope {
                                 id: mediaLeadingSeparator
                                 scaleFactor: rightPanel.s
                                 panelHeightPx: rightPanel.barHeightPx
+                                panelActive: rightPanel.renderActive
                                 triangleEnabled: true
                                 triangleWidthFactor: 0.95
                                 mirrorTriangle: false
@@ -1047,6 +1080,7 @@ Scope {
                             PillSeparator {
                                 scaleFactor: rightPanel.s
                                 panelHeightPx: rightPanel.barHeightPx
+                                panelActive: rightPanel.renderActive
                                 triangleEnabled: false
                                 widthScale: 0.5
                             }
@@ -1237,7 +1271,7 @@ Scope {
                                 systemTrayModule.expanded = false
                             }
                         }
-                        visible: true
+                        visible: rightPanel.renderActive
                         Rectangle { visible: false }
                     }
 
@@ -1256,7 +1290,8 @@ Scope {
                     // Readiness filter: when enabled, only show seam once geometry stabilizes.
                     // Prevents early full-width flash while rows are still measuring.
                     property bool useReadinessFilter: true
-                    visible: monitorEnabled && (
+                    property bool rightPanelActive: rightPanel.renderActive
+                    visible: monitorEnabled && seamPanel.rightPanelActive && (
                         !seamPanel.useReadinessFilter
                         ? (seamPanel.rawGapWidth > 0)
                         : (seamPanel.geometryReady)
