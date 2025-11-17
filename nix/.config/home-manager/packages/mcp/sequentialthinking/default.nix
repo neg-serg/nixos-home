@@ -22,6 +22,7 @@ buildNpmPackage rec {
 
   buildPhase = ''
     runHook preBuild
+    npm run build
     runHook postBuild
   '';
 
