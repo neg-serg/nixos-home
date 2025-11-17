@@ -5,7 +5,8 @@
     "linkPollMs": 4000,
     "capsule": {
       "iconPadding": 0,
-      "gapTightenPx": 8
+      "gapTightenPx": 8,
+      "iconHorizontalMargin": 0
     }
   }
 }
