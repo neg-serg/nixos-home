@@ -2,13 +2,22 @@
   lib,
   pkgs,
   config,
+  xdg,
   iosevkaNeg,
   ...
 }:
 with {
   alkano-aio = pkgs.callPackage ./alkano-aio.nix {};
-}; {
-  home = lib.mkIf (config.features.gui.enable or false) {
+};
+let
+  kvantumAltConfig = xdg.mkXdgText "Kvantum/kvantum.kvconfig" ''
+[General]
+theme=KvantumAlt
+'';
+in
+lib.mkMerge [
+  {
+    home = lib.mkIf (config.features.gui.enable or false) {
     packages =
       [
         pkgs.adw-gtk3 # adwaita port to gtk3
@@ -175,4 +184,6 @@ with {
       };
     };
   };
-}
+  }
+  (lib.mkIf (config.features.gui.qt.enable or false) kvantumAltConfig)
+]
