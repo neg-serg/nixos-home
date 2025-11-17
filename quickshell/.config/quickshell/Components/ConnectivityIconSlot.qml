@@ -26,6 +26,9 @@ Item {
     property string alignModeToken: Theme.networkCapsuleIconAlignMode
     property int padding: Theme.networkCapsuleIconPadding
     property int outerHorizontalMargin: Theme.networkCapsuleIconHorizontalMargin
+    property bool debugBorderVisible: false
+    property color debugBorderColor: "#ff0000"
+    property real debugBorderWidth: 1
 
     visible: active
     readonly property int _box: Math.max(0, box)
@@ -62,5 +65,14 @@ Item {
         padding: Math.max(0, slot.padding)
         scaleToken: slot.scaleToken
         baselineOffsetToken: slot.baselineToken - glyph.baselineVisualDelta
+    }
+
+    Rectangle {
+        anchors.fill: parent
+        color: "transparent"
+        border.color: slot.debugBorderColor
+        border.width: slot.debugBorderVisible ? Math.max(1, slot.debugBorderWidth) : 0
+        radius: slot.square ? slot.height / 2 : Math.min(slot.width, slot.height) / 2
+        visible: slot.debugBorderVisible && border.width > 0
     }
 }

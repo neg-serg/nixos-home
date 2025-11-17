@@ -16,6 +16,9 @@ ConnectivityCapsule {
     property bool vpnIconRounded: false
     property bool linkIconRounded: false
     property bool iconSquare: true
+    property bool iconDebugFrames: true
+    property color iconDebugFrameColor: "#ff0000"
+    property real iconDebugFrameWidth: 1.5
 
     property real accentSaturateBoost: Theme.vpnAccentSaturateBoost
     property real accentLightenTowardWhite: Theme.vpnAccentLightenTowardWhite
@@ -75,6 +78,9 @@ ConnectivityCapsule {
             labelRef: root.labelItem
             alignTarget: root.labelItem
             outerHorizontalMargin: root.vpnSlotHorizontalMargin
+            debugBorderVisible: root.iconDebugFrames
+            debugBorderColor: root.iconDebugFrameColor
+            debugBorderWidth: root.iconDebugFrameWidth
             anchors.verticalCenter: parent.verticalCenter
         }
 
@@ -91,6 +97,9 @@ ConnectivityCapsule {
             labelRef: root.labelItem
             alignTarget: root.labelItem
             outerHorizontalMargin: root.iconHorizontalMargin
+            debugBorderVisible: root.iconDebugFrames
+            debugBorderColor: root.iconDebugFrameColor
+            debugBorderWidth: root.iconDebugFrameWidth
             anchors.verticalCenter: parent.verticalCenter
         }
     }
