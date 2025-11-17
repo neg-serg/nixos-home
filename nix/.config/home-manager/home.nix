@@ -42,6 +42,10 @@ in {
 
   # Enable hy3 plugin/config for Hyprland
   features.gui.hy3.enable = true;
+  # Enable hyprsplit layout plugin for Hyprland
+  features.gui.hyprsplit.enable = true;
+  # Enable hyprland-vrr plugin
+  features.gui.vrr.enable = true;
 
   # Enable Unreal Engine tooling (ue5-sync/build/editor wrappers)
   features.dev.unreal.enable = true;
