@@ -16,7 +16,7 @@ ConnectivityCapsule {
     property bool vpnIconRounded: false
     property bool linkIconRounded: false
     property bool iconSquare: true
-    property bool iconDebugFrames: true
+    property bool iconDebugFrames: false
     property color iconDebugFrameColor: "#ff0000"
     property real iconDebugFrameWidth: 1.5
 
@@ -44,7 +44,6 @@ ConnectivityCapsule {
     readonly property int _compactPadding: Math.min(_iconPaddingToken, Math.round(_baseClusterSpacing / 2))
     readonly property int clusterSpacing: Math.max(0, _baseClusterSpacing - _compactPadding)
     readonly property int iconHorizontalMargin: Math.max(0, _baseIconMargin - Math.round(_compactPadding / 2))
-    readonly property int vpnSlotHorizontalMargin: Math.max(0, iconHorizontalMargin - Theme.networkCapsuleVpnHorizontalMarginTrim)
     readonly property color vpnIconColor: vpnConnected ? accentColor : vpnOffColor
     readonly property color linkIconColor: (!hasLink)
         ? ConnUi.errorColor(Settings.settings, Theme)
@@ -77,7 +76,7 @@ ConnectivityCapsule {
             screen: root.screen
             labelRef: root.labelItem
             alignTarget: root.labelItem
-            outerHorizontalMargin: root.vpnSlotHorizontalMargin
+            outerHorizontalMargin: root.iconHorizontalMargin
             debugBorderVisible: root.iconDebugFrames
             debugBorderColor: root.iconDebugFrameColor
             debugBorderWidth: root.iconDebugFrameWidth
