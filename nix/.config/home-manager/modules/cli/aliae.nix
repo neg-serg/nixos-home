@@ -22,6 +22,7 @@ lib.mkMerge [
       hasHandlr = pkgs ? handlr;
       hasWget2 = pkgs ? wget2;
       hasPlocate = pkgs ? plocate;
+      hasOuch = pkgs ? ouch;
       hasPigz = pkgs ? pigz;
       hasPbzip2 = pkgs ? pbzip2;
       hasHxd = pkgs ? hexyl || pkgs ? hxd;
@@ -63,6 +64,7 @@ lib.mkMerge [
         (lib.optionalString hasDust "  sp:   \"dust -r\"\n")
         (lib.optionalString hasKhal "  cal:  \"khal calendar\"\n")
         (lib.optionalString hasHxd "  hexdump: \"hxd\"\n")
+        (lib.optionalString hasOuch "  se: \"ouch decompress --threads 0\"\n")
         (lib.optionalString hasPigz "  gzip: \"pigz\"\n")
         (lib.optionalString hasPbzip2 "  bzip2: \"pbzip2\"\n")
         (lib.optionalString hasPlocate "  locate: \"plocate\"\n")
