@@ -16,7 +16,7 @@ ConnectivityCapsule {
     property bool vpnIconRounded: false
     property bool linkIconRounded: false
     property bool iconSquare: true
-    property bool iconDebugFrames: false
+    property bool iconDebugFrames: true
     property color iconDebugFrameColor: "#ff0000"
     property real iconDebugFrameWidth: 1.5
 
@@ -40,10 +40,10 @@ ConnectivityCapsule {
     readonly property bool _hasLeading: vpnVisible || linkVisible
     readonly property int _baseClusterSpacing: Math.max(0, Theme.networkCapsuleIconSpacing)
     readonly property int _baseIconMargin: Math.max(0, Theme.networkCapsuleIconHorizontalMargin)
-    readonly property int _iconPaddingToken: Math.max(0, Theme.networkCapsuleIconPadding)
-    readonly property int _compactPadding: Math.min(_iconPaddingToken, Math.round(_baseClusterSpacing / 2))
-    readonly property int clusterSpacing: Math.max(0, _baseClusterSpacing - _compactPadding)
-    readonly property int iconHorizontalMargin: Math.max(0, _baseIconMargin - Math.round(_compactPadding / 2))
+    readonly property int _iconPaddingToken: Theme.networkCapsuleIconPadding
+    readonly property int _tightenAmount: Math.min(Math.abs(_iconPaddingToken), Math.round(_baseClusterSpacing / 2))
+    readonly property int clusterSpacing: Math.max(0, _baseClusterSpacing - _tightenAmount)
+    readonly property int iconHorizontalMargin: Math.max(0, _baseIconMargin - Math.round(_tightenAmount / 2))
     readonly property color vpnIconColor: vpnConnected ? accentColor : vpnOffColor
     readonly property color linkIconColor: (!hasLink)
         ? ConnUi.errorColor(Settings.settings, Theme)
