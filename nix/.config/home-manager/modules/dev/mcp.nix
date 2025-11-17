@@ -534,4 +534,8 @@ lib.mkIf cfgDev (lib.mkMerge [
     # it may introduce extra evaluation edges in some environments.
     # programs.vscode.profiles.default.enableMcpIntegration = true;
   }
+  (lib.mkIf (config.programs.claude-code.enable or false) {
+    # Claude Desktop expects the same MCP list; reuse the generated servers.
+    programs.claude-code.mcpServers = config.programs.mcp.servers;
+  })
 ])
