@@ -29,6 +29,8 @@ in {
 
     gui.enable = mkBool "enable GUI stack (wayland/hyprland, quickshell, etc.)" true;
     gui.hy3.enable = mkBool "enable hy3 plugin and hy3-specific Hyprland config" false;
+    gui.hyprsplit.enable = mkBool "enable hyprsplit layout plugin for Hyprland" false;
+    gui.vrr.enable = mkBool "enable hyprland-vrr plugin for adaptive refresh" false;
     gui.qt.enable = mkBool "enable Qt integrations for GUI (qt6ct, hyprland-qt-*)" true;
     gui.quickshell.enable = mkBool "enable Quickshell (panel) at login" true;
     mail.enable = mkBool "enable Mail stack (notmuch, isync, vdirsyncer, etc.)" true;

@@ -37,6 +37,31 @@ with lib; let
       # Ensure repo-managed Hypr files replace any existing files
       force = true;
     };
+  hy3Enabled = config.features.gui.hy3.enable or false;
+  hyprsplitEnabled = config.features.gui.hyprsplit.enable or false;
+  vrrEnabled = config.features.gui.vrr.enable or false;
+  hy3Pkg =
+    if hy3Enabled
+    then hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3
+    else null;
+  hyprsplitPkg = pkgs.hyprlandPlugins.hyprsplit;
+  hyprVrrPkg =
+    if vrrEnabled
+    then lib.attrByPath ["hyprlandPlugins" "hyprland-vrr"] null pkgs
+    else null;
+  pluginEntries =
+    (lib.optional (hy3Enabled && hy3Pkg != null) {
+      path = "${hy3Pkg}/lib/libhy3.so";
+      pkg = hy3Pkg;
+    })
+    ++ (lib.optional hyprsplitEnabled {
+      path = "${hyprsplitPkg}/lib/libhyprsplit.so";
+      pkg = hyprsplitPkg;
+    })
+    ++ (lib.optional (vrrEnabled && hyprVrrPkg != null) {
+      path = "${hyprVrrPkg}/lib/libhyprland-vrr.so";
+      pkg = hyprVrrPkg;
+    });
 in
   mkIf config.features.gui.enable (lib.mkMerge [
     # Local helper: safe Hyprland reload that ensures Quickshell is started if absent
@@ -145,19 +170,23 @@ in
       }
     ))
     # Dynamically generated plugin loader (hy3 only)
-    (mkIf (config.features.gui.hy3.enable or false) (
+    (mkIf (pluginEntries != []) (
       let
-        # Resolve hy3 plugin for the current system; keep out of closure churn elsewhere
-        hy3Pkg = hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3;
-        pluginPath = "${hy3Pkg}/lib/libhy3.so";
+        pluginLines = lib.concatMapStringsSep "\n" (entry: "plugin = ${entry.path}") pluginEntries;
+        pluginPkgs = map (entry: entry.pkg) pluginEntries;
       in
-        xdg.mkXdgText "hypr/plugins.conf" ''
-          # Hyprland plugins
-          plugin = ${pluginPath}
-        ''
+        lib.mkMerge [
+          (xdg.mkXdgText "hypr/plugins.conf" ''
+            # Hyprland plugins
+            ${pluginLines}
+          '')
+          { xdg.configFile."hypr/plugins.conf".force = true; }
+          { home.packages = pluginPkgs; }
+        ]
     ))
-    # Overwrite existing generated plugin config file if present
-    (mkIf (config.features.gui.hy3.enable or false) { xdg.configFile."hypr/plugins.conf".force = true; })
-    # Keep the hy3 plugin alive in the profile to avoid GC removing the path
-    (mkIf (config.features.gui.hy3.enable or false) { home.packages = [ (hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3) ]; })
+    (mkIf (vrrEnabled && hyprVrrPkg == null) {
+      warnings = [
+        "hyprland-vrr plugin requested, but `pkgs.hyprlandPlugins.hyprland-vrr` is missing in the current nixpkgs revision; skipping plugin load."
+      ];
+    })
   ])
