@@ -1,9 +1,46 @@
 {
   lib,
   config,
-  # pkgs not used here
+  pkgs,
   ...
 }:
+let
+  xdg = import ../../lib/xdg-helpers.nix { inherit lib pkgs; };
+  vicinaeThemeNeg = import ./vicinae/themes/neg.nix;
+  vicinaeFont = lib.attrByPath ["gtk" "font"] { name = "Iosevka"; size = 10; } config;
+  mkTitleCase = name: let
+    str = builtins.toString name;
+    len = lib.stringLength str;
+    head = if len == 0 then "" else lib.substring 0 1 str;
+    tail = if len <= 1 then "" else lib.substring 1 (len - 1) str;
+  in if len == 0 then str else "${lib.strings.toUpper head}${tail}";
+  vicinaeIconTheme = mkTitleCase (lib.attrByPath ["gtk" "iconTheme" "name"] "kora" config);
+  vicinaeSettings = {
+    closeOnFocusLoss = false;
+    faviconService = "google";
+    font = {
+      normal = vicinaeFont.name;
+      family = vicinaeFont.name;
+      size = vicinaeFont.size;
+    };
+    keybinding = "emacs";
+    keybinds = {};
+    popToRootOnClose = true;
+    rootSearch.searchFiles = true;
+    theme = {
+      name = "neg";
+      iconTheme = vicinaeIconTheme;
+    };
+    window = {
+      csd = true;
+      opacity = 0.98;
+      rounding = 10;
+    };
+  };
+  vicinaeSettingsFile =
+    pkgs.writeText "vicinae-settings.json" (builtins.toJSON vicinaeSettings);
+  emptyVicinaeConfig = pkgs.writeText "vicinae-empty.json" "{}";
+in
 with lib;
   # Enable Vicinae when GUI is on and provide sane defaults.
   mkIf config.features.gui.enable (
@@ -13,8 +50,6 @@ with lib;
           enable = true;
           # Prefer Wayland layer-shell integration for proper stacking on Hyprland
           useLayerShell = true;
-          # Lightweight base config; Vicinae reads this as JSON at $XDG_CONFIG_HOME/vicinae/vicinae.json
-          settings = {};
           # Autostart the daemon in graphical sessions via systemd user unit
           systemd = {
             enable = true;
@@ -28,14 +63,32 @@ with lib;
               src = ./vicinae/extensions/neg-hello;
             })
           ];
-          # Drop a minimal theme placeholder; not selected unless explicitly referenced by settings
+          # Walker-matched dark theme (neg) for Vicinae
           themes = {
-            neg = {
-              # Keep minimal to avoid coupling to a specific Vicinae theme schema
-              name = "neg";
-            };
+            neg = vicinaeThemeNeg;
           };
         };
       }
+      # Merge our desired defaults into vicinae.json without clobbering manual edits.
+      {
+        home.activation.vicinaeMergeConfig = lib.hm.dag.entryAfter ["writeBoundary"] ''
+          cfg="${config.xdg.configHome}/vicinae/vicinae.json"
+          mkdir -p "$(dirname "$cfg")"
+          current="$cfg"
+          if [ ! -s "$cfg" ]; then
+            current=${emptyVicinaeConfig}
+          fi
+          tmp="$(mktemp)"
+          ${pkgs.jq}/bin/jq -s 'reduce .[] as $item ({}; . * $item)' \
+            ${vicinaeSettingsFile} "$current" > "$tmp"
+          if ! cmp -s "$tmp" "$cfg" 2>/dev/null; then
+            install -Dm644 "$tmp" "$cfg"
+          fi
+          rm -f "$tmp"
+        '';
+      }
+      # Vicinae discovers themes exclusively from XDG data paths; ship the TOML there so
+      # theme auto-selection works without runtime warnings.
+      (xdg.mkXdgDataToml "vicinae/themes/neg.toml" vicinaeThemeNeg)
     ]
   )
